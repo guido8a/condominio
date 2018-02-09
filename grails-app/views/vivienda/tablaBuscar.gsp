@@ -31,8 +31,8 @@ th, td {
         <g:each in="${data}" var="dato" status="z">
 
             <tr id="${dato.prsn__id}" data-id="${dato.prsn__id}" class="${clase}">
-                <td width="10%">
-                    ${dato?.edif__id}
+                <td width="6%">
+                    ${dato?.edifdscr}
                 </td>
 
                 <td width="20%" style="color:#186063">
@@ -46,6 +46,10 @@ th, td {
 
                 <td width="7%" class="text-info">
                     ${dato?.prsndpto}
+                </td>
+
+                <td width="4%" class="text-info">
+                    ${dato?.tpoccdgo}
                 </td>
 
                 <td width="10%" class="text-info">

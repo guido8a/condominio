@@ -91,10 +91,11 @@
     <table class="table table-bordered table-hover table-condensed" style="width: 1070px">
         <thead>
         <tr>
-            <th class="alinear" style="width: 10%">Edificio</th>
+            <th class="alinear" style="width: 6%">Edificio</th>
             <th class="alinear" style="width: 20%">Nombre</th>
             <th class="alinear" style="width: 20%">Apellido</th>
             <th class="alinear" style="width: 7%">Dept.</th>
+            <th class="alinear" style="width: 4%">P/A</th>
             <th class="alinear" style="width: 10%">Teléfono</th>
             <th class="alinear" style="width: 15%">Correo electrónico</th>
             <th class="alinear" style="width: 8%">Alícutoa</th>
