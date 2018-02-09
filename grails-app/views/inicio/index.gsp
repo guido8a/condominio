@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="texto">
-                    <span class="text-success"><strong>Buscar actividades</strong></span></div>
+                    <span class="text-success"><strong>Egresos y Gastos</strong></span></div>
             </div>
         </div>
         </a>
@@ -124,9 +124,10 @@
                         <img src="${resource(dir: 'images', file: 'actividades.png')}" width="100%" height="100%"/>
                     </div>
 
-                    <div style="margin-top: 50px; margin-left: 140px;">
-                        <span class="text-success" style="font-size: large"><strong>Mis Actividades</strong></span></div>
-                        <span class="text-success" style="margin-top: 20px; margin-left: 30px; width: 400px; display: block"><strong>Actividades en las que estoy involucrado o pertenecen a mi grupo de trabajo</strong></span></div>
+                    <div style="margin-top: 50px; margin-left: 80px;">
+                        <span class="text-success" style="font-size: large"><strong>Sugerencias y Obras por hacer</strong></span></div>
+                        <span class="text-success" style="margin-top: 20px; margin-left: 30px; width: 400px; display: block">
+                            <strong>Daños y repacraciones o mejoras pendientes en el Condominio</strong></span></div>
                 </div>
             </div>
         </a>

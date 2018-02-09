@@ -27,6 +27,7 @@ class Alicuota {
     }
 
     static constraints = {
+        fechaHasta(blank: true, nullable: true)
         observaciones(blank: true, nullable: true)
     }
 }

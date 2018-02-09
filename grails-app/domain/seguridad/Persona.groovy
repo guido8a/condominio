@@ -80,7 +80,7 @@ class Persona {
     }
 
     String toString() {
-        "${this.id}: ${this.nombre} ${this.apellido}"
+        "${this.nombre} ${this.apellido} Departamento:(${this.departamento})"
     }
 
     def getEstaActivo() {

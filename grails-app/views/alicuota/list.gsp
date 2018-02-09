@@ -159,7 +159,7 @@
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
-                    title   : title + " Alicuota",
+                    title   : title + " el valor de pago por Alícuota",
                     
                     message : msg,
                     buttons : {
@@ -174,7 +174,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitForm();
+                                return submitFormAlicuota();
                             } //callback
                         } //guardar
                     } //buttons
