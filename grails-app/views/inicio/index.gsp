@@ -82,7 +82,7 @@
     <g:set var="inst" value="${utilitarios.Parametros.get(1)}"></g:set>
 
     <div style="text-align: center;"><h2 class="titl">
-            <p class="text-warning">${inst.institucion}</p>
+            <p class="text-warning">${inst.nombre}</p>
             <p class="text-warning">Administración de Condominios</p>
         </h2>
     </div>
@@ -90,15 +90,15 @@
     <div class="body ui-corner-all" style="width: 680px;position: relative;margin: auto;margin-top: 40px;height: 280px; ">
 
 
-        <a href= "${createLink(controller:'buscarBase', action: 'busquedaBase')}" style="text-decoration: none">
+        <a href= "${createLink(controller:'vivienda', action: 'index')}" style="text-decoration: none">
         <div class="ui-corner-all item fuera">
             <div class="ui-corner-all item">
                 <div class="imagen">
-                    <img src="${resource(dir: 'images', file: 'conocimiento.png')}" width="100%" height="100%"/>
+                    <img src="${resource(dir: 'images', file: 'vivienda.png')}" width="100%" height="100%"/>
                 </div>
 
                 <div class="texto">
-                    <span class="text-success"><strong>Base de conocimiento</strong></span></div>
+                    <span class="text-success"><strong>Departamentos y Personas</strong></span></div>
             </div>
         </div>
         </a>

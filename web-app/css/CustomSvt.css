@@ -1,28 +1,49 @@
 .css-vertical-text {
     position          : absolute;
     left              : 5px;
-    bottom            : -15px;
-    color             : #5a6b7d;
+    bottom            : 5px;
+    color             : #0088CC;
+    border            : 0px solid red;
     -webkit-transform : rotate(270deg);
     -moz-transform    : rotate(270deg);
     -o-transform      : rotate(270deg);
     white-space       : nowrap;
     display           : block;
     width             : 20px;
-    height            : 60px;
-    font-size         : 40px;
+    height            : 50px;
+    font-size         : 25px;
     font-family       : 'Tulpen One', cursive;
-    text-shadow       : -2px 2px 1px rgba(0, 0, 0, 0.40);
+    font-weight       : bold;
+    font-size         : 35px;
+    /*text-shadow       : -2px 2px 1px rgba(0, 0, 0, 0.25);*/
+
+    /*text-shadow: 0px 0px 1px #333;*/
+}
+
+.css-icono {
+    position          : absolute;
+    left              : 5px;
+    bottom            : 5px;
+    color             : #0088CC;
+    border            : 0px solid red;
+    /*-webkit-transform : rotate(270deg);*/
+    /*-moz-transform    : rotate(270deg);*/
+    /*-o-transform      : rotate(270deg);*/
+    white-space       : nowrap;
+    display           : block;
+    width             : 20px;
+    height            : 50px;
+    font-size         : 25px;
+    font-family       : 'Tulpen One', cursive;
+    font-weight       : bold;
+    font-size         : 35px;
+    /*text-shadow       : -2px 2px 1px rgba(0, 0, 0, 0.25);*/
+
+    /*text-shadow: 0px 0px 1px #333;*/
 }
 
 .vertical-container {
     border-bottom : 1px solid black;
-    padding-left  : 50px;
-    position      : relative;
-}
-
-.contenedor-vertical {
-    border-bottom : 1px dotted #888;
     padding-left  : 50px;
     position      : relative;
 }
@@ -45,6 +66,12 @@
     /*text-shadow: 0px 0px 1px #333;*/
 }
 
+/*.negrilla-puntos:after{*/
+/*content: ":";*/
+/*position: absolute;*/
+/*right: 0;*/
+/*}*/
+
 .titulo-horizontal {
     padding-bottom : 10px;
     border-bottom  : 1px solid #000000;
@@ -61,9 +88,17 @@
     left        : 30px;
     bottom      : 5px;
     width       : 1px;
-    border-left : 1px solid #B7872F;
+    border-left : 1px solid #0088CC;
     height      : 95%;
+}
 
+.linea45 {
+    position    : absolute;
+    left        : 45px;
+    bottom      : 5px;
+    width       : 1px;
+    border-left : 1px solid #0088CC;
+    height      : 95%;
 }
 
 .negrilla {
@@ -77,6 +112,7 @@
     font-size   : 14px;
     /*text-shadow : -2px 2px 1px rgba(0, 0, 0, 0.25);*/
     line-height : 14px;
+
 }
 
 .label-shared {
@@ -86,7 +122,7 @@
 }
 
 .row {
-    margin-top : 15px;
+    margin-top : 10px;
 }
 
 .btn-azul {
@@ -127,6 +163,12 @@
     background-position : 0 -3px;
 }
 
+/*a.btn-azul:hover {*/
+/*background  : #327BbA;*/
+/*color       : #ffffff;*/
+/*border      : 1px solid #327BbA;*/
+/*text-shadow : -2px 2px 1px rgba(0, 0, 0, 0.25);*/
+/*}*/
 .modalTabelGray {
     position         : absolute;
     width            : 100%;
@@ -142,3 +184,41 @@
     vertical-align   : middle;
 }
 
+/*etiqueta*/
+.etiqueta-container{
+    position: relative;
+    border: 1px solid white;
+}
+.etiqueta-svt{
+    width: 96%;
+    height: 40px;
+    line-height: 40px;
+    color:#ffffff;
+    background:  #0088CC;
+    margin-top: 10px !important;
+    margin-bottom: 10px;
+    padding-left: 1%;
+    font-weight: bold;
+    font-family : 'open sans condensed';
+    font-size: 18px;
+}
+.etiqueta-svt:before, .etiqueta-svt:after{
+    position: absolute;
+    content: "";
+    width: 0px;
+    height: 0px;
+}
+.etiqueta-svt:before{
+    width: 30px;
+    left: -29px;
+    top: 10px;
+    height: 40px;
+    background:#0088CC  ;
+}
+.etiqueta-svt:after{
+    left:-29;
+    top: 50;
+    border-width:  10px 0px 0px 29px;
+    border-style: solid;
+    border-color:#666 transparent ;
+}
