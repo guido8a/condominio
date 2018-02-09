@@ -73,15 +73,9 @@ class ElementosTagLib {
 
 
     def bootstrapCss = { attrs ->
-
         def html = "<link href=\"${resource(dir: 'bootstrap-3.1.1/css', file: 'bootstrap.css')}\" rel=\"stylesheet\">"
         html += "<link href=\"${resource(dir: 'bootstrap-3.1.1/css', file: 'bootstrap-theme.min.css')}\" rel=\"stylesheet\">"
-
-//        def html = "<asset:javascript src=\"bootstrap-3.1.1/css/bootstrap.css\"/>" +
-//                "<asset:javascript src=\"bootstrap-3.1.1/css/bootstrap-theme.min.css\"/>"
-
         out << html
-
     }
 
     def bootstrapJs = { attrs ->

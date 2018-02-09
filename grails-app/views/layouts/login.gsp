@@ -6,7 +6,7 @@
         <meta name="author" content="">
 
         <!-- los favicon de todos los tamaños -->
-        %{--<elm:favicon/>--}%
+        <elm:favicon/>
 
         <title><g:layoutTitle default="Bitácora"/></title>
 
@@ -14,28 +14,17 @@
         <elm:bootstrapCss/>
 
         <!-- JQuery -->
-        <asset:javascript src="js/jquery/js/jquery-1.9.1.js"/>
-        <asset:javascript src="js/jquery/js/jquery-ui-1.10.3.custom.min.js"/>
-        <asset:javascript src="js/jquery/js/jquery-ui-1.10.3.custom.min.css"/>
+        <script src="${resource(dir: 'js/jquery/js', file: 'jquery-1.9.1.js')}"></script>
+        <script src="${resource(dir: 'js/jquery/js', file: 'jquery-ui-1.10.3.custom.min.js')}"></script>
+        <link href="${resource(dir: 'js/jquery/css/ui-lightness', file: 'jquery-ui-1.10.3.custom.min.css')}" rel="stylesheet">
 
-        <asset:javascript src="js/functions.js"/>
-        <asset:javascript src="js/funciones.js"/>
-
-        <asset:javascript src="js/plugins/jquery-validation-1.11.1/js/jquery.validate.min.js"/>
-        <asset:javascript src="js/plugins/jquery-validation-1.11.1/localization/messages_es.js"/>
-        <asset:javascript src="js/jquery.validate.custom.js"/>
-
-        %{--<script src="${resource(dir: 'js/jquery/js', file: 'jquery-1.9.1.js')}"></script>--}%
-        %{--<script src="${resource(dir: 'js/jquery/js', file: 'jquery-ui-1.10.3.custom.min.js')}"></script>--}%
-        %{--<link href="${resource(dir: 'js/jquery/css/ui-lightness', file: 'jquery-ui-1.10.3.custom.min.css')}" rel="stylesheet">--}%
-
-        %{--<script src="${resource(dir: 'js', file: 'functions.js')}"></script>--}%
-        %{--<script src="${resource(dir: 'js', file: 'funciones.js')}"></script>--}%
+        <script src="${resource(dir: 'js', file: 'functions.js')}"></script>
+        <script src="${resource(dir: 'js', file: 'funciones.js')}"></script>
 
         <!-- la validacion del lado del cliente -->
-        %{--<script src="${resource(dir: 'js/plugins/jquery-validation-1.11.1/js', file: 'jquery.validate.min.js')}"></script>--}%
-        %{--<script src="${resource(dir: 'js/plugins/jquery-validation-1.11.1/localization', file: 'messages_es.js')}"></script>--}%
-        %{--<script src="${resource(dir: 'js', file: 'jquery.validate.custom.js')}"></script>--}%
+        <script src="${resource(dir: 'js/plugins/jquery-validation-1.11.1/js', file: 'jquery.validate.min.js')}"></script>
+        <script src="${resource(dir: 'js/plugins/jquery-validation-1.11.1/localization', file: 'messages_es.js')}"></script>
+        <script src="${resource(dir: 'js', file: 'jquery.validate.custom.js')}"></script>
 
 
 
