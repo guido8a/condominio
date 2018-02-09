@@ -1,13 +1,12 @@
 package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
-import condominio.seguridad.Shield
 
 
 /**
  * Controlador que muestra las pantallas de manejo de TipoOcupacion
  */
-class TipoOcupacionController extends Shield {
+class TipoOcupacionController extends seguridad.Shield {
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 

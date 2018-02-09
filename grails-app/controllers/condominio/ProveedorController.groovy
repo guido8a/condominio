@@ -1,13 +1,13 @@
-package seguridad
+package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
-
+import seguridad.Shield
 
 
 /**
- * Controlador que muestra las pantallas de manejo de Persona
+ * Controlador que muestra las pantallas de manejo de Proveedor
  */
-class PersonaController extends Shield {
+class ProveedorController extends Shield {
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
@@ -34,27 +34,23 @@ class PersonaController extends Shield {
         }
         def list
         if(params.search) {
-            def c = Persona.createCriteria()
+            def c = Proveedor.createCriteria()
             list = c.list(params) {
                 or {
                     /* TODO: cambiar aqui segun sea necesario */
                     
+                            ilike("activo", "%" + params.search + "%")  
                             ilike("apellido", "%" + params.search + "%")  
-                            ilike("autorizacion", "%" + params.search + "%")  
-                            ilike("cargo", "%" + params.search + "%")  
-                            ilike("departamento", "%" + params.search + "%")  
                             ilike("direccion", "%" + params.search + "%")  
-                            ilike("login", "%" + params.search + "%")  
                             ilike("mail", "%" + params.search + "%")  
                             ilike("nombre", "%" + params.search + "%")  
                             ilike("observaciones", "%" + params.search + "%")  
                             ilike("ruc", "%" + params.search + "%")  
-                            ilike("sexo", "%" + params.search + "%")  
                             ilike("telefono", "%" + params.search + "%")  
                 }
             }
         } else {
-            list = Persona.list(params)
+            list = Proveedor.list(params)
         }
         if (!all && params.offset.toInteger() > 0 && list.size() == 0) {
             params.offset = params.offset.toInteger() - 1
@@ -65,48 +61,48 @@ class PersonaController extends Shield {
 
     /**
      * Acción que muestra la lista de elementos
-     * @return personaInstanceList: la lista de elementos filtrados, personaInstanceCount: la cantidad total de elementos (sin máximo)
+     * @return proveedorInstanceList: la lista de elementos filtrados, proveedorInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def list() {
-        def personaInstanceList = getList(params, false)
-        def personaInstanceCount = getList(params, true).size()
-        return [personaInstanceList: personaInstanceList, personaInstanceCount: personaInstanceCount]
+        def proveedorInstanceList = getList(params, false)
+        def proveedorInstanceCount = getList(params, true).size()
+        return [proveedorInstanceList: proveedorInstanceList, proveedorInstanceCount: proveedorInstanceCount]
     }
 
     /**
      * Acción llamada con ajax que muestra la información de un elemento particular
-     * @return personaInstance el objeto a mostrar cuando se encontró el elemento
+     * @return proveedorInstance el objeto a mostrar cuando se encontró el elemento
      * @render ERROR*[mensaje] cuando no se encontró el elemento
      */
     def show_ajax() {
         if(params.id) {
-            def personaInstance = Persona.get(params.id)
-            if(!personaInstance) {
-                render "ERROR*No se encontró Persona."
+            def proveedorInstance = Proveedor.get(params.id)
+            if(!proveedorInstance) {
+                render "ERROR*No se encontró Proveedor."
                 return
             }
-            return [personaInstance: personaInstance]
+            return [proveedorInstance: proveedorInstance]
         } else {
-            render "ERROR*No se encontró Persona."
+            render "ERROR*No se encontró Proveedor."
         }
     } //show para cargar con ajax en un dialog
 
     /**
      * Acción llamada con ajax que muestra un formaulario para crear o modificar un elemento
-     * @return personaInstance el objeto a modificar cuando se encontró el elemento
+     * @return proveedorInstance el objeto a modificar cuando se encontró el elemento
      * @render ERROR*[mensaje] cuando no se encontró el elemento
      */
     def form_ajax() {
-        def personaInstance = new Persona()
+        def proveedorInstance = new Proveedor()
         if(params.id) {
-            personaInstance = Persona.get(params.id)
-            if(!personaInstance) {
-                render "ERROR*No se encontró Persona."
+            proveedorInstance = Proveedor.get(params.id)
+            if(!proveedorInstance) {
+                render "ERROR*No se encontró Proveedor."
                 return
             }
         }
-        personaInstance.properties = params
-        return [personaInstance: personaInstance]
+        proveedorInstance.properties = params
+        return [proveedorInstance: proveedorInstance]
     } //form para cargar con ajax en un dialog
 
     /**
@@ -114,20 +110,20 @@ class PersonaController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-        def personaInstance = new Persona()
+        def proveedorInstance = new Proveedor()
         if(params.id) {
-            personaInstance = Persona.get(params.id)
-            if(!personaInstance) {
-                render "ERROR*No se encontró Persona."
+            proveedorInstance = Proveedor.get(params.id)
+            if(!proveedorInstance) {
+                render "ERROR*No se encontró Proveedor."
                 return
             }
         }
-        personaInstance.properties = params
-        if(!personaInstance.save(flush: true)) {
-            render "ERROR*Ha ocurrido un error al guardar Persona: " + renderErrors(bean: personaInstance)
+        proveedorInstance.properties = params
+        if(!proveedorInstance.save(flush: true)) {
+            render "ERROR*Ha ocurrido un error al guardar Proveedor: " + renderErrors(bean: proveedorInstance)
             return
         }
-        render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Persona exitosa."
+        render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Proveedor exitosa."
         return
     } //save para grabar desde ajax
 
@@ -137,46 +133,25 @@ class PersonaController extends Shield {
      */
     def delete_ajax() {
         if(params.id) {
-            def personaInstance = Persona.get(params.id)
-            if (!personaInstance) {
-                render "ERROR*No se encontró Persona."
+            def proveedorInstance = Proveedor.get(params.id)
+            if (!proveedorInstance) {
+                render "ERROR*No se encontró Proveedor."
                 return
             }
             try {
-                personaInstance.delete(flush: true)
-                render "SUCCESS*Eliminación de Persona exitosa."
+                proveedorInstance.delete(flush: true)
+                render "SUCCESS*Eliminación de Proveedor exitosa."
                 return
             } catch (DataIntegrityViolationException e) {
-                render "ERROR*Ha ocurrido un error al eliminar Persona"
+                render "ERROR*Ha ocurrido un error al eliminar Proveedor"
                 return
             }
         } else {
-            render "ERROR*No se encontró Persona."
+            render "ERROR*No se encontró Proveedor."
             return
         }
     } //delete para eliminar via ajax
     
-            /**
-             * Acción llamada con ajax que valida que no se duplique la propiedad login
-             * @render boolean que indica si se puede o no utilizar el valor recibido
-             */
-            def validar_unique_login_ajax() {
-                params.login = params.login.toString().trim()
-                if (params.id) {
-                    def obj = Persona.get(params.id)
-                    if (obj.login.toLowerCase() == params.login.toLowerCase()) {
-                        render true
-                        return
-                    } else {
-                        render Persona.countByLoginIlike(params.login) == 0
-                        return
-                    }
-                } else {
-                    render Persona.countByLoginIlike(params.login) == 0
-                    return
-                }
-            }
-            
             /**
              * Acción llamada con ajax que valida que no se duplique la propiedad mail
              * @render boolean que indica si se puede o no utilizar el valor recibido
@@ -184,16 +159,16 @@ class PersonaController extends Shield {
             def validar_unique_mail_ajax() {
                 params.mail = params.mail.toString().trim()
                 if (params.id) {
-                    def obj = Persona.get(params.id)
+                    def obj = Proveedor.get(params.id)
                     if (obj.mail.toLowerCase() == params.mail.toLowerCase()) {
                         render true
                         return
                     } else {
-                        render Persona.countByMailIlike(params.mail) == 0
+                        render Proveedor.countByMailIlike(params.mail) == 0
                         return
                     }
                 } else {
-                    render Persona.countByMailIlike(params.mail) == 0
+                    render Proveedor.countByMailIlike(params.mail) == 0
                     return
                 }
             }
