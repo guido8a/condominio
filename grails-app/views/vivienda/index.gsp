@@ -202,8 +202,12 @@ como máximo 30 <span style="margin-left: 40px; color: #0b2c89">Se ordena por ap
         var editar = {
             label: " Editar Persona",
             icon: "fa fa-file-text-o",
-            action: function () {
-                location.href = '${createLink(controller: "proceso", action: "nuevoProceso")}?id=' + id;
+            %{--action: function () {--}%
+                %{--location.href = '${createLink(controller: "proceso", action: "nuevoProceso")}?id=' + id;--}%
+            %{--}--}%
+            action : function ($element) {
+                var id = $element.data("id");
+                createEditRow(id);
             }
         };
 
@@ -243,6 +247,45 @@ como máximo 30 <span style="margin-left: 40px; color: #0b2c89">Se ordena por ap
     $(document).ready(function() {
         $("#buscador_con").change();
     });
+
+    function createEditRow(id) {
+        var title = id ? "Editar" : "Nueva";
+        var data = id ? { id: id } : {};
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'persona', action:'form_ajax')}",
+            data    : data,
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgCreateEdit",
+                    title   : title + " Persona",
+                    class   : "long",
+//                    class   : "modal-lg",
+
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return submitForm();
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 500);
+            } //success
+        }); //ajax
+    } //createEdit
 
 
 

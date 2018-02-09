@@ -154,7 +154,7 @@
         });
     }
     function createEditRow(id) {
-        var title = id ? "Editar" : "Crear";
+        var title = id ? "Editar" : "Nueva";
         var data = id ? { id: id } : {};
                 $.ajax({
             type    : "POST",
@@ -164,8 +164,8 @@
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
                     title   : title + " Persona",
-                    
-                    class   : "modal-lg",
+                    class   : "long",
+//                    class   : "modal-lg",
                     
                     message : msg,
                     buttons : {
