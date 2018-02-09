@@ -19,7 +19,7 @@
                             Nombre
                         </label>
                         <div class="col-md-7">
-                            <g:textField name="nombre" maxlength="30" required="" class="allCaps form-control required" value="${personaInstance?.nombre}"/>
+                            <g:textField name="nombre" maxlength="30" required="" class="form-control required" value="${personaInstance?.nombre}"/>
                         </div>
                         *
                     </span>
@@ -43,7 +43,7 @@
                             Apellido
                         </label>
                         <div class="col-md-7">
-                            <g:textField name="apellido" maxlength="30" required="" class="allCaps form-control required" value="${personaInstance?.apellido}"/>
+                            <g:textField name="apellido" maxlength="30" required="" class="form-control required" value="${personaInstance?.apellido}"/>
                         </div>
                         *
                     </span>
@@ -60,10 +60,6 @@
                 </div>
 
             </div>
-
-
-        %{--<div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'sexo', 'error')} required">--}%
-        %{--</div>--}%
 
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'mail', 'error')} required">
                 <div class="col-md-6">
@@ -93,25 +89,25 @@
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'password', 'error')} required">
                 <div class="col-md-6">
                     <span class="grupo">
-                        <label for="mail" class="col-md-2 control-label">
-                            Mail
+                        <label for="direccion" class="col-md-2 control-label">
+                            Dirección
                         </label>
                         <div class="col-md-7">
-                            <g:textField name="mail" maxlength="63" class="allCaps form-control" value="${personaInstance?.mail}"/>
+                            <g:textArea name="direccion" class="form-control" value="${personaInstance?.direccion}" style="resize: none"/>
                         </div>
                     </span>
                 </div>
                 <div class="col-md-6">
                     <span class="grupo">
-                        <label for="cargo" class="col-md-2 control-label">
-                            Cargo
+                        <label for="alicuota" class="col-md-2 control-label">
+                            Alicuota
                         </label>
                         <div class="col-md-7">
-                            <g:textField name="cargo" class="form-control" value="${personaInstance?.cargo}"/>
+                            <g:textField name="alicuota" value="${personaInstance?.alicuota}" class="number form-control"/>
                         </div>
-
                     </span>
                 </div>
+
             </div>
 
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'activo', 'error')} required">
@@ -128,29 +124,6 @@
                 </div>
                 <div class="col-md-6">
                     <span class="grupo">
-                        <label for="alicuota" class="col-md-2 control-label">
-                            Alicuota
-                        </label>
-                        <div class="col-md-7">
-                            <g:textField name="alicuota" value="${personaInstance?.alicuota}" class="number form-control"/>
-                        </div>
-                    </span>
-                </div>
-            </div>
-
-            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'cargo', 'error')} ">
-                <div class="col-md-6">
-                    <span class="grupo">
-                        <label for="autorizacion" class="col-md-2 control-label">
-                            Autorizacion
-                        </label>
-                        <div class="col-md-7">
-                            <g:textField name="autorizacion" pattern="${personaInstance.constraints.autorizacion.matches}" class="allCaps form-control" value="${personaInstance?.autorizacion}"/>
-                        </div>
-                    </span>
-                </div>
-                <div class="col-md-6">
-                    <span class="grupo">
                         <label for="sexo" class="col-md-2 control-label">
                             Sexo
                         </label>
@@ -161,40 +134,17 @@
                 </div>
             </div>
 
+
+
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'observaciones', 'error')} ">
                 <div class="col-md-6">
                     <span class="grupo">
-                        <label for="direccion" class="col-md-2 control-label">
-                            Dirección
+                        <label for="mail" class="col-md-2 control-label">
+                            Mail
                         </label>
                         <div class="col-md-7">
-                            %{--<g:textField name="direccion" class="allCaps form-control" value="${personaInstance?.direccion}"/>--}%
-                            <g:textArea name="direccion" class="form-control" value="${personaInstance?.direccion}"/>
+                            <g:textField name="mail" maxlength="63" class="allCaps form-control" value="${personaInstance?.mail}"/>
                         </div>
-                    </span>
-                </div>
-                <div class="col-md-6">
-                    <span class="grupo">
-                        <label for="observaciones" class="col-md-2 control-label">
-                            Observaciones
-                        </label>
-                        <div class="col-md-7">
-                            <g:textArea name="observaciones" class="form-control" value="${personaInstance?.observaciones}"/>
-                        </div>
-                    </span>
-                </div>
-            </div>
-
-            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'departamento', 'error')} required">
-                <div class="col-md-6">
-                    <span class="grupo">
-                        <label for="password" class="col-md-2 control-label">
-                            Password
-                        </label>
-                        <div class="col-md-7">
-                            <g:textField name="password" required="" class="allCaps form-control required" value="${personaInstance?.password}"/>
-                        </div>
-                        *
                     </span>
                 </div>
                 <div class="col-md-6">
@@ -206,6 +156,53 @@
                             <g:textField name="login" maxlength="14" required="" class="allCaps form-control required" value="${personaInstance?.login}"/>
                         </div>
                         *
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'departamento', 'error')} required">
+                <div class="col-md-6">
+                    <span class="grupo">
+                        <label for="fechaNacimiento" class="col-md-2 control-label">
+                            Fecha Nacimiento
+                        </label>
+                        <div class="col-md-5">
+                            <elm:datepicker name="fechaNacimiento"  class="datepicker form-control" value="${personaInstance?.fechaNacimiento}" />
+                        </div>
+                    </span>
+                </div>
+                <div class="col-md-6">
+                    <span class="grupo">
+                        <label for="password" class="col-md-2 control-label">
+                            Password
+                        </label>
+                        <div class="col-md-7">
+                            <g:textField name="password" required="" class="allCaps form-control required" value="${personaInstance?.password}"/>
+                        </div>
+                        *
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'cargo', 'error')} ">
+                <div class="col-md-6">
+                    <span class="grupo">
+                        <label for="cargo" class="col-md-2 control-label">
+                            Cargo
+                        </label>
+                        <div class="col-md-7">
+                            <g:textField name="cargo" class="form-control" value="${personaInstance?.cargo}"/>
+                        </div>
+                    </span>
+                </div>
+                <div class="col-md-6">
+                    <span class="grupo">
+                        <label for="autorizacion" class="col-md-2 control-label">
+                            Autorizacion
+                        </label>
+                        <div class="col-md-7">
+                            <g:textField name="autorizacion" pattern="${personaInstance.constraints.autorizacion.matches}" class="allCaps form-control" value="${personaInstance?.autorizacion}"/>
+                        </div>
                     </span>
                 </div>
             </div>
@@ -245,13 +242,13 @@
                         </div>
                     </span>
                 </div>
-                 <div class="col-md-6">
+                <div class="col-md-6">
                     <span class="grupo">
-                        <label for="fechaNacimiento" class="col-md-2 control-label">
-                            Fecha Nacimiento
+                        <label for="observaciones" class="col-md-2 control-label">
+                            Observaciones
                         </label>
-                        <div class="col-md-5">
-                            <elm:datepicker name="fechaNacimiento"  class="datepicker form-control" value="${personaInstance?.fechaNacimiento}" />
+                        <div class="col-md-7">
+                            <g:textArea name="observaciones" class="form-control" value="${personaInstance?.observaciones}" style="resize: none"/>
                         </div>
                     </span>
                 </div>
@@ -283,16 +280,16 @@
                                 <div class="col-md-6">
                                     <table id="tblPerfiles" class="table table-hover table-bordered table-condensed">
                                         %{--<g:each in="${perfiles.perfil}" var="perfil">--}%
-                                            %{--<tr class="perfiles" data-id="${perfil.id}">--}%
-                                                %{--<td>--}%
-                                                    %{--${perfil?.nombre}--}%
-                                                %{--</td>--}%
-                                                %{--<td width="35">--}%
-                                                    %{--<a href="#" class="btn btn-danger btn-xs btn-deletePerfil">--}%
-                                                        %{--<i class="fa fa-trash-o"></i>--}%
-                                                    %{--</a>--}%
-                                                %{--</td>--}%
-                                            %{--</tr>--}%
+                                        %{--<tr class="perfiles" data-id="${perfil.id}">--}%
+                                        %{--<td>--}%
+                                        %{--${perfil?.nombre}--}%
+                                        %{--</td>--}%
+                                        %{--<td width="35">--}%
+                                        %{--<a href="#" class="btn btn-danger btn-xs btn-deletePerfil">--}%
+                                        %{--<i class="fa fa-trash-o"></i>--}%
+                                        %{--</a>--}%
+                                        %{--</td>--}%
+                                        %{--</tr>--}%
                                         %{--</g:each>--}%
                                     </table>
                                 </div>
