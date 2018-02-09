@@ -83,7 +83,7 @@
 
     <div style="text-align: center;"><h2 class="titl">
             <p class="text-warning">${inst.institucion}</p>
-            <p class="text-warning">Base de Conocimiento y Agenda Empresarial</p>
+            <p class="text-warning">Administración de Condominios</p>
         </h2>
     </div>
 
