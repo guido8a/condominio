@@ -211,7 +211,17 @@ como máximo 30 <span style="margin-left: 40px; color: #0b2c89">Se ordena por ap
             }
         };
 
+        var perfil = {
+            label: " Asignar Perfil",
+            icon: "fa fa-users",
+            action : function ($element) {
+                var id = $element.data("id");
+                asignarPerfil(id);
+            }
+        };
+
         items.editar = editar;
+        items.perfil = perfil;
 
 //        if(tp == 'Compras' || tp == 'Ventas' || tp == 'Transferencias' || tp == 'Nota de crédito'){
 
@@ -313,8 +323,34 @@ como máximo 30 <span style="margin-left: 40px; color: #0b2c89">Se ordena por ap
         } //else
     }
 
-
-
+    function asignarPerfil (id) {
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'persona', action:'perfil_ajax')}",
+            data    : {
+                id: id
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgAsignarPerfil",
+                    title   : "Asignar Perfil",
+//                    class   : "modal-lg",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "<i class='fa fa-times'></i> Cerrar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 500);
+            } //success
+        }); //ajax
+    }
 
 </script>
 

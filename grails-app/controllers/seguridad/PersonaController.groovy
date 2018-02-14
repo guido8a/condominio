@@ -39,19 +39,19 @@ class PersonaController extends Shield {
             list = c.list(params) {
                 or {
                     /* TODO: cambiar aqui segun sea necesario */
-                    
-                            ilike("apellido", "%" + params.search + "%")  
-                            ilike("autorizacion", "%" + params.search + "%")  
-                            ilike("cargo", "%" + params.search + "%")  
-                            ilike("departamento", "%" + params.search + "%")  
-                            ilike("direccion", "%" + params.search + "%")  
-                            ilike("login", "%" + params.search + "%")  
-                            ilike("mail", "%" + params.search + "%")  
-                            ilike("nombre", "%" + params.search + "%")  
-                            ilike("observaciones", "%" + params.search + "%")  
-                            ilike("ruc", "%" + params.search + "%")  
-                            ilike("sexo", "%" + params.search + "%")  
-                            ilike("telefono", "%" + params.search + "%")  
+
+                    ilike("apellido", "%" + params.search + "%")
+                    ilike("autorizacion", "%" + params.search + "%")
+                    ilike("cargo", "%" + params.search + "%")
+                    ilike("departamento", "%" + params.search + "%")
+                    ilike("direccion", "%" + params.search + "%")
+                    ilike("login", "%" + params.search + "%")
+                    ilike("mail", "%" + params.search + "%")
+                    ilike("nombre", "%" + params.search + "%")
+                    ilike("observaciones", "%" + params.search + "%")
+                    ilike("ruc", "%" + params.search + "%")
+                    ilike("sexo", "%" + params.search + "%")
+                    ilike("telefono", "%" + params.search + "%")
                 }
             }
         } else {
@@ -118,7 +118,7 @@ class PersonaController extends Shield {
         }
         personaInstance.properties = params
 
-        println("perfiles " + perfiles)
+//        println("perfiles " + perfiles)
 
         return [personaInstance: personaInstance, perfiles: perfiles]
     } //form para cargar con ajax en un dialog
@@ -151,9 +151,9 @@ class PersonaController extends Shield {
         persona.password = params.password.encodeAsMD5()
 
         if(params.activo){
-        params.activo = 1
+            params.activo = 1
         }else{
-        params.activo = 0
+            params.activo = 0
         }
 
         persona.properties = params
@@ -192,47 +192,110 @@ class PersonaController extends Shield {
             return
         }
     } //delete para eliminar via ajax
-    
-            /**
-             * Acción llamada con ajax que valida que no se duplique la propiedad login
-             * @render boolean que indica si se puede o no utilizar el valor recibido
-             */
-            def validar_unique_login_ajax() {
-                params.login = params.login.toString().trim()
-                if (params.id) {
-                    def obj = Persona.get(params.id)
-                    if (obj.login.toLowerCase() == params.login.toLowerCase()) {
-                        render true
-                        return
-                    } else {
-                        render Persona.countByLoginIlike(params.login) == 0
-                        return
-                    }
-                } else {
-                    render Persona.countByLoginIlike(params.login) == 0
-                    return
-                }
+
+    /**
+     * Acción llamada con ajax que valida que no se duplique la propiedad login
+     * @render boolean que indica si se puede o no utilizar el valor recibido
+     */
+    def validar_unique_login_ajax() {
+        params.login = params.login.toString().trim()
+        if (params.id) {
+            def obj = Persona.get(params.id)
+            if (obj.login.toLowerCase() == params.login.toLowerCase()) {
+                render true
+                return
+            } else {
+                render Persona.countByLoginIlike(params.login) == 0
+                return
             }
-            
-            /**
-             * Acción llamada con ajax que valida que no se duplique la propiedad mail
-             * @render boolean que indica si se puede o no utilizar el valor recibido
-             */
-            def validar_unique_mail_ajax() {
-                params.mail = params.mail.toString().trim()
-                if (params.id) {
-                    def obj = Persona.get(params.id)
-                    if (obj.mail.toLowerCase() == params.mail.toLowerCase()) {
-                        render true
-                        return
-                    } else {
-                        render Persona.countByMailIlike(params.mail) == 0
-                        return
-                    }
-                } else {
-                    render Persona.countByMailIlike(params.mail) == 0
-                    return
-                }
+        } else {
+            render Persona.countByLoginIlike(params.login) == 0
+            return
+        }
+    }
+
+    /**
+     * Acción llamada con ajax que valida que no se duplique la propiedad mail
+     * @render boolean que indica si se puede o no utilizar el valor recibido
+     */
+    def validar_unique_mail_ajax() {
+        params.mail = params.mail.toString().trim()
+        if (params.id) {
+            def obj = Persona.get(params.id)
+            if (obj.mail.toLowerCase() == params.mail.toLowerCase()) {
+                render true
+                return
+            } else {
+                render Persona.countByMailIlike(params.mail) == 0
+                return
             }
-            
+        } else {
+            render Persona.countByMailIlike(params.mail) == 0
+            return
+        }
+    }
+
+    def perfil_ajax() {
+        def usuario = Persona.get(params.id)
+        return[usuario: usuario]
+    }
+
+    def tablaPerfiles_ajax () {
+
+        def perfiles = []
+        def usuario = Persona.get(params.id)
+        perfiles = Sesn.withCriteria {
+            eq("usuario", usuario)
+            perfil {
+                order("nombre", "asc")
+            }
+        }
+
+        return[perfiles: perfiles]
+    }
+
+    def guardarPerfil_ajax () {
+//        println("params gperfil " + params)
+        def usuario = Persona.get(params.id)
+        def perfilSeleccionado = Prfl.get(params.perfil)
+
+        def perfiles = Sesn.withCriteria {
+            eq("usuario", usuario)
+            perfil {
+                order("nombre", "asc")
+            }
+        }
+
+        if(perfiles.perfil.id.contains(perfilSeleccionado.id)){
+            render "no_Este perfil ya se encuentra asignado al usuario"
+        }else{
+            def sesion = new Sesn()
+            sesion.fechaInicio = new Date()
+            sesion.perfil = perfilSeleccionado
+            sesion.usuario = usuario
+
+
+            if(!sesion.save(flush: true)){
+                println("error al guardar el perfil")
+                render "no_Erro al guardar el perfil"
+            }else{
+                render "ok"
+            }
+        }
+    }
+
+    def borrarPerfil_ajax () {
+//        println("params " + params)
+        def sesion = Sesn.get(params.id)
+
+        try{
+            sesion.delete(flush: true)
+            render "ok"
+        }catch (e){
+            println("error al borrar el perfil " + e)
+            render "no"
+        }
+
+    }
+
 }
