@@ -128,7 +128,7 @@
                             Sexo
                         </label>
                         <div class="col-md-7">
-                            <g:select name="sexo" from="${["Masculino", "Femenino"]}" class="form-control " value="${personaInstance?.sexo}" valueMessagePrefix="persona.sexo"/>
+                            <g:select name="sexo" from="${["Masculino", "Femenino"]}" class="form-control " value="${personaInstance?.sexo == 'F' ? 'Femenino' : 'Masculino'}" valueMessagePrefix="persona.sexo"/>
                         </div>
                     </span>
                 </div>
@@ -177,7 +177,7 @@
                             Password
                         </label>
                         <div class="col-md-7">
-                            <g:textField name="password" required="" class="allCaps form-control required" value="${personaInstance?.password}"/>
+                            <g:passwordField name="password" required="" class="form-control required" value="${personaInstance?.password}"/>
                         </div>
                         *
                     </span>
@@ -238,7 +238,7 @@
                             Activo
                         </label>
                         <div class="col-md-3">
-                            <g:checkBox name="activo" class="form-control activ" data-on-Label="Si" value="${personaInstance?.activo}"/>
+                            <g:checkBox name="activo" class="form-control activ" data-on-Label="Si" value="${personaInstance?.activo == 1}"/>
                         </div>
                     </span>
                 </div>
@@ -254,50 +254,50 @@
                 </div>
             </div>
 
-            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'perfil', 'error')} ">
-                <div class="col-md-12">
-                    <span class="grupo">
-                        <label for="perfil" class="col-md-2 control-label">
-                            Perfiles
-                        </label>
-                        <div class="col-md-10">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="col-md-10">
-                                        <g:select name="perfil" from="${seguridad.Prfl.list([sort: 'nombre'])}" class="form-control input-sm"
-                                                  optionKey="id" optionValue="nombre"/>
-                                    </div>
+            %{--<div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'perfil', 'error')} ">--}%
+                %{--<div class="col-md-12">--}%
+                    %{--<span class="grupo">--}%
+                        %{--<label for="perfil" class="col-md-2 control-label">--}%
+                            %{--Perfiles--}%
+                        %{--</label>--}%
+                        %{--<div class="col-md-10">--}%
+                            %{--<div class="row">--}%
+                                %{--<div class="col-md-6">--}%
+                                    %{--<div class="col-md-10">--}%
+                                        %{--<g:select name="perfil" from="${seguridad.Prfl.list([sort: 'nombre'])}" class="form-control input-sm"--}%
+                                                  %{--optionKey="id" optionValue="nombre"/>--}%
+                                    %{--</div>--}%
 
-                                    <div class="col-md-2">
-                                        <a href="#" class="btn btn-success btn-sm" id="btn-addPerfil" title="Agregar perfil">
-                                            <i class="fa fa-plus"></i> Agregar perfil
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <table id="tblPerfiles" class="table table-hover table-bordered table-condensed">
-                                        %{--<g:each in="${perfiles.perfil}" var="perfil">--}%
-                                        %{--<tr class="perfiles" data-id="${perfil.id}">--}%
-                                        %{--<td>--}%
-                                        %{--${perfil?.nombre}--}%
-                                        %{--</td>--}%
-                                        %{--<td width="35">--}%
-                                        %{--<a href="#" class="btn btn-danger btn-xs btn-deletePerfil">--}%
-                                        %{--<i class="fa fa-trash-o"></i>--}%
+                                    %{--<div class="col-md-2">--}%
+                                        %{--<a href="#" class="btn btn-success btn-sm" id="btn-addPerfil" title="Agregar perfil">--}%
+                                            %{--<i class="fa fa-plus"></i> Agregar perfil--}%
                                         %{--</a>--}%
-                                        %{--</td>--}%
-                                        %{--</tr>--}%
+                                    %{--</div>--}%
+                                %{--</div>--}%
+                            %{--</div>--}%
+
+                            %{--<div class="row">--}%
+                                %{--<div class="col-md-6">--}%
+                                    %{--<table id="tblPerfiles" class="table table-hover table-bordered table-condensed">--}%
+                                        %{--<g:each in="${perfiles.perfil}" var="perfil">--}%
+                                            %{--<tr class="perfiles" data-id="${perfil.id}">--}%
+                                                %{--<td>--}%
+                                                    %{--${perfil?.nombre}--}%
+                                                %{--</td>--}%
+                                                %{--<td width="35">--}%
+                                                    %{--<a href="#" class="btn btn-danger btn-xs btn-deletePerfil">--}%
+                                                        %{--<i class="fa fa-trash-o"></i>--}%
+                                                    %{--</a>--}%
+                                                %{--</td>--}%
+                                            %{--</tr>--}%
                                         %{--</g:each>--}%
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </span>
-                </div>
-            </div>
+                                    %{--</table>--}%
+                                %{--</div>--}%
+                            %{--</div>--}%
+                        %{--</div>--}%
+                    %{--</span>--}%
+                %{--</div>--}%
+            %{--</div>--}%
         </g:form>
     </div>
 
@@ -368,6 +368,44 @@
             return true;
         });
 
+//        $("#btn-addPerfil").click(function () {
+//            var $perfil = $("#perfil");
+//            var idPerfilAdd = $perfil.val();
+//            $(".perfiles").each(function () {
+//                if ($(this).data("id") == idPerfilAdd) {
+//                    $(this).remove();
+//                }
+//            });
+//            var $tabla = $("#tblPerfiles");
+//
+//            var $tr = $("<tr>");
+//            $tr.addClass("perfiles");
+//            $tr.data("id", idPerfilAdd);
+//            var $tdNombre = $("<td>");
+//            $tdNombre.text($perfil.find("option:selected").text());
+//            var $tdBtn = $("<td>");
+//            $tdBtn.attr("width", "35");
+//            var $btnDelete = $("<a>");
+//            $btnDelete.addClass("btn btn-danger btn-xs");
+//            $btnDelete.html("<i class='fa fa-trash-o'></i> ");
+//            $tdBtn.append($btnDelete);
+//
+//            $btnDelete.click(function () {
+//                $tr.remove();
+//                return false;
+//            });
+//
+//            $tr.append($tdNombre).append($tdBtn);
+//
+//            $tabla.prepend($tr);
+//            $tr.effect("highlight");
+//
+//            return false;
+//        });
+//        $(".btn-deletePerfil").click(function () {
+//            $(this).parents("tr").remove();
+//            return false;
+//        });
 
 
     </script>

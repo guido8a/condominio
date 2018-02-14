@@ -1,7 +1,8 @@
 package seguridad
 
+import org.apache.tomcat.util.security.MD5Encoder
 import org.springframework.dao.DataIntegrityViolationException
-
+import sun.security.provider.MD5
 
 
 /**
@@ -98,15 +99,28 @@ class PersonaController extends Shield {
      */
     def form_ajax() {
         def personaInstance = new Persona()
+        def perfiles = []
         if(params.id) {
             personaInstance = Persona.get(params.id)
             if(!personaInstance) {
                 render "ERROR*No se encontró Persona."
                 return
             }
+
+            perfiles = Sesn.withCriteria {
+                eq("usuario", personaInstance)
+                perfil {
+                    order("nombre", "asc")
+                }
+            }
+
+
         }
         personaInstance.properties = params
-        return [personaInstance: personaInstance]
+
+        println("perfiles " + perfiles)
+
+        return [personaInstance: personaInstance, perfiles: perfiles]
     } //form para cargar con ajax en un dialog
 
     /**
@@ -114,25 +128,44 @@ class PersonaController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-
         println("params " + params)
+
         def persona
         params.sexo = (params.sexo == 'Masculino' ? 'M' : 'F')
 
+        params.alicuota = params.alicuota.toDouble()
+
+        if(params.fechaInicio_input){
+            println("entro")
+            params.fechaInicio_input = new Date().parse('dd-MM-yyyy', params.fechaInicio_input)
+            params.fechaFin_input = new Date().parse('dd-MM-yyyy', params.fechaFin_input)
+        }
+
         if(params.id){
             persona = Persona.get(params.id)
-
         }else{
             persona = new Persona()
+            persona.fecha = new Date()
+        }
+
+        persona.password = params.password.encodeAsMD5()
+
+        if(params.activo){
+        params.activo = 1
+        }else{
+        params.activo = 0
         }
 
         persona.properties = params
 
-        try{
-            persona.save(flush: true)
-        }catch (e){
+        if(!persona.save(flush: true)){
+            println("persona " + persona.errors)
+            render "no"
 
+        }else{
+            render "ok"
         }
+
     } //save para grabar desde ajax
 
     /**

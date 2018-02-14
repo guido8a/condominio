@@ -298,16 +298,14 @@ como máximo 30 <span style="margin-left: 40px; color: #0b2c89">Se ordena por ap
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
                 success : function (msg) {
-                    var parts = msg.split("*");
-                    log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                    setTimeout(function() {
-                        if (parts[0] == "SUCCESS") {
+                    if(msg == 'ok'){
+                        log("Persona guardada correctamente","success");
+                        setTimeout(function() {
                             location.reload(true);
-                        } else {
-                            spinner.replaceWith($btn);
-                            return false;
-                        }
-                    }, 1000);
+                        }, 1000);
+                    }else{
+                        log("Error al guardar la información de persona","error")
+                    }
                 }
             });
         } else {
