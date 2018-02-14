@@ -21,7 +21,7 @@ class Persona {
     String autorizacion
     int activo
     String cargo
-    String departamento
+    String departamento    /* numero identificador de la vivienda */
     String ruc
     double alicuota
     String observaciones

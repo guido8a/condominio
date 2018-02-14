@@ -15,7 +15,7 @@ class Obligacion {
         id generator: 'identity'
         columns {
             id column: 'oblg__id'
-            descripcion column: 'oblgsdscr'
+            descripcion column: 'oblgdscr'
             fecha column: 'oblgfcha'
             tipo column: 'oblgtipo'
             valor column: 'oblgvlor'

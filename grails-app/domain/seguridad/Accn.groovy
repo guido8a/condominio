@@ -32,6 +32,7 @@ class Accn {
 
     static constraints = {
         accnNombre(blank: false, size: 0..50)
+        accnDescripcion(blank: false, size: 0..63)
         accnAuditable(blank: true, nullable: true)
     }
 

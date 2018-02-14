@@ -20,7 +20,8 @@ class Modulo {
     }
 
     static constraints = {
-
+        nombre(blank: false, size: 0..31)
+        descripcion(blank: false, size: 0..63)
     }
 
     String toString() {
