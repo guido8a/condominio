@@ -66,7 +66,7 @@ class Persona {
         apellido(size: 3..30, blank: false)
         ruc(blank: false, nullable: false)
         sexo(inList: ["F", "M"], size: 1..1, blank: false, attributes: ['mensaje': 'Sexo de la persona'])
-        mail(size: 3..63, blank: true)
+        mail(size: 3..63, blank: true, nullable: true)
         login(size: 4..14, blank: false, unique: true)
         password(blank: false)
         autorizacion(matches: /^[a-zA-Z0-9ñÑáéíóúÁÉÍÚÓüÜ_-]+$/, blank: true, nullable: true, attributes: [mensaje: 'Contraseña para autorizaciones'])
@@ -77,6 +77,7 @@ class Persona {
         cargo(blank: true, nullable: true, size: 1..255, attributes: [mensaje: 'Cargo'])
         direccion(blank: true, nullable: true)
         observaciones(blank: true, nullable: true)
+        fechaNacimiento(blank: true, nullable: true)
     }
 
     String toString() {

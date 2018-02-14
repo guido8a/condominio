@@ -275,7 +275,7 @@ como máximo 30 <span style="margin-left: 40px; color: #0b2c89">Se ordena por ap
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitForm();
+                                return submitFormPersona();
                             } //callback
                         } //guardar
                     } //buttons
@@ -286,6 +286,34 @@ como máximo 30 <span style="margin-left: 40px; color: #0b2c89">Se ordena por ap
             } //success
         }); //ajax
     } //createEdit
+
+    function submitFormPersona() {
+        var $form = $("#frmPersona");
+        var $btn = $("#dlgCreateEdit").find("#btnSave");
+        if ($form.valid()) {
+            $btn.replaceWith(spinner);
+            openLoader("Guardando Persona");
+            $.ajax({
+                type    : "POST",
+                url     : $form.attr("action"),
+                data    : $form.serialize(),
+                success : function (msg) {
+                    var parts = msg.split("*");
+                    log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
+                    setTimeout(function() {
+                        if (parts[0] == "SUCCESS") {
+                            location.reload(true);
+                        } else {
+                            spinner.replaceWith($btn);
+                            return false;
+                        }
+                    }, 1000);
+                }
+            });
+        } else {
+            return false;
+        } //else
+    }
 
 
 

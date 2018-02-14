@@ -114,21 +114,25 @@ class PersonaController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-        def personaInstance = new Persona()
-        if(params.id) {
-            personaInstance = Persona.get(params.id)
-            if(!personaInstance) {
-                render "ERROR*No se encontró Persona."
-                return
-            }
+
+        println("params " + params)
+        def persona
+        params.sexo = (params.sexo == 'Masculino' ? 'M' : 'F')
+
+        if(params.id){
+            persona = Persona.get(params.id)
+
+        }else{
+            persona = new Persona()
         }
-        personaInstance.properties = params
-        if(!personaInstance.save(flush: true)) {
-            render "ERROR*Ha ocurrido un error al guardar Persona: " + renderErrors(bean: personaInstance)
-            return
+
+        persona.properties = params
+
+        try{
+            persona.save(flush: true)
+        }catch (e){
+
         }
-        render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Persona exitosa."
-        return
     } //save para grabar desde ajax
 
     /**
