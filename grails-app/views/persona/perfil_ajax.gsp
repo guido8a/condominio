@@ -6,23 +6,22 @@
 --%>
 
 <div class="row">
-    <label for="perfil" class="col-md-2 control-label">
-        Perfil
-    </label>
-    <div class="col-md-8">
-        <div class="row">
-            <div class="col-md-8">
+    <div class="col-xs-11 col-md-8">
+        <label for="perfil" class="col-xs-2 col-md-2 control-label">
+            Perfil
+        </label>
+            <div class="col-xs-11 col-md-8">
                 <g:select name="perfil" id="selPerfil" from="${seguridad.Prfl.list([sort: 'nombre'])}" class="form-control input-sm"
                           optionKey="id" optionValue="nombre"/>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-xs-2 col-md-2">
                 <a href="#" class="btn btn-success btn-sm" id="btn-addPerfil" title="Agregar perfil">
                     <i class="fa fa-plus"></i> Agregar perfil
                 </a>
             </div>
-        </div>
     </div>
+
 </div>
 
 <div class="row" style="text-align: center; margin-top: 20px">
