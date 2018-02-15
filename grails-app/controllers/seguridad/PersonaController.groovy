@@ -113,15 +113,11 @@ class PersonaController extends Shield {
                     order("nombre", "asc")
                 }
             }
-
-
         }
         personaInstance.properties = params
-
-//        println("perfiles " + perfiles)
-
         return [personaInstance: personaInstance, perfiles: perfiles]
     } //form para cargar con ajax en un dialog
+
 
     /**
      * Acción llamada con ajax que guarda la información de un elemento
@@ -157,6 +153,8 @@ class PersonaController extends Shield {
         }
 
         persona.properties = params
+
+        if(!persona.fecha) persona.fecha = new Date()
 
         if(!persona.save(flush: true)){
             println("persona " + persona.errors)
@@ -201,7 +199,7 @@ class PersonaController extends Shield {
         params.login = params.login.toString().trim()
         if (params.id) {
             def obj = Persona.get(params.id)
-            if (obj.login.toLowerCase() == params.login.toLowerCase()) {
+            if (obj?.login?.toLowerCase() == params?.login?.toLowerCase()) {
                 render true
                 return
             } else {

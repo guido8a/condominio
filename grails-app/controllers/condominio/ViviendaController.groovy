@@ -11,14 +11,16 @@ class ViviendaController {
 
 //        println "busqueda "
         def condominio = Parametros.get(1)
+        params.ordenar = "prsndpto"
         return[condominio: condominio]
     }
 
     def tablaBuscar() {
-//        println "buscar .... $params"
+        println "buscar .... $params"
         def cn = dbConnectionService.getConnection()
         params.old = params.criterio
         params.criterio = buscadorService.limpiaCriterio(params.criterio)
+        params.ordenar  = buscadorService.limpiaCriterio(params.ordenar)
 
         def sql = armaSql(params)
         params.criterio = params.old
@@ -41,13 +43,14 @@ class ViviendaController {
 //        println "armaSql: $params"
         def campos = buscadorService.parmProcesos()
         def operador = buscadorService.operadores()
-        def wh = " edif.edif__id = prsn.edif__id and tpoc.tpoc__id = prsn.tpoc__id and prsnactv = 1 " //condicion fija
+//        def wh = " edif.edif__id = prsn.edif__id and tpoc.tpoc__id = prsn.tpoc__id and prsnactv = 1 " //condicion fija
+        def wh = " edif.edif__id = prsn.edif__id and tpoc.tpoc__id = prsn.tpoc__id " //condicion fija
 
         def sqlSelect = "select * from prsn, edif, tpoc "
 
         def sqlWhere = "where (${wh})"
 
-        def sqlOrder = "order by prsnapll limit 31"
+        def sqlOrder = "order by ${params.ordenar} limit 31"
 
 //        println "sql: $sqlSelect $sqlWhere $sqlOrder"
 //        if(params.criterio) {

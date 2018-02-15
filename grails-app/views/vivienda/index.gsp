@@ -34,21 +34,26 @@
         <div class="row-fluid">
             <div style="margin-left: 20px;">
                 <div class="col-xs-6">
-                    <div class="col-xs-4">
+                    <div class="col-xs-3">
                         <b>Buscar por: </b>
                         <elm:select name="buscador" from = "${buscadorServ.parmProcesos()}" value="${params.buscador}"
                                     optionKey="campo" optionValue="nombre" optionClass="operador" id="buscador_con"
                                     style="width: 120px" class="form-control"/>
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-xs-3">
                         <strong style="margin-left: 20px;">Operación:</strong>
                         <span id="selOpt"></span>
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-xs-3">
                         <b style="margin-left: 20px">Criterio: </b>
-                        <g:textField name="criterio" style="margin-right: 10px; width: 100%" value="${params.criterio}"
+                        <g:textField name="criterio" style="margin-right: 10px; width: 100%; border-color: #53a7ff" value="${params.criterio}"
                                      id="criterio_con" class="form-control"/>
-
+                    </div>
+                    <div class="col-xs-3">
+                        <b>Ordenado por: </b>
+                        <elm:select name="buscador" from = "${buscadorServ.parmProcesos()}" value="${params.ordenar}"
+                                    optionKey="campo" optionValue="nombre" optionClass="operador" id="ordenar_por"
+                                    style="width: 120px" class="form-control"/>
                     </div>
                 </div>
 
@@ -61,6 +66,14 @@
                     <a href="#" name="limpiarBus" class="btn btn-warning" id="btnLimpiarBusqueda"
                        title="Borrar criterios" style="height: 34px; padding: 9px; width: 34px">
                         <i class="fa fa-eraser"></i></a>
+                </div>
+
+                <div class="btn-group col-xs-1" style="margin-left: -10px; margin-top: 20px; width: 110px;">
+
+                    <a href="#" name="busqueda" class="btn btn-info" id="nuevo" title="Crear Persona"
+                       style="height: 34px; padding: 9px; width: 46px">
+                        <i class="fa fa-file-o"></i></a>
+
                 </div>
 
             </div>
@@ -113,7 +126,7 @@
 </div>
 
 <div><strong>Nota</strong>: Si existen muchos registros que coinciden con el criterio de búsqueda, se retorna
-como máximo 30 <span style="margin-left: 40px; color: #0b2c89">Se ordena por apellido</span>
+como máximo 30
 </div>
 
 <div class="modal fade " id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -165,6 +178,7 @@ como máximo 30 <span style="margin-left: 40px; color: #0b2c89">Se ordena por ap
                 url: "${g.createLink(controller: 'vivienda', action: 'tablaBuscar')}",
                 data: {
                     buscador: $("#buscador_con").val(),
+                    ordenar:  $("#ordenar_por").val(),
                     criterio: $("#criterio_con").val(),
                     operador: $("#oprd").val()
                 },
@@ -230,6 +244,10 @@ como máximo 30 <span style="margin-left: 40px; color: #0b2c89">Se ordena por ap
 
     $("#btnLimpiarBusqueda").click(function () {
         $(".fechaD, .fechaH, #criterio_con").val('');
+    });
+
+    $("#nuevo").click(function () {
+        createEditRow(null);
     });
 
     $("#buscador_con").change(function(){

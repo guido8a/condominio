@@ -13,49 +13,53 @@
 
 
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'nombre', 'error')} required">
-                <div class="col-md-6">
-                    <span class="grupo">
-                        <label for="nombre" class="col-md-2 control-label">
+                <div class="col-md-7">
+                    <div class="col-md-6">
+                        <label for="nombre" class="control-label">
                             Nombre
                         </label>
-                        <div class="col-md-7">
-                            <g:textField name="nombre" maxlength="30" required="" class="form-control required" value="${personaInstance?.nombre}"/>
-                        </div>
-                        *
-                    </span>
+                            <g:textField name="nombre" maxlength="30" required="" class="form-control required col-md-3"
+                                         value="${personaInstance?.nombre}"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="apellido" class="control-label">
+                            Apellido
+                        </label>
+                            <g:textField name="apellido" maxlength="30" required="" class="form-control required"
+                                         value="${personaInstance?.apellido}"/>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <span class="grupo">
+
+                <div class="col-md-5">
+                    <div class="col-md-4">
+                        <label for="edificio" class="col-md-2 control-label">
+                            Edificio
+                        </label>
+                        <g:select id="edificio" name="edificio.id" from="${condominio.Edificio.list()}" optionKey="id" optionValue="descripcion" value="${personaInstance?.edificio?.id}" class="many-to-one form-control"/>
+                    </div>
+                    <div class="col-md-3">
+                            <label for="departamento" class="col-md-2 control-label">
+                                Número
+                            </label>
+                                <g:textField name="departamento" class="allCaps form-control required" required="" value="${personaInstance?.departamento}"/>
+                    </div>
+                    <div class="col-md-5">
                         <label for="tipoOcupacion" class="col-md-2 control-label">
                             Tipo
                         </label>
-                        <div class="col-md-7">
-                            <g:select id="tipoOcupacion" name="tipoOcupacion.id" from="${condominio.TipoOcupacion.list()}" optionKey="id" value="${personaInstance?.tipoOcupacion?.id}" class="many-to-one form-control"/>
-                        </div>
-                    </span>
+                            <g:select id="tipoOcupacion" name="tipoOcupacion.id" from="${condominio.TipoOcupacion.list()}"
+                                      optionKey="id" value="${personaInstance?.tipoOcupacion?.id}"
+                                      class="many-to-one form-control"/>
+                    </div>
+
                 </div>
+
+
             </div>
 
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'ruc', 'error')} required">
                 <div class="col-md-6">
                     <span class="grupo">
-                        <label for="apellido" class="col-md-2 control-label">
-                            Apellido
-                        </label>
-                        <div class="col-md-7">
-                            <g:textField name="apellido" maxlength="30" required="" class="form-control required" value="${personaInstance?.apellido}"/>
-                        </div>
-                        *
-                    </span>
-                </div>
-                <div class="col-md-6">
-                    <span class="grupo">
-                        <label for="edificio" class="col-md-2 control-label">
-                            Edificio
-                        </label>
-                        <div class="col-md-7">
-                            <g:select id="edificio" name="edificio.id" from="${condominio.Edificio.list()}" optionKey="id" optionValue="descripcion" value="${personaInstance?.edificio?.id}" class="many-to-one form-control"/>
-                        </div>
                     </span>
                 </div>
 
@@ -74,15 +78,6 @@
                     </span>
                 </div>
                 <div class="col-md-6">
-                    <span class="grupo">
-                        <label for="departamento" class="col-md-2 control-label">
-                            Departamento
-                        </label>
-                        <div class="col-md-7">
-                            <g:textField name="departamento" class="allCaps form-control required" required="" value="${personaInstance?.departamento}"/>
-                        </div>
-                        *
-                    </span>
                 </div>
             </div>
 
@@ -153,7 +148,7 @@
                             Login
                         </label>
                         <div class="col-md-7">
-                            <g:textField name="login" maxlength="14" required="" class="allCaps form-control required" value="${personaInstance?.login}"/>
+                            <g:textField name="login" maxlength="14" required="" class="form-control required" value="${personaInstance?.login}"/>
                         </div>
                         *
                     </span>
@@ -238,7 +233,8 @@
                             Activo
                         </label>
                         <div class="col-md-3">
-                            <g:checkBox name="activo" class="form-control activ" data-on-Label="Si" value="${personaInstance?.activo == 1}"/>
+                            <g:checkBox name="activo" class="form-control activ" data-on-Label="Si"
+                                        value="${personaInstance?.activo == 1}"/>
                         </div>
                     </span>
                 </div>
