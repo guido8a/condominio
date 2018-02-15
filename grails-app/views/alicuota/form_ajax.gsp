@@ -24,15 +24,11 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: alicuotaInstance, field: 'valor', 'error')} required">
                 <span class="grupo">
-                    <label for="valor" class="col-md-4 control-label">
+                    <label for="valor" class="col-xs-9 col-md-4 control-label">
                         Valor a pagar mensual:
                     </label>
-                    <div class="col-md-3">
+                    <div class="col-xs-10 col-md-3">
                         <g:textField name="valor" value="${alicuotaInstance?.valor}" class="number form-control"/>
-%{--
-                        <g:field name="valor" type="number" value="${fieldValue(bean: alicuotaInstance, field: 'valor')}"
-                                 class="form-control  required" required=""/>
---}%
                     </div>
                     *
                 </span>
@@ -40,10 +36,10 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: alicuotaInstance, field: 'fechaDesde', 'error')} required">
                 <span class="grupo">
-                    <label for="fechaDesde" class="col-md-2 control-label">
+                    <label for="fechaDesde" class="col-xs-9 col-md-2 control-label">
                         Desde
                     </label>
-                    <div class="col-md-4">
+                    <div class="col-xs-10 col-md-4">
                         <elm:datepicker name="fechaDesde"  class="datepicker form-control required"
                                         value="${alicuotaInstance?.fechaDesde?:new Date()}"  />
                     </div>
@@ -53,10 +49,10 @@
             
             <div class="form-group keeptogether ${hasErrors(bean: alicuotaInstance, field: 'fechaHasta', 'error')} required">
                 <span class="grupo">
-                    <label for="fechaHasta" class="col-md-2 control-label">
+                    <label for="fechaHasta" class="col-xs-9 col-md-2 control-label">
                         Hasta
                     </label>
-                    <div class="col-md-4">
+                    <div class="col-xs-10 col-md-4">
                         <elm:datepicker name="fechaHasta"  class="datepicker form-control" value="${alicuotaInstance?.fechaHasta}"  />
                     </div>
                 </span>
