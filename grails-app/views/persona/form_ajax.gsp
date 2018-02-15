@@ -273,7 +273,7 @@
                             </label>
                             <div class="col-xs-8 col-md-8">
                                 <g:checkBox name="activo" class="form-control activ" data-on-Label="Si"
-                                            value="${personaInstance?.activo == 1}" checked="true" />
+                                            value="${personaInstance?.activo == 1}"  />
                             </div>
                         </span>
                     </div>

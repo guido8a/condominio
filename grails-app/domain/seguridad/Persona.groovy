@@ -19,7 +19,7 @@ class Persona {
     String password
     Date fechaNacimiento
     String autorizacion
-    int activo
+    int activo = 1
     String cargo
     String departamento    /* numero identificador de la vivienda */
     String ruc

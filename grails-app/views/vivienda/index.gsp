@@ -33,68 +33,50 @@
 
         <div class="row-fluid">
             <div style="margin-left: 20px;">
-                <div class="col-xs-6">
-                    <div class="col-xs-3">
+                <div class="col-xs-9 col-md-9">
+                    <div class="col-xs-3 col-md-2">
                         <b>Buscar por: </b>
                         <elm:select name="buscador" from = "${buscadorServ.parmProcesos()}" value="${params.buscador}"
                                     optionKey="campo" optionValue="nombre" optionClass="operador" id="buscador_con"
                                     style="width: 120px" class="form-control"/>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-3 col-md-2">
                         <strong style="margin-left: 20px;">Operación:</strong>
                         <span id="selOpt"></span>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-3 col-md-5">
                         <b style="margin-left: 20px">Criterio: </b>
                         <g:textField name="criterio" style="margin-right: 10px; width: 100%; border-color: #53a7ff" value="${params.criterio}"
                                      id="criterio_con" class="form-control"/>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-3 col-md-3">
                         <b>Ordenado por: </b>
                         <elm:select name="buscador" from = "${buscadorServ.parmProcesos()}" value="${params.ordenar}"
                                     optionKey="campo" optionValue="nombre" optionClass="operador" id="ordenar_por"
-                                    style="width: 120px" class="form-control"/>
+                                    style="width: 160px" class="form-control"/>
                     </div>
                 </div>
 
-                <div class="btn-group col-xs-1" style="margin-left: -10px; margin-top: 20px; width: 110px;">
+                <div class="col-xs-3 col-md-3">
+                        <div class="btn-group col-xs-10 col-md-10" style="margin-left: -10px; margin-top: 20px;">
 
-                    <a href="#" name="busqueda" class="btn btn-info" id="btnBusqueda" title="Buscar"
-                       style="height: 34px; padding: 9px; width: 46px">
-                        <i class="fa fa-search"></i></a>
+                            <a href="#" name="busqueda" class="btn btn-info" id="btnBusqueda" title="Buscar"
+                               style="height: 34px; padding: 9px; width: 46px">
+                                <i class="fa fa-search"></i></a>
 
-                    <a href="#" name="limpiarBus" class="btn btn-warning" id="btnLimpiarBusqueda"
-                       title="Borrar criterios" style="height: 34px; padding: 9px; width: 34px">
-                        <i class="fa fa-eraser"></i></a>
+                            <a href="#" name="limpiarBus" class="btn btn-warning" id="btnLimpiarBusqueda"
+                               title="Borrar criterios" style="height: 34px; padding: 9px; width: 34px">
+                                <i class="fa fa-eraser"></i></a>
+
+                            <a href="#" name="busqueda" class="btn btn-success" id="nuevo" title="Crear Persona"
+                               style="height: 34px; padding: 9px; width: 46px">
+                                <i class="fa fa-user-circle"></i></a>
+                        </div>
                 </div>
-
-                <div class="btn-group col-xs-1" style="margin-left: -10px; margin-top: 20px; width: 110px;">
-
-                    <a href="#" name="busqueda" class="btn btn-info" id="nuevo" title="Crear Persona"
-                       style="height: 34px; padding: 9px; width: 46px">
-                        <i class="fa fa-user-circle"></i></a>
-
-                </div>
-
             </div>
 
         </div>
     </div>
-
-%{--
-    <div class="row" style="border-style: solid; border-radius:6px; border-width: 1px;
-    height: 40px; border-color: #0c6cc2; margin-left: 10px;">
-        <div class="col-xs-5" style="margin-left: 5px; margin-top: 2px;">
-            <g:link class="btn btn-success" action="nuevoProceso" style="margin-left: -15px">
-                <i class="fa fa-file-o"></i> Crear Persona
-            </g:link>
-            <g:link class="btn btn-primary" action="procesosAnulados">
-                <i class="fa fa-times-circle"></i> Ir a Gastos
-            </g:link>
-        </div>
-    </div>
---}%
-
 </div>
 
 <div style="margin-top: 30px; min-height: 650px" class="vertical-container">
@@ -226,7 +208,7 @@ como máximo 30
             label: " Editar Persona",
             icon: "fa fa-id-card-o",
             %{--action: function () {--}%
-                %{--location.href = '${createLink(controller: "proceso", action: "nuevoProceso")}?id=' + id;--}%
+            %{--location.href = '${createLink(controller: "proceso", action: "nuevoProceso")}?id=' + id;--}%
             %{--}--}%
             action : function ($element) {
                 var id = $element.data("id");
@@ -451,6 +433,11 @@ como máximo 30
             return false;
         } //else
     }
+
+    %{--$("#").click(function(){--}%
+    %{--url = "${g.createLink(controller:'reportes2' , action: 'retenciones')}?cont=" + cont + "Wemp=${session.empresa.id}" + "Wdesde=" + fechaDesde + "Whasta=" + fechaHasta;--}%
+    %{--location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=retenciones.pdf"--}%
+    %{--});--}%
 
 </script>
 
