@@ -16,7 +16,8 @@
                         Persona
                     </label>
                     <div class="col-md-10">
-                        <g:select id="persona" name="persona.id" from="${seguridad.Persona.list()}" optionKey="id" required="" value="${alicuotaInstance?.persona?.id}" class="many-to-one form-control"/>
+                        <g:select id="persona" name="persona.id" from="${seguridad.Persona.list()}" optionKey="id" required=""
+                                  value="${alicuotaInstance?.persona?.id?:persona?.id}" class="many-to-one form-control"/>
                     </div>
                 </span>
             </div>
@@ -27,8 +28,11 @@
                         Valor a pagar mensual:
                     </label>
                     <div class="col-md-3">
+                        <g:textField name="valor" value="${alicuotaInstance?.valor}" class="number form-control"/>
+%{--
                         <g:field name="valor" type="number" value="${fieldValue(bean: alicuotaInstance, field: 'valor')}"
-                                 class="number form-control  required" required=""/>
+                                 class="form-control  required" required=""/>
+--}%
                     </div>
                     *
                 </span>
@@ -40,7 +44,8 @@
                         Desde
                     </label>
                     <div class="col-md-4">
-                        <elm:datepicker name="fechaDesde"  class="datepicker form-control required" value="${alicuotaInstance?.fechaDesde}"  />
+                        <elm:datepicker name="fechaDesde"  class="datepicker form-control required"
+                                        value="${alicuotaInstance?.fechaDesde?:new Date()}"  />
                     </div>
                      *
                 </span>

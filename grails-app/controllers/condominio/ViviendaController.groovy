@@ -44,15 +44,16 @@ class ViviendaController {
         def campos = buscadorService.parmProcesos()
         def operador = buscadorService.operadores()
 //        def wh = " edif.edif__id = prsn.edif__id and tpoc.tpoc__id = prsn.tpoc__id and prsnactv = 1 " //condicion fija
-        def wh = " edif.edif__id = prsn.edif__id and tpoc.tpoc__id = prsn.tpoc__id " //condicion fija
+        def sqlSelect = "select * from personas() "
+        //condicion fija
+        def wh = " prsn__id is not null "
 
-        def sqlSelect = "select * from prsn, edif, tpoc "
 
         def sqlWhere = "where (${wh})"
 
         def sqlOrder = "order by ${params.ordenar} limit 31"
 
-//        println "sql: $sqlSelect $sqlWhere $sqlOrder"
+        println "sql: $sqlSelect $sqlWhere $sqlOrder"
 //        if(params.criterio) {
         if(params.operador && params.criterio) {
             if(campos.find {it.campo == params.buscador}?.size() > 0) {

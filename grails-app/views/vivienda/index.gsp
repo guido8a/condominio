@@ -72,7 +72,7 @@
 
                     <a href="#" name="busqueda" class="btn btn-info" id="nuevo" title="Crear Persona"
                        style="height: 34px; padding: 9px; width: 46px">
-                        <i class="fa fa-file-o"></i></a>
+                        <i class="fa fa-user-circle"></i></a>
 
                 </div>
 
@@ -213,9 +213,18 @@ como máximo 30
 
         var id = $tr.data("id");
 
+        var perfil = {
+            label: " Asignar Perfil",
+            icon: "fa fa-user-o",
+            action : function ($element) {
+                var id = $element.data("id");
+                asignarPerfil(id);
+            }
+        };
+
         var editar = {
             label: " Editar Persona",
-            icon: "fa fa-file-text-o",
+            icon: "fa fa-id-card-o",
             %{--action: function () {--}%
                 %{--location.href = '${createLink(controller: "proceso", action: "nuevoProceso")}?id=' + id;--}%
             %{--}--}%
@@ -225,17 +234,19 @@ como máximo 30
             }
         };
 
-        var perfil = {
-            label: " Asignar Perfil",
-            icon: "fa fa-users",
+        var alicuota = {
+            label: "Alícuota",
+            icon: "fa fa-money",
             action : function ($element) {
                 var id = $element.data("id");
-                asignarPerfil(id);
+                alicuotaEdit(id);
             }
         };
 
+
         items.editar = editar;
         items.perfil = perfil;
+        items.alicuota = alicuota;
 
 //        if(tp == 'Compras' || tp == 'Ventas' || tp == 'Transferencias' || tp == 'Nota de crédito'){
 
@@ -329,8 +340,10 @@ como máximo 30
                     if(msg == 'ok'){
                         log("Persona guardada correctamente","success");
                         setTimeout(function() {
-                            location.reload(true);
-                        }, 1000);
+                            spinner.replaceWith($btn);
+                            closeLoader();
+                            cargarBusqueda();
+                        }, 100);
                     }else{
                         log("Error al guardar la información de persona","error")
                     }
@@ -365,9 +378,79 @@ como máximo 30
                 }); //dialog
                 setTimeout(function () {
                     b.find(".form-control").first().focus()
-                }, 500);
+                }, 100);
             } //success
         }); //ajax
+    }
+
+    function alicuotaEdit (id) {
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'alicuota', action:'form_ajax')}",
+            data    : {
+                id: id
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgAsignarPerfilxx",
+                    title   : "Alícuota",
+//                    class   : "modal-lg",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "<i class='fa fa-times'></i> Cerrar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return submitFormAlicuota();
+                            } //callback
+                        }
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 100);
+            } //success
+        }); //ajax
+    }
+
+    function submitFormAlicuota() {
+        var $form = $("#frmAlicuota");
+        var $btn = $("#dlgCreateEdit").find("#btnSave");
+        if ($form.valid()) {
+            $btn.replaceWith(spinner);
+            openLoader("Guardando Alicuota");
+            $.ajax({
+                type    : "POST",
+                url     : $form.attr("action"),
+                data    : $form.serialize(),
+                success : function (msg) {
+                    var parts = msg.split("*");
+                    log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
+                    setTimeout(function() {
+                        if (parts[0] == "SUCCESS") {
+                            spinner.replaceWith($btn);
+                            closeLoader();
+                            cargarBusqueda();
+                            return false;
+
+//                            location.reload(true);
+                        } else {
+                            spinner.replaceWith($btn);
+                            return false;
+                        }
+                    }, 100);
+                }
+            });
+        } else {
+            return false;
+        } //else
     }
 
 </script>

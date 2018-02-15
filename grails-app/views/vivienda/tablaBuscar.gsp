@@ -61,7 +61,7 @@ th, td {
                 </td>
 
                 <td width="8%" class="text-info" style="text-align: right">
-                    ${dato.prsnalct}
+                    ${dato.alctvlor}
                 </td>
                 <td width="10%" class="text-info" style="text-align: right">
                     ${dato?.prsncrgo}

@@ -1,6 +1,7 @@
 package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
+import seguridad.Persona
 import seguridad.Shield
 
 
@@ -86,16 +87,23 @@ class AlicuotaController extends Shield {
      * @render ERROR*[mensaje] cuando no se encontró el elemento
      */
     def form_ajax() {
-        def alicuotaInstance = new Alicuota()
-        if(params.id) {
-            alicuotaInstance = Alicuota.get(params.id)
-            if(!alicuotaInstance) {
-                render "ERROR*No se encontró Alicuota."
-                return
+        def alicuota = new Alicuota()
+        def prsn = Persona.get(params.id)
+        if(prsn) {
+//            alicuota = Alicuota.findAllByPersona(prsn, sort: 'fechaInicio', order: 'desc')[0]
+            def alct = Alicuota.findByPersona(prsn)
+            if(alct){
+                alicuota = alct
             }
+
+            
+//            if(!alicuota) {
+//                render "ERROR*No se encontró Alicuota."
+//                return
+//            }
         }
-        alicuotaInstance.properties = params
-        return [alicuotaInstance: alicuotaInstance]
+        alicuota?.properties = params
+        return [alicuotaInstance: alicuota, persona: prsn]
     } //form para cargar con ajax en un dialog
 
     /**
@@ -103,6 +111,7 @@ class AlicuotaController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
+        println "params: $params"
         def alicuotaInstance = new Alicuota()
         if(params.id) {
             alicuotaInstance = Alicuota.get(params.id)
@@ -111,7 +120,9 @@ class AlicuotaController extends Shield {
                 return
             }
         }
+        if(params.valor) params.valor = params.valor.toDouble()
         alicuotaInstance.properties = params
+        println "valor: ${alicuotaInstance.valor}"
         if(!alicuotaInstance.save(flush: true)) {
             render "ERROR*Ha ocurrido un error al guardar Alicuota: " + renderErrors(bean: alicuotaInstance)
             return

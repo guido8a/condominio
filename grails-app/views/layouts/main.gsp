@@ -13,7 +13,7 @@
 	<!-- Bootstrap core CSS 3.1.1 -->
 	<elm:bootstrapCss/>
 
-	<link href="${resource(dir: 'font-awesome-4.2.0/css', file: 'font-awesome.min.css')}" rel="stylesheet">
+	<link href="${resource(dir: 'font-awesome-4.7.0/css', file: 'font-awesome.min.css')}" rel="stylesheet">
 
 	<!-- JQuery -->
 	<script src="${resource(dir: 'js/jquery/js', file: 'jquery-1.9.1.js')}"></script>

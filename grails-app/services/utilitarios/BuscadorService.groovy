@@ -234,7 +234,8 @@ class BuscadorService {
     def parmProcesos () {
         [[campo: 'prsnnmbr', nombre: 'Nombre',        operador: "contiene:contiene,inicia:inicia con"],
          [campo: 'prsnapll', nombre: 'Apellido',      operador: "contiene:contiene,inicia:inicia con"],
-         [campo: 'prsndpto', nombre: 'Núm. Departamento',         operador: "eqStr:Igual a"],
+         [campo: 'prsndpto', nombre: 'Deparatamento',      operador: "inicia:inicia con, contiene:contiene"],
+//         [campo: 'prsndpto', nombre: 'Núm. Departamento',         operador: "eqStr:Igual a, contiene:contiene"],
         ]
     }
 
