@@ -106,6 +106,16 @@ class ViviendaController {
                 def prsnId = parts[0]
                 def valor  = parts[1].toDouble()
                 def ingr   = parts[2]
+                def obsr = null
+                if(it.contains('_ob')) {
+                    obsr   = parts[3]
+                    if(obsr.size() > 2) {
+                        obsr = obsr[2..-1]
+                    } else {
+                        obsr = null
+                    }
+                }
+
                 if(ingr.size() > 2) {
                     ingr = ingr[2..-1]
                 } else {
@@ -125,6 +135,8 @@ class ViviendaController {
                     ingreso.fecha = new Date()
                     ingreso.estado = 'M'
                 }
+
+                ingreso.observaciones = obsr
 
                 if (!ingreso.save(flush: true)) {
                     println "error $parts, --> ${ingreso.errors}"
