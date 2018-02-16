@@ -104,6 +104,8 @@ class ObligacionController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
+        println "params: $params"
+        params.valor = params.valor.toDouble()
         def obligacionInstance = new Obligacion()
         if(params.id) {
             obligacionInstance = Obligacion.get(params.id)

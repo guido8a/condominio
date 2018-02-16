@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Lista de Obligacion</title>
+    <title>Obligaciones</title>
 </head>
 <body>
 
@@ -83,8 +83,8 @@
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
         $btn.replaceWith(spinner);
-            openLoader("Guardando Obligacion");
-                    $.ajax({
+            openLoader("Guardando Obligación");
+                $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
@@ -148,14 +148,14 @@
     function createEditRow(id) {
         var title = id ? "Editar" : "Crear";
         var data = id ? { id: id } : {};
-                $.ajax({
+            $.ajax({
             type    : "POST",
             url     : "${createLink(controller:'obligacion', action:'form_ajax')}",
             data    : data,
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
-                    title   : title + " Obligacion",
+                    title   : title + " Obligación",
                     
                     message : msg,
                     buttons : {
@@ -170,7 +170,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitForm();
+                                return submitFormObligacion();
                             } //callback
                         } //guardar
                     } //buttons
@@ -189,7 +189,7 @@
             return false;
         });
 
-                $("tbody>tr").contextMenu({
+        $("tbody>tr").contextMenu({
             items  : {
                 header   : {
                     label  : "Acciones",

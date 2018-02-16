@@ -14,10 +14,10 @@
             <div class="form-group keeptogether ${hasErrors(bean: obligacionInstance, field: 'descripcion', 'error')} required">
                 <span class="grupo">
                     <label for="descripcion" class="col-md-2 control-label">
-                        Descripcion
+                        Descripción
                     </label>
-                    <div class="col-md-6">
-                        <g:textField name="descripcion" required="" class="allCaps form-control required" value="${obligacionInstance?.descripcion}"/>
+                    <div class="col-md-10">
+                        <g:textField name="descripcion" required="" class="form-control required" value="${obligacionInstance?.descripcion}"/>
                     </div>
                      *
                 </span>
@@ -40,9 +40,22 @@
                     <label for="tipo" class="col-md-2 control-label">
                         Tipo
                     </label>
+                    <div class="col-md-4">
+                        <g:select name="tipo" from="${['N': 'Normal', 'E': 'Extraordinario', 'M': 'Multas']}"
+                                  optionKey="key" optionValue="value" class="form-control "
+                                  value="${obligacionInstance?.tipo}" />
+%{--
+                        <g:select name="tipo" from="${["Normal", "Extraordinario", "Multa"]}" class="form-control "
+                                  value="${obligacionInstance?.tipo == 'N' ? 'Normal' : 'Extraordinario'}"/>
+--}%
+                    </div>
+
+
+%{--
                     <div class="col-md-6">
                         <g:textField name="tipo" class="allCaps form-control" value="${obligacionInstance?.tipo}"/>
                     </div>
+--}%
                      *
                 </span>
             </div>
@@ -52,8 +65,8 @@
                     <label for="valor" class="col-md-2 control-label">
                         Valor
                     </label>
-                    <div class="col-md-2">
-                        <g:field name="valor" type="number" value="${fieldValue(bean: obligacionInstance, field: 'valor')}" class="number form-control  required" required=""/>
+                    <div class="col-md-3">
+                        <g:textField name="valor" value="${obligacionInstance?.valor}" class="number form-control required"/>
                     </div>
                      *
                 </span>

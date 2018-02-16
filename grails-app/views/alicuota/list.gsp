@@ -87,8 +87,8 @@
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
         $btn.replaceWith(spinner);
-            openLoader("Guardando Alicuota");
-                    $.ajax({
+            openLoader("Guardando Alícuota");
+                $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
@@ -152,7 +152,7 @@
     function createEditRow(id) {
         var title = id ? "Editar" : "Crear";
         var data = id ? { id: id } : {};
-                $.ajax({
+            $.ajax({
             type    : "POST",
             url     : "${createLink(controller:'alicuota', action:'form_ajax')}",
             data    : data,
@@ -193,7 +193,7 @@
             return false;
         });
 
-                $("tbody>tr").contextMenu({
+        $("tbody>tr").contextMenu({
             items  : {
                 header   : {
                     label  : "Acciones",

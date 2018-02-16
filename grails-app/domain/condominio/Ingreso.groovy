@@ -9,8 +9,8 @@ class Ingreso {
     Obligacion obligacion
     Date fecha
     double valor
-    String estado
-    double abono
+    String estado = 'E'
+    double abono = 0
     Date fechaPago
     String documento
     String observaciones
@@ -36,6 +36,7 @@ class Ingreso {
 
     static constraints = {
         documento(blank: true, nullable: true)
+        fechaPago(blank: true, nullable: true)
         observaciones(blank: true, nullable: true)
     }
 }
