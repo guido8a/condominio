@@ -1,6 +1,7 @@
 package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
+import seguridad.Persona
 import seguridad.Shield
 
 
@@ -65,6 +66,18 @@ class IngresoController extends Shield {
     }
 
     /**
+     * Acción que muestra la lista de elementos
+     * @return ingresoInstanceList: la lista de elementos filtrados, ingresoInstanceCount: la cantidad total de elementos (sin máximo)
+     */
+    def pendiente() {
+        println "params: $params"
+        def prsn = Persona.get(params.id)
+        def ingr = Ingreso.findAllByPersona(prsn)
+
+        return [ingreso: ingr, ingrCount: ingr.size()]
+    }
+
+    /**
      * Acción llamada con ajax que muestra la información de un elemento particular
      * @return ingresoInstance el objeto a mostrar cuando se encontró el elemento
      * @render ERROR*[mensaje] cuando no se encontró el elemento
@@ -88,6 +101,18 @@ class IngresoController extends Shield {
      * @render ERROR*[mensaje] cuando no se encontró el elemento
      */
     def form_ajax() {
+/*
+        def ingreso = new Ingreso()
+        def prsn = Persona.get(params.id)
+        if(prsn) {
+            def ingr = Ingreso.findByPersona(prsn)
+            if(alct){
+                alicuota = alct
+            }
+        }
+        alicuota?.properties = params
+        return [alicuotaInstance: alicuota, persona: prsn]
+*/
         def ingresoInstance = new Ingreso()
         if(params.id) {
             ingresoInstance = Ingreso.get(params.id)
@@ -113,7 +138,13 @@ class IngresoController extends Shield {
                 return
             }
         }
+        params.abono = params.abono.toDouble()
         ingresoInstance.properties = params
+        if((ingresoInstance.estado == 'E') && Math.abs(ingresoInstance.valor - ingresoInstance.abono) <= 0.001) {
+            ingresoInstance.estado = 'P'
+        } else if((ingresoInstance.estado == 'E') && (ingresoInstance.abono > 0)) {
+            ingresoInstance.estado = 'A'
+        }
         if(!ingresoInstance.save(flush: true)) {
             render "ERROR*Ha ocurrido un error al guardar Ingreso: " + renderErrors(bean: ingresoInstance)
             return
@@ -134,9 +165,14 @@ class IngresoController extends Shield {
                 return
             }
             try {
-                ingresoInstance.delete(flush: true)
-                render "SUCCESS*Eliminación de Ingreso exitosa."
-                return
+                if(ingresoInstance.estado == 'E') {
+                    ingresoInstance.delete(flush: true)
+                    render "SUCCESS*Eliminación de Ingreso exitosa."
+                    return
+                } else {
+                    render "ERROR*No es posible borrar un valor pendiente de pago"
+                    return
+                }
             } catch (DataIntegrityViolationException e) {
                 render "ERROR*Ha ocurrido un error al eliminar Ingreso"
                 return

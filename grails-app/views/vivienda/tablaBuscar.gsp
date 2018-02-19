@@ -35,6 +35,10 @@ th, td {
                     ${dato?.edifdscr}
                 </td>
 
+                <td width="7%" class="text-info">
+                    ${dato?.prsndpto}
+                </td>
+
                 <td width="20%" style="color:#186063">
                     ${dato?.prsnnmbr}
                 </td>
@@ -42,10 +46,6 @@ th, td {
                 %{--<td width="40px" class="${dato.prsnetdo == 'R-S' ? 'registrado' : dato.prsnetdo == 'R' ? 'reg' : 'noReg'}">--}%
                 <td width="20%">
                     ${dato.prsnapll}
-                </td>
-
-                <td width="7%" class="text-info">
-                    ${dato?.prsndpto}
                 </td>
 
                 <td width="4%" class="text-info">
@@ -56,13 +56,18 @@ th, td {
                     ${dato.prsntelf}
                 </td>
 
-                <td width="15%" class="text-info">
+                <td width="14%" class="text-info">
                     ${dato.prsnmail}
                 </td>
 
                 <td width="8%" class="text-info" style="text-align: right">
                     ${dato.alctvlor}
                 </td>
+
+                <td width="8%" class="text-info" style="text-align: right">
+                    ${dato.prsnsldo}
+                </td>
+
                 <td width="10%" class="text-info" style="text-align: right">
                     ${dato?.prsncrgo}
                 </td>

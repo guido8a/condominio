@@ -4,17 +4,25 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Lista de Ingreso</title>
+    <title>Cuentas pendientes</title>
 </head>
 <body>
 
 <elm:message tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:message>
 
+<h3 style="text-align: center">Pendientes de ${ingreso[0].persona.nombre} ${ingreso[0].persona.apellido}</h3>
 <!-- botones -->
 <div class="btn-toolbar toolbar">
+%{--
     <div class="btn-group">
         <a href="#" class="btn btn-default btnCrear">
-            <i class="fa fa-file-o"></i> Crear
+            <i class="fa fa-file-o"></i> Regresar
+        </a>
+    </div>
+--}%
+    <div class="btn-group">
+        <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-default">
+            <i class="fa fa-arrow-left"></i> Regresar
         </a>
     </div>
     <div class="btn-group pull-right col-md-3">
@@ -29,40 +37,51 @@
     </div>
 </div>
 
+
+
 <table class="table table-condensed table-bordered table-striped table-hover">
     <thead>
     <tr>
-        
-        <g:sortableColumn property="documento" title="Documento" />
-        
-        <g:sortableColumn property="observaciones" title="Observaciones" />
-        
+
+        <g:sortableColumn property="observaciones" title="Concepto" />
+
+        <g:sortableColumn property="fecha" title="Fecha" />
+
+        <g:sortableColumn property="valor" title="Valor" />
+
         <g:sortableColumn property="abono" title="Abono" />
-        
+
+        <th>Saldo</th>
+
+        <g:sortableColumn property="fechaPago" title="Fecha Pago" />
+
+        <g:sortableColumn property="documento" title="Documento" />
+
         <g:sortableColumn property="estado" title="Estado" />
         
-        <g:sortableColumn property="fecha" title="Fecha" />
-        
-        <g:sortableColumn property="fechaPago" title="Fecha Pago" />
-        
+
     </tr>
     </thead>
     <tbody>
-    <g:if test="${ingresoInstanceCount > 0}">
-        <g:each in="${ingresoInstanceList}" status="i" var="ingresoInstance">
-            <tr data-id="${ingresoInstance.id}">
+    <g:if test="${ingrCount > 0}">
+        <g:each in="${ingreso}" status="i" var="ingr">
+            <tr data-id="${ingr.id}" data-obsr="${ingr.obligacion.descripcion}: ${ingr.observaciones}">
+
+                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${ingr}" field="observaciones"/></elm:textoBusqueda></td>
+
+                <td><g:formatDate date="${ingr.fecha}" format="dd-MM-yyyy" /></td>
+
+                <td><g:fieldValue bean="${ingr}" field="valor" /></td>
+
+                <td><g:fieldValue bean="${ingr}" field="abono"/></td>
+
+                <td>${ingr.valor - ingr.abono}</td>
+
+                <td><g:formatDate date="${ingr.fechaPago}" format="dd-MM-yyyy" /></td>
+
+                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${ingr}" field="documento"/></elm:textoBusqueda></td>
                 
-                <td>${ingresoInstance.documento}</td>
-                
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${ingresoInstance}" field="observaciones"/></elm:textoBusqueda></td>
-                
-                <td><g:fieldValue bean="${ingresoInstance}" field="abono"/></td>
-                
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${ingresoInstance}" field="estado"/></elm:textoBusqueda></td>
-                
-                <td><g:formatDate date="${ingresoInstance.fecha}" format="dd-MM-yyyy" /></td>
-                
-                <td><g:formatDate date="${ingresoInstance.fechaPago}" format="dd-MM-yyyy" /></td>
+                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${ingr}" field="estado"/></elm:textoBusqueda></td>
                 
             </tr>
         </g:each>
@@ -82,7 +101,7 @@
     </tbody>
 </table>
 
-<elm:pagination total="${ingresoInstanceCount}" params="${params}"/>
+<elm:pagination total="${ingrCount}" params="${params}"/>
 
 <script type="text/javascript">
     var id = null;
@@ -113,6 +132,7 @@
             return false;
         } //else
     }
+
     function deleteRow(itemId) {
         bootbox.dialog({
             title   : "Alerta",
@@ -154,9 +174,9 @@
         });
     }
 
-    function createEditRow(id) {
-//        var title = id ? "Editar" : "Crear";
-        var title = "Registro del pago de ${ingresoInstanceList}";
+    function createEditRow(id, obsr) {
+        var title = "Registrar el pago de: ${ingreso[0].persona.nombre} ${ingreso[0].persona.apellido}" +
+                "<br/><span style='color:#800'>" + obsr + "</span>";
         var data = id ? { id: id } : {};
                 $.ajax({
             type    : "POST",
@@ -165,8 +185,7 @@
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
-                    title   : title + " Ingreso",
-                    
+                    title   : title,
                     message : msg,
                     buttons : {
                         cancelar : {
@@ -209,36 +228,37 @@
                     label  : "Ver",
                     icon   : "fa fa-search",
                     action : function ($element) {
-                        var id = $element.data("id");
-                        $.ajax({
-                            type    : "POST",
-                            url     : "${createLink(controller:'ingreso', action:'show_ajax')}",
-                            data    : {
-                            id : id
-                            },
-                            success : function (msg) {
-                                bootbox.dialog({
-                                title   : "Ver Pago",
-                                message : msg,
-                                buttons : {
-                                    ok : {
-                                        label     : "Aceptar",
-                                        className : "btn-primary",
-                                        callback  : function () {
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    }
+            var id = $element.data("id");
+                                $.ajax({
+                type    : "POST",
+                url     : "${createLink(controller:'ingreso', action:'show_ajax')}",
+                data    : {
+                    id : id
                 },
+                success : function (msg) {
+                    bootbox.dialog({
+                        title   : "Ver Ingreso",
+                        message : msg,
+                        buttons : {
+                            ok : {
+                                label     : "Aceptar",
+                                className : "btn-primary",
+                                callback  : function () {
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    },
         editar   : {
             label  : "Ingresar pago",
                 icon   : "fa fa-pencil",
                 action : function ($element) {
                 var id = $element.data("id");
-                createEditRow(id);
+                var obsr = $element.data("obsr");
+                createEditRow(id, obsr);
             }
         },
         eliminar : {

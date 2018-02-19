@@ -7,6 +7,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
+
     <title>Propietarios del Condominio</title>
 
     <style type="text/css">
@@ -14,6 +15,7 @@
     .alinear {
         text-align: center !important;
     }
+
     </style>
 
 </head>
@@ -87,13 +89,14 @@
         <thead>
         <tr>
             <th class="alinear" style="width: 6%">Edificio</th>
+            <th class="alinear" style="width: 7%">Dept.</th>
             <th class="alinear" style="width: 20%">Nombre</th>
             <th class="alinear" style="width: 20%">Apellido</th>
-            <th class="alinear" style="width: 7%">Dept.</th>
             <th class="alinear" style="width: 4%">P/A</th>
             <th class="alinear" style="width: 10%">Teléfono</th>
-            <th class="alinear" style="width: 15%">Correo electrónico</th>
-            <th class="alinear" style="width: 8%">Alícutoa</th>
+            <th class="alinear" style="width: 14%">Correo electrónico</th>
+            <th class="alinear" style="width: 8%">Alícuota</th>
+            <th class="alinear" style="width: 8%">Deuda</th>
             <th class="alinear" style="width: 10%">Cargo</th>
         </tr>
         </thead>
@@ -225,10 +228,21 @@ como máximo 30
             }
         };
 
+        var ingresos = {
+            label: "Pago alícuota",
+            icon: "fa fa-money",
+            separator_before : true,
+            action : function ($element) {
+                var id = $element.data("id");
+                pagoAlicuota(id);
+            }
+        };
+
 
         items.editar = editar;
         items.perfil = perfil;
         items.alicuota = alicuota;
+        items.pagar = ingresos;
 
 //        if(tp == 'Compras' || tp == 'Ventas' || tp == 'Transferencias' || tp == 'Nota de crédito'){
 
@@ -438,6 +452,14 @@ como máximo 30
     %{--url = "${g.createLink(controller:'reportes2' , action: 'retenciones')}?cont=" + cont + "Wemp=${session.empresa.id}" + "Wdesde=" + fechaDesde + "Whasta=" + fechaHasta;--}%
     %{--location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=retenciones.pdf"--}%
     %{--});--}%
+
+    function pagoAlicuota (id) {
+        var url = "${createLink(controller:'ingreso', action:'pendiente')}"
+        location.href = url + "/" + id;
+    }
+
+
+
 
 </script>
 

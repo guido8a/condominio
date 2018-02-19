@@ -29,7 +29,7 @@ class ViviendaController {
         def data = cn.rows(sql.toString())
 
         def msg = ""
-        if(data?.size() > 30){
+        if(data?.size() > 50){
             data.pop()   //descarta el último puesto que son 21
             msg = "<div class='alert-danger' style='margin-top:-20px; diplay:block; height:25px;margin-bottom: 20px;'>" +
                     " <i class='fa fa-warning fa-2x pull-left'></i> Su búsqueda ha generado más de 30 resultados. " +
@@ -52,7 +52,7 @@ class ViviendaController {
 
         def sqlWhere = "where (${wh})"
 
-        def sqlOrder = "order by ${params.ordenar} limit 31"
+        def sqlOrder = "order by ${params.ordenar} limit 51"
 
         println "sql: $sqlSelect $sqlWhere $sqlOrder"
 //        if(params.criterio) {

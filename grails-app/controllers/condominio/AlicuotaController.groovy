@@ -90,17 +90,10 @@ class AlicuotaController extends Shield {
         def alicuota = new Alicuota()
         def prsn = Persona.get(params.id)
         if(prsn) {
-//            alicuota = Alicuota.findAllByPersona(prsn, sort: 'fechaInicio', order: 'desc')[0]
             def alct = Alicuota.findByPersona(prsn)
             if(alct){
                 alicuota = alct
             }
-
-            
-//            if(!alicuota) {
-//                render "ERROR*No se encontró Alicuota."
-//                return
-//            }
         }
         alicuota?.properties = params
         return [alicuotaInstance: alicuota, persona: prsn]
