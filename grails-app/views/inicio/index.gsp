@@ -117,7 +117,7 @@
         </a>
 
 
-        <a href= "${createLink(controller:'actividad', action: 'list')}" style="text-decoration: none">
+        <a href= "${createLink(controller:'egreso', action: 'list')}" style="text-decoration: none">
             <div class="ui-corner-all item2 fuera">
                 <div class="ui-corner-all item2">
                     <div class="imagen2">
@@ -125,9 +125,9 @@
                     </div>
 
                     <div style="margin-top: 50px; margin-left: 80px;">
-                        <span class="text-success" style="font-size: large"><strong>Sugerencias y Obras por hacer</strong></span></div>
+                        <span class="text-success" style="font-size: large"><strong>Sugerencias y Obras por hacer</strong></span>
                         <span class="text-success" style="margin-top: 20px; margin-left: 30px; width: 400px; display: block">
-                            <strong>Daños y repacraciones o mejoras pendientes en el Condominio</strong></span></div>
+                            <strong>Daños y reparaciones o mejoras pendientes en el Condominio</strong></span></div>
                 </div>
             </div>
         </a>

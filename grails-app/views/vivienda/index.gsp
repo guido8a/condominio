@@ -7,7 +7,6 @@
 <html>
 <head>
     <meta name="layout" content="main">
-
     <title>Propietarios del Condominio</title>
 
     <style type="text/css">
@@ -15,7 +14,6 @@
     .alinear {
         text-align: center !important;
     }
-
     </style>
 
 </head>

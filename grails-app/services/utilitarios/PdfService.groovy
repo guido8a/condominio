@@ -1,6 +1,5 @@
 package utilitarios
 
-
 import org.xhtmlrenderer.pdf.ITextRenderer
 
 class PdfService {
@@ -24,7 +23,7 @@ class PdfService {
         }
     }
 
-/*
+/*  
   A Simple fetcher to turn a well formated XHTML string into a PDF
   The baseUri is included to allow for relative URL's in the XHTML string
 */

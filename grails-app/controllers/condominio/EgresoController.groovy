@@ -145,5 +145,6 @@ class EgresoController extends Shield {
             return
         }
     } //delete para eliminar via ajax
-    
+
+
 }

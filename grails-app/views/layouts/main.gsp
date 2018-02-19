@@ -88,11 +88,11 @@
 
 	<script type="text/javascript">
 		/* deshabilita navegación hacia adelante */
-		$('.disableNav').bind('focus', function (event) {
-			navEnabled = false;
-		}).bind('blur', function (event) {
-			navEnabled = true;
-		});
+//		$('.disableNav').bind('focus', function (event) {
+//			navEnabled = false;
+//		}).bind('blur', function (event) {
+//			navEnabled = true;
+//		});
 	</script>
 
 </head>

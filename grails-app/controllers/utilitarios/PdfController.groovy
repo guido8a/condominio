@@ -1,5 +1,7 @@
 package utilitarios
 
+import utilitarios.PdfService
+
 class PdfController {
 
     PdfService pdfService
@@ -111,4 +113,6 @@ class PdfController {
         return ['bar':bar, 'today':today, 'tomorrow':tomorrow]
         //[today:today, tomorrow:tomorrow]
     }
+
 }
+

@@ -13,8 +13,11 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <a href="#" class="btn btn-default btnCrear">
+        <a href="#" class="btn btn-primary btnCrear">
             <i class="fa fa-file-o"></i> Crear
+        </a>
+        <a href="#" class="btn btn-info" id="btnImprimir">
+            <i class="fa fa-print"></i> Imprimir
         </a>
     </div>
     <div class="btn-group pull-right col-md-3">
@@ -32,38 +35,38 @@
 <table class="table table-condensed table-bordered table-striped table-hover">
     <thead>
     <tr>
-        
+
         <g:sortableColumn property="descripcion" title="Descripcion" />
-        
+
         <g:sortableColumn property="abono" title="Abono" />
-        
+
         <g:sortableColumn property="estado" title="Estado" />
-        
+
         <g:sortableColumn property="fecha" title="Fecha" />
-        
+
         <g:sortableColumn property="fechaPago" title="Fecha Pago" />
-        
+
         <th>Proveedor</th>
-        
+
     </tr>
     </thead>
     <tbody>
     <g:if test="${egresoInstanceCount > 0}">
         <g:each in="${egresoInstanceList}" status="i" var="egresoInstance">
             <tr data-id="${egresoInstance.id}">
-                
+
                 <td>${egresoInstance.descripcion}</td>
-                
+
                 <td><g:fieldValue bean="${egresoInstance}" field="abono"/></td>
-                
+
                 <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${egresoInstance}" field="estado"/></elm:textoBusqueda></td>
-                
+
                 <td><g:formatDate date="${egresoInstance.fecha}" format="dd-MM-yyyy" /></td>
-                
+
                 <td><g:formatDate date="${egresoInstance.fechaPago}" format="dd-MM-yyyy" /></td>
-                
+
                 <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${egresoInstance}" field="proveedor"/></elm:textoBusqueda></td>
-                
+
             </tr>
         </g:each>
     </g:if>
@@ -90,25 +93,25 @@
         var $form = $("#frmEgreso");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
-        $btn.replaceWith(spinner);
+            $btn.replaceWith(spinner);
             openLoader("Guardando Egreso");
-                    $.ajax({
+            $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
                 success : function (msg) {
-                var parts = msg.split("*");
-                log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                setTimeout(function() {
-                    if (parts[0] == "SUCCESS") {
-                        location.reload(true);
-                    } else {
-                        spinner.replaceWith($btn);
-                        return false;
-                    }
-                }, 1000);
-            }
-        });
+                    var parts = msg.split("*");
+                    log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
+                    setTimeout(function() {
+                        if (parts[0] == "SUCCESS") {
+                            location.reload(true);
+                        } else {
+                            spinner.replaceWith($btn);
+                            return false;
+                        }
+                    }, 1000);
+                }
+            });
         } else {
             return false;
         } //else
@@ -130,7 +133,7 @@
                     className : "btn-danger",
                     callback  : function () {
                         openLoader("Eliminando Egreso");
-                                $.ajax({
+                        $.ajax({
                             type    : "POST",
                             url     : '${createLink(controller:'egreso', action:'delete_ajax')}',
                             data    : {
@@ -156,7 +159,7 @@
     function createEditRow(id) {
         var title = id ? "Editar" : "Crear";
         var data = id ? { id: id } : {};
-                $.ajax({
+        $.ajax({
             type    : "POST",
             url     : "${createLink(controller:'egreso', action:'form_ajax')}",
             data    : data,
@@ -164,7 +167,7 @@
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
                     title   : title + " Egreso",
-                    
+
                     message : msg,
                     buttons : {
                         cancelar : {
@@ -197,7 +200,7 @@
             return false;
         });
 
-                $("tbody>tr").contextMenu({
+        $("tbody>tr").contextMenu({
             items  : {
                 header   : {
                     label  : "Acciones",
@@ -207,56 +210,90 @@
                     label  : "Ver",
                     icon   : "fa fa-search",
                     action : function ($element) {
-            var id = $element.data("id");
-                                $.ajax({
-                type    : "POST",
-                url     : "${createLink(controller:'egreso', action:'show_ajax')}",
-                data    : {
-                    id : id
-                },
-                success : function (msg) {
-                    bootbox.dialog({
-                        title   : "Ver Egreso",
-                        message : msg,
-                        buttons : {
-                            ok : {
-                                label     : "Aceptar",
-                                className : "btn-primary",
-                                callback  : function () {
-                                }
+                        var id = $element.data("id");
+                        $.ajax({
+                            type    : "POST",
+                            url     : "${createLink(controller:'egreso', action:'show_ajax')}",
+                            data    : {
+                                id : id
+                            },
+                            success : function (msg) {
+                                bootbox.dialog({
+                                    title   : "Ver Egreso",
+                                    message : msg,
+                                    buttons : {
+                                        ok : {
+                                            label     : "Aceptar",
+                                            className : "btn-primary",
+                                            callback  : function () {
+                                            }
+                                        }
+                                    }
+                                });
                             }
-                        }
-                    });
+                        });
+                    }
+                },
+                editar   : {
+                    label  : "Editar",
+                    icon   : "fa fa-pencil",
+                    action : function ($element) {
+                        var id = $element.data("id");
+                        createEditRow(id);
+                    }
+                },
+                eliminar : {
+                    label            : "Eliminar",
+                    icon             : "fa fa-trash-o",
+                    separator_before : true,
+                    action           : function ($element) {
+                        var id = $element.data("id");
+                        deleteRow(id);
+                    }
                 }
-            });
-        }
-    },
-        editar   : {
-            label  : "Editar",
-                icon   : "fa fa-pencil",
-                action : function ($element) {
-                var id = $element.data("id");
-                createEditRow(id);
+            },
+            onShow : function ($element) {
+                $element.addClass("success");
+            },
+            onHide : function ($element) {
+                $(".success").removeClass("success");
             }
-        },
-        eliminar : {
-            label            : "Eliminar",
-                icon             : "fa fa-trash-o",
-                separator_before : true,
-                action           : function ($element) {
-                var id = $element.data("id");
-                deleteRow(id);
-            }
-        }
-    },
-        onShow : function ($element) {
-        $element.addClass("success");
-        },
-        onHide : function ($element) {
-        $(".success").removeClass("success");
-        }
+        });
     });
+
+
+
+    $("#btnImprimir").click(function () {
+
+        url = "${g.createLink(controller:'reportes', action: 'pagosPendientes')}";
+        location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + '&filename=pagosPendientes.pdf';
+
+
+        %{--$.ajax({--}%
+            %{--type: 'POST',--}%
+            %{--url:'${createLink(controller: 'reportes', action: 'pagosPendientes_modal')}',--}%
+            %{--data:{--}%
+
+            %{--},--}%
+            %{--success: function (msg){--}%
+                %{--var b = bootbox.dialog({--}%
+                    %{--id      : "dlgPagosPen",--}%
+                    %{--title   : "Pagos Pendientes",--}%
+                    %{--message : msg,--}%
+                    %{--buttons : {--}%
+                        %{--cancelar : {--}%
+                            %{--label     : "<i class='fa fa-times'></i> Cancelar",--}%
+                            %{--className : "btn-primary",--}%
+                            %{--callback  : function () {--}%
+                            %{--}--}%
+                        %{--}--}%
+                    %{--} //buttons--}%
+                %{--}); //dialog--}%
+            %{--}--}%
+        %{--});--}%
     });
+
+
 </script>
 
 </body>
