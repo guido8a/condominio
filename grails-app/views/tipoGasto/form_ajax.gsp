@@ -14,10 +14,10 @@
             <div class="form-group keeptogether ${hasErrors(bean: tipoGastoInstance, field: 'descripcion', 'error')} required">
                 <span class="grupo">
                     <label for="descripcion" class="col-md-2 control-label">
-                        Descripcion
+                        Descripción
                     </label>
                     <div class="col-md-6">
-                        <g:textField name="descripcion" required="" class="allCaps form-control required" value="${tipoGastoInstance?.descripcion}"/>
+                        <g:textField name="descripcion" required="" class="form-control required" value="${tipoGastoInstance?.descripcion}"/>
                     </div>
                      *
                 </span>

@@ -3,6 +3,7 @@ package condominio
 class Proveedor {
 
     static auditable = true
+    String tipoPersona = 'N'
     String ruc
     String nombre
     String apellido
@@ -20,6 +21,7 @@ class Proveedor {
         id generator: 'identity'
         columns {
             id column: 'prve__id'
+            tipoPersona column: 'prvetppr'
             ruc column: 'prve_ruc'
             nombre column: 'prvenmbr'
             apellido column: 'prveapll'
@@ -33,6 +35,7 @@ class Proveedor {
     }
 
     static constraints = {
+        tipoPersona(blank: false, nullable: false, inList: ['N', 'J'])
         ruc(blank: false, nullable: false)
         nombre(blank: false, nullable: false)
         apellido(blank: true, nullable: true)
@@ -40,5 +43,9 @@ class Proveedor {
         telefono(blank: false, nullable: false)
         mail(blank: true, nullable: true)
         observaciones(blank: true, nullable: true)
+    }
+
+    String toString(){
+        "${this.nombre} ${this.apellido?:''}"
     }
 }

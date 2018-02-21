@@ -10,50 +10,59 @@
         <g:form class="form-horizontal" name="frmProveedor" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${proveedorInstance?.id}" />
 
-            
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'ruc', 'error')} required">
                 <span class="grupo">
-                    <label for="ruc" class="col-md-2 control-label">
-                        Ruc
+                    <label for="sexo" class="col-xs-3 col-md-3 control-label">
+                        Tipo de persona:
                     </label>
-                    <div class="col-md-6">
-                        <g:textField name="ruc" required="" class="allCaps form-control required" value="${proveedorInstance?.ruc}"/>
+                    <div class="col-xs-4 col-md-4">
+                        <g:select name="tipoPersona" from="${['N': 'Natural', 'J': 'Jurídica']}"
+                                  optionKey="key" optionValue="value" class="form-control text-info"
+                                  value="${proveedorInstance?.tipoPersona}" />
                     </div>
-                     *
                 </span>
             </div>
-            
+
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'nombre', 'error')} required">
                 <span class="grupo">
-                    <label for="nombre" class="col-md-2 control-label">
+                    <label for="nombre" class="col-md-3 control-label">
                         Nombre
                     </label>
-                    <div class="col-md-6">
-                        <g:textField name="nombre" required="" class="allCaps form-control required" value="${proveedorInstance?.nombre}"/>
+                    <div class="col-md-8">
+                        <g:textField name="nombre" required="" class=" form-control required" value="${proveedorInstance?.nombre}"/>
                     </div>
-                     *
                 </span>
             </div>
-            
+
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'apellido', 'error')} ">
                 <span class="grupo">
-                    <label for="apellido" class="col-md-2 control-label">
+                    <label for="apellido" class="col-md-3 control-label">
                         Apellido
                     </label>
-                    <div class="col-md-6">
-                        <g:textField name="apellido" class="allCaps form-control" value="${proveedorInstance?.apellido}"/>
+                    <div class="col-md-7">
+                        <g:textField name="apellido" class=" form-control" value="${proveedorInstance?.apellido}"/>
                     </div>
-                    
                 </span>
             </div>
-            
+
+            <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'ruc', 'error')} required">
+                <span class="grupo">
+                    <label for="ruc" class="col-md-3 control-label">
+                        Ruc
+                    </label>
+                    <div class="col-md-4">
+                        <g:textField name="ruc" required="" class=" form-control required" value="${proveedorInstance?.ruc}"/>
+                    </div>
+                </span>
+            </div>
+
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'direccion', 'error')} ">
                 <span class="grupo">
-                    <label for="direccion" class="col-md-2 control-label">
-                        Direccion
+                    <label for="direccion" class="col-md-3 control-label">
+                        Dirección
                     </label>
-                    <div class="col-md-6">
-                        <g:textField name="direccion" class="allCaps form-control" value="${proveedorInstance?.direccion}"/>
+                    <div class="col-md-9">
+                        <g:textField name="direccion" class=" form-control" value="${proveedorInstance?.direccion}"/>
                     </div>
                     
                 </span>
@@ -61,35 +70,33 @@
             
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'telefono', 'error')} required">
                 <span class="grupo">
-                    <label for="telefono" class="col-md-2 control-label">
-                        Telefono
+                    <label for="telefono" class="col-md-3 control-label">
+                        Teléfono
                     </label>
-                    <div class="col-md-6">
-                        <g:textField name="telefono" required="" class="allCaps form-control required" value="${proveedorInstance?.telefono}"/>
+                    <div class="col-md-5">
+                        <g:textField name="telefono" required="" class=" form-control required" value="${proveedorInstance?.telefono}"/>
                     </div>
-                     *
                 </span>
             </div>
             
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'mail', 'error')} ">
                 <span class="grupo">
-                    <label for="mail" class="col-md-2 control-label">
+                    <label for="mail" class="col-md-3 control-label">
                         Mail
                     </label>
-                    <div class="col-md-6">
-                        <g:textField name="mail" class="allCaps form-control" value="${proveedorInstance?.mail}"/>
+                    <div class="col-md-7">
+                        <g:textField name="mail" class=" form-control" value="${proveedorInstance?.mail}"/>
                     </div>
-                    
                 </span>
             </div>
             
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'observaciones', 'error')} ">
                 <span class="grupo">
-                    <label for="observaciones" class="col-md-2 control-label">
+                    <label for="observaciones" class="col-md-3 control-label">
                         Observaciones
                     </label>
-                    <div class="col-md-6">
-                        <g:textField name="observaciones" class="allCaps form-control" value="${proveedorInstance?.observaciones}"/>
+                    <div class="col-md-9">
+                        <g:textField name="observaciones" class=" form-control" value="${proveedorInstance?.observaciones}"/>
                     </div>
                     
                 </span>
@@ -97,28 +104,16 @@
             
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'activo', 'error')} required">
                 <span class="grupo">
-                    <label for="activo" class="col-md-2 control-label">
+                    <label for="activo" class="col-md-3 control-label">
                         Activo
                     </label>
-                    <div class="col-md-6">
-                        <g:textField name="activo" class="allCaps form-control" value="${proveedorInstance?.activo}"/>
+                    <div class="col-md-2">
+                        <g:select name="activo" from="${['S': 'Si', 'N': 'No']}"
+                                  optionKey="key" optionValue="value" class="form-control text-info"
+                                  value="${proveedorInstance?.activo?:'S'}" />
                     </div>
-                     *
                 </span>
             </div>
-            
-            <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'fecha', 'error')} required">
-                <span class="grupo">
-                    <label for="fecha" class="col-md-2 control-label">
-                        Fecha
-                    </label>
-                    <div class="col-md-4">
-                        <elm:datepicker name="fecha"  class="datepicker form-control required" value="${proveedorInstance?.fecha}"  />
-                    </div>
-                     *
-                </span>
-            </div>
-            
         </g:form>
     </div>
 

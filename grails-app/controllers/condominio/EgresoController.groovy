@@ -111,8 +111,14 @@ class EgresoController extends Shield {
                 render "ERROR*No se encontró Egreso."
                 return
             }
+        }  else {
+           egresoInstance.fecha = new Date()
+           egresoInstance.estado = 'E'
         }
+        params.valor = params.valor.toDouble()
+        params.abono = params.abono.toDouble()
         egresoInstance.properties = params
+        if(egresoInstance.valor <= egresoInstance.abono) egresoInstance.estado = 'P'
         if(!egresoInstance.save(flush: true)) {
             render "ERROR*Ha ocurrido un error al guardar Egreso: " + renderErrors(bean: egresoInstance)
             return

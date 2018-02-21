@@ -15,8 +15,13 @@
     <body>
 
         <fieldset class="borde">
-
             <div class="row" style="margin-bottom: 20px;">
+                <div class="col-md-1" align="center">
+                <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-default">
+                    <i class="fa fa-arrow-left"></i> Regresar
+                </a>
+                </div>
+
                 <div class="col-md-2" align="center">Concepto de aportes</div>
 
                 <div class="col-md-4" align="center">
@@ -26,15 +31,16 @@
                               disabled="false" style="width: 300px;"/>
                 </div>
 
-                <div class="btn-group col-md-3">
+                <div class="btn-group col-md-2">
                     <a href="#" class="btn btn-azul btn-consultar"><i class="icon-search"></i>Consultar</a>
                     <a href="#" class="btn btn-success btn-actualizar"><i class="icon-save"></i>Guardar</a>
                 </div>
 
                 <div class="btn-group col-md-3">
-                    <div class="col-md-3">Fecha</div>
-                    <div class="col-md-9">
-                    <elm:datepicker name="fecha" id="fechaOb" class="datepicker form-control required" value="${params.fecha}"/>
+                    <div class="col-md-4">Fecha</div>
+                    <div class="col-md-8">
+                    <elm:datepicker name="fecha" id="fechaOb" class="datepicker form-control required"
+                                    value="${params.fecha?: new Date()}"/>
                     </div>
                 </div>
             </div>

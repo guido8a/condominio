@@ -13,6 +13,12 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
+        <a href="${createLink(controller: "inicio", action: "parametros")}" class="btn btn-default">
+            <i class="fa fa-arrow-left"></i> Regresar
+        </a>
+    </div>
+
+    <div class="btn-group">
         <a href="#" class="btn btn-default btnCrear">
             <i class="fa fa-file-o"></i> Crear
         </a>
@@ -138,7 +144,7 @@
         var data = id ? { id: id } : {};
                 $.ajax({
             type    : "POST",
-            url     : "${createLink(controller:'tipogasto', action:'form_ajax')}",
+            url     : "${createLink(controller:'tipoGasto', action:'form_ajax')}",
             data    : data,
             success : function (msg) {
                 var b = bootbox.dialog({
@@ -158,7 +164,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitForm();
+                                return submitFormTipoGasto();
                             } //callback
                         } //guardar
                     } //buttons

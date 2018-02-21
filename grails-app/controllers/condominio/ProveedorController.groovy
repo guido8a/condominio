@@ -117,6 +117,8 @@ class ProveedorController extends Shield {
                 render "ERROR*No se encontró Proveedor."
                 return
             }
+        } else {
+            proveedorInstance.fecha = new Date()
         }
         proveedorInstance.properties = params
         if(!proveedorInstance.save(flush: true)) {

@@ -27,7 +27,7 @@ class InicioController extends seguridad.Shield {
 
     def parametros = {
 
-        if (session.usuario.puedeAdmin) {
+        if (session.usuario) {
             return []
         } else {
             flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será registrada."

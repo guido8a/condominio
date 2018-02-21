@@ -210,13 +210,14 @@ class PrflController extends seguridad.Shield {
                 "accn__id in (${ids})) and prfl__id = ${prfl} and tpac__id = ${tpac}"
         println "a borrar: $tx"
         cn.eachRow(tx.toString()) { d ->
+            def prms
             try {
-                def prms = Prms.get(d.prms__id)
+                prms = Prms.get(d.prms__id)
                 println "borrando ${prms.id}"
                 prms.delete()
             }
             catch (Exception ex) {
-                println "borrar permiso: " + ex.getMessage()
+                println "borrar permiso: " + prms.errors
             }
         }
         // se debe barrer tosos los menús señalados y si está chequeado añadir a prms.

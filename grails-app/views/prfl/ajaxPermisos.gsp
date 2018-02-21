@@ -10,7 +10,7 @@
                     <tr>
                         <th style="padding:4px;" width="100px">Permisos</th>
                         <th "width="150px">Menú</th>
-                        <th "width="300px">Accion</th>
+                        <th "width="300px">Acción</th>
                         <th "width="200px">Controlador</th>
                     </tr>
                 </thead>

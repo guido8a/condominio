@@ -20,6 +20,11 @@
             <i class="fa fa-print"></i> Imprimir
         </a>
     </div>
+    <div class="btn-group">
+        <g:link controller="proveedor" action="list" class="btn btn-default">
+            <i class="fa fa-user-o"></i> Proveedores
+        </g:link>
+    </div>
     <div class="btn-group pull-right col-md-3">
         <div class="input-group">
             <input type="text" class="form-control input-search" placeholder="Buscar" value="${params.search}">
@@ -181,7 +186,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitForm();
+                                return submitFormEgreso();
                             } //callback
                         } //guardar
                     } //buttons

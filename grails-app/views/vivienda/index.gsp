@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="col-xs-3 col-md-3">
-                        <div class="btn-group col-xs-10 col-md-10" style="margin-left: -10px; margin-top: 20px;">
+                        <div class="btn-group col-xs-6 col-md-6" style="margin-left: -10px; margin-top: 20px;">
 
                             <a href="#" name="busqueda" class="btn btn-info" id="btnBusqueda" title="Buscar"
                                style="height: 34px; padding: 9px; width: 46px">
@@ -67,12 +67,19 @@
                             <a href="#" name="limpiarBus" class="btn btn-warning" id="btnLimpiarBusqueda"
                                title="Borrar criterios" style="height: 34px; padding: 9px; width: 34px">
                                 <i class="fa fa-eraser"></i></a>
-
+                        </div>
+                        <div class="btn-group col-xs-3 col-md-3" style="margin-left: -10px; margin-top: 20px;">
                             <a href="#" name="busqueda" class="btn btn-success" id="nuevo" title="Crear Persona"
                                style="height: 34px; padding: 9px; width: 46px">
                                 <i class="fa fa-user-circle"></i></a>
                         </div>
+                        <div class="btn-group col-xs-3 col-md-3" style="margin-left: -10px; margin-top: 20px;">
+                            <g:link action="creaIngresos" class="btn btn-info" title="Registro de aportes">
+                                <i class="fa fa-money"></i>
+                            </g:link>
+                        </div>
                 </div>
+
             </div>
 
         </div>

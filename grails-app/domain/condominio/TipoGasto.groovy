@@ -19,4 +19,8 @@ class TipoGasto {
     static constraints = {
         descripcion(blank: false, nullable: false)
     }
+
+    String toString() {
+        this.descripcion
+    }
 }
