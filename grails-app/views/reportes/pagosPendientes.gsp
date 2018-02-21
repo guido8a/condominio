@@ -12,7 +12,7 @@
 
     <title>Pagos Pendientes</title>
 
-    %{--<rep:estilos orientacion="l" pagTitle="${"Kardex 4"}"/>--}%
+    <rep:estilos orientacion="p" pagTitle="${"Pagos pendientes"}"/>
 
     <style type="text/css">
 
@@ -28,6 +28,7 @@
     table {
         border-collapse: collapse;
         width: 100%;
+        page-break-inside: avoid;
     }
 
     th, td {
@@ -48,21 +49,20 @@
         text-align: left;
     }
 
+    .azul{
+        color: #17365D;
+    }
+
     </style>
 
 </head>
 
 <body>
 
-%{--<rep:headerFooter title="${'Existencias por item'}" subtitulo="${'Datos'}" empresa="${empresa}"/>--}%
+<rep:headerFooter title="${'Conjunto Habitacional "Los Viñedos"'}" subtitulo="${'Pagos Pendientes'}" empresa="${''}"/>
 
-<h2 style="color: #0a6aa1">CONJUNTO HABITACIONAL "LOS VIÑEDOS"</h2>
-<h2 style="color: #0a6aa1">
-    %{--PAGOS PENDIENTES A LA FECHA <g:formatDate date="${hasta}" format="dd-MM-yyyy"/>--}%
-    PAGOS PENDIENTES
-</h2>
 
-<div>
+%{--<div>--}%
     <table border="1">
         <thead>
         <tr>
@@ -90,7 +90,7 @@
                         <g:set var="total" value="${total += fila.por_pagar}"/>
                         <g:set var="anterior" value="${fila.depart}"/>
                     </tr>
-                    <tr style="font-weight: bold; color: #0a6aa1"><td colspan="3" class="derecha">TOTAL:</td><td class="derecha">${total}</td></tr>
+                    <tr style="font-weight: bold;" class="azul"><td colspan="3" class="derecha">TOTAL:</td><td class="derecha">${total}</td></tr>
                 </g:if>
                 <g:else>
                     <tr style="width: 100%">
@@ -115,7 +115,7 @@
                     </tr>
                 </g:if>
                 <g:else>
-                    <tr style="font-weight: bold; color: #0a6aa1"><td colspan="3" class="derecha">TOTAL:</td><td class="derecha">${total}</td></tr>
+                    <tr style="font-weight: bold;" class="azul"><td colspan="3" class="derecha">TOTAL:</td><td class="derecha">${total}</td></tr>
                     <tr style="width: 100%">
                         <td class="izquierda" style="width: 8%">${fila.depart}</td>
                         <td class="izquierda" style="width: 17%; font-size: 11px">${fila.nombre}</td>
@@ -130,7 +130,7 @@
         </g:each>
         </tbody>
     </table>
-</div>
+%{--</div>--}%
 
 </body>
 </html>

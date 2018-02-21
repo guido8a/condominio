@@ -245,10 +245,10 @@ class ReportesTagLib {
 //                "    page-break-inside : avoid;\n" +
                 "}"
         css += ".table tr {\n" +
-                "    page-break-inside : avoid;\n" +
+//                "    page-break-inside : avoid;\n" +
                 "}"
         css += ".no-break {\n" +
-                "    page-break-inside : avoid;\n" +
+//                "    page-break-inside : avoid;\n" +
                 "}"
         css += ".tituloReporte{\n" +
                 "    text-align     : center;\n" +
@@ -320,7 +320,7 @@ class ReportesTagLib {
      * @param title el título del reporte
      */
     def headerReporte = { attrs ->
-        println("AQUI atributos headerReporte  " + attrs)
+//        println("AQUI atributos headerReporte  " + attrs)
         def title = attrs.title ?: ""
         def titulo = attrs.titulo ?: ""
         def empresa
@@ -369,7 +369,7 @@ class ReportesTagLib {
             } else {
                 html += "<div class='tituloReporteSinLinea'>" + "\n"
             }
-//            html += title + "\n"
+
             html += '</div>' + "\n"
             if (subtitulo != "") {
                 html += "<div class='datosRprt'>"
@@ -387,6 +387,12 @@ class ReportesTagLib {
 
         html += "<div class='tituloCuentaRprt'>"
         html += title
+        html += '</div>'
+        html += "<div class='tituloCuentaRprt'>"
+        html += subtitulo
+        html += '</div>'
+        html += '<div id="header">' + "\n"
+        html += subtitulo
         html += '</div>'
 
         if (attrs.unidad || attrs.numero != null) {
@@ -419,11 +425,9 @@ class ReportesTagLib {
                     }
 
                 } else {
-//                    html += "<td style='background: #008080;'>${attrs.anio}</td>" + "\n"
                 }
 
             }else{
-//                html += "<td style='background: #008080;'>${attrs.anio}</td>" + "\n"
             }
 
             html += "<td style='background: #008080;'>No. ${attrs.numero != null ? attrs.numero.toString().padLeft(3, '0') : ''}</td>" + "\n"
@@ -444,13 +448,12 @@ class ReportesTagLib {
         def logoPath = resource(dir: 'images', file: 'logo-pdf-footer.png')
 
         html += '<div id="footer">'
-//        html += "<div class='fechaReporte' style='font-size: 8.5pt; margin-bottom: 15px;'>Impreso el ${new Date().format('dd-MM-yyyy HH:mm')}</div>"
         html += "<img src='${logoPath}' style='height:${h}px; float:right; margin-left: 1cm; margin-bottom: 1cm;'/>"
         html += "<div style='float:right; font-size:8pt;'>"
-        html += "Amazonas N26-146 y La Niña<br/>"
-        html += "Telf. +(593)2304 9100<br/>"
+        html += "Viñedos 269 y Los Angeles<br/>"
+        html += "Telf. 0984916620<br/>"
         html += "Quito - Ecuador<br/>"
-        html += "www.yachay.gob.ec<br/>"
+//        html += "www.yachay.gob.ec<br/>"
         html += "</div>"
         html += "</div>"
 
@@ -461,13 +464,13 @@ class ReportesTagLib {
      * Muestra header y footer para los reportes
      */
     def headerFooter = { attrs ->
-        println("header footer attr " + attrs)
+//        println("header footer attr " + attrs)
         attrs.title = attrs.title ?: ""
         def header = headerReporte(attrs)
-//        def footer = footerReporte(attrs)
+        def footer = footerReporte(attrs)
 
-//        out << header << footer
-        out << header
+        out << header << footer
+//        out << header
     }
 
     /**

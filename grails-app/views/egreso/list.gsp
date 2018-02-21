@@ -16,9 +16,16 @@
         <a href="#" class="btn btn-primary btnCrear">
             <i class="fa fa-file-o"></i> Crear
         </a>
-        <a href="#" class="btn btn-info" id="btnImprimir">
-            <i class="fa fa-print"></i> Imprimir
-        </a>
+        %{--<a href="#" class="btn btn-info" id="btnImprimir">--}%
+            %{--<i class="fa fa-print"></i> Imprimir--}%
+        %{--</a>--}%
+
+        <g:link controller="reportes" action="pagosPendientes2"
+                class="btn btnPrint btn-info" rel="tooltip">
+            <i class="fa -fa-print"></i> Imprimir
+        </g:link>
+
+
     </div>
     <div class="btn-group">
         <g:link controller="proveedor" action="list" class="btn btn-default">
@@ -274,28 +281,6 @@
         location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + '&filename=pagosPendientes.pdf';
 
 
-        %{--$.ajax({--}%
-            %{--type: 'POST',--}%
-            %{--url:'${createLink(controller: 'reportes', action: 'pagosPendientes_modal')}',--}%
-            %{--data:{--}%
-
-            %{--},--}%
-            %{--success: function (msg){--}%
-                %{--var b = bootbox.dialog({--}%
-                    %{--id      : "dlgPagosPen",--}%
-                    %{--title   : "Pagos Pendientes",--}%
-                    %{--message : msg,--}%
-                    %{--buttons : {--}%
-                        %{--cancelar : {--}%
-                            %{--label     : "<i class='fa fa-times'></i> Cancelar",--}%
-                            %{--className : "btn-primary",--}%
-                            %{--callback  : function () {--}%
-                            %{--}--}%
-                        %{--}--}%
-                    %{--} //buttons--}%
-                %{--}); //dialog--}%
-            %{--}--}%
-        %{--});--}%
     });
 
 
