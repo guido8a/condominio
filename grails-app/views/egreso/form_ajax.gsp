@@ -89,7 +89,6 @@
                     </div>
                 </span>
             </div>
-
         </g:form>
     </div>
 
@@ -116,6 +115,7 @@
             }
             return true;
         });
+
     </script>
 
 </g:else>

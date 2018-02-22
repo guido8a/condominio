@@ -14,21 +14,17 @@
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
         <a href="#" class="btn btn-primary btnCrear">
-            <i class="fa fa-file-o"></i> Crear
+            <i class="fa fa-file-o"></i> Nuevo
         </a>
-        %{--<a href="#" class="btn btn-info" id="btnImprimir">--}%
-            %{--<i class="fa fa-print"></i> Imprimir--}%
-        %{--</a>--}%
-
-        <g:link controller="reportes" action="pagosPendientes2"
-                class="btn btnPrint btn-info" rel="tooltip">
-            <i class="fa -fa-print"></i> Imprimir
-        </g:link>
-
-
     </div>
     <div class="btn-group">
-        <g:link controller="proveedor" action="list" class="btn btn-default">
+        <g:link controller="reportes" action="pagosPendientes2"
+                class="btn btnPrint btn-info" rel="tooltip" title="Imprimir pagos pendientes">
+            <i class="fa fa-print"></i> Imprimir
+        </g:link>
+    </div>
+    <div class="btn-group">
+        <g:link controller="proveedor" action="list" class="btn btn-warning">
             <i class="fa fa-user-o"></i> Proveedores
         </g:link>
     </div>
@@ -169,7 +165,7 @@
         });
     }
     function createEditRow(id) {
-        var title = id ? "Editar" : "Crear";
+        var title = id ? "Editar" : "Nuevo";
         var data = id ? { id: id } : {};
         $.ajax({
             type    : "POST",
