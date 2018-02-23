@@ -6,7 +6,7 @@
 </g:if>
 <g:else>
     
-    <laiv class="modal-contenido">
+    <div class="modal-contenido">
         <g:form class="form-horizontal" name="frmIngreso" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${ingresoInstance?.id}" />
 

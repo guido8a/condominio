@@ -73,7 +73,6 @@ class IngresoController extends Shield {
         println "params: $params"
         def prsn = Persona.get(params.id)
         def ingr = Ingreso.findAllByPersona(prsn)
-
         return [ingreso: ingr, ingrCount: ingr.size()]
     }
 
@@ -182,5 +181,68 @@ class IngresoController extends Shield {
             return
         }
     } //delete para eliminar via ajax
-    
+
+
+    def pago_ajax () {
+
+        def pago
+        def ingreso = Ingreso.get(params.id)
+        if(params.pago){
+            pago = Pago.get(params.pago)
+        }
+        def pagos = Pago.findAllByIngreso(ingreso)
+        def saldo = (ingreso.valor - (pagos?.valor?.sum() ?: 0))
+
+        return[ingreso: ingreso, pagos: pagos, saldo: saldo, pago: pago]
+    }
+
+
+    def guardarPago_ajax (){
+//        println("params " + params)
+
+        def ingreso = Ingreso.get(params.ingreso)
+        def pagos = Pago.findAllByIngreso(ingreso)
+        def saldo = (ingreso.valor - (pagos?.valor?.sum() ?: 0))
+
+        if(params.abono.toDouble() > saldo){
+            render "di"
+            return
+        }
+
+        def pago
+        if(params.id){
+            pago = Pago.get(params.id)
+        }else{
+            pago = new Pago()
+        }
+
+        params.fecha = new Date().parse("dd-MM-yyyy", params.fechaPago_input)
+
+        pago.ingreso = ingreso
+        pago.valor = params.abono.toDouble()
+        pago.fechaPago = params.fecha
+        pago.documento = params.documento.toUpperCase();
+        pago.observaciones = params.observaciones
+
+        if(!pago.save(flush: true)){
+            println("error al guardar el pago " + pago.errors)
+            render "no"
+        }else{
+            render "ok"
+        }
+
+    }
+
+    def borrarPago_ajax () {
+        def pago = Pago.get(params.id)
+
+        try{
+            pago.delete(flush: true)
+            render "ok"
+        }catch (e){
+            println("error al borrar el pago " + e)
+            render "no"
+        }
+    }
+
 }
