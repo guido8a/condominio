@@ -95,9 +95,12 @@
 
                 %{--<td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${ingr}" field="estado"/></elm:textoBusqueda></td>--}%
                 <td class="centro">
+                <g:if test="${(ingr.valor.toDouble() - (Pago.findAllByIngreso(ingr)?.valor?.sum()?.toDouble() ?: 0)) > 0}">
                     <a href="#" class="btn btn-success btn-sm btnAdd" data-ing="${ingr?.id}" title="Ingresar Pago">
                         <i class="fa fa-plus"></i>
                     </a>
+                </g:if>
+
                     %{--<a href="#" class="btn btn-danger btn-sm btnEliminarIngreso" data-id="${ingr?.id}" title="Eliminar Registro">--}%
                         %{--<i class="fa fa-trash-o"></i>--}%
                     %{--</a>--}%

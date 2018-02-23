@@ -203,13 +203,25 @@ class IngresoController extends Shield {
         def ingreso = Ingreso.get(params.ingreso)
         def pagos = Pago.findAllByIngreso(ingreso)
         def saldo = (ingreso.valor - (pagos?.valor?.sum() ?: 0))
+        def saldo2
+        def pago
 
-        if(params.abono.toDouble() > saldo){
-            render "di"
-            return
+        if(params.id){
+            pago = Pago.get(params.id)
+            saldo2 = saldo + (pago.valor ? pago.valor.toDouble() : 0)
+            if(params.abono.toDouble() > saldo2){
+                render "di"
+                return
+            }
+        }else{
+            if(params.abono.toDouble() > saldo){
+                render "di"
+                return
+            }
         }
 
-        def pago
+
+
         if(params.id){
             pago = Pago.get(params.id)
         }else{
