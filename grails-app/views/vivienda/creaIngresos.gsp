@@ -17,27 +17,32 @@
         <fieldset class="borde">
             <div class="row" style="margin-bottom: 20px;">
                 <div class="col-md-1" align="center">
-                <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-default">
+                <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary">
                     <i class="fa fa-arrow-left"></i> Regresar
                 </a>
                 </div>
 
-                <div class="col-md-2" align="center">Concepto de aportes</div>
+                <div class="col-md-1" align="center">Concepto de aportes</div>
 
                 <div class="col-md-4" align="center">
                     <g:select class="form-control" name="obligaciones"
                               from="${condominio.Obligacion.list([sort: 'descripcion'])}" optionKey="id"
                               optionValue="${{ it.descripcion }}"
-                              disabled="false" style="width: 300px;"/>
+                              disabled="false" style="width: 380px;"/>
                 </div>
 
-                <div class="btn-group col-md-2">
-                    <a href="#" class="btn btn-azul btn-consultar"><i class="icon-search"></i>Consultar</a>
-                    <a href="#" class="btn btn-success btn-actualizar"><i class="icon-save"></i>Guardar</a>
+                <div class="btn-group col-md-1">
+                    <a href="#" class="btn btn-azul btn-consultar btn-sm"><i class="fa fa-search"></i> Consultar</a>
+                </div>
+                <div class="btn-group col-md-1">
+                    <a href="#" class="btn btn-success btn-actualizar btn-sm"><i class="fa fa-save"></i> Guardar</a>
+                </div>
+                <div class="btn-group col-md-1">
+                    <a href="#" class="btn btn-warning btn-generar btn-sm"><i class="fa fa-check"></i> Generar</a>
                 </div>
 
                 <div class="btn-group col-md-3">
-                    <div class="col-md-4">Fecha</div>
+                    <div class="col-md-2">Fecha</div>
                     <div class="col-md-8">
                     <elm:datepicker name="fecha" id="fechaOb" class="datepicker form-control required"
                                     value="${params.fecha?: new Date()}"/>
@@ -74,6 +79,32 @@
 
 
         <script type="text/javascript">
+
+
+            $(".btn-generar").click(function () {
+                $.ajax({
+                   type:'POST',
+                    url:'${createLink(controller: 'vivienda', action: 'generar_ajax')}',
+                    data:{
+
+                    },
+                    success: function (msg){
+                        var b = bootbox.dialog({
+                            id      : "dlgGenerar",
+                            title   : "Generar grupo de ingresos",
+                            message : msg,
+                            buttons : {
+                                cancelar : {
+                                    label     : "Cancelar",
+                                    className : "btn-primary",
+                                    callback  : function () {
+                                    }
+                                }
+                            } //buttons
+                        }); //dialog
+                    }
+                });
+            });
 
             function consultar() {
                 var oblg = $("#obligaciones").val();
@@ -135,12 +166,12 @@
                         var obsr = $(this).siblings(".observaciones").children("input").val();
 
                         if(chk && (obsr != obsrog) && (ingr)){
-                            console.log('obsr:', obsr, 'obsrog:', obsrog);
+//                            console.log('obsr:', obsr, 'obsrog:', obsrog);
                             if(data != '') {
                                 data += "&"
                             }
                             data += "&obsr=" + id + "_id" + ingr + "_ob" + obsr
-                            console.log('obsr:', obsr, 'data:', data);
+//                            console.log('obsr:', obsr, 'data:', data);
                         }
 //                        console.log('data:', data)
                         if (chk && (parseFloat(valor) > 0 && parseFloat(data1) != parseFloat(valor))) {
@@ -156,7 +187,7 @@
 
                         }
                     });
-                    console.log('data -->', data);
+//                    console.log('data -->', data);
                     $.ajax({
                         type    : "POST",
                         url     : "${createLink(action: 'actualizar')}",
@@ -184,7 +215,6 @@
                         }
                     });
                 });
-
             });
         </script>
     </body>

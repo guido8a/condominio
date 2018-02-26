@@ -8,8 +8,8 @@ class Egreso {
     Date fecha
     double valor
     String estado
-    double abono
-    Date fechaPago
+    double abono = 0
+    Date fechaPago = new Date()
     String descripcion
 
     static mapping = {
@@ -32,5 +32,6 @@ class Egreso {
 
     static constraints = {
         descripcion(blank: true, nullable: true)
+
     }
 }

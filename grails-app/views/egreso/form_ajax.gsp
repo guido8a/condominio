@@ -68,27 +68,27 @@
                 </span>
             </div>
 
-            <div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'fechaPago', 'error')} required">
-                <span class="grupo">
-                    <label for="fechaPago" class="col-md-2 control-label">
-                        Fecha de Pago
-                    </label>
-                    <div class="col-md-4">
-                        <elm:datepicker name="fechaPago"  class="datepicker form-control" value="${egresoInstance?.fechaPago}"  />
-                    </div>
-                </span>
-            </div>
+            %{--<div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'fechaPago', 'error')} required">--}%
+                %{--<span class="grupo">--}%
+                    %{--<label for="fechaPago" class="col-md-2 control-label">--}%
+                        %{--Fecha de Pago--}%
+                    %{--</label>--}%
+                    %{--<div class="col-md-4">--}%
+                        %{--<elm:datepicker name="fechaPago"  class="datepicker form-control" value="${egresoInstance?.fechaPago}"  />--}%
+                    %{--</div>--}%
+                %{--</span>--}%
+            %{--</div>--}%
 
-            <div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'abono', 'error')} required">
-                <span class="grupo">
-                    <label for="abono" class="col-md-2 control-label">
-                        Pago
-                    </label>
-                    <div class="col-md-3">
-                        <g:textField name="abono" value="${egresoInstance?.abono}" class="number form-control required"/>
-                    </div>
-                </span>
-            </div>
+            %{--<div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'abono', 'error')} required">--}%
+                %{--<span class="grupo">--}%
+                    %{--<label for="abono" class="col-md-2 control-label">--}%
+                        %{--Pago--}%
+                    %{--</label>--}%
+                    %{--<div class="col-md-3">--}%
+                        %{--<g:textField name="abono" value="${egresoInstance?.abono}" class="number form-control required"/>--}%
+                    %{--</div>--}%
+                %{--</span>--}%
+            %{--</div>--}%
         </g:form>
     </div>
 

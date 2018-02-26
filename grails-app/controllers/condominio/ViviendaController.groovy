@@ -207,6 +207,40 @@ class ViviendaController {
         render oks + "_" + nos
     }
 
+    def generar_ajax () {
+
+    }
+    
+    def genera () {
+//        println("params " + params)
+
+        def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
+        def mesNumero = params.fecha.split("-")[1]
+        def anio = params.fecha.split("-")[2]
+
+        def meses = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        def mes = meses[mesNumero.toInteger()]
+
+        def observacion = mes + " " + anio
+
+//        println("observa: " + observacion)
+
+        def cn = dbConnectionService.getConnection()
+        def sql = "select * from alicuota(${7},'${fecha}','${observacion}')"
+//        def res = cn.execute(sql.toString())
+        def res = cn.rows(sql.toString())
+
+//        println("---- " + res[0].alicuota)
+
+        if(res[0].alicuota == 0){
+            render "no"
+        }else{
+            render "ok"
+        }
+
+
+    }
+
 
 
 }

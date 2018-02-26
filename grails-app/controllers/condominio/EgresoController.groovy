@@ -116,15 +116,26 @@ class EgresoController extends Shield {
            egresoInstance.estado = 'E'
         }
         params.valor = params.valor.toDouble()
-        params.abono = params.abono.toDouble()
+//        params.abono = params.abono.toDouble()
         egresoInstance.properties = params
-        if(egresoInstance.valor <= egresoInstance.abono) egresoInstance.estado = 'P'
-        if(!egresoInstance.save(flush: true)) {
-            render "ERROR*Ha ocurrido un error al guardar Egreso: " + renderErrors(bean: egresoInstance)
+//        if(egresoInstance.valor <= egresoInstance.abono) egresoInstance.estado = 'P'
+
+        def pagos = PagoEgreso.findAllByEgreso(egresoInstance)
+
+        if(params.valor.toDouble() >= pagos?.valor?.sum()){
+            if(!egresoInstance.save(flush: true)) {
+                render "ERROR*Ha ocurrido un error al guardar Egreso: " + renderErrors(bean: egresoInstance)
+                return
+            }
+            render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Egreso exitosa."
+            return
+        }else{
+            render "ERROR*El valor ingresado es menor al valor de los pagos"
             return
         }
-        render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Egreso exitosa."
-        return
+
+
+
     } //save para grabar desde ajax
 
     /**
@@ -151,6 +162,99 @@ class EgresoController extends Shield {
             return
         }
     } //delete para eliminar via ajax
+
+    def pagoEgreso_ajax () {
+
+        def pago
+        def egreso = Egreso.get(params.id)
+        if(params.pago){
+            pago = PagoEgreso.get(params.pago)
+        }
+        def pagos = PagoEgreso.findAllByEgreso(egreso)
+        def saldo = (egreso.valor - (pagos?.valor?.sum() ?: 0))
+
+        return[egreso: egreso, pagos: pagos, saldo: saldo, pago: pago]
+    }
+
+    def guardarPagoEgreso_ajax () {
+
+        //        println("params " + params)
+
+        def egreso = Egreso.get(params.egreso)
+        def pagos = PagoEgreso.findAllByEgreso(egreso)
+        def saldo = (egreso.valor - (pagos?.valor?.sum() ?: 0))
+        def saldo2
+        def pago
+
+        if(params.id){
+            pago = PagoEgreso.get(params.id)
+            saldo2 = saldo + (pago.valor ? pago.valor.toDouble() : 0)
+            if(params.abono.toDouble() > saldo2){
+                render "di"
+                return
+            }
+        }else{
+            if(params.abono.toDouble() > saldo){
+                render "di"
+                return
+            }
+        }
+
+
+
+        if(params.id){
+            pago = PagoEgreso.get(params.id)
+        }else{
+            pago = new PagoEgreso()
+        }
+
+        params.fecha = new Date().parse("dd-MM-yyyy", params.fechaPago_input)
+
+        pago.egreso = egreso
+        pago.valor = params.abono.toDouble()
+        pago.fechaPago = params.fecha
+        pago.documento = params.documento.toUpperCase();
+        pago.observaciones = params.observaciones
+
+        if(!pago.save(flush: true)){
+            println("error al guardar el pago " + pago.errors)
+            render "no"
+        }else{
+            render "ok"
+        }
+    }
+
+
+    def borrarPagoEgreso_ajax () {
+        def pago = PagoEgreso.get(params.id)
+
+        try{
+            pago.delete(flush: true)
+            render "ok"
+        }catch (e){
+            println("error al borrar el pago " + e)
+            render "no"
+        }
+    }
+
+    def borrarEgreso_ajax () {
+        def egreso = Egreso.get(params.id)
+        def pagos = PagoEgreso.findAllByEgreso(egreso)
+
+        if(!pagos){
+            try{
+                egreso.delete(flush: true)
+                render "ok"
+            }catch (e){
+                println("error al borrar el egreso " + e)
+                render "no"
+            }
+        }else{
+            render "di"
+        }
+
+
+    }
 
 
 }

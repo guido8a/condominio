@@ -74,7 +74,7 @@
                                 <i class="fa fa-user-circle"></i></a>
                         </div>
                         <div class="btn-group col-xs-3 col-md-3" style="margin-left: -10px; margin-top: 20px;">
-                            <g:link action="creaIngresos" class="btn btn-info" title="Registro de aportes">
+                            <g:link action="creaIngresos" class="btn btn-info" title="Registro de aportes" style="height: 34px; padding: 9px; width: 46px">
                                 <i class="fa fa-money"></i>
                             </g:link>
                         </div>

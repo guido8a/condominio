@@ -35,28 +35,11 @@
 <h3 style="text-align: center">Pendientes de <strong>${ingreso[0].persona.nombre} ${ingreso[0].persona.apellido}</strong></h3>
 <!-- botones -->
 <div class="btn-toolbar toolbar">
-    %{--
-        <div class="btn-group">
-            <a href="#" class="btn btn-default btnCrear">
-                <i class="fa fa-file-o"></i> Regresar
-            </a>
-        </div>
-    --}%
     <div class="btn-group">
         <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary">
             <i class="fa fa-arrow-left"></i> Regresar
         </a>
     </div>
-    %{--<div class="btn-group pull-right col-md-3">--}%
-    %{--<div class="input-group">--}%
-    %{--<input type="text" class="form-control input-search" placeholder="Buscar" value="${params.search}">--}%
-    %{--<span class="input-group-btn">--}%
-    %{--<g:link controller="ingreso" action="list" class="btn btn-default btn-search">--}%
-    %{--<i class="fa fa-search"></i>&nbsp;--}%
-    %{--</g:link>--}%
-    %{--</span>--}%
-    %{--</div><!-- /input-group -->--}%
-    %{--</div>--}%
 </div>
 
 
@@ -187,6 +170,7 @@
                                 location.reload(true);
                             }, 1000);
                         }else{
+                            closeLoader();
                             log("Error al borrar el pago","error")
                         }
                     }
