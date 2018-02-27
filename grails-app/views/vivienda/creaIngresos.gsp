@@ -91,7 +91,7 @@
                     success: function (msg){
                         var b = bootbox.dialog({
                             id      : "dlgGenerar",
-                            title   : "Generar grupo de ingresos",
+                            title   : "Generar alícuotas por mes",
                             message : msg,
                             buttons : {
                                 cancelar : {

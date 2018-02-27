@@ -241,6 +241,16 @@ class ViviendaController {
 
     }
 
+    def comboMes_ajax () {
+
+//        println("params " + params)
+        def mesNumero = params.fecha.split("-")[1]
+        def meses = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        def mes = meses[mesNumero.toInteger()]
+
+        return[mes: mes]
+    }
+
 
 
 }
