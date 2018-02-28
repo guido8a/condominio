@@ -51,10 +51,26 @@ class ReportesController {
 //        def desde = new Date().parse("dd-MM-yyyy", params.desde)
 //        def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
 
-        def cn = dbConnectionService.getConnection()
-        def sql = "select prsndpto depart, prsnnmbr||' '||prsnapll nombre,   coalesce(ingrobsr, '')||' ('||oblgdscr||')' detalle,   ingrvlor - ingrabno por_pagar from prsn, ingr, oblg where prsn.prsn__id = ingr.prsn__id and oblg.oblg__id = ingr.oblg__id and   ingrvlor > ingrabno Order by prsndpto, oblgdscr;"
 
+      def cn = dbConnectionService.getConnection()
+      def sql = "select prsndpto depart, prsnnmbr||' '||prsnapll nombre,   coalesce(ingrobsr, '')||' ('||oblgdscr||')' detalle,   ingrvlor - ingrabno por_pagar from prsn, ingr, oblg where prsn.prsn__id = ingr.prsn__id and oblg.oblg__id = ingr.oblg__id and   ingrvlor > ingrabno Order by prsndpto, oblgdscr;"
 //        println("sql: " + sql)
+
+        def res =  cn.rows(sql.toString())
+        def ultimo = res.last().depart
+        def cont = res.size();
+
+        return [res: res, ultimo: ultimo, cont: cont.toInteger()]
+    }
+
+    def reportePendientes(){
+                println("params pp " + params)
+
+        def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
+
+        def cn = dbConnectionService.getConnection()
+        def sql = "select * from pendientes('${fecha}')"
+        println("sql: " + sql)
 
         def res =  cn.rows(sql.toString())
         def ultimo = res.last().depart
@@ -352,6 +368,215 @@ class ReportesController {
         response.setHeader("Content-disposition", "attachment; filename=" + name)
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
+
+    }
+
+    def pagosPendientes3 () {
+
+//        println("params " + params)
+
+        def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
+
+        def cn = dbConnectionService.getConnection()
+        def sql = "select * from pendiente('${fecha}')"
+
+//        println("sql " + sql)
+
+        def res =  cn.rows(sql.toString())
+        def tamano = res.size()
+        def max = 54
+        def actual = 0
+
+//        println("tamaño " + tamano)
+
+
+        def baos = new ByteArrayOutputStream()
+        def name = "pagosPendientes_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
+        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+        Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 8, Font.BOLD);
+        Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
+        Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
+        Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
+
+        def prmsTdNoBorder = [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def prmsTdBorder = [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def prmsNmBorder = [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+        Document document
+//        document = new Document(PageSize.A4.rotate());
+        document = new Document(PageSize.A4);
+        document.setMargins(50,30,30,28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Pagos Pendientes");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitulo));
+        preface.add(new Paragraph("PAGOS PENDIENTES", fontTitulo));
+        addEmptyLine(preface, 1);
+        document.add(preface);
+
+        PdfPTable tablaDetalles = null
+
+        def printHeaderDetalle = {
+
+            def tablaHeaderDetalles = new PdfPTable(4);
+            tablaHeaderDetalles.setWidthPercentage(100);
+            tablaHeaderDetalles.setWidths(arregloEnteros([10,20,55,15]))
+
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bg: Color.LIGHT_GRAY, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Nombre", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bg: Color.LIGHT_GRAY, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Detalle", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bg: Color.LIGHT_GRAY, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Por Pagar", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bg: Color.LIGHT_GRAY, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
+        }
+
+
+        def printTotales = {params->
+
+            def tablaTotal = new PdfPTable(2);
+            tablaTotal.setWidthPercentage(100);
+            tablaTotal.setWidths(arregloEnteros([85,15]))
+
+            addCellTabla(tablaTotal, new Paragraph("Total: ", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, bg: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaTotal, new Paragraph("" + params.total, fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, bg: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+
+            addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
+
+        }
+
+        def currentPag = 1
+        def totalPags = Math.ceil(tamano/max)
+        def pagActual = 1
+
+        tablaDetalles = new PdfPTable(4);
+        tablaDetalles.setWidthPercentage(100);
+        tablaDetalles.setWidths(arregloEnteros([10,20,55,15]))
+        tablaDetalles.setSpacingAfter(1f);
+
+
+        def anterior
+        def nuevo
+        def total = 0
+        def contador = 0
+        def ultimo = res.last().prsndpto
+        def adicionales = 0
+        def u = 0
+
+        res.each{fila->
+
+//            println("actual " + actual)
+//            println("adicionales " + adicionales)
+//            println("pagActual " + pagActual)
+
+            if(actual == 0){
+                printHeaderDetalle()
+            }
+
+//            if((actual.toInteger() + adicionales.toInteger()) == (max*(pagActual))){
+            if((actual.toInteger() + adicionales.toInteger()) >= max){
+//                max = (max + 7)
+                max = 59
+                printHeaderDetalle()
+                actual = 0
+                adicionales = 0
+            }
+
+            nuevo = fila.prsndpto
+            contador++
+
+//            println("contador " + contador)
+//            println("tamaño " + tamano)
+//            println("anterior " + anterior)
+//            println("nuevo " + nuevo)
+
+            if(anterior  ==  nuevo){
+                if(nuevo ==  ultimo && (tamano.toInteger()) == contador){
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                    total += fila.sldo
+                    anterior = fila.prsndpto
+                    printTotales([total:total])
+                    adicionales ++
+                }else{
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                    total += fila.sldo
+                    anterior = fila.prsndpto
+                }
+            }else{
+                if(contador == 1){
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                    total += fila.sldo
+                    anterior = fila.prsndpto
+                }else{
+                    if(tamano.toInteger() == contador){
+                        printTotales([total:total])
+                        addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                        addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                        addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                        total = fila.sldo
+                        anterior = fila.prsndpto
+                        printTotales([total:fila.sldo])
+                        adicionales ++
+                    }else{
+                        printTotales([total:total])
+                        addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                        addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                        addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
+                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                        total = fila.sldo
+                        anterior = fila.prsndpto
+                        adicionales ++
+                    }
+                }
+            }
+
+            actual ++
+            u = (actual.toInteger() + adicionales.toInteger())
+
+//            println("--- " + u)
+            if(actual <= max){
+                pagActual = 1
+            }else{
+                pagActual = Math.ceil(actual/max).toInteger()
+            }
+        }
+
+
+        document.add(tablaDetalles)
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=" + name)
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+
+    }
+
+    def fecha_ajax(){
 
     }
 

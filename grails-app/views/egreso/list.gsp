@@ -41,10 +41,13 @@
         </a>
     </div>
     <div class="btn-group">
-        <g:link controller="reportes" action="pagosPendientes2"
-                class="btn btnPrint btn-info" rel="tooltip" title="Imprimir pagos pendientes">
+        %{--<g:link controller="reportes" action="pagosPendientes2"--}%
+        %{--class="btn btnPrint btn-info" rel="tooltip" title="Imprimir pagos pendientes">--}%
+        %{--<i class="fa fa-print"></i> Imprimir--}%
+        %{--</g:link>--}%
+        <a href="#" class="btn btn-info" id="btnImprimir">
             <i class="fa fa-print"></i> Imprimir
-        </g:link>
+        </a>
     </div>
     <div class="btn-group">
         <g:link controller="proveedor" action="list" class="btn btn-warning">
@@ -274,71 +277,93 @@
         });
 
         %{--$("tbody>tr").contextMenu({--}%
-            %{--items  : {--}%
-                %{--header   : {--}%
-                    %{--label  : "Acciones",--}%
-                    %{--header : true--}%
-                %{--},--}%
-                %{--ver      : {--}%
-                    %{--label  : "Ver",--}%
-                    %{--icon   : "fa fa-search",--}%
-                    %{--action : function ($element) {--}%
-                        %{--var id = $element.data("id");--}%
-                        %{--$.ajax({--}%
-                            %{--type    : "POST",--}%
-                            %{--url     : "${createLink(controller:'egreso', action:'show_ajax')}",--}%
-                            %{--data    : {--}%
-                                %{--id : id--}%
-                            %{--},--}%
-                            %{--success : function (msg) {--}%
-                                %{--bootbox.dialog({--}%
-                                    %{--title   : "Ver Egreso",--}%
-                                    %{--message : msg,--}%
-                                    %{--buttons : {--}%
-                                        %{--ok : {--}%
-                                            %{--label     : "Aceptar",--}%
-                                            %{--className : "btn-primary",--}%
-                                            %{--callback  : function () {--}%
-                                            %{--}--}%
-                                        %{--}--}%
-                                    %{--}--}%
-                                %{--});--}%
-                            %{--}--}%
-                        %{--});--}%
-                    %{--}--}%
-                %{--},--}%
-                %{--editar   : {--}%
-                    %{--label  : "Editar",--}%
-                    %{--icon   : "fa fa-pencil",--}%
-                    %{--action : function ($element) {--}%
-                        %{--var id = $element.data("id");--}%
-                        %{--createEditRow(id);--}%
-                    %{--}--}%
-                %{--},--}%
-                %{--eliminar : {--}%
-                    %{--label            : "Eliminar",--}%
-                    %{--icon             : "fa fa-trash-o",--}%
-                    %{--separator_before : true,--}%
-                    %{--action           : function ($element) {--}%
-                        %{--var id = $element.data("id");--}%
-                        %{--deleteRow(id);--}%
-                    %{--}--}%
-                %{--}--}%
-            %{--},--}%
-            %{--onShow : function ($element) {--}%
-                %{--$element.addClass("success");--}%
-            %{--},--}%
-            %{--onHide : function ($element) {--}%
-                %{--$(".success").removeClass("success");--}%
-            %{--}--}%
+        %{--items  : {--}%
+        %{--header   : {--}%
+        %{--label  : "Acciones",--}%
+        %{--header : true--}%
+        %{--},--}%
+        %{--ver      : {--}%
+        %{--label  : "Ver",--}%
+        %{--icon   : "fa fa-search",--}%
+        %{--action : function ($element) {--}%
+        %{--var id = $element.data("id");--}%
+        %{--$.ajax({--}%
+        %{--type    : "POST",--}%
+        %{--url     : "${createLink(controller:'egreso', action:'show_ajax')}",--}%
+        %{--data    : {--}%
+        %{--id : id--}%
+        %{--},--}%
+        %{--success : function (msg) {--}%
+        %{--bootbox.dialog({--}%
+        %{--title   : "Ver Egreso",--}%
+        %{--message : msg,--}%
+        %{--buttons : {--}%
+        %{--ok : {--}%
+        %{--label     : "Aceptar",--}%
+        %{--className : "btn-primary",--}%
+        %{--callback  : function () {--}%
+        %{--}--}%
+        %{--}--}%
+        %{--}--}%
+        %{--});--}%
+        %{--}--}%
+        %{--});--}%
+        %{--}--}%
+        %{--},--}%
+        %{--editar   : {--}%
+        %{--label  : "Editar",--}%
+        %{--icon   : "fa fa-pencil",--}%
+        %{--action : function ($element) {--}%
+        %{--var id = $element.data("id");--}%
+        %{--createEditRow(id);--}%
+        %{--}--}%
+        %{--},--}%
+        %{--eliminar : {--}%
+        %{--label            : "Eliminar",--}%
+        %{--icon             : "fa fa-trash-o",--}%
+        %{--separator_before : true,--}%
+        %{--action           : function ($element) {--}%
+        %{--var id = $element.data("id");--}%
+        %{--deleteRow(id);--}%
+        %{--}--}%
+        %{--}--}%
+        %{--},--}%
+        %{--onShow : function ($element) {--}%
+        %{--$element.addClass("success");--}%
+        %{--},--}%
+        %{--onHide : function ($element) {--}%
+        %{--$(".success").removeClass("success");--}%
+        %{--}--}%
         %{--});--}%
     });
 
 
 
     $("#btnImprimir").click(function () {
-        url = "${g.createLink(controller:'reportes', action: 'pagosPendientes')}";
-        location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + '&filename=pagosPendientes.pdf';
+        %{--url = "${g.createLink(controller:'reportes', action: 'pagosPendientes')}";--}%
+        %{--location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + '&filename=pagosPendientes.pdf';--}%
+
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'reportes', action: 'fecha_ajax')}',
+            data:{},
+            success: function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgFecha",
+                    title   : "Imprimir pagos pendientes",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+            }
+        });
+
 
     });
 
