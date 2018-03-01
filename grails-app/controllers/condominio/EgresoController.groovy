@@ -252,7 +252,13 @@ class EgresoController extends Shield {
         }else{
             render "di"
         }
+    }
 
+    def saldos_ajax() {
+
+    }
+
+    def tablaSaldos_ajax () {
 
     }
 

@@ -64,6 +64,12 @@
             </span>
         </div><!-- /input-group -->
     </div>
+    <div class="btn-group">
+        <g:link controller="egreso" action="saldos_ajax" class="btn btn-success">
+            <i class="fa fa-dollar"></i> Saldos
+        </g:link>
+    </div>
+
 </div>
 
 <table class="table table-condensed table-bordered table-striped table-hover">
@@ -155,6 +161,7 @@
 <elm:pagination total="${egresoInstanceCount}" params="${params}"/>
 
 <script type="text/javascript">
+
 
 
     $(".btnEditarEgg").click(function () {
