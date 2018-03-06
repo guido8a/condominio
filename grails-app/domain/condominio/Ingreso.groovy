@@ -10,9 +10,6 @@ class Ingreso {
     Date fecha
     double valor
     String estado = 'E'
-    double abono = 0
-    Date fechaPago
-    String documento
     String observaciones
 
     static mapping = {
@@ -27,16 +24,16 @@ class Ingreso {
             fecha column: 'ingrfcha'
             valor column: 'ingrvlor'
             estado column: 'ingretdo'
-            abono column: 'ingrabno'
-            fechaPago column: 'ingrfcpg'
-            documento column: 'ingrdcmt'
+//            abono column: 'ingrabno'
+//            fechaPago column: 'ingrfcpg'
+//            documento column: 'ingrdcmt'
             observaciones column: 'ingrobsr'
         }
     }
 
     static constraints = {
-        documento(blank: true, nullable: true)
-        fechaPago(blank: true, nullable: true)
+//        documento(blank: true, nullable: true)
+//        fechaPago(blank: true, nullable: true)
         observaciones(blank: true, nullable: true)
     }
 }

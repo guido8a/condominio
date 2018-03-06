@@ -10,7 +10,7 @@
     <style type="text/css">
 
     .colorFondo{
-        background-color: lightslategrey;
+        background-color: #d0d0d0;
         text-align: center;
     }
 
@@ -78,7 +78,7 @@
         <th>Descripción</th>
         <th>Fecha</th>
         <th>Valor</th>
-        <th>Abono</th>
+        <th>Pagado</th>
         <th>Saldo</th>
         <th>Proveedor</th>
         <th class="centro"><i class="fa fa-pencil"></i> </th>
@@ -117,15 +117,15 @@
                 <g:each in="${pagosEgreso}" var="pagoUsuario">
                     <g:if test="${cabecera != 'S'}">
                         <tr style="color: #0b0b0b!important;">
-                            <td class="colorFondo">Documento</td>
+                            <td class="colorFondo">Documento de Pago</td>
                             <td class="colorFondo">Fecha Pago</td>
-                            <td class="colorFondo" colspan="3">Abono</td>
+                            <td class="colorFondo" colspan="3">Pago</td>
                             <td class="colorFondo">Observaciones</td>
                             <td class="colorFondo"><i class="fa fa-pencil"></i></td>
                             <g:set var="cabecera" value="S"/>
                         </tr>
                     </g:if>
-                    <tr data-id="${pagoUsuario.id}" style="background-color: #95ef9b !important;">
+                    <tr data-id="${pagoUsuario.id}" style="background-color: #dfdfef !important;">
                         <td>${pagoUsuario?.documento}</td>
                         <td><g:formatDate date="${pagoUsuario?.fechaPago}" format="dd-MM-yyyy"/></td>
                         <td class="derecha dd" colspan="3"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>

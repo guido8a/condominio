@@ -8,8 +8,8 @@ class Egreso {
     Date fecha
     double valor
     String estado
-    double abono = 0
-    Date fechaPago = new Date()
+//    double abono = 0
+//    Date fechaPago = new Date()
     String descripcion
 
     static mapping = {
@@ -24,14 +24,13 @@ class Egreso {
             fecha column: 'egrsfcha'
             valor column: 'egrsvlor'
             estado column: 'egrsetdo'
-            abono column: 'egrsabno'
-            fechaPago column: 'egrsfcpg'
+//            abono column: 'egrsabno'
+//            fechaPago column: 'egrsfcpg'
             descripcion column: 'egrsdscr'
         }
     }
 
     static constraints = {
         descripcion(blank: true, nullable: true)
-
     }
 }

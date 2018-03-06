@@ -33,17 +33,17 @@
     <thead>
     <tr>
         
-        <g:sortableColumn property="documento" title="Documento" />
+        %{--<g:sortableColumn property="documento" title="Documento" />--}%
         
         <g:sortableColumn property="observaciones" title="Observaciones" />
         
-        <g:sortableColumn property="abono" title="Abono" />
+        %{--<g:sortableColumn property="abono" title="Abono" />--}%
         
         <g:sortableColumn property="estado" title="Estado" />
         
         <g:sortableColumn property="fecha" title="Fecha" />
         
-        <g:sortableColumn property="fechaPago" title="Fecha Pago" />
+        %{--<g:sortableColumn property="fechaPago" title="Fecha Pago" />--}%
         
     </tr>
     </thead>
@@ -52,17 +52,17 @@
         <g:each in="${ingresoInstanceList}" status="i" var="ingresoInstance">
             <tr data-id="${ingresoInstance.id}">
                 
-                <td>${ingresoInstance.documento}</td>
+                %{--<td>${ingresoInstance.documento}</td>--}%
                 
                 <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${ingresoInstance}" field="observaciones"/></elm:textoBusqueda></td>
                 
-                <td><g:fieldValue bean="${ingresoInstance}" field="abono"/></td>
+                %{--<td><g:fieldValue bean="${ingresoInstance}" field="abono"/></td>--}%
                 
                 <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${ingresoInstance}" field="estado"/></elm:textoBusqueda></td>
                 
                 <td><g:formatDate date="${ingresoInstance.fecha}" format="dd-MM-yyyy" /></td>
                 
-                <td><g:formatDate date="${ingresoInstance.fechaPago}" format="dd-MM-yyyy" /></td>
+                %{--<td><g:formatDate date="${ingresoInstance.fechaPago}" format="dd-MM-yyyy" /></td>--}%
                 
             </tr>
         </g:each>

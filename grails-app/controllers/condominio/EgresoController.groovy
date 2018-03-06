@@ -120,7 +120,7 @@ class EgresoController extends Shield {
         egresoInstance.properties = params
 //        if(egresoInstance.valor <= egresoInstance.abono) egresoInstance.estado = 'P'
 
-        def pagos = PagoEgreso.findAllByEgreso(egresoInstance)
+        def pagos
 
         if(params.valor.toDouble() >= pagos?.valor?.sum()){
             if(!egresoInstance.save(flush: true)) {
@@ -128,6 +128,8 @@ class EgresoController extends Shield {
                 return
             }
             render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Egreso exitosa."
+            pagos = PagoEgreso.findAllByEgreso(egresoInstance)
+
             return
         }else{
             render "ERROR*El valor ingresado es menor al valor de los pagos"

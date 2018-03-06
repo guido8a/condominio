@@ -373,14 +373,14 @@ class ReportesController {
 
     def pagosPendientes3 () {
 
-//        println("params " + params)
+        println("params " + params)
 
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
 
         def cn = dbConnectionService.getConnection()
-        def sql = "select * from pendiente('${fecha}')"
+        def sql = "select * from pendiente('${fecha.format('yyy-MM-dd')}')"
 
-//        println("sql " + sql)
+        println("sql " + sql)
 
         def res =  cn.rows(sql.toString())
         def tamano = res.size()
