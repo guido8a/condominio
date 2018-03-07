@@ -18,14 +18,14 @@
         <label>Fecha desde:</label>
     </div>
     <div class="col-md-2">
-        <elm:datepicker name="fecha_name" id="fecha" class="datepicker form-control" value="${new Date()}"/>
+        <elm:datepicker name="fechaD_name" id="fechaDesde" class="datepicker form-control" value="${new Date() - 30}" />
     </div>
 
     <div class="col-md-1">
         <label>Fecha Fin:</label>
     </div>
     <div class="col-md-2">
-        <elm:datepicker name="fecha_name" id="fecha" class="datepicker form-control" value="${new Date()}"/>
+        <elm:datepicker name="fechaH_name" id="fechaHasta" class="datepicker form-control" value="${new Date()}"/>
     </div>
 
     <div class="col-md-2">
@@ -41,12 +41,14 @@
 <script type="text/javascript">
 
     $(".btnBuscar").click(function () {
-        var fecha = $(this).val();
+        var desde = $("#fechaDesde").val();
+        var hasta = $("#fechaHasta").val();
         $.ajax({
           type: 'POST',
             url:'${createLink(controller: 'egreso', action: 'tablaSaldos_ajax')}',
             data:{
-                fecha: fecha
+                desde: desde,
+                hasta: hasta
             },
             success: function (msg) {
                 $("#divSaldos").html(msg)

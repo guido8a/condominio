@@ -9,6 +9,8 @@ import seguridad.Shield
  */
 class EgresoController extends Shield {
 
+    def dbConnectionService
+
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
     /**
@@ -262,7 +264,45 @@ class EgresoController extends Shield {
 
     def tablaSaldos_ajax () {
 
+//        println("params " + params)
+
+        def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde)
+        def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta)
+
+        //saldos
+        def sql = "select * from saldos('${fechaDesde}','${fechaHasta}')"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+
+        def sql2 = "select * from aportes('${params.desde}','${params.hasta}')"
+        def cn2 = dbConnectionService.getConnection()
+        def ingresos = cn2.rows(sql2.toString())
+
+        def sql3 = "select * from egresos('${params.desde}','${params.hasta}')"
+        def cn3 = dbConnectionService.getConnection()
+        def egresos = cn3.rows(sql3.toString())
+
+        def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
+        def totalEgresos = (egresos.egrsvlor.sum() ?: 0)
+
+        return[data: data, desde: fechaDesde, hasta: fechaHasta, totalIngresos: totalIngresos, totalEgresos: totalEgresos]
     }
 
+    def tablaIngresos_ajax () {
+
+        def sql2 = "select * from aportes('${params.desde}','${params.hasta}')"
+        def cn2 = dbConnectionService.getConnection()
+        def ingresos = cn2.rows(sql2.toString())
+
+        return [ingresos: ingresos]
+    }
+
+    def tablaEgresos_ajax () {
+        def sql3 = "select * from egresos('${params.desde}','${params.hasta}')"
+        def cn3 = dbConnectionService.getConnection()
+        def egresos = cn3.rows(sql3.toString())
+
+        return[egresos: egresos]
+    }
 
 }
