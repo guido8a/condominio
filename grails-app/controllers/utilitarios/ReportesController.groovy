@@ -400,7 +400,8 @@ class ReportesController {
 
         def baos = new ByteArrayOutputStream()
         def name = "pagosPendientes_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
-        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
+        def titulo = new Color(40,140,180)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
         Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
         Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
         Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
