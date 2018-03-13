@@ -10,7 +10,7 @@
     <style type="text/css">
 
     .colorFondo{
-        background-color: #d0d0d0;
+        background-color: #eae8df;
         text-align: center;
     }
 
@@ -34,6 +34,7 @@
 <elm:message tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:message>
 
 <!-- botones -->
+<h3 style="text-align: center">Egresos y Gastos</h3>
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
         <a href="#" class="btn btn-primary btnCrear">
@@ -41,10 +42,10 @@
         </a>
     </div>
     <div class="btn-group">
-        %{--<g:link controller="reportes" action="pagosPendientes2"--}%
-        %{--class="btn btnPrint btn-info" rel="tooltip" title="Imprimir pagos pendientes">--}%
-        %{--<i class="fa fa-print"></i> Imprimir--}%
-        %{--</g:link>--}%
+        <g:link controller="reportes" action="pagosPendientes2"
+        class="btn btnPrint btn-info" rel="tooltip" title="Imprimir pagos pendientes">
+        <i class="fa fa-print"></i> Pendientes
+        </g:link>
         <a href="#" class="btn btn-info" id="btnImprimir">
             <i class="fa fa-print"></i> Imprimir
         </a>
@@ -75,33 +76,35 @@
 <table class="table table-condensed table-bordered table-striped table-hover">
     <thead>
     <tr>
-        <th>Descripción</th>
-        <th>Fecha</th>
-        <th>Valor</th>
-        <th>Pagado</th>
-        <th>Saldo</th>
-        <th>Proveedor</th>
-        <th class="centro"><i class="fa fa-pencil"></i> </th>
+        <th style="width: 30%">Descripción del Gasto</th>
+        <th style="width: 27%">Proveedor</th>
+        <th style="width: 8%">Fecha</th>
+        <th style="width: 7%">Valor</th>
+        <th style="width: 7%">Pagado</th>
+        <th style="width: 7%">Saldo</th>
+        <th class="centro" style="width: 14%"><i class="fa fa-pencil"></i> Pagos</th>
     </tr>
     </thead>
     <tbody>
     <g:if test="${egresoInstanceCount > 0}">
         <g:each in="${egresoInstanceList}" status="i" var="egresoInstance">
-            <tr data-id="${egresoInstance.id}" style="background-color: #76aed1">
+            <tr data-id="${egresoInstance.id}" style="background-color: #faf8ef">
 
                 <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${egresoInstance}" field="descripcion"/></elm:textoBusqueda></td>
+                %{--<td><g:fieldValue bean="${egresoInstance}" field="descripcion"/></td>--}%
+                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${egresoInstance}" field="proveedor"/></elm:textoBusqueda></td>
+                %{--<td><g:fieldValue bean="${egresoInstance}" field="descripcion"/></td>--}%
                 <td><g:formatDate date="${egresoInstance.fecha}" format="dd-MM-yyyy" /></td>
                 <td class="derecha"><g:formatNumber number="${egresoInstance?.valor}" format="##,##0" locale="en" maxFractionDigits="2" minFractionDigits="2"/></td>
                 <td class="derecha"><g:formatNumber number="${(PagoEgreso.findAllByEgreso(egresoInstance).valor?.sum()?.toDouble() ?: 0)}" format="##,##0" locale="en" maxFractionDigits="2" minFractionDigits="2"/></td>
                 <td class="derecha"><g:formatNumber number="${egresoInstance?.valor?.toDouble() - (PagoEgreso.findAllByEgreso(egresoInstance).valor?.sum()?.toDouble() ?: 0)}" format="##,##0" locale="en" maxFractionDigits="2" minFractionDigits="2"/></td>
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${egresoInstance}" field="proveedor"/></elm:textoBusqueda></td>
-                <td>
-                    <a href="#" class="btn btn-warning btn-sm btnEditarEgg" data-ing="${egresoInstance?.id}" title="Editar Egreso">
+                <td style="background-color: #a0a0a0">
+                    <a href="#" class="btn btn-primary btn-sm btnEditarEgg" data-ing="${egresoInstance?.id}" title="Editar Egreso">
                         <i class="fa fa-pencil"></i>
                     </a>
                     <g:if test="${(egresoInstance.valor.toDouble() - (PagoEgreso.findAllByEgreso(egresoInstance)?.valor?.sum()?.toDouble() ?: 0)) > 0}">
                         <a href="#" class="btn btn-success btn-sm btnPago" data-ing="${egresoInstance?.id}" title="Ingresar Pago">
-                            <i class="fa fa-plus"></i>
+                            <i class="fa fa-plus"></i> Pagar
                         </a>
                     </g:if>
                     <g:if test="${!PagoEgreso.findAllByEgreso(egresoInstance)}">
@@ -117,20 +120,20 @@
                 <g:each in="${pagosEgreso}" var="pagoUsuario">
                     <g:if test="${cabecera != 'S'}">
                         <tr style="color: #0b0b0b!important;">
+                            <td class="colorFondo">Concepto del egreso</td>
                             <td class="colorFondo">Documento de Pago</td>
-                            <td class="colorFondo">Fecha Pago</td>
-                            <td class="colorFondo" colspan="3">Pago</td>
-                            <td class="colorFondo">Observaciones</td>
-                            <td class="colorFondo"><i class="fa fa-pencil"></i></td>
+                            <td class="colorFondo" colspan="2">Fecha Pago</td>
+                            <td class="colorFondo" colspan="2">Pago</td>
+                            <td style="background-color: #C0C0C0"><i class="fa fa-pencil">** Pagar</i></td>
                             <g:set var="cabecera" value="S"/>
                         </tr>
                     </g:if>
-                    <tr data-id="${pagoUsuario.id}" style="background-color: #dfdfef !important;">
-                        <td>${pagoUsuario?.documento}</td>
-                        <td><g:formatDate date="${pagoUsuario?.fechaPago}" format="dd-MM-yyyy"/></td>
-                        <td class="derecha dd" colspan="3"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
+                    <tr data-id="${pagoUsuario.id}" style="background-color: #ffffff !important;">
                         <td >${pagoUsuario?.observaciones}</td>
-                        <td class="centro">
+                        <td>${pagoUsuario?.documento}</td>
+                        <td colspan="2"><g:formatDate date="${pagoUsuario?.fechaPago}" format="dd-MM-yyyy"/></td>
+                        <td class="derecha dd" colspan="2"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
+                        <td style="background-color: #E0E0E0; text-align: center">
                             <a href="#" class="btn btn-info btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${egresoInstance?.id}" title="Editar Pago">
                                 <i class="fa fa-pencil"></i>
                             </a>
@@ -199,6 +202,7 @@
             return false;
         } //else
     }
+
     function deleteRow(itemId) {
         bootbox.dialog({
             title   : "Alerta",
@@ -239,6 +243,7 @@
             }
         });
     }
+
     function createEditRow(id) {
         var title = id ? "Editar" : "Nuevo";
         var data = id ? { id: id } : {};

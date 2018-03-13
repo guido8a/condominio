@@ -10,7 +10,7 @@
     <style type="text/css">
 
     .colorFondo{
-        background-color: lightslategrey;
+        background-color: #e0e0e0;
         text-align: center;
     }
 
@@ -48,45 +48,36 @@
     <thead>
     <tr style="width: 100%">
 
-        <th style="width: 35%">Concepto</th>
+        <th style="width: 45%">Concepto</th>
         <th style="width: 10%">Fecha</th>
-        <th style="width: 15%">Valor</th>
-        <th style="width: 15%">Abono</th>
-        <th style="width: 15%">Saldo</th>
-        <th style="width: 10%; text-align: center"><i class="fa fa-pencil"></i></th>
+        <th style="width: 10%">Valor</th>
+        <th style="width: 10%">Pagado</th>
+        <th style="width: 10%">Saldo</th>
+        <th style="width: 10%; text-align: center"><i class="fa fa-pencil"></i> Pagos</th>
     </tr>
     </thead>
     <tbody>
     <g:if test="${ingrCount > 0}">
         <g:each in="${ingreso}" status="i" var="ingr">
-            <tr data-id="${ingr.id}" data-obsr="${ingr.obligacion.descripcion}: ${ingr.observaciones}" style="background-color: #76aed1">
+            <tr data-id="${ingr.id}" data-obsr="${ingr.obligacion.descripcion}: ${ingr.observaciones}"
+                style="background-color: #ffffff">
 
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${ingr}" field="observaciones"/></elm:textoBusqueda></td>
+                <td>${ingr.obligacion.descripcion} ${ingr.observaciones? ': ' + ingr.observaciones :''}</td>
 
                 <td><g:formatDate date="${ingr.fecha}" format="dd-MM-yyyy" /></td>
 
                 <td class="derecha"><g:fieldValue bean="${ingr}" field="valor" /></td>
 
-                %{--<td><g:fieldValue bean="${ingr}" field="abono"/></td>--}%
                 <td class="derecha">${(Pago.findAllByIngreso(ingr).valor?.sum()?.toDouble() ?: 0)}</td>
-                %{--<td>${ingr.valor - ingr.abono}</td>--}%
+
                 <td class="derecha">${ingr?.valor?.toDouble() - (Pago.findAllByIngreso(ingr).valor?.sum()?.toDouble() ?: 0)}</td>
 
-                %{--<td><g:formatDate date="${ingr.fechaPago}" format="dd-MM-yyyy" /></td>--}%
-
-                %{--<td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${ingr}" field="documento"/></elm:textoBusqueda></td>--}%
-
-                %{--<td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${ingr}" field="estado"/></elm:textoBusqueda></td>--}%
                 <td class="centro">
-                <g:if test="${(ingr.valor.toDouble() - (Pago.findAllByIngreso(ingr)?.valor?.sum()?.toDouble() ?: 0)) > 0}">
-                    <a href="#" class="btn btn-success btn-sm btnAdd" data-ing="${ingr?.id}" title="Ingresar Pago">
-                        <i class="fa fa-plus"></i>
-                    </a>
-                </g:if>
-
-                    %{--<a href="#" class="btn btn-danger btn-sm btnEliminarIngreso" data-id="${ingr?.id}" title="Eliminar Registro">--}%
-                        %{--<i class="fa fa-trash-o"></i>--}%
-                    %{--</a>--}%
+                    <g:if test="${(ingr.valor.toDouble() - (Pago.findAllByIngreso(ingr)?.valor?.sum()?.toDouble() ?: 0)) > 0}">
+                        <a href="#" class="btn btn-success btn-sm btnAdd" data-ing="${ingr?.id}" title="Ingresar Pago">
+                            <i class="fa fa-plus"></i> Pagar
+                        </a>
+                    </g:if>
                 </td>
             </tr>
             <g:if test="${Pago.findAllByIngreso(ingr)}">
@@ -95,19 +86,19 @@
                 <g:each in="${pagosUsuario}" var="pagoUsuario">
                     <g:if test="${cabecera != 'S'}">
                         <tr style="color: #0b0b0b!important;">
+                            <td class="colorFondo"colspan="2">Pago realizado por:</td>
                             <td class="colorFondo">Documento</td>
                             <td class="colorFondo">Fecha Pago</td>
-                            <td class="colorFondo">Abono</td>
-                            <td class="colorFondo"colspan="2">Observaciones</td>
+                            <td class="colorFondo">Pago</td>
                             <td class="colorFondo"><i class="fa fa-pencil"></i></td>
                             <g:set var="cabecera" value="S"/>
                         </tr>
                     </g:if>
-                    <tr data-id="${pagoUsuario.id}" style="background-color: #95ef9b !important;">
+                    <tr data-id="${pagoUsuario.id}" style="background-color: #efffef !important;">
+                        <td colspan="2">${pagoUsuario?.observaciones}</td>
                         <td>${pagoUsuario?.documento}</td>
                         <td><g:formatDate date="${pagoUsuario?.fechaPago}" format="dd-MM-yyyy"/></td>
                         <td class="derecha dd"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
-                        <td colspan="2">${pagoUsuario?.observaciones}</td>
                         <td class="centro">
                             <a href="#" class="btn btn-info btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${ingr?.id}" title="Editar Pago">
                                 <i class="fa fa-pencil"></i>
@@ -317,66 +308,6 @@
             return false;
         });
 
-        %{--$("tbody>tr").contextMenu({--}%
-            %{--items  : {--}%
-                %{--header   : {--}%
-                    %{--label  : "Acciones",--}%
-                    %{--header : true--}%
-                %{--},--}%
-                %{--ver      : {--}%
-                    %{--label  : "Ver",--}%
-                    %{--icon   : "fa fa-search",--}%
-                    %{--action : function ($element) {--}%
-                        %{--var id = $element.data("id");--}%
-                        %{--$.ajax({--}%
-                            %{--type    : "POST",--}%
-                            %{--url     : "${createLink(controller:'ingreso', action:'show_ajax')}",--}%
-                            %{--data    : {--}%
-                                %{--id : id--}%
-                            %{--},--}%
-                            %{--success : function (msg) {--}%
-                                %{--bootbox.dialog({--}%
-                                    %{--title   : "Ver Ingreso",--}%
-                                    %{--message : msg,--}%
-                                    %{--buttons : {--}%
-                                        %{--ok : {--}%
-                                            %{--label     : "Aceptar",--}%
-                                            %{--className : "btn-primary",--}%
-                                            %{--callback  : function () {--}%
-                                            %{--}--}%
-                                        %{--}--}%
-                                    %{--}--}%
-                                %{--});--}%
-                            %{--}--}%
-                        %{--});--}%
-                    %{--}--}%
-                %{--},--}%
-                %{--editar   : {--}%
-                    %{--label  : "Ingresar pago",--}%
-                    %{--icon   : "fa fa-pencil",--}%
-                    %{--action : function ($element) {--}%
-                        %{--var id = $element.data("id");--}%
-                        %{--var obsr = $element.data("obsr");--}%
-                        %{--createEditRow(id, obsr);--}%
-                    %{--}--}%
-                %{--},--}%
-                %{--eliminar : {--}%
-                    %{--label            : "Eliminar",--}%
-                    %{--icon             : "fa fa-trash-o",--}%
-                    %{--separator_before : true,--}%
-                    %{--action           : function ($element) {--}%
-                        %{--var id = $element.data("id");--}%
-                        %{--deleteRow(id);--}%
-                    %{--}--}%
-                %{--}--}%
-            %{--},--}%
-            %{--onShow : function ($element) {--}%
-                %{--$element.addClass("success");--}%
-            %{--},--}%
-            %{--onHide : function ($element) {--}%
-                %{--$(".success").removeClass("success");--}%
-            %{--}--}%
-        %{--});--}%
     });
 </script>
 

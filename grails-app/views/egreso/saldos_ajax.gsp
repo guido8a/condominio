@@ -14,21 +14,21 @@
 
 <body>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-2">
         <label>Fecha desde:</label>
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-2">
         <elm:datepicker name="fechaD_name" id="fechaDesde" class="datepicker form-control" value="${new Date() - 30}" />
     </div>
 
-    <div class="col-md-1">
+    <div class="col-xs-1">
         <label>Fecha Fin:</label>
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-2">
         <elm:datepicker name="fechaH_name" id="fechaHasta" class="datepicker form-control" value="${new Date()}"/>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-xs-2">
         <a href="#" class="btn btn-info btnBuscar" ><i class="fa fa-search"></i> Buscar</a>
     </div>
 </div>

@@ -95,8 +95,9 @@ class ElementosTagLib {
      *              contenido/texto/text/body del tag       el texto donde buscar
      */
     def textoBusqueda = { attrs, body ->
+//        println "----textoBusqueda params: $params"
         def texto = body()
-
+//        println "texto: $texto"
         def busca
         if (attrs.search) {
             busca = attrs.search

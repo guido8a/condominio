@@ -60,7 +60,10 @@ class EgresoController extends Shield {
      * @return egresoInstanceList: la lista de elementos filtrados, egresoInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def list() {
+        println "egrsos: $params"
+        params.sort = 'fecha'
         def egresoInstanceList = getList(params, false)
+//        def egresoInstanceList = getList(params, [sort: 'fecha'])
         def egresoInstanceCount = getList(params, true).size()
         return [egresoInstanceList: egresoInstanceList, egresoInstanceCount: egresoInstanceCount]
     }
@@ -106,13 +109,17 @@ class EgresoController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
+        println "params: $params"
         def egresoInstance = new Egreso()
+        def pagos
+
         if(params.id) {
             egresoInstance = Egreso.get(params.id)
             if(!egresoInstance) {
                 render "ERROR*No se encontró Egreso."
                 return
             }
+            pagos = PagoEgreso.findAllByEgreso(egresoInstance)
         }  else {
            egresoInstance.fecha = new Date()
            egresoInstance.estado = 'E'
@@ -122,24 +129,28 @@ class EgresoController extends Shield {
         egresoInstance.properties = params
 //        if(egresoInstance.valor <= egresoInstance.abono) egresoInstance.estado = 'P'
 
-        def pagos
-
         if(params.valor.toDouble() >= pagos?.valor?.sum()){
-            if(!egresoInstance.save(flush: true)) {
+            if(egresoInstance.save(flush: true)) {
+                if(params.pagar && !pagos){
+                    pagos = new PagoEgreso()
+                    pagos.egreso = egresoInstance
+                    pagos.fechaPago = egresoInstance.fecha
+                    pagos.valor = egresoInstance.valor
+                    pagos.observaciones = egresoInstance.descripcion
+                    pagos.save(flush: true)
+                }
+                render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Egreso exitosa."
+                return
+            } else {
                 render "ERROR*Ha ocurrido un error al guardar Egreso: " + renderErrors(bean: egresoInstance)
                 return
             }
             render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Egreso exitosa."
-            pagos = PagoEgreso.findAllByEgreso(egresoInstance)
-
             return
-        }else{
+        } else {
             render "ERROR*El valor ingresado es menor al valor de los pagos"
             return
         }
-
-
-
     } //save para grabar desde ajax
 
     /**
@@ -266,31 +277,34 @@ class EgresoController extends Shield {
 
 //        println("params " + params)
 
-        def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde)
-        def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta)
+        def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
+        def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
+        println "fechas: '${fechaDesde}','${fechaHasta}'"
         //saldos
         def sql = "select * from saldos('${fechaDesde}','${fechaHasta}')"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
+        println "....sql: $sql"
 
-        def sql2 = "select * from aportes('${params.desde}','${params.hasta}')"
+        def sql2 = "select * from aportes('${fechaDesde}','${fechaHasta}') order by pagofcha"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
 
-        def sql3 = "select * from egresos('${params.desde}','${params.hasta}')"
+        def sql3 = "select * from egresos('${fechaDesde}','${fechaHasta}') order by egrsfcha"
         def cn3 = dbConnectionService.getConnection()
         def egresos = cn3.rows(sql3.toString())
 
         def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
         def totalEgresos = (egresos.egrsvlor.sum() ?: 0)
 
-        return[data: data, desde: fechaDesde, hasta: fechaHasta, totalIngresos: totalIngresos, totalEgresos: totalEgresos]
+        return [data: data, desde: fechaDesde, hasta: fechaHasta, totalIngresos: totalIngresos, totalEgresos: totalEgresos,
+            ingresos: ingresos, egresos: egresos]
     }
 
     def tablaIngresos_ajax () {
 
-        def sql2 = "select * from aportes('${params.desde}','${params.hasta}')"
+        def sql2 = "select * from aportes('${params.desde}','${params.hasta}') order by egrsfcha"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
 

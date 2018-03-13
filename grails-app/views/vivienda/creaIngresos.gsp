@@ -22,14 +22,24 @@
                 </a>
                 </div>
 
+                <div class="col-md-1" align="center"></div>
                 <div class="col-md-1" align="center">Concepto de aportes</div>
 
-                <div class="col-md-4" align="center">
+                <div class="col-md-3" align="center">
                     <g:select class="form-control" name="obligaciones"
                               from="${condominio.Obligacion.list([sort: 'descripcion'])}" optionKey="id"
                               optionValue="${{ it.descripcion }}"
-                              disabled="false" style="width: 380px;"/>
+                              disabled="false" />
                 </div>
+
+                <div class="btn-group col-md-3">
+                    <div class="col-md-3">Fecha</div>
+                    <div class="col-md-9">
+                        <elm:datepicker name="fecha" id="fechaOb" class="datepicker form-control required"
+                                        value="${params.fecha?: new Date()}"/>
+                    </div>
+                </div>
+
 
                 <div class="btn-group col-md-1">
                     <a href="#" class="btn btn-azul btn-consultar btn-sm"><i class="fa fa-search"></i> Consultar</a>
@@ -38,16 +48,9 @@
                     <a href="#" class="btn btn-success btn-actualizar btn-sm"><i class="fa fa-save"></i> Guardar</a>
                 </div>
                 <div class="btn-group col-md-1">
-                    <a href="#" class="btn btn-warning btn-generar btn-sm"><i class="fa fa-check"></i> Generar</a>
+                    <a href="#" class="btn btn-warning btn-generar btn-sm"><i class="fa fa-users"></i> Mensualidades</a>
                 </div>
 
-                <div class="btn-group col-md-3">
-                    <div class="col-md-2">Fecha</div>
-                    <div class="col-md-8">
-                    <elm:datepicker name="fecha" id="fechaOb" class="datepicker form-control required"
-                                    value="${params.fecha?: new Date()}"/>
-                    </div>
-                </div>
             </div>
 
         </fieldset>

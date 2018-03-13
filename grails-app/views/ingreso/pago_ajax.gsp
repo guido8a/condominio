@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 23/02/18
-  Time: 10:30
---%>
-
 <%@ page import="condominio.Ingreso" %>
 
 <script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
@@ -54,8 +47,8 @@
                 <label for="documento" class="col-md-3 control-label">
                     Documento
                 </label>
-                <div class="col-md-8">
-                    <g:textField name="documento" class="allCaps form-control" value="${pago?.documento}"/>
+                <div class="col-md-5">
+                    <g:textField name="documento" class="form-control" value="${pago?.documento}"/>
                 </div>
             </span>
         </div>
@@ -63,10 +56,11 @@
         <div class="form-group keeptogether ${hasErrors(bean: pago, field: 'observaciones', 'error')} ">
             <span class="grupo">
                 <label for="observaciones" class="col-md-3 control-label">
-                    Observaciones
+                    Pago realizado por:
                 </label>
-                <div class="col-md-8">
-                    <g:textField name="observaciones" class="form-control" value="${pago?.observaciones}"/>
+                <div class="col-md-9">
+                    <g:textField name="observaciones" class="form-control"
+                                 value="${pago?.observaciones?:dscr}"/>
                 </div>
             </span>
         </div>
@@ -99,4 +93,3 @@
     });
 </script>
 
-%{--</g:else>--}%

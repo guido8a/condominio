@@ -18,8 +18,8 @@ environments {
     development {
         dataSource {
             dbCreate = "update"
-//            url = "jdbc:postgresql://10.0.0.9:5432/casa"
-            url = "jdbc:postgresql://10.0.0.9:5432/casa_prba"
+            url = "jdbc:postgresql://10.0.0.9:5432/casa"
+//            url = "jdbc:postgresql://10.0.0.9:5432/casa_prba"
             username = "postgres"
             password = "postgres"
         }

@@ -72,7 +72,7 @@ class IngresoController extends Shield {
     def pendiente() {
         println "params: $params"
         def prsn = Persona.get(params.id)
-        def ingr = Ingreso.findAllByPersona(prsn)
+        def ingr = Ingreso.findAllByPersona(prsn, [sort: 'fecha'])
         return [ingreso: ingr, ingrCount: ingr.size()]
     }
 
@@ -192,13 +192,14 @@ class IngresoController extends Shield {
         }
         def pagos = Pago.findAllByIngreso(ingreso)
         def saldo = (ingreso.valor - (pagos?.valor?.sum() ?: 0))
+        def dscr  = "${ingreso.obligacion.descripcion} ${ingreso.observaciones?:''}"
 
-        return[ingreso: ingreso, pagos: pagos, saldo: saldo, pago: pago]
+        return[ingreso: ingreso, pagos: pagos, saldo: saldo, pago: pago, dscr: dscr]
     }
 
 
     def guardarPago_ajax (){
-//        println("params " + params)
+        println("params " + params)
 
         def ingreso = Ingreso.get(params.ingreso)
         def pagos = Pago.findAllByIngreso(ingreso)
@@ -233,7 +234,7 @@ class IngresoController extends Shield {
         pago.ingreso = ingreso
         pago.valor = params.abono.toDouble()
         pago.fechaPago = params.fecha
-        pago.documento = params.documento.toUpperCase();
+        pago.documento = params.documento
         pago.observaciones = params.observaciones
 
         if(!pago.save(flush: true)){

@@ -25,7 +25,7 @@ class ViviendaController {
 
         def sql = armaSql(params)
         params.criterio = params.old
-//        println "sql: $sql"
+        println "sql: $sql"
         def data = cn.rows(sql.toString())
 
         def msg = ""
@@ -212,8 +212,6 @@ class ViviendaController {
     }
     
     def genera () {
-//        println("params " + params)
-
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
         def mesNumero = params.fecha.split("-")[1]
         def anio = params.fecha.split("-")[2]
@@ -222,23 +220,18 @@ class ViviendaController {
         def mes = meses[mesNumero.toInteger()]
 
         def observacion = mes + " " + anio
-
-//        println("observa: " + observacion)
+//        println("obsr: " + observacion)
 
         def cn = dbConnectionService.getConnection()
-        def sql = "select * from alicuota(${7},'${fecha}','${observacion}')"
-//        def res = cn.execute(sql.toString())
+        def sql = "select * from alicuota(${7},'${fecha.format('yyyy-MM-dd')}','${observacion}')"
+        println "sql: $sql"
         def res = cn.rows(sql.toString())
-
-//        println("---- " + res[0].alicuota)
 
         if(res[0].alicuota == 0){
             render "no"
-        }else{
+        } else {
             render "ok"
         }
-
-
     }
 
     def comboMes_ajax () {
