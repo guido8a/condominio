@@ -191,7 +191,7 @@ class ReportesController {
 
 //        println("tamaño " + tamano)
 
-
+        def fondoTotal = new Color(250, 250, 240);
         def baos = new ByteArrayOutputStream()
         def name = "pagosPendientes_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
         def titulo = new Color(40,140,180)
@@ -238,8 +238,9 @@ class ReportesController {
 //            document.newPage()
             def tablaHeaderDetalles = new PdfPTable(4);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([10,20,55,15]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([6,20,62,12]))
             def fondo = new Color(240, 240, 240);
+
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
             addCellTabla(tablaHeaderDetalles, new Paragraph("Nombre", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
@@ -253,10 +254,10 @@ class ReportesController {
 
             def tablaTotal = new PdfPTable(2);
             tablaTotal.setWidthPercentage(100);
-            tablaTotal.setWidths(arregloEnteros([85,15]))
+            tablaTotal.setWidths(arregloEnteros([88,12]))
 
-            addCellTabla(tablaTotal, new Paragraph("Total: ", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, bg: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-            addCellTabla(tablaTotal, new Paragraph("" + params.total, fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, bg: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaTotal, new Paragraph("Total: ", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaTotal, new Paragraph("" + params.total, fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
 
             addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
 
@@ -268,7 +269,7 @@ class ReportesController {
 
         tablaDetalles = new PdfPTable(4);
         tablaDetalles.setWidthPercentage(100);
-        tablaDetalles.setWidths(arregloEnteros([10,20,55,15]))
+        tablaDetalles.setWidths(arregloEnteros([6,20,62,12]))
         tablaDetalles.setSpacingAfter(1f);
 
 
@@ -387,14 +388,13 @@ class ReportesController {
 
         def cn = dbConnectionService.getConnection()
         def sql = "select * from pendiente('${fecha.format('yyy-MM-dd')}')"
-
 //        println("sql " + sql)
 
         def res =  cn.rows(sql.toString())
         def tamano = res.size()
-        def max = 54
+//        def max = 54
+        def max = 46
         def actual = 0
-
 //        println("tamaño " + tamano)
 
 
@@ -405,10 +405,13 @@ class ReportesController {
         Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
         Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
         Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
-        Font fontTh = new Font(Font.TIMES_ROMAN, 8, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
         Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
         Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
+
+        def fondoTotal = new Color(240, 240, 240);
 
         def prmsTdNoBorder = [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def prmsTdBorder = [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
@@ -440,17 +443,20 @@ class ReportesController {
 
         PdfPTable tablaDetalles = null
 
+
+
         def printHeaderDetalle = {
+            def fondo = new Color(240, 248, 250);
+            def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
 
             def tablaHeaderDetalles = new PdfPTable(4);
             tablaHeaderDetalles.setWidthPercentage(100);
             tablaHeaderDetalles.setWidths(arregloEnteros([10,20,55,15]))
-            def fondo = new Color(240, 240, 240);
 
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Nombre", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Detalle", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Por Pagar", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Nombre", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Detalle", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Por Pagar", fontTh), frmtHd)
             addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
         }
 
@@ -461,8 +467,8 @@ class ReportesController {
             tablaTotal.setWidthPercentage(100);
             tablaTotal.setWidths(arregloEnteros([85,15]))
 
-            addCellTabla(tablaTotal, new Paragraph("Total: ", fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, bg: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-            addCellTabla(tablaTotal, new Paragraph("" + params.total, fontThTiny), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, bg: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaTotal, new Paragraph("" + params.total, fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
 
             addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
 
@@ -486,24 +492,21 @@ class ReportesController {
         def adicionales = 0
         def u = 0
 
-        res.each{fila->
+//        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
 
-//            println("actual " + actual)
-//            println("adicionales " + adicionales)
-//            println("pagActual " + pagActual)
-
-            if(actual == 0){
+        res.each { fila ->
+            if (actual == 0) {
                 printHeaderDetalle()
             }
-
-//            if((actual.toInteger() + adicionales.toInteger()) == (max*(pagActual))){
-            if((actual.toInteger() + adicionales.toInteger()) >= max){
+            if ((actual.toInteger() + adicionales.toInteger()) >= max) {
 //                max = (max + 7)
-                max = 59
+                max = 52
                 printHeaderDetalle()
                 actual = 0
                 adicionales = 0
             }
+
 
             nuevo = fila.prsndpto
             contador++
@@ -513,49 +516,50 @@ class ReportesController {
 //            println("anterior " + anterior)
 //            println("nuevo " + nuevo)
 
+
             if(anterior  ==  nuevo){
                 if(nuevo ==  ultimo && (tamano.toInteger()) == contador){
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtDato)
                     total += fila.sldo
                     anterior = fila.prsndpto
                     printTotales([total:total])
                     adicionales ++
                 }else{
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtDato)
                     total += fila.sldo
                     anterior = fila.prsndpto
                 }
             }else{
                 if(contador == 1){
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtDato)
                     total += fila.sldo
                     anterior = fila.prsndpto
                 }else{
                     if(tamano.toInteger() == contador){
                         printTotales([total:total])
-                        addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                        addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                        addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                        addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
+                        addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
+                        addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
+                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtDato)
                         total = fila.sldo
                         anterior = fila.prsndpto
                         printTotales([total:fila.sldo])
                         adicionales ++
                     }else{
                         printTotales([total:total])
-                        addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                        addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                        addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE])
-                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTdTiny), [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 13, border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+                        addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
+                        addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
+                        addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
+                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtDato)
                         total = fila.sldo
                         anterior = fila.prsndpto
                         adicionales ++
