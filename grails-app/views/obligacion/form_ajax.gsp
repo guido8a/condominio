@@ -16,7 +16,7 @@
                     <label for="descripcion" class="col-md-2 control-label">
                         Descripción
                     </label>
-                    <div class="col-md-10">
+                    <div class="col-md-9">
                         <g:textField name="descripcion" required="" class="form-control required" value="${obligacionInstance?.descripcion}"/>
                     </div>
                      *

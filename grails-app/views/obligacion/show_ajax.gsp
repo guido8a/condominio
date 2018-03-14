@@ -10,10 +10,10 @@
         <g:if test="${obligacionInstance?.descripcion}">
             <div class="row">
                 <div class="col-md-3 show-label">
-                    Descripcion
+                    Descripción
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <g:fieldValue bean="${obligacionInstance}" field="descripcion"/>
                 </div>
                 
@@ -40,7 +40,9 @@
                 </div>
                 
                 <div class="col-md-4">
-                    <g:fieldValue bean="${obligacionInstance}" field="tipo"/>
+                    %{--<g:fieldValue bean="${obligacionInstance}" field="tipo"/>--}%
+                    ${obligacionInstance?.tipo == 'N' ? 'Normal' : (obligacionInstance?.tipo == 'E' ? 'Extraordinario' : 'Multa')}
+
                 </div>
                 
             </div>
@@ -53,7 +55,8 @@
                 </div>
                 
                 <div class="col-md-4">
-                    <g:fieldValue bean="${obligacionInstance}" field="valor"/>
+                    %{--<g:fieldValue bean="${obligacionInstance}" field="valor"/>--}%
+                    <g:formatNumber number="${obligacionInstance?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/>
                 </div>
                 
             </div>

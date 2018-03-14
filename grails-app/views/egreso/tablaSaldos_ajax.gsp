@@ -67,10 +67,10 @@
                 <tr style="width:100%;">
                     <th style="width: 10%">Dpto.</th>
                     <th style="width: 20%">Persona</th>
-                    <th style="width: 15%">Ocupante</th>
-                    <th style="width: 22%">Descripción de Ingreso</th>
-                    <th style="width: 15%">Fecha</th>
-                    <th style="width: 15%">Valor</th>
+                    <th style="width: 12%">Ocupante</th>
+                    <th style="width: 30%">Descripción de Ingreso</th>
+                    <th style="width: 12%">Fecha</th>
+                    <th style="width: 13%">Valor</th>
                     <th style="width: 3%"></th>
                 </tr>
             </table>
@@ -82,10 +82,10 @@
                             <tr style="width: 100%">
                                 <td style="width: 10%">${ingreso.prsndpto}</td>
                                 <td style="width: 20%">${ingreso.prsn}</td>
-                                <td style="width: 15%">${ingreso.tpocdscr}</td>
-                                <td style="width: 22%">${ingreso.pagodscr}</td>
-                                <td style="width: 15%">${ingreso.pagofcha}</td>
-                                <td class="derecha" style="width: 15%">${ingreso.pagovlor}</td>
+                                <td style="width: 12%">${ingreso.tpocdscr}</td>
+                                <td style="width: 30%">${ingreso.pagodscr}</td>
+                                <td style="width: 12%">${ingreso.pagofcha}</td>
+                                <td class="derecha" style="width: 13%">${ingreso.pagovlor}</td>
                             </tr>
                         </g:each>
                     </table>

@@ -13,8 +13,8 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <a href="#" class="btn btn-default btnCrear">
-            <i class="fa fa-file-o"></i> Crear
+        <a href="#" class="btn btn-primary btnCrear">
+            <i class="fa fa-file-o"></i> Nueva Obligación
         </a>
     </div>
     <div class="btn-group pull-right col-md-3">
@@ -33,7 +33,7 @@
     <thead>
     <tr>
         
-        <g:sortableColumn property="descripcion" title="Descripcion" />
+        <g:sortableColumn property="descripcion" title="Descripción" />
         
         <g:sortableColumn property="fecha" title="Fecha" />
         
@@ -52,10 +52,13 @@
                 
                 <td><g:formatDate date="${obligacionInstance.fecha}" format="dd-MM-yyyy" /></td>
                 
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${obligacionInstance}" field="tipo"/></elm:textoBusqueda></td>
+                %{--<td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${obligacionInstance}" field="tipo"/></elm:textoBusqueda></td>--}%
+                <td>${obligacionInstance?.tipo == 'N' ? 'Normal' : (obligacionInstance?.tipo == 'E' ? 'Extraordinario' : 'Multa')}</td>
                 
-                <td><g:fieldValue bean="${obligacionInstance}" field="valor"/></td>
-                
+                %{--<td><g:fieldValue bean="${obligacionInstance}" field="valor"/></td>--}%
+               <td><g:formatNumber number="${obligacionInstance?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
+
+
             </tr>
         </g:each>
     </g:if>
@@ -109,7 +112,7 @@
         bootbox.dialog({
             title   : "Alerta",
             message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-            "¿Está seguro que desea eliminar el Obligacion seleccionado? Esta acción no se puede deshacer.</p>",
+            "¿Está seguro que desea eliminar la Obligación seleccionada? Esta acción no se puede deshacer.</p>",
             buttons : {
                 cancelar : {
                     label     : "Cancelar",
@@ -146,7 +149,7 @@
         });
     }
     function createEditRow(id) {
-        var title = id ? "Editar" : "Crear";
+        var title = id ? "Editar" : "Nueva";
         var data = id ? { id: id } : {};
             $.ajax({
             type    : "POST",
