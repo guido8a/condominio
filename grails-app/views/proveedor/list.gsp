@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Lista de Proveedor</title>
+    <title>Lista de Proveedores</title>
 </head>
 <body>
 
@@ -13,13 +13,13 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <a href="${createLink(controller: "egreso", action: "index")}" class="btn btn-default">
+        <a href="${createLink(controller: "egreso", action: "index")}" class="btn btn-primary">
             <i class="fa fa-arrow-left"></i> Regresar
         </a>
     </div>
     <div class="btn-group">
-        <a href="#" class="btn btn-default btnCrear">
-            <i class="fa fa-file-o"></i> Crear
+        <a href="#" class="btn btn-primary btnCrear">
+            <i class="fa fa-file-o"></i> Nuevo Proveedor
         </a>
     </div>
     <div class="btn-group pull-right col-md-3">
@@ -44,31 +44,27 @@
         
         <g:sortableColumn property="apellido" title="Apellido" />
         
-        <g:sortableColumn property="direccion" title="Direccion" />
+        <g:sortableColumn property="direccion" title="Dirección" />
         
-        <g:sortableColumn property="telefono" title="Telefono" />
+        <g:sortableColumn property="telefono" title="Teléfono" />
         
         <g:sortableColumn property="mail" title="Mail" />
+
+        <th>Estado</th>
         
     </tr>
     </thead>
     <tbody>
     <g:if test="${proveedorInstanceCount > 0}">
         <g:each in="${proveedorInstanceList}" status="i" var="proveedorInstance">
-            <tr data-id="${proveedorInstance.id}">
-                
-                <td>${proveedorInstance.ruc}</td>
-                
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${proveedorInstance}" field="nombre"/></elm:textoBusqueda></td>
-                
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${proveedorInstance}" field="apellido"/></elm:textoBusqueda></td>
-                
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${proveedorInstance}" field="direccion"/></elm:textoBusqueda></td>
-                
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${proveedorInstance}" field="telefono"/></elm:textoBusqueda></td>
-                
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${proveedorInstance}" field="mail"/></elm:textoBusqueda></td>
-                
+            <tr data-id="${proveedorInstance.id}" style="width: 100%">
+                <td style="width: 12%">${proveedorInstance.ruc}</td>
+                <td style="width: 23%"><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${proveedorInstance}" field="nombre"/></elm:textoBusqueda></td>
+                <td style="width: 15%"><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${proveedorInstance}" field="apellido"/></elm:textoBusqueda></td>
+                <td style="width: 15%"><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${proveedorInstance}" field="direccion"/></elm:textoBusqueda></td>
+                <td style="width: 12%"><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${proveedorInstance}" field="telefono"/></elm:textoBusqueda></td>
+                <td style="width: 14%"><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${proveedorInstance}" field="mail"/></elm:textoBusqueda></td>
+                <td style="${proveedorInstance?.activo == 'S' ? 'color: #00aa00;' : 'color: #701b19;'} width: 9%" >${proveedorInstance?.activo == 'S' ? "Activo" : 'Inactivo'}</td>
             </tr>
         </g:each>
     </g:if>
@@ -159,7 +155,7 @@
         });
     }
     function createEditRow(id) {
-        var title = id ? "Editar" : "Crear";
+        var title = id ? "Editar" : "Nuevo";
         var data = id ? { id: id } : {};
                 $.ajax({
             type    : "POST",
@@ -221,7 +217,7 @@
                 },
                 success : function (msg) {
                     bootbox.dialog({
-                        title   : "Ver Proveedor",
+                        title   : "Datos Proveedor",
                         message : msg,
                         buttons : {
                             ok : {

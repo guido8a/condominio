@@ -26,7 +26,7 @@
                     Nombre
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <g:fieldValue bean="${proveedorInstance}" field="nombre"/>
                 </div>
                 
@@ -49,10 +49,10 @@
         <g:if test="${proveedorInstance?.direccion}">
             <div class="row">
                 <div class="col-md-3 show-label">
-                    Direccion
+                    Dirección
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <g:fieldValue bean="${proveedorInstance}" field="direccion"/>
                 </div>
                 
@@ -62,7 +62,7 @@
         <g:if test="${proveedorInstance?.telefono}">
             <div class="row">
                 <div class="col-md-3 show-label">
-                    Telefono
+                    Teléfono
                 </div>
                 
                 <div class="col-md-4">
@@ -91,7 +91,7 @@
                     Observaciones
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <g:fieldValue bean="${proveedorInstance}" field="observaciones"/>
                 </div>
                 
@@ -101,11 +101,12 @@
         <g:if test="${proveedorInstance?.activo}">
             <div class="row">
                 <div class="col-md-3 show-label">
-                    Activo
+                    Estado
                 </div>
                 
                 <div class="col-md-4">
-                    <g:fieldValue bean="${proveedorInstance}" field="activo"/>
+                    %{--<g:fieldValue bean="${proveedorInstance}" field="activo"/>--}%
+                    ${proveedorInstance?.activo == 'S' ? "Activo" : 'Inactivo'}
                 </div>
                 
             </div>
