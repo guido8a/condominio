@@ -73,7 +73,7 @@ class IngresoController extends Shield {
         println "params: $params"
         def prsn = Persona.get(params.id)
         def ingr = Ingreso.findAllByPersona(prsn, [sort: 'fecha'])
-        return [ingreso: ingr, ingrCount: ingr.size()]
+        return [ingreso: ingr, ingrCount: ingr.size(), persona: prsn]
     }
 
     /**
@@ -256,6 +256,22 @@ class IngresoController extends Shield {
             println("error al borrar el pago " + e)
             render "no"
         }
+    }
+
+    def obligaciones_ajax () {
+        def persona = Persona.get(params.persona)
+        def ingresos = Ingreso.findAllByPersona(persona).sort{it.obligacion.descripcion}
+
+        return[ingreso: ingresos]
+    }
+
+    def pagos_ajax () {
+        def ingreso = Ingreso.get(params.ingreso)
+        def pagos = Pago.findAllByIngreso(ingreso)
+
+        def saldo = Math.round(ingreso?.valor*100)/100 - Math.round((pagos.valor?.sum() ?: 0) * 100)/100
+
+        return[ingreso: ingreso, pagos: pagos, saldo: saldo]
     }
 
 }
