@@ -346,6 +346,7 @@ como máximo 30
                         }, 100);
                     }else{
                         log("Error al guardar la información de persona","error")
+                        closeLoader();
                     }
                 }
             });

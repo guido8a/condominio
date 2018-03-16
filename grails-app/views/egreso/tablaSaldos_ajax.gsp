@@ -11,7 +11,6 @@
 
 
 <div class="row">
-    %{--<div class="col-xs-1"></div>--}%
     <div class="col-xs-12 alert alert-warning">
         <div class="col-xs-2">
             <label>Saldo Inicial:</label>
@@ -19,44 +18,43 @@
                          value="${g.formatNumber(number: data[0].sldoinic ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-    <div class="col-xs-1" style="padding: 0">
+        <div class="col-xs-1" style="padding: 0">
             <label style="color: #42a151">Total Ingresos:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: totalIngresos, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-    <div class="col-xs-1" style="padding: 0">
+        <div class="col-xs-1" style="padding: 0">
             <label style="color: #81c7eb">Total Egresos</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: totalEgresos, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-    <div class="col-xs-2">
+        <div class="col-xs-2">
             <label>Saldo a la fecha:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: data[0].sldofnal, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
 
-    <div class="col-xs-2">
-                <label>Valores por cobrar:</label>
-                <g:textField name="saldo_name" class="form-control derecha" readonly=""
-                             value="${g.formatNumber(number: data[0].ingrsldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
-            </div>
+        <div class="col-xs-2">
+            <label>Valores por cobrar:</label>
+            <g:textField name="saldo_name" class="form-control derecha" readonly=""
+                         value="${g.formatNumber(number: data[0].ingrsldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
+        </div>
 
-    <div class="col-xs-2">
-                <label>Pagos pendientes:</label>
-                <g:textField name="saldo_name" class="form-control derecha" readonly=""
-                             value="${g.formatNumber(number: data[0].egrssldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
-            </div>
-    <div class="col-xs-2">
-                <label>Resultado final:</label>
-                <g:textField  name="saldoTotal_name" value="${g.formatNumber(number: data[0].ingrsldo + data[0].sldofnal - data[0].egrssldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}" class="form-control derecha" readonly=""/>
-            </div>
-
-
+        <div class="col-xs-2">
+            <label>Pagos pendientes:</label>
+            <g:textField name="saldo_name" class="form-control derecha" readonly=""
+                         value="${g.formatNumber(number: data[0].egrssldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
+        </div>
+        <div class="col-xs-2">
+            <label>Resultado final:</label>
+            <g:textField  name="saldoTotal_name" value="${g.formatNumber(number: data[0].ingrsldo + data[0].sldofnal - data[0].egrssldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}" class="form-control derecha" readonly=""/>
+        </div>
+    </div>
 </div>
-</div>
+
 <div class="row">
     %{--<div class="col-xs-1"></div>--}%
     <div class="col-xs-12 alert alert-success">
@@ -96,9 +94,9 @@
                     No existen datos!
                 </div>
             </g:else>
-            </div>
         </div>
     </div>
+</div>
 </div>
 
 <div class="row">
@@ -117,7 +115,7 @@
                 </tr>
             </table>
 
-            %{--<div id="tablaEgresos"></div>--}%
+        %{--<div id="tablaEgresos"></div>--}%
 
             <g:if test="${egresos.size() > 0}">
                 <div class="" style="width: 100%;height: 260px; overflow-y: auto;float: right;" >
@@ -150,22 +148,22 @@
     %{--cargarIngresos('${desde}', '${hasta}');--}%
     %{--cargarEgresos('${desde}', '${hasta}');--}%
 
-/*
-    function cargarIngresos (desde, hasta){
-        $.ajax({
-            type: 'POST',
-            url: "${createLink(controller: 'egreso', action: 'tablaIngresos_ajax')}",
-            async: true,
-            data:{
-                desde: desde,
-                hasta: hasta
-            },
-            success: function (msg){
-                $("#tablaIngresos").html(msg)
-            }
-        })
-    }
-*/
+    /*
+     function cargarIngresos (desde, hasta){
+     $.ajax({
+     type: 'POST',
+     url: "${createLink(controller: 'egreso', action: 'tablaIngresos_ajax')}",
+     async: true,
+     data:{
+     desde: desde,
+     hasta: hasta
+     },
+     success: function (msg){
+     $("#tablaIngresos").html(msg)
+     }
+     })
+     }
+     */
 
     function cargarEgresos (desde, hasta){
         $.ajax({

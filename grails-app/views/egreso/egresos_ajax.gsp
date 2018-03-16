@@ -20,18 +20,24 @@
     color: #53cf6d;
 }
 
+.letra{
+    font-size: 11px;
+}
+
 </style>
 
 
+
+
 <div class="" style="width: 100%;height: 300px; overflow-y: auto;">
-    <table class="table-bordered table-condensed table-hover" width="100%">
+    <table class="table-bordered table-condensed table-hover letra" width="100%">
         <g:each in="${egresos}" status="i" var="egreso">
             <g:set var="saldo" value="${egreso?.valor?.toDouble() - (condominio.PagoEgreso.findAllByEgreso(egreso).valor?.sum()?.toDouble() ?: 0)}"/>
             <tr class="trEgreso" egr="${egreso?.id}">
                 <td>${egreso?.descripcion}</td>
-                <td class="derecha">${egreso?.proveedor?.nombre + " " + (egreso?.proveedor?.apellido ?: '')}</td>
+                <td>${egreso?.proveedor?.nombre + " " + (egreso?.proveedor?.apellido ?: '')}</td>
                 <td class="derecha"><g:formatNumber number="${egreso?.valor}" format="##,##0" locale="en" maxFractionDigits="2" minFractionDigits="2"/></td>
-                <td class="derecha ${saldo > 0 ? 'azul' : 'verde'}"><g:formatNumber number="${saldo}" format="##,##0" locale="en" maxFractionDigits="2" minFractionDigits="2"/></td>
+                %{--<td class="derecha ${saldo > 0 ? 'azul' : 'verde'}"><g:formatNumber number="${saldo}" format="##,##0" locale="en" maxFractionDigits="2" minFractionDigits="2"/></td>--}%
             </tr>
         </g:each>
     </table>

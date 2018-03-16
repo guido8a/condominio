@@ -1,5 +1,6 @@
 package seguridad
 
+import condominio.Ingreso
 import org.apache.tomcat.util.security.MD5Encoder
 import org.springframework.dao.DataIntegrityViolationException
 import sun.security.provider.MD5
@@ -9,6 +10,8 @@ import sun.security.provider.MD5
  * Controlador que muestra las pantallas de manejo de Persona
  */
 class PersonaController extends Shield {
+
+    def dbConnectionService
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
@@ -124,7 +127,7 @@ class PersonaController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-        println("params " + params)
+//        println("params " + params)
 
         def persona
         params.sexo = (params.sexo == 'Masculino' ? 'M' : 'F')
@@ -132,7 +135,6 @@ class PersonaController extends Shield {
         params.alicuota = params.alicuota.toDouble()
 
         if(params.fechaInicio_input){
-            println("entro")
             params.fechaInicio_input = new Date().parse('dd-MM-yyyy', params.fechaInicio_input)
             params.fechaFin_input = new Date().parse('dd-MM-yyyy', params.fechaFin_input)
         }
@@ -143,9 +145,6 @@ class PersonaController extends Shield {
             persona = new Persona()
             persona.fecha = new Date()
         }
-
-        persona.password = params.password.encodeAsMD5()
-
         if(params.activo){
             params.activo = 1
         }else{
@@ -153,6 +152,8 @@ class PersonaController extends Shield {
         }
 
         persona.properties = params
+
+        persona.password = params.password.encodeAsMD5()
 
         if(!persona.fecha) persona.fecha = new Date()
 
@@ -293,6 +294,26 @@ class PersonaController extends Shield {
             println("error al borrar el perfil " + e)
             render "no"
         }
+    }
+
+    def personal () {
+        def persona = Persona.get(session.usuario.id)
+        def sql = "select * from personas() where prsn__id= ${persona.id}"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+        return[data: data]
+    }
+
+    def deudas_ajax (){
+
+        def fecha = new Date().parse("dd-MM-yyyy",params.fecha)
+        def persona = Persona.get(session.usuario.id)
+        def ingresos = Ingreso.findAllByPersonaAndFechaLessThanEquals(persona,fecha).sort{it.obligacion.descripcion}
+        def sql = "select * from pendiente('${fecha}') where prsn__id= ${persona.id}"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+
+        return[ingresos: ingresos, pendientes: data]
 
     }
 

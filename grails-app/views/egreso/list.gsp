@@ -85,10 +85,10 @@
     <tbody>
 
     <tr style="width: 100%">
-        <td id="tdEgresos" style="width: 40%">
+        <td id="tdEgresos" style="width: 45%">
 
         </td>
-        <td id="tdPagosEgresos" style="width: 60%">
+        <td id="tdPagosEgresos" style="width: 55%">
 
         </td>
     </tr>
