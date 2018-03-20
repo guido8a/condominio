@@ -15,10 +15,10 @@
 </style>
 
 <div class="row">
-    <div class="col-xs-12 alert alert-success">
-        <div class="col-xs-12" style="height: 300px">
+    <div class="alert alert-success">
+        <div style="width: 100%; text-align: center; ">
             <label>Deudas</label>
-            <table class="table-bordered table-condensed" style="width: 100%">
+            <table class="table-bordered table-condensed">
                 <tr style="width:100%;">
                     <th style="width: 37%">Concepto</th>
                     <th style="width: 20%">Valor</th>
@@ -29,7 +29,7 @@
             </table>
 
             <g:if test="${pendientes.size() > 0}">
-                <div class="" style="width: 100%;height: 260px; overflow-y: auto;float: right;" >
+                <div class="" style="width: 100%; height: 200px; overflow-y:auto;" >
                     <table class="table-bordered table-condensed table-hover" width="98%">
                         <g:each in="${pendientes}" var="pendiente">
                             <tr style="width: 100%">
@@ -43,7 +43,7 @@
                 </div>
             </g:if>
             <g:else>
-                <div class="alert alert-danger" style="text-align: center; margin-top: 15px">
+                <div class="alert alert-info" style="text-align: center; margin-top: 15px">
                     No tiene deudas a la fecha seleccionada
                 </div>
             </g:else>

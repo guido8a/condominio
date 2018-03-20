@@ -18,16 +18,19 @@
 
 <body>
 
-<div style="text-align: center; margin-top: 20px; height: ${(flash.message) ? '650' : '580'}px;" class="well">
+%{--<div style="text-align: center; margin-top: 20px; height: ${(flash.message) ? '650' : '580'}px;" class="well">--}%
+<div style="text-align: center;" class="well">
 
     <h1 class="titl" style="font-size: 24px; color: #06a">Ingreso al Sistema</h1>
     <elm:flashMessage tipo="${flash.tipo}" icon="${flash.icon}"
                       clase="${flash.clase}">${flash.message}</elm:flashMessage>
 
-    <div class="dialog ui-corner-all" style="height: 295px;padding: 10px;width: 910px;margin: auto;margin-top: 5px">
-        <div>
+    %{--<div class="dialog ui-corner-all" style="height: 295px;padding: 10px;width: 910px;margin: auto;margin-top: 5px">--}%
+    <div class="dialog ui-corner-all" style="height: 70%;padding: 10px;width: 100%;margin: auto;margin-top: 5px">
+        <div class="col-xs-12">
             %{--<img src="${resource(dir: 'images', file: 'condominio.png')}" style="padding: 40px;"/>--}%
-            <img src="${resource(dir: 'images', file: 'logo.png')}" style="padding: 40px;"/>
+            %{--<img src="${resource(dir: 'images', file: 'logo.png')}" style="padding: 10%; max-height: 500px; height: 40%"/>--}%
+            <img src="${resource(dir: 'images', file: 'logo.png')}" style="width: inherit; max-width: 400px;" />
         </div>
 
         <div style="width: 100%;height: 20px;float: left;margin-top: 30px;text-align: center">
@@ -50,39 +53,39 @@
 
 
 <div class="modal fade" id="modal-ingreso" tabindex="-1" role="dialog" aria-labelledby=""
-     aria-hidden="true">
-    <div class="modal-dialog" id="modalBody" style="width: 380px;">
+     aria-hidden="true" style="position: absolute; top: 10px;">
+    <div class="modal-dialog" id="modalBody" style="width: 80%px; max-width: 320px;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Ingreso a trámites</h4>
+                <h4 class="modal-title">Ingreso al sistema</h4>
             </div>
 
-            <div class="modal-body" style="width: 280px; margin: auto">
+            <div class="modal-body" style="width: 100%; margin: auto">
                 <g:form name="frmLogin" action="validar" class="form-horizontal">
                     <div class="form-group">
                         <label class="col-md-5" for="login">Usuario</label>
 
-                        <div class="controls col-md-5">
+                        <div class="controls col-md-7">
                             %{--<input type="text" id="login" placeholder="Usuario">--}%
                             <input name="login" id="login" type="text" class="form-control required"
-                                   placeholder="Usuario" required autofocus style="width: 160px;">
+                                   placeholder="Usuario" required autofocus >
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="col-md-5" for="pass">Contraseña</label>
 
-                        <div class="controls col-md-5">
+                        <div class="controls col-md-7">
                             %{--<input type="password" id="pass" placeholder="Usuario">--}%
                             <input name="pass" id="pass" type="password" class="form-control required"
-                                   placeholder="Contraseña" required style="width: 160px;">
+                                   placeholder="Contraseña" required>
                         </div>
                     </div>
 
-                    <div class="divBtn" style="width: 100%">
+                    <div class="divBtn" >
                         <a href="#" class="btn btn-primary btn-lg btn-block" id="btn-login"
-                           style="width: 140px; margin: auto">
+                           style="width: 60%; margin: auto">
                             <i class="fa fa-lock"></i> Ingresar
                         </a>
                     </div>

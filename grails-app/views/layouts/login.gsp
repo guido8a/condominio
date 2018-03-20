@@ -56,7 +56,7 @@
 
     <body>
 
-        <div class="container" style="min-width: 1000px !important;">
+        <div class="container" style="min-width: 80%" !important;">
             <g:layoutBody/>
         </div> <!-- /container -->
 
