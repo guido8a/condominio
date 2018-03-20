@@ -29,7 +29,7 @@
 
 
 
-<div class="" style="width: 100%;height: 300px; overflow-y: auto;">
+<div class="" style="width: 100%;height: 600px; overflow-y: auto;">
     <table class="table-bordered table-condensed table-hover letra" width="100%">
         <g:each in="${egresos}" status="i" var="egreso">
             <g:set var="saldo" value="${egreso?.valor?.toDouble() - (condominio.PagoEgreso.findAllByEgreso(egreso).valor?.sum()?.toDouble() ?: 0)}"/>

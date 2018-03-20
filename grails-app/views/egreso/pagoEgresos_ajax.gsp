@@ -9,12 +9,12 @@
 <div class="alert alert-warning col-md-12">
 
 
-    <div class="col-md-4">
-        <a href="#" class="btn btn-success btn-sm btnPago ${(saldo ?: 0) > 0 ? '' : 'disabled'}" data-ing="${egreso?.id}" title="Ingresar Pago">
-            <i class="fa fa-plus"></i> Pagar
+    <div class="col-md-6">
+        <a href="#" class="btn btn-info btnEditarEgg ${(saldo ?: 0) > 0 ? '' : 'disabled'}" data-ing="${egreso?.id}" title="Editar Egreso">
+            <i class="fa fa-pencil"></i> Editar Egreso
         </a>
-        <a href="#" class="btn btn-info btn-sm btnEditarEgg ${(saldo ?: 0) > 0 ? '' : 'disabled'}" data-ing="${egreso?.id}" title="Editar Egreso">
-            <i class="fa fa-pencil"></i> Editar
+        <a href="#" class="btn btn-success btnPago ${(saldo ?: 0) > 0 ? '' : 'disabled'}" data-ing="${egreso?.id}" title="Ingresar Pago">
+            <i class="fa fa-plus"></i> Pagar
         </a>
     </div>
 
@@ -29,17 +29,17 @@
                      %{--value="${g.formatNumber(number: egreso?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
     %{--</div>--}%
 
-    <div class="col-md-1">
-        <label style="color: #1b8e36">Pagado:</label>
-    </div>
     <div class="col-md-3">
+        <label style="color: #1b8e36">Pagado:</label>
+    %{--</div>--}%
+    %{--<div class="col-md-3">--}%
         <g:textField name="saldo_name" class="form-control derecha" readonly=""
                      value="${g.formatNumber(number: pagos?.valor?.sum() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
     </div>
-    <div class="col-md-1">
-        <label style="color: #701b19">Saldo:</label>
-    </div>
     <div class="col-md-3">
+        <label style="color: #701b19">Saldo:</label>
+    %{--</div>--}%
+    %{--<div class="col-md-3">--}%
         <g:textField name="saldo_name" class="form-control derecha" readonly=""
                      value="${g.formatNumber(number: saldo ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
     </div>

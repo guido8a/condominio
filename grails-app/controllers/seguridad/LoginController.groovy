@@ -219,14 +219,18 @@ class LoginController {
                     }
                     // ------------------fin de sesion activa --------------
 
-
-
                     if (perfiles.size() == 1) {
                         session.usuario.vaciarPermisos()
                         session.perfil = perfiles.first().perfil
                         cargarPermisos()
                         def cn = "inicio"
                         def an = "index"
+
+                        println "perf: $perfiles"
+                        if (perfiles[0].perfil.codigo == 'USU') {
+                            redirect(controller: 'persona', action: 'personal')
+                            return
+                        }
 
                         def permisos = Prpf.findAllByPerfil(session.perfil)
                         permisos.each {
@@ -241,7 +245,7 @@ class LoginController {
                         def count = borrarAlertas()
                         if (count > 0) {
                             redirect(controller: 'alertas', action: 'list')
-                        } else {// llama a reporte
+                        } else {
                             redirect(controller: 'inicio', action: 'index')
                         }
 

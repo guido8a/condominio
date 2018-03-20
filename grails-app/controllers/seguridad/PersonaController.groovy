@@ -306,10 +306,10 @@ class PersonaController extends Shield {
 
     def deudas_ajax (){
 
-        def fecha = new Date().parse("dd-MM-yyyy",params.fecha)
+        def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
         def persona = Persona.get(session.usuario.id)
         def ingresos = Ingreso.findAllByPersonaAndFechaLessThanEquals(persona,fecha).sort{it.obligacion.descripcion}
-        def sql = "select * from pendiente('${fecha}') where prsn__id= ${persona.id}"
+        def sql = "select * from pendiente('${fecha.format("yyyy-MM-dd")}') where prsn__id= ${persona.id}"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 

@@ -382,7 +382,7 @@ class ReportesController {
 
     def pagosPendientes3 () {
 
-//        println("params " + params)
+        println "params " + params
 
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
 
@@ -393,7 +393,7 @@ class ReportesController {
         def res =  cn.rows(sql.toString())
         def tamano = res.size()
 //        def max = 54
-        def max = 46
+        def malox = 46
         def actual = 0
 //        println("tamaño " + tamano)
 
