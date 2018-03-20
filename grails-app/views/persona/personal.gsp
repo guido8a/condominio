@@ -38,45 +38,34 @@
 
 
 <div class="row">
-    %{--<div class="col-xs-2">--}%
-    %{--<label>Fecha Desde:</label>--}%
-    %{--</div>--}%
-    %{--<div class="col-xs-2">--}%
-    %{--<elm:datepicker name="fechaD_name" id="fechaDesde" class="datepicker form-control" value="${new Date() - 30}" />--}%
-    %{--</div>--}%
-    <div class="col-sm-2">
+    <div class="col-md-2 col-xs-2">
         <label>Deudas a la fecha:</label>
     </div>
-    <div class="col-sm-2">
+    <div class="col-md-2 col-xs-2">
         <elm:datepicker name="fechaH_name" id="fechaHasta" class="datepicker form-control" value="${new Date()}"/>
     </div>
+</div>
 
-    <div class="col-sm-2">
+<div class="row">
+    <div class="col-sm-2 col-xs-2">
         <a href="#" class="btn btn-info btnBuscar" ><i class="fa fa-search"></i> Buscar</a>
     </div>
 </div>
 
+<div class="row col-xs-6 alert alert-warning" style="margin-top: 10px">
+    <div class="col-xs-4">
+        <label>Alícuota:</label>
+        <g:textField name="saldo_name" class="form-control" readonly=""
+                     value="${data[0].alctvlor}"/>
+    </div>
 
-<div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-7 alert alert-warning">
-        <div class="col-md-2">
-            <label>Alícuota:</label>
-        </div>
-        <div class="col-md-3">
-
-            <g:textField name="saldo_name" class="form-control derecha" readonly=""
-                         value="${data[0].alctvlor}"/>
-        </div>
-        <div class="col-md-2">
-            <label>Saldo Total:</label>
-        </div>
-        <div class="col-md-3">
-            <g:textField name="saldo_name" class="form-control derecha" readonly=""
-                         value="${data[0].prsnsldo}"/>
-        </div>
+    <div class="col-xs-4">
+        <label>Saldo Total:</label>
+        <g:textField name="saldo_name" class="form-control" readonly=""
+                     value="${data[0].prsnsldo}"/>
     </div>
 </div>
+
 
 <div id="divDeudas">
 
