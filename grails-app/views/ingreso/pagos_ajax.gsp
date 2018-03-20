@@ -23,7 +23,7 @@
         <label>Valor:</label>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-3">
         <g:textField name="saldo_name" class="form-control derecha" readonly=""
                      value="${g.formatNumber(number: ingreso?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
     </div>
@@ -50,7 +50,6 @@
 
 </div>
 <g:if test="${pagos?.size() > 0}">
-
     <table class="table table-condensed table-bordered table-striped table-hover">
         <thead>
         <tr style="width: 100%">
