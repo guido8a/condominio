@@ -18,7 +18,7 @@
     <div class="alert alert-success">
         <div style="width: 100%; text-align: center; ">
             <label>Deudas</label>
-            <table class="table-bordered table-condensed">
+            <table class=" col-md-12 table-bordered table-condensed">
                 <tr style="width:100%;">
                     <th style="width: 37%">Concepto</th>
                     <th style="width: 20%">Valor</th>
