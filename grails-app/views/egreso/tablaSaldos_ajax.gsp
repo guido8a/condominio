@@ -12,45 +12,49 @@
 
 <div class="row">
     <div class="col-xs-12 alert alert-warning">
-        <div class="col-xs-2">
+        <div class="col-xs-1" style="padding: 5px; width: 140px">
             <label>Saldo Inicial:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: data[0].sldoinic ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-        <div class="col-xs-1" style="padding: 0">
+        <div class="col-xs-1" style="padding: 5px; width: 140px">
             <label style="color: #42a151">Total Ingresos:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: totalIngresos, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-        <div class="col-xs-1" style="padding: 0">
-            <label style="color: #81c7eb">Total Egresos</label>
+        <div class="col-xs-1" style="padding: 5px; width: 140px">
+            <label style="color: #a34a23">Total Egresos</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: totalEgresos, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-        <div class="col-xs-2">
+        <div class="col-xs-1" style="padding: 5px; width: 140px">
             <label>Saldo a la fecha:</label>
-            <g:textField name="saldo_name" class="form-control derecha" readonly=""
+            <strong><g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: data[0].sldofnal, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
+            </strong>
         </div>
 
 
-        <div class="col-xs-2">
+        <div class="col-xs-2" style="padding: 5px; width: 140px; margin-left: 120px">
             <label>Valores por cobrar:</label>
-            <g:textField name="saldo_name" class="form-control derecha" readonly=""
+            <g:textField name="saldo_name" class="form-control derecha" readonly="" style="color: #804040"
                          value="${g.formatNumber(number: data[0].ingrsldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-        <div class="col-xs-2">
+        <div class="col-xs-1" style="padding: 5px; width: 140px">
             <label>Pagos pendientes:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: data[0].egrssldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
-        <div class="col-xs-2">
+        <div class="col-xs-1" style="padding: 5px; width: 140px">
             <label>Resultado final:</label>
-            <g:textField  name="saldoTotal_name" value="${g.formatNumber(number: data[0].ingrsldo + data[0].sldofnal - data[0].egrssldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}" class="form-control derecha" readonly=""/>
+            <strong>
+                <g:textField  name="saldoTotal_name" class="form-control derecha" readonly=""
+                              value="${g.formatNumber(number: data[0].ingrsldo + data[0].sldofnal - data[0].egrssldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
+            </strong>
         </div>
     </div>
 </div>
