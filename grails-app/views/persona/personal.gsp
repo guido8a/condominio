@@ -26,7 +26,7 @@
 
 <div class="col-md-4"></div>
 
-<div class="row col-md-5 alert alert-info" style="margin-top:-1%">
+<div class="row col-md-5 alert alert-info" style="margin-top:-1%;">
     <div class="col-md-2"></div>
     <div class="col-md-3 col-xs-5">
         <label><i class="fa fa-child"></i> ${(data[0].prsnnmbr ?: '') + " " + (data[0].prsnapll ?: '')}</label>
@@ -39,8 +39,8 @@
     </div>
 </div>
 
-<div class="col-md-4"></div>
-<div class="col-md-5" style="margin-top: -9px">* Para realizar consulta de sus saldos, seleccione la fecha y clic en el botón azul </div>
+%{--<div class="col-md-4"></div>--}%
+<div class="col-md-12" style="margin-top: -9px; text-align: center">* Para realizar consulta de sus saldos, seleccione la fecha y clic en el botón azul </div>
 
 
 <div class="row col-md-8">
@@ -65,7 +65,7 @@
     </div>
 
     <div class="col-xs-6">
-        <label>por pagar: </label>
+        <label>Por pagar: </label>
         <label class="${data[0].prsnsldo > 0 ? 'text-danger' : 'text-info'}">${data[0].prsnsldo}</label>
     </div>
 </div>
