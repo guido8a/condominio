@@ -42,6 +42,7 @@
 <div class="col-md-4"></div>
 <div class="col-md-5" style="margin-top: -9px">* Para realizar consulta de sus saldos, seleccione la fecha y clic en el botón azul </div>
 
+
 <div class="row col-md-8">
     <div class="col-md-7"></div>
     <div class="col-md-2 col-xs-6" style="margin-left: 0">
