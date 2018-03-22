@@ -713,7 +713,7 @@ class ReportesController {
         Paragraph t2 = new Paragraph();
         t2.setAlignment("Justify");
         t2.add(new Paragraph( "Agradecemos que tenga la bondad de cancelar este saldo a la administración del " +
-                "edificio o proponer una forma de pago enviando la misma al correo electrónico vinedos269@gmai.com.", info))
+                "edificio o proponer una forma de pago enviando la misma al correo electrónico vinedos269@gmail.com.", info))
         addEmptyLine(t2, 1);
         document.add(t2)
         Paragraph t3 = new Paragraph();
