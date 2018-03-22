@@ -3,6 +3,9 @@ package utilitarios
 import com.lowagie.text.Chapter
 import com.lowagie.text.ChapterAutoNumber
 import com.lowagie.text.Chunk
+import com.lowagie.text.Phrase
+import condominio.Ingreso
+import org.apache.poi.hwpf.usermodel.OfficeDrawing
 import seguridad.Persona
 
 import com.lowagie.text.Document
@@ -592,6 +595,152 @@ class ReportesController {
 
     def fecha_ajax(){
 
+    }
+
+    def solicitud () {
+
+//        println "params " + params
+
+        def persona = Persona.get(params.id)
+
+        def sql = "select * from personas() where prsn__id= ${persona.id}"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+
+        def sql2 = "select * from pendiente('${new Date().format("yyyy-MM-dd")}') where prsn__id= ${persona.id}"
+        def cn2 = dbConnectionService.getConnection()
+        def data2 = cn2.rows(sql2.toString())
+
+        def baos = new ByteArrayOutputStream()
+        def name = "solicitud_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def titulo = new Color(40,140,180)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
+        Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
+        Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
+        def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtDatoDere = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+
+        def fondoTotal = new Color(240, 240, 240);
+
+        def prmsTdNoBorder = [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def prmsTdBorder = [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def prmsNmBorder = [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+        Document document
+        document = new Document(PageSize.A4);
+        document.setMargins(74,30,30,28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Solicitud");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitle));
+//        preface.add(new Paragraph("", fontTitulo));
+        addEmptyLine(preface, 2);
+        document.add(preface);
+
+        def tabla = new PdfPTable(2);
+        tabla.setWidthPercentage(70);
+        tabla.setWidths(arregloEnteros([45,25]))
+
+//        Paragraph s = new Paragraph();
+//        s.add(new Paragraph("Señor(a)", info))
+//        document.add(s)
+
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(100);
+        table.addCell(getCell("Señor(a)", PdfPCell.ALIGN_LEFT));
+        table.addCell(getCell("", PdfPCell.ALIGN_CENTER));
+//        table.addCell(getCell("Quito, ${new Date().format("dd-MM-yyyy")}", PdfPCell.ALIGN_RIGHT));
+        table.addCell(getCell("Quito, ${util.fechaConFormato(fecha: new Date(), formato: 'dd MMMM yyyy')} ", PdfPCell.ALIGN_RIGHT));
+        document.add(table);
+
+        Paragraph c = new Paragraph();
+        c.add(new Paragraph((persona?.nombre ?: '') + ' ' + (persona?.apellido ?: ''), info))
+        document.add(c)
+        Paragraph d = new Paragraph();
+        d.add(new Paragraph( "Edificio: " + (persona?.edificio?.descripcion ?: '') + ' , Departamento: ' + (persona?.departamento ?: ''), info))
+        document.add(d)
+        Paragraph p = new Paragraph();
+        p.add(new Paragraph( "Presente,", info))
+        addEmptyLine(p, 1);
+        document.add(p)
+        Paragraph t1 = new Paragraph();
+        t1.add(new Paragraph( "Luego de un atento saludo, me permito indicarle que usted mantiene una deuda con el conjunto residencial 'Los Viñedos', ", info))
+        t1.add(new Paragraph( "por un valor total de \$ ${data[0].prsnsldo}, el mismo que tiene el siguiente desglose:", info))
+        addEmptyLine(t1, 1);
+        document.add(t1)
+
+        addCellTabla(tabla, new Paragraph("Obligación.", fontTh), frmtHd)
+        addCellTabla(tabla, new Paragraph("Valor", fontTh), frmtHd)
+        data2.each{pendiente->
+            if(pendiente.sldo > 0){
+                addCellTabla(tabla, new Paragraph(pendiente.oblg, fontTd10), frmtDato)
+                addCellTabla(tabla, new Paragraph(pendiente.sldo.toString(), fontTd10), frmtDatoDere)
+            }
+        }
+        document.add(tabla)
+
+        Paragraph e = new Paragraph();
+        e.add(new Paragraph( "", info))
+        document.add(e)
+
+        Paragraph t2 = new Paragraph();
+        t2.add(new Paragraph( "Agradecemos que tenga la bondad de cancelar este saldo a la administración del edificio o proponer una forma de pago", info))
+        t2.add(new Paragraph( "enviando la misma al correo electrónico vinedos269@hotmail.com.", info))
+        addEmptyLine(t2, 1);
+        document.add(t2)
+        Paragraph t3 = new Paragraph();
+        t3.add(new Paragraph( "Recordándole que todos nos beneficiamos del agua, seguridad, luz, ascensores y la labor de limpieza, por lo que todos", info))
+        t3.add(new Paragraph( "debemos cumplir con nuestras obligaciones.", info))
+        addEmptyLine(t3, 1);
+        document.add(t3)
+        Paragraph a = new Paragraph();
+        a.add(new Paragraph("Atentamente", info))
+        addEmptyLine(a, 3);
+        document.add(a)
+        Paragraph f = new Paragraph();
+        f.add(new Paragraph("Ing. Guido E. Ochoa Moreno", info))
+        f.add(new Paragraph("ADMINISTRADOR", info))
+        f.add(new Paragraph("C.I: 0601983869", info))
+        document.add(f)
+
+
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=" + name)
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+
+    }
+
+    public PdfPCell getCell(String text, int alignment) {
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        PdfPCell cell = new PdfPCell(new Phrase(text, fontTd10));
+        cell.setPadding(0);
+        cell.setHorizontalAlignment(alignment);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        return cell;
     }
 
 

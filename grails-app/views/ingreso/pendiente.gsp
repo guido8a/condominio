@@ -39,6 +39,11 @@
             <i class="fa fa-arrow-left"></i> Regresar
         </a>
     </div>
+    <div class="btn-group">
+        <a href="${createLink(controller: "reportes", action: "solicitud", id: persona.id)}" class="btn btn-info">
+            <i class="fa fa-print"></i> Solicitud de Pago
+        </a>
+    </div>
 </div>
 
 
@@ -65,91 +70,6 @@
     </tbody>
 </table>
 
-
-%{--<table class="table table-condensed table-bordered table-striped table-hover">--}%
-    %{--<thead>--}%
-    %{--<tr style="width: 100%">--}%
-
-        %{--<th style="width: 45%">Concepto</th>--}%
-        %{--<th style="width: 10%">Fecha</th>--}%
-        %{--<th style="width: 10%">Valor</th>--}%
-        %{--<th style="width: 10%">Pagado</th>--}%
-        %{--<th style="width: 10%">Saldo</th>--}%
-        %{--<th style="width: 10%; text-align: center"><i class="fa fa-pencil"></i> Pagos</th>--}%
-    %{--</tr>--}%
-    %{--</thead>--}%
-    %{--<tbody>--}%
-    %{--<g:if test="${ingrCount > 0}">--}%
-        %{--<g:each in="${ingreso}" status="i" var="ingr">--}%
-            %{--<tr data-id="${ingr.id}" data-obsr="${ingr.obligacion.descripcion}: ${ingr.observaciones}"--}%
-                %{--style="background-color: #ffffff">--}%
-
-                %{--<td>${ingr.obligacion.descripcion} ${ingr.observaciones? ': ' + ingr.observaciones :''}</td>--}%
-
-                %{--<td><g:formatDate date="${ingr.fecha}" format="dd-MM-yyyy" /></td>--}%
-
-                %{--<td class="derecha"><g:fieldValue bean="${ingr}" field="valor" /></td>--}%
-
-                %{--<td class="derecha">${(Pago.findAllByIngreso(ingr).valor?.sum()?.toDouble() ?: 0)}</td>--}%
-
-                %{--<td class="derecha">${ingr?.valor?.toDouble() - (Pago.findAllByIngreso(ingr).valor?.sum()?.toDouble() ?: 0)}</td>--}%
-
-                %{--<td class="centro">--}%
-                    %{--<g:if test="${(ingr.valor.toDouble() - (Pago.findAllByIngreso(ingr)?.valor?.sum()?.toDouble() ?: 0)) > 0}">--}%
-                        %{--<a href="#" class="btn btn-success btn-sm btnAdd" data-ing="${ingr?.id}" title="Ingresar Pago">--}%
-                            %{--<i class="fa fa-plus"></i> Pagar--}%
-                        %{--</a>--}%
-                    %{--</g:if>--}%
-                %{--</td>--}%
-            %{--</tr>--}%
-            %{--<g:if test="${Pago.findAllByIngreso(ingr)}">--}%
-                %{--<g:set var="cabecera" value="N"/>--}%
-                %{--<g:set var="pagosUsuario" value="${Pago.findAllByIngreso(ingr).sort{it.fechaPago}}"/>--}%
-                %{--<g:each in="${pagosUsuario}" var="pagoUsuario">--}%
-                    %{--<g:if test="${cabecera != 'S'}">--}%
-                        %{--<tr style="color: #0b0b0b!important;">--}%
-                            %{--<td class="colorFondo"colspan="2">Pago realizado por:</td>--}%
-                            %{--<td class="colorFondo">Documento</td>--}%
-                            %{--<td class="colorFondo">Fecha Pago</td>--}%
-                            %{--<td class="colorFondo">Pago</td>--}%
-                            %{--<td class="colorFondo"><i class="fa fa-pencil"></i></td>--}%
-                            %{--<g:set var="cabecera" value="S"/>--}%
-                        %{--</tr>--}%
-                    %{--</g:if>--}%
-                    %{--<tr data-id="${pagoUsuario.id}" style="background-color: #efffef !important;">--}%
-                        %{--<td colspan="2">${pagoUsuario?.observaciones}</td>--}%
-                        %{--<td>${pagoUsuario?.documento}</td>--}%
-                        %{--<td><g:formatDate date="${pagoUsuario?.fechaPago}" format="dd-MM-yyyy"/></td>--}%
-                        %{--<td class="derecha dd"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>--}%
-                        %{--<td class="centro">--}%
-                            %{--<a href="#" class="btn btn-info btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${ingr?.id}" title="Editar Pago">--}%
-                                %{--<i class="fa fa-pencil"></i>--}%
-                            %{--</a>--}%
-                            %{--<a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" title="Borrar Pago">--}%
-                                %{--<i class="fa fa-trash-o"></i>--}%
-                            %{--</a>--}%
-                        %{--</td>--}%
-                    %{--</tr>--}%
-                %{--</g:each>--}%
-            %{--</g:if>--}%
-        %{--</g:each>--}%
-    %{--</g:if>--}%
-    %{--<g:else>--}%
-        %{--<tr class="danger">--}%
-            %{--<td class="text-center" colspan="9">--}%
-                %{--<g:if test="${params.search && params.search!= ''}">--}%
-                    %{--No se encontraron resultados para su búsqueda--}%
-                %{--</g:if>--}%
-                %{--<g:else>--}%
-                    %{--No se encontraron registros que mostrar--}%
-                %{--</g:else>--}%
-            %{--</td>--}%
-        %{--</tr>--}%
-    %{--</g:else>--}%
-    %{--</tbody>--}%
-%{--</table>--}%
-
-%{--<elm:pagination total="${ingrCount}" params="${params}"/>--}%
 
 <script type="text/javascript">
 
