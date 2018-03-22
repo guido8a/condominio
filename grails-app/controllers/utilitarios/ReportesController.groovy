@@ -615,12 +615,11 @@ class ReportesController {
         def name = "solicitud_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
         def titulo = new Color(40,140,180)
         Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
-        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
-        Font fontTitle = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
-        Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
-        Font fontTh = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font info = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL)
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
         Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
-        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
         Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
@@ -636,7 +635,7 @@ class ReportesController {
 
         Document document
         document = new Document(PageSize.A4);
-        document.setMargins(74,30,30,28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        document.setMargins(74,60,30,30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos);
         document.resetHeader()
         document.resetFooter()
@@ -659,37 +658,45 @@ class ReportesController {
 
         def tabla = new PdfPTable(2);
         tabla.setWidthPercentage(70);
-        tabla.setWidths(arregloEnteros([45,25]))
+        tabla.setWidths(arregloEnteros([55,15]))
 
 //        Paragraph s = new Paragraph();
 //        s.add(new Paragraph("Señor(a)", info))
 //        document.add(s)
 
-        PdfPTable table = new PdfPTable(3);
+        PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(100);
-        table.addCell(getCell("Señor(a)", PdfPCell.ALIGN_LEFT));
-        table.addCell(getCell("", PdfPCell.ALIGN_CENTER));
-//        table.addCell(getCell("Quito, ${new Date().format("dd-MM-yyyy")}", PdfPCell.ALIGN_RIGHT));
-        table.addCell(getCell("Quito, ${util.fechaConFormato(fecha: new Date(), formato: 'dd MMMM yyyy')} ", PdfPCell.ALIGN_RIGHT));
+        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+        table.addCell(getCell12("Quito, ${util.fechaConFormato(fecha: new Date(), formato: 'dd MMMM yyyy')} ", PdfPCell.ALIGN_RIGHT));
+        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+        table.addCell(getCell12("Señor(a)", PdfPCell.ALIGN_LEFT));
         document.add(table);
 
         Paragraph c = new Paragraph();
         c.add(new Paragraph((persona?.nombre ?: '') + ' ' + (persona?.apellido ?: ''), info))
         document.add(c)
         Paragraph d = new Paragraph();
-        d.add(new Paragraph( "Edificio: " + (persona?.edificio?.descripcion ?: '') + ' , Departamento: ' + (persona?.departamento ?: ''), info))
+        d.add(new Paragraph((persona?.edificio?.descripcion ?: '') + ', Departamento: ' + (persona?.departamento ?: ''), info))
         document.add(d)
         Paragraph p = new Paragraph();
+//        p.add(new Paragraph( "", info))
         p.add(new Paragraph( "Presente,", info))
         addEmptyLine(p, 1);
         document.add(p)
         Paragraph t1 = new Paragraph();
-        t1.add(new Paragraph( "Luego de un atento saludo, me permito indicarle que usted mantiene una deuda con el conjunto residencial 'Los Viñedos', ", info))
-        t1.add(new Paragraph( "por un valor total de \$ ${data[0].prsnsldo}, el mismo que tiene el siguiente desglose:", info))
-        addEmptyLine(t1, 1);
+        t1.setAlignment("Justify");
+//        t1.add(new Paragraph( "Luego de un atento saludo, me permito indicarle que usted mantiene una deuda con el " +
+//                "conjunto residencial \"Los Viñedos\", ", info))
+//        t1.add(new Paragraph( "por un valor total de \$ ${data[0].prsnsldo}, el mismo que tiene el siguiente desglose:", info))
+        t1.add(new Paragraph( "Luego de un atento saludo, me permito indicarle que usted mantiene una deuda con el " +
+                "conjunto residencial \"Los Viñedos\", por un valor total de \$ ${data[0].prsnsldo}, el mismo que " +
+                "tiene el siguiente desglose:", info))
+        addEmptyLine(t1, 2);
         document.add(t1)
 
-        addCellTabla(tabla, new Paragraph("Obligación.", fontTh), frmtHd)
+        addCellTabla(tabla, new Paragraph("Concepto", fontTh), frmtHd)
         addCellTabla(tabla, new Paragraph("Valor", fontTh), frmtHd)
         data2.each{pendiente->
             if(pendiente.sldo > 0){
@@ -704,17 +711,19 @@ class ReportesController {
         document.add(e)
 
         Paragraph t2 = new Paragraph();
-        t2.add(new Paragraph( "Agradecemos que tenga la bondad de cancelar este saldo a la administración del edificio o proponer una forma de pago", info))
-        t2.add(new Paragraph( "enviando la misma al correo electrónico vinedos269@hotmail.com.", info))
+        t2.setAlignment("Justify");
+        t2.add(new Paragraph( "Agradecemos que tenga la bondad de cancelar este saldo a la administración del " +
+                "edificio o proponer una forma de pago enviando la misma al correo electrónico vinedos269@gmai.com.", info))
         addEmptyLine(t2, 1);
         document.add(t2)
         Paragraph t3 = new Paragraph();
-        t3.add(new Paragraph( "Recordándole que todos nos beneficiamos del agua, seguridad, luz, ascensores y la labor de limpieza, por lo que todos", info))
-        t3.add(new Paragraph( "debemos cumplir con nuestras obligaciones.", info))
+        t3.setAlignment("Justify");
+        t3.add(new Paragraph( "Recordándole que todos nos beneficiamos del agua, seguridad, luz, ascensores y la " +
+                "labor de limpieza, por lo que todos debemos aportar para que esto sea posible.", info))
         addEmptyLine(t3, 1);
         document.add(t3)
         Paragraph a = new Paragraph();
-        a.add(new Paragraph("Atentamente", info))
+        a.add(new Paragraph("Atentamente,", info))
         addEmptyLine(a, 3);
         document.add(a)
         Paragraph f = new Paragraph();
@@ -736,6 +745,15 @@ class ReportesController {
 
     public PdfPCell getCell(String text, int alignment) {
         Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        PdfPCell cell = new PdfPCell(new Phrase(text, fontTd10));
+        cell.setPadding(0);
+        cell.setHorizontalAlignment(alignment);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        return cell;
+    }
+
+    public PdfPCell getCell12(String text, int alignment) {
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
         PdfPCell cell = new PdfPCell(new Phrase(text, fontTd10));
         cell.setPadding(0);
         cell.setHorizontalAlignment(alignment);

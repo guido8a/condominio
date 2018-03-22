@@ -18,7 +18,7 @@ environments {
     development {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:postgresql://10.0.0.9:5432/casa"
+            url = "jdbc:postgresql://192.168.100.9:5432/casa"
 //            url = "jdbc:postgresql://10.0.0.9:5432/casa_prba"
             username = "postgres"
             password = "postgres"
@@ -27,7 +27,7 @@ environments {
     test {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:postgresql://10.0.0.9:5432/casa"
+            url = "jdbc:postgresql://192.168.100.9:5432/casa"
             username = "postgres"
             password = "postgres"
         }
@@ -35,9 +35,9 @@ environments {
     production {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:postgresql://10.0.0.9:5432/casa"
+            url = "jdbc:postgresql://127.0.0.1:5432/casa"
             username = "postgres"
-            password = "postgres"
+            password = "steingate"
             properties {
                // See http://grails.org/doc/latest/guide/conf.html#dataSource for documentation
                jmxEnabled = true
