@@ -38,18 +38,20 @@
         </div>
 
 
-        <div class="col-xs-2" style="padding: 5px; width: 140px; margin-left: 120px">
+        <div class="col-xs-1">
+        </div>
+        <div class="col-xs-2" style="padding: 5px; width: 140px;">
             <label>Valores por cobrar:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly="" style="color: #804040"
                          value="${g.formatNumber(number: data[0].ingrsldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-        <div class="col-xs-1" style="padding: 5px; width: 140px">
+        <div class="col-xs-2" style="padding: 5px; width: 140px">
             <label>Pagos pendientes:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: data[0].egrssldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
-        <div class="col-xs-1" style="padding: 5px; width: 140px">
+        <div class="col-xs-2" style="padding: 5px; width: 140px">
             <label>Resultado final:</label>
             <strong>
                 <g:textField  name="saldoTotal_name" class="form-control derecha" readonly=""

@@ -8,24 +8,24 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <title>Saldos</title>
+    <title>Balance General</title>
     <meta name="layout" content="main">
 </head>
 
 <body>
 <div class="row">
-    <div class="col-xs-2" style="top: -15px; height: 35px;">
-        <h3>Saldos</h3>
+    <div class="col-xs-3" style="top: -15px; height: 35px;">
+        <h3>Balance General</h3>
     </div>
-    <div class="col-xs-2">
-        <label>Fecha desde:</label>
+    <div class="col-xs-1">
+        <label>Desde:</label>
     </div>
     <div class="col-xs-2">
         <elm:datepicker name="fechaD_name" id="fechaDesde" class="datepicker form-control" value="${new Date() - 30}" />
     </div>
 
     <div class="col-xs-1">
-        <label>Fecha Fin:</label>
+        <label>Hasta:</label>
     </div>
     <div class="col-xs-2">
         <elm:datepicker name="fechaH_name" id="fechaHasta" class="datepicker form-control" value="${new Date()}"/>
