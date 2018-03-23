@@ -37,9 +37,9 @@
         <div class="form-group keeptogether ${hasErrors(bean: pago, field: 'valor', 'error')} required" style="margin-top: 10px !important;">
             <span class="grupo">
                 <label for="abono" class="col-md-3 control-label">
-                    Abono
+                    Valor del pago
                 </label>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <g:textField name="abono" value="${pago?.valor}" class="number form-control required"/>
                 </div>
             </span>
@@ -61,7 +61,7 @@
                 <label for="documento" class="col-md-3 control-label">
                     Documento
                 </label>
-                <div class="col-md-8">
+                <div class="col-md-5">
                     <g:textField name="documento" class="allCaps form-control" value="${pago?.documento}"/>
                 </div>
             </span>
@@ -72,7 +72,7 @@
                 <label for="observaciones" class="col-md-3 control-label">
                     Observaciones
                 </label>
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <g:textField name="observaciones" class="form-control" value="${pago?.observaciones}"/>
                 </div>
             </span>

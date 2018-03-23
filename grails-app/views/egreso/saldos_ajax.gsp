@@ -14,6 +14,9 @@
 
 <body>
 <div class="row">
+    <div class="col-xs-2" style="top: -15px; height: 35px;">
+        <h3>Saldos</h3>
+    </div>
     <div class="col-xs-2">
         <label>Fecha desde:</label>
     </div>

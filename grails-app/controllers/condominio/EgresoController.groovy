@@ -10,6 +10,7 @@ import seguridad.Shield
 class EgresoController extends Shield {
 
     def dbConnectionService
+    def buscadorService
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
@@ -332,5 +333,66 @@ class EgresoController extends Shield {
 
         return[egreso: egreso, pagos: pagos, saldo: saldo]
     }
+
+    def egresos() {
+        params.ordenar = "prsndpto"
+    }
+
+    def tablaBuscar() {
+        println "buscar .... $params"
+        def cn = dbConnectionService.getConnection()
+        params.old = params.criterio
+        params.criterio = buscadorService.limpiaCriterio(params.criterio)
+        params.ordenar  = buscadorService.limpiaCriterio(params.ordenar)
+
+        def sql = armaSql(params)
+        params.criterio = params.old
+        println "sql: $sql"
+        def data = cn.rows(sql.toString())
+
+        def msg = ""
+        if(data?.size() > 50){
+            data.pop()   //descarta el último puesto que son 21
+            msg = "<div class='alert-danger' style='margin-top:-20px; diplay:block; height:25px;margin-bottom: 20px;'>" +
+                    " <i class='fa fa-warning fa-2x pull-left'></i> Su búsqueda ha generado más de 30 resultados. " +
+                    "Use más letras para especificar mejor la búsqueda.</div>"
+        }
+        cn.close()
+
+        return [data: data, msg: msg]
+    }
+
+    def armaSql(params){
+//        println "armaSql: $params"
+        def campos = buscadorService.parmEgrs()
+        def operador = buscadorService.operadores()
+        //condicion fija
+        def wh = " egrs__id is not null "
+        def fcds = "null"
+        def fchs = "null"
+        if(params.desde) fcds = "'" + new Date().parse("dd-MM-yyyy",params.desde).format('yyyy-MM-dd') + "'"
+        if(params.hasta) fchs = "'" + new Date().parse("dd-MM-yyyy",params.hasta).format('yyyy-MM-dd') + "'"
+
+//        def sqlSelect = "select * from ls_egrs(${session.empresa.id}, ${cont}, ${fcds}, ${fchs}) "
+        def sqlSelect = "select * from ls_egrs(${fcds}, ${fchs}) "
+        def sqlWhere = "where (${wh})"
+        def sqlOrder = "order by ${params.ordenar} limit 51"
+//        println "sql: $sqlSelect $sqlWhere $sqlOrder"
+
+        println "operador: $operador"
+        if(params.operador && params.criterio) {
+            if(campos.find {it.campo == params.buscador}?.size() > 0) {
+                def op = operador.find {it.valor == params.operador}
+                sqlWhere += " and ${params.buscador} ${op.operador} ${op.strInicio}${params.criterio}${op.strFin}";
+            }
+        }
+        if(params.saldo == 'true') {
+            sqlWhere += " and egrssldo > 0 "
+        }
+
+//        println "-->sql: $sqlSelect $sqlWhere $sqlOrder"
+        "$sqlSelect $sqlWhere $sqlOrder".toString()
+    }
+
 
 }

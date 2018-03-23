@@ -239,6 +239,14 @@ class BuscadorService {
         ]
     }
 
+    def parmEgrs () {
+        [[campo: 'egrsdscr', nombre: 'Concepto',      operador: "contiene:contiene,inicia:inicia con"],
+         [campo: 'prvenmbr', nombre: 'Proveedor',     operador: "contiene:contiene,inicia:inicia con"],
+         [campo: 'egrsvlor', nombre: 'Valor',         operador: "gteq:mayor a,lteq:menor a"],
+         [campo: 'egrssldo', nombre: 'Saldo',         operador: "gteq:mayor a,lteq:menor a"]
+        ]
+    }
+
     def operadores() {   //operadores usados en la opción operador
         [[valor: 'contiene', operador: 'ilike', strInicio: "'%", strFin: "%'"],
          [valor: 'inicia', operador: 'ilike', strInicio: "'", strFin: "%'"],
@@ -248,8 +256,8 @@ class BuscadorService {
          [valor: 'gteq', operador: '>=', strInicio: '', strFin: ''],
          [valor: 'lt', operador: '<', strInicio: '', strFin: ''],
          [valor: 'lteq', operador: '<=', strInicio: '', strFin: ''],
-         [valor: 'gtfc', operador: '>', strInicio: "'", strFin: "'"],
-         [valor: 'ltfc', operador: '<', strInicio: "'", strFin: "'"]
+         [valor: 'gtfc', operador: '>=', strInicio: "'", strFin: "'"],
+         [valor: 'ltfc', operador: '<=', strInicio: "'", strFin: "'"]
         ]
     }
 

@@ -21,48 +21,45 @@
 <div class="alert alert-warning col-md-12">
 
 
-    <div class="col-md-6">
-        <a href="#" class="btn btn-info btn-sm btnEditarEgg ${(saldo ?: 0) > 0 ? '' : 'disabled'}" data-ing="${egreso?.id}" title="Editar Egreso">
-            <i class="fa fa-pencil"></i> Editar Egreso
-        </a>
-        <a href="#" class="btn btn-success btn-sm btnPago ${(saldo ?: 0) > 0 ? '' : 'disabled'}" data-ing="${egreso?.id}" title="Ingresar Pago">
+    <div class="col-md-5">
+        <label style="color: #1b8e36">Pagado: $
+        ${g.formatNumber(number: pagos?.valor?.sum() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2,
+                locale: 'en_US')}
+        </label>
+    </div>
+    <div class="col-md-5">
+        <label style="color: #701b19">Saldo: $
+        ${g.formatNumber(number: saldo ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
+        </label>
+    </div>
+
+    <div class="col-md-2">
+        <a href="#" class="btn btn-success btn-sm btnPago ${(saldo ?: 0) > 0 ? '' : 'disabled'}" data-ing="${egreso?.id}"
+           title="Ingresar Pago" style="margin-left: -20px;">
             <i class="fa fa-plus"></i> Pagar
         </a>
     </div>
-
-    <div class="col-md-3">
-        <label style="color: #1b8e36">Pagado:</label>
-
-        <g:textField name="saldo_name" class="form-control derecha" readonly=""
-                     value="${g.formatNumber(number: pagos?.valor?.sum() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
-    </div>
-    <div class="col-md-3">
-        <label style="color: #701b19">Saldo:</label>
-        <g:textField name="saldo_name" class="form-control derecha" readonly=""
-                     value="${g.formatNumber(number: saldo ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
-    </div>
-
-
 </div>
 
 <g:if test="${pagos.size() > 0}">
-    <table class="table table-condensed table-bordered table-striped table-hover">
+    <div style="text-align: center"><h3>Detalle de pagos</h3></div>
+    <table class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
-            <th>Concepto del egreso</th>
-            <th>Doc. Pago</th>
-            <th>Fecha Pago</th>
-            <th>Pago</th>
-            <th class="centro"><i class="fa fa-pencil"></i></th>
+            <th class="alinear" style="width: 18%">Fecha</th>
+            <th class="alinear" style="width: 18%">Doc.</th>
+            <th class="alinear" style="width: 15%">Valor</th>
+            <th class="alinear" style="width: 29%">Obser.</th>
+            <th class="centro" style="width: 20%"><i class="fa fa-pencil"></i></th>
         </tr>
         </thead>
         <tbody>
         <g:each in="${pagos}" var="pagoUsuario">
             <tr data-id="${pagoUsuario.id}" style="width: 100%">
-                <td style="width: 35%">${pagoUsuario?.observaciones}</td>
-                <td style="width: 20%">${pagoUsuario?.documento}</td>
                 <td style="width: 15%"><g:formatDate date="${pagoUsuario?.fechaPago}" format="dd-MM-yyyy"/></td>
+                <td style="width: 20%">${pagoUsuario?.documento}</td>
                 <td class="derecha" style="width: 15%"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
+                <td style="width: 20%">${pagoUsuario?.observaciones}</td>
                 <td style="text-align: center; width: 15%">
                     <a href="#" class="btn btn-info btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${egreso?.id}" title="Editar Pago">
                         <i class="fa fa-pencil"></i>

@@ -103,7 +103,7 @@
         </div>
         </a>
 
-        <a href= "${createLink(controller:'egreso', action: 'list')}" style="text-decoration: none">
+        <a href= "${createLink(controller:'egreso', action: 'egresos')}" style="text-decoration: none">
         <div class="ui-corner-all item fuera">
             <div class="ui-corner-all item">
                 <div class="imagen">
@@ -117,7 +117,7 @@
         </a>
 
 
-        <a href= "${createLink(controller:'egreso', action: 'list')}" style="text-decoration: none">
+        <a href= "${createLink(controller:'egreso', action: 'saldos_ajax')}" style="text-decoration: none">
             <div class="ui-corner-all item2 fuera">
                 <div class="ui-corner-all item2">
                     <div class="imagen2">
