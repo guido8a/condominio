@@ -778,8 +778,9 @@ class ReportesController {
         def baos = new ByteArrayOutputStream()
         def name = "solicitud_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
         def titulo = new Color(40,140,180)
-        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
         Font info = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL)
+        Font nota = new Font(Font.TIMES_ROMAN, 11, Font.ITALIC)
+        Font notaTitulo = new Font(Font.TIMES_ROMAN, 11, Font.BOLD)
         Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
         Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
         Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
@@ -825,7 +826,7 @@ class ReportesController {
 
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(100);
-        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+//        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
         table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
         table.addCell(getCell12("Quito, ${util.fechaConFormato(fecha: new Date(), formato: 'dd MMMM yyyy')} ", PdfPCell.ALIGN_RIGHT));
         table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
@@ -846,10 +847,10 @@ class ReportesController {
         Paragraph t1 = new Paragraph();
         t1.setAlignment("Justify");
 
-        t1.add(new Paragraph( "Luego de un atento saludo, me permito indicarle que usted mantiene una deuda con el " +
-                "conjunto residencial \"Los Viñedos\", por un valor total de \$ ${data[0].prsnsldo}, el mismo que " +
-                "tiene el siguiente desglose:", info))
-        addEmptyLine(t1, 2);
+        t1.add(new Paragraph( "Luego de un atento saludo, me permito solicitarle el pago de la deuda que mantiene " +
+                "con el conjunto residencial \"Los Viñedos\", la misma que asciende a un valor de " +
+                "\$ ${data[0].prsnsldo}, de acuerdo con el siguiente desglose:", info))
+        addEmptyLine(t1, 1);
         document.add(t1)
 
         addCellTabla(tabla, new Paragraph("Concepto", fontTh), frmtHd)
@@ -868,14 +869,19 @@ class ReportesController {
 
         Paragraph t2 = new Paragraph();
         t2.setAlignment("Justify");
-        t2.add(new Paragraph( "Agradecemos que tenga la bondad de cancelar este saldo a la administración del " +
-                "edificio o proponer una forma de pago enviando la misma al correo electrónico vinedos269@gmail.com.", info))
+        t2.add(new Paragraph( "Desde el 1° de abril de 2018 se aplicará el 3% de intereses por mora, conforme lo determina " +
+                "nuestro reglamento en el artículo 39 literal p, a los valores adeudados hasta el 31 de enero " +
+                "de 2018, así como también a las deudas que superen los 2 meses de alícuotas. Por esta razón me " +
+                "permito insistir en que realice el pago lo antes posible o proponga una forma de pago enviando " +
+                "la misma al correo electrónico vinedos269@gmail.com.", info))
         addEmptyLine(t2, 1);
         document.add(t2)
+
         Paragraph t3 = new Paragraph();
         t3.setAlignment("Justify");
-        t3.add(new Paragraph( "Recordándole que todos nos beneficiamos del agua, seguridad, luz, ascensores y la " +
-                "labor de limpieza, por lo que todos debemos aportar para que esto sea posible.", info))
+        t3.add(new Paragraph( "Agradezco su tiempo y la oportuna atención que de a la presente, lo que nos ayudará " +
+                "a pagar oportunamente las planillas de agua, luz, mantenimeinto del ascensor, conserje, vigilancia " +
+                "y destinar recursos para la limpieza, conservación y mejora de los bienes comunales. ", info))
         addEmptyLine(t3, 1);
         document.add(t3)
         Paragraph a = new Paragraph();
@@ -885,8 +891,17 @@ class ReportesController {
         Paragraph f = new Paragraph();
         f.add(new Paragraph("Ing. Guido E. Ochoa Moreno", info))
         f.add(new Paragraph("ADMINISTRADOR", info))
-        f.add(new Paragraph("C.I: 0601983869", info))
+        f.add(new Paragraph("Cel: 0984916620, dpto. 214", info))
+        addEmptyLine(f, 1);
         document.add(f)
+
+        Paragraph t4 = new Paragraph();
+        t4.setAlignment("Justify");
+        t4.add(new Paragraph( "PD: ART. 39 literal p:", notaTitulo))
+        t4.add(new Paragraph( "«Por no pago de alícuotas ordinarias y/o extraordinarias, " +
+                "a partir del segundo mes:", nota))
+        t4.add(new Paragraph( "ACCIÓN: Recorte de servicios básicos y cobro de interés por mora»", nota))
+        document.add(t4)
 
         document.close();
         pdfw.close()
@@ -944,8 +959,6 @@ class ReportesController {
         response.setHeader("Content-disposition", "attachment; filename=solicitudes")
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
-
-
     }
 
 
