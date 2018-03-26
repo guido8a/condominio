@@ -39,9 +39,21 @@
             <i class="fa fa-arrow-left"></i> Regresar
         </a>
     </div>
+    <g:if test="${data[0].prsnsldo > data[0].alctvlor}">
+        <div class="btn-group">
+            <a href="${createLink(controller: "reportes", action: "solicitud", id: persona.id)}" class="btn btn-info">
+                <i class="fa fa-print"></i> Solicitud de Pago
+            </a>
+        </div>
+    </g:if>
     <div class="btn-group">
-        <a href="${createLink(controller: "reportes", action: "solicitud", id: persona.id)}" class="btn btn-info">
-            <i class="fa fa-print"></i> Solicitud de Pago
+        <a href="#" class="btn btn-warning" id="listarSaldo">
+            <i class="fa fa-search"></i> Listar con saldo por pagar
+        </a>
+    </div>
+    <div class="btn-group">
+        <a href="#" class="btn btn-success hidden" id="listarTodos">
+            <i class="fa fa-search"></i> Listar todos
         </a>
     </div>
 </div>
@@ -73,14 +85,27 @@
 
 <script type="text/javascript">
 
-    cargarObligaciones();
+    $("#listarTodos").click(function () {
+        cargarObligaciones(null);
+        $("#listarSaldo").removeClass('hidden');
+        $("#listarTodos").addClass('hidden')
+    });
 
-    function cargarObligaciones () {
+    $("#listarSaldo").click(function () {
+        cargarObligaciones(true);
+        $("#listarTodos").removeClass('hidden');
+        $("#listarSaldo").addClass('hidden')
+    });
+
+    cargarObligaciones(null);
+
+    function cargarObligaciones (band) {
         $.ajax({
             type: 'POST',
             url:'${createLink(controller: 'ingreso', action: 'obligaciones_ajax')}',
             data:{
-                persona: '${persona?.id}'
+                persona: '${persona?.id}',
+                band: band
             },
             success: function (msg){
                 $("#tdObligaciones").html(msg)

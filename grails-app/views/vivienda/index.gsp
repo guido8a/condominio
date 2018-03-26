@@ -33,7 +33,7 @@
 
         <div class="row-fluid">
             <div style="margin-left: 20px;">
-                <div class="col-xs-9 col-md-9">
+                <div class="col-xs-8 col-md-8">
                     <div class="col-xs-3 col-md-2">
                         <b>Buscar por: </b>
                         <elm:select name="buscador" from = "${buscadorServ.parmProcesos()}" value="${params.buscador}"
@@ -57,8 +57,8 @@
                     </div>
                 </div>
 
-                <div class="col-xs-3 col-md-3">
-                        <div class="btn-group col-xs-6 col-md-6" style="margin-left: -10px; margin-top: 20px;">
+                <div class="col-xs-3 col-md-4">
+                        <div class="btn-group col-xs-6 col-md-4" style="margin-left: -10px; margin-top: 20px;">
 
                             <a href="#" name="busqueda" class="btn btn-info" id="btnBusqueda" title="Buscar"
                                style="height: 34px; padding: 9px; width: 46px">
@@ -68,16 +68,27 @@
                                title="Borrar criterios" style="height: 34px; padding: 9px; width: 34px">
                                 <i class="fa fa-eraser"></i></a>
                         </div>
-                        <div class="btn-group col-xs-3 col-md-3" style="margin-left: -10px; margin-top: 20px;">
+                        %{--<div class="btn-group col-xs-3 col-md-3" style="margin-left: -10px; margin-top: 20px;">--}%
+                            %{--<a href="#" name="busqueda" class="btn btn-success" id="nuevo" title="Crear Persona"--}%
+                               %{--style="height: 34px; padding: 9px; width: 46px">--}%
+                                %{--<i class="fa fa-user-circle"></i></a>--}%
+                        %{--</div>--}%
+                        <div class="btn-group col-xs-3 col-md-7" style="margin-left: -10px; margin-top: 20px;">
                             <a href="#" name="busqueda" class="btn btn-success" id="nuevo" title="Crear Persona"
                                style="height: 34px; padding: 9px; width: 46px">
                                 <i class="fa fa-user-circle"></i></a>
-                        </div>
-                        <div class="btn-group col-xs-3 col-md-3" style="margin-left: -10px; margin-top: 20px;">
                             <g:link action="creaIngresos" class="btn btn-info" title="Registro de aportes" style="height: 34px; padding: 9px; width: 46px">
                                 <i class="fa fa-money"></i>
                             </g:link>
+                            <g:link controller="reportes" action="imprimirSolicitudes" class="btn btn-warning" title="Imprimir solicitudes de pago" style="height: 34px; padding: 9px; width: 46px">
+                                <i class="fa fa-print"></i>
+                            </g:link>
                         </div>
+                    %{--<div class="btn-group col-xs-3 col-md-3" style="margin-left: -10px; margin-top: 20px;">--}%
+                        %{--<g:link controller="reportes" action="imprimirSolicitudes" class="btn btn-warning" title="Imprimir solicitudes de pago" style="height: 34px; padding: 9px; width: 46px">--}%
+                            %{--<i class="fa fa-print"></i>--}%
+                        %{--</g:link>--}%
+                    %{--</div>--}%
                 </div>
 
             </div>

@@ -19,6 +19,12 @@
         color: #53cf6d;
     }
 
+    .seleccionado {
+        border-color: #df960b;
+        border-style: solid;
+        border-width: 2px;
+    }
+
 </style>
 
 
@@ -26,11 +32,23 @@
     <table class="table-bordered table-condensed table-hover" width="100%">
         <g:each in="${ingreso}" status="i" var="ingr">
             <g:set var="saldo" value="${ingr?.valor?.toDouble() - (Pago.findAllByIngreso(ingr).valor?.sum()?.toDouble() ?: 0)}"/>
-            <tr class="trIngreso" ing="${ingr?.id}">
-                <td>${ingr.obligacion.descripcion} ${ingr.observaciones? ': ' + ingr.observaciones :''}</td>
-                <td class="derecha"><g:formatNumber number="${ingr?.valor}" format="##,##0" locale="en_US" minFractionDigits="2" maxFractionDigits="2"/></td>
-                <td class="derecha ${saldo > 0 ? 'azul' : 'verde'}"><g:formatNumber number="${saldo}" format="##,##0" locale="en_US" minFractionDigits="2" maxFractionDigits="2"/></td>
-            </tr>
+            <g:if test="${band}">
+                <g:if test="${saldo > 0}">
+                    <tr class="trIngreso  ${i== 0 ? 'seleccionado' : ''}" ing="${ingr?.id}">
+                        <td>${ingr.obligacion.descripcion} ${ingr.observaciones? ': ' + ingr.observaciones :''}</td>
+                        <td class="derecha"><g:formatNumber number="${ingr?.valor}" format="##,##0" locale="en_US" minFractionDigits="2" maxFractionDigits="2"/></td>
+                        <td class="derecha ${saldo > 0 ? 'azul' : 'verde'}"><g:formatNumber number="${saldo}" format="##,##0" locale="en_US" minFractionDigits="2" maxFractionDigits="2"/></td>
+                    </tr>
+                </g:if>
+            </g:if>
+            <g:else>
+                <tr class="trIngreso  ${i== 0 ? 'seleccionado' : ''}" ing="${ingr?.id}">
+                    <td>${ingr.obligacion.descripcion} ${ingr.observaciones? ': ' + ingr.observaciones :''}</td>
+                    <td class="derecha"><g:formatNumber number="${ingr?.valor}" format="##,##0" locale="en_US" minFractionDigits="2" maxFractionDigits="2"/></td>
+                    <td class="derecha ${saldo > 0 ? 'azul' : 'verde'}"><g:formatNumber number="${saldo}" format="##,##0" locale="en_US" minFractionDigits="2" maxFractionDigits="2"/></td>
+                </tr>
+            </g:else>
+
         </g:each>
     </table>
 </div>
@@ -55,6 +73,8 @@
 
     $(".trIngreso").click(function () {
         var ingreso = $(this).attr("ing");
+        $(".trIngreso").removeClass("seleccionado");
+        $(this).addClass("seleccionado");
         cargarPagos(ingreso)
     });
 

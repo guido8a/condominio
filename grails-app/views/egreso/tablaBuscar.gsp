@@ -82,7 +82,7 @@ th, td {
     cargarPagosE(${data[0]?.egrs__id});
 
     function cargarPagosE (egreso) {
-        console.log('carga pagos')
+//        console.log('carga pagos')
         $.ajax({
             type: 'POST',
             url:'${createLink(controller: 'egreso', action: 'pagoEgresos_ajax')}',

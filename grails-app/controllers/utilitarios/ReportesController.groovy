@@ -761,5 +761,194 @@ class ReportesController {
         return cell;
     }
 
+    def solicitudes (id) {
+
+//        println "params " + params
+
+        def persona = Persona.get(id)
+
+        def sql = "select * from personas() where prsn__id= ${persona.id}"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+
+        def sql2 = "select * from pendiente('${new Date().format("yyyy-MM-dd")}') where prsn__id= ${persona.id} order by ingrfcha"
+        def cn2 = dbConnectionService.getConnection()
+        def data2 = cn2.rows(sql2.toString())
+
+        def baos = new ByteArrayOutputStream()
+        def name = "solicitud_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def titulo = new Color(40,140,180)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font info = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL)
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
+        Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
+        Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
+        Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
+        def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtDatoDere = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+
+        def fondoTotal = new Color(240, 240, 240);
+
+        def prmsTdNoBorder = [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def prmsTdBorder = [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def prmsNmBorder = [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+        Document document
+        document = new Document(PageSize.A4);
+        document.setMargins(74,60,30,30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Solicitud");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitle));
+        addEmptyLine(preface, 2);
+        document.add(preface);
+
+        def tabla = new PdfPTable(2);
+        tabla.setWidthPercentage(70);
+        tabla.setWidths(arregloEnteros([55,15]))
+
+        PdfPTable table = new PdfPTable(1);
+        table.setWidthPercentage(100);
+        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+        table.addCell(getCell12("Quito, ${util.fechaConFormato(fecha: new Date(), formato: 'dd MMMM yyyy')} ", PdfPCell.ALIGN_RIGHT));
+        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+        table.addCell(getCell12("Señor(a)", PdfPCell.ALIGN_LEFT));
+        document.add(table);
+
+        Paragraph c = new Paragraph();
+        c.add(new Paragraph((persona?.nombre ?: '') + ' ' + (persona?.apellido ?: ''), info))
+        document.add(c)
+        Paragraph d = new Paragraph();
+        d.add(new Paragraph((persona?.edificio?.descripcion ?: '') + ', Departamento: ' + (persona?.departamento ?: ''), info))
+        document.add(d)
+        Paragraph p = new Paragraph();
+        p.add(new Paragraph( "Presente,", info))
+        addEmptyLine(p, 1);
+        document.add(p)
+        Paragraph t1 = new Paragraph();
+        t1.setAlignment("Justify");
+
+        t1.add(new Paragraph( "Luego de un atento saludo, me permito indicarle que usted mantiene una deuda con el " +
+                "conjunto residencial \"Los Viñedos\", por un valor total de \$ ${data[0].prsnsldo}, el mismo que " +
+                "tiene el siguiente desglose:", info))
+        addEmptyLine(t1, 2);
+        document.add(t1)
+
+        addCellTabla(tabla, new Paragraph("Concepto", fontTh), frmtHd)
+        addCellTabla(tabla, new Paragraph("Valor", fontTh), frmtHd)
+        data2.each{pendiente->
+            if(pendiente.sldo > 0){
+                addCellTabla(tabla, new Paragraph(pendiente.oblg, fontTd10), frmtDato)
+                addCellTabla(tabla, new Paragraph(pendiente.sldo.toString(), fontTd10), frmtDatoDere)
+            }
+        }
+        document.add(tabla)
+
+        Paragraph e = new Paragraph();
+        e.add(new Paragraph( "", info))
+        document.add(e)
+
+        Paragraph t2 = new Paragraph();
+        t2.setAlignment("Justify");
+        t2.add(new Paragraph( "Agradecemos que tenga la bondad de cancelar este saldo a la administración del " +
+                "edificio o proponer una forma de pago enviando la misma al correo electrónico vinedos269@gmail.com.", info))
+        addEmptyLine(t2, 1);
+        document.add(t2)
+        Paragraph t3 = new Paragraph();
+        t3.setAlignment("Justify");
+        t3.add(new Paragraph( "Recordándole que todos nos beneficiamos del agua, seguridad, luz, ascensores y la " +
+                "labor de limpieza, por lo que todos debemos aportar para que esto sea posible.", info))
+        addEmptyLine(t3, 1);
+        document.add(t3)
+        Paragraph a = new Paragraph();
+        a.add(new Paragraph("Atentamente,", info))
+        addEmptyLine(a, 3);
+        document.add(a)
+        Paragraph f = new Paragraph();
+        f.add(new Paragraph("Ing. Guido E. Ochoa Moreno", info))
+        f.add(new Paragraph("ADMINISTRADOR", info))
+        f.add(new Paragraph("C.I: 0601983869", info))
+        document.add(f)
+
+        document.close();
+        pdfw.close()
+        return baos
+
+    }
+
+    def imprimirSolicitudes () {
+
+        def pl = new ByteArrayOutputStream()
+        byte[] b
+        def pdfs = []
+        def contador = 0
+
+        def sql = "select * from personas()"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+
+
+        data.each {persona->
+            if(persona.prsnsldo > persona.alctvlor){
+                pl = solicitudes(persona.prsn__id)
+                pdfs.add(pl.toByteArray())
+                contador++
+            }
+        }
+
+        if(contador > 1) {
+            def baos = new ByteArrayOutputStream()
+            Document document
+            document = new Document(PageSize.A4);
+
+            def pdfw = PdfWriter.getInstance(document, baos);
+            document.open();
+            PdfContentByte cb = pdfw.getDirectContent();
+
+            pdfs.each {f ->
+                PdfReader reader = new PdfReader(f);
+                for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+                    //nueva página
+                    document.newPage();
+                    //importa la página "i" de la fuente "reader"
+                    PdfImportedPage page = pdfw.getImportedPage(reader, i);
+                    //añade página
+                    cb.addTemplate(page, 0, 0);
+                }
+            }
+            document.close();
+            b = baos.toByteArray();
+        } else {
+            b = pl.toByteArray();
+        }
+
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=solicitudes")
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+
+
+    }
+
+
+
 
 }

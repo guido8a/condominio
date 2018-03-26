@@ -19,27 +19,33 @@
 
 <div class="alert alert-warning col-md-12">
 
-    <div class="col-md-1">
-        <label>Valor:</label>
-    </div>
+    %{--<div class="col-md-1">--}%
+        %{--<label>Valor: </label>--}%
+    %{--</div>--}%
 
     <div class="col-md-3">
-        <g:textField name="saldo_name" class="form-control derecha" readonly=""
-                     value="${g.formatNumber(number: ingreso?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
+        %{--<g:textField name="saldo_name" class="form-control derecha" readonly=""--}%
+                     %{--value="${g.formatNumber(number: ingreso?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
+        <label>Valor: $</label>
+        ${g.formatNumber(number: ingreso?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
     </div>
-    <div class="col-md-1">
-        <label style="color: #1b8e36">Pagado:</label>
+    %{--<div class="col-md-1">--}%
+        %{--<label style="color: #1b8e36">Pagado:</label>--}%
+    %{--</div>--}%
+    <div class="col-md-3">
+        %{--<g:textField name="saldo_name" class="form-control derecha" readonly=""--}%
+                     %{--value="${g.formatNumber(number: condominio.Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
+        <label style="color: #1b8e36">Pagado: $</label>
+        ${g.formatNumber(number: condominio.Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
     </div>
-    <div class="col-md-2">
-        <g:textField name="saldo_name" class="form-control derecha" readonly=""
-                     value="${g.formatNumber(number: condominio.Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
-    </div>
-    <div class="col-md-1">
+    %{--<div class="col-md-1">--}%
+        %{--<label style="color: #701b19">Saldo:</label>--}%
+    %{--</div>--}%
+    <div class="col-md-3">
+        %{--<g:textField name="saldo_name" class="form-control derecha" readonly=""--}%
+                     %{--value="${g.formatNumber(number: saldo ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
         <label style="color: #701b19">Saldo:</label>
-    </div>
-    <div class="col-md-2">
-        <g:textField name="saldo_name" class="form-control derecha" readonly=""
-                     value="${g.formatNumber(number: saldo ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
+        ${g.formatNumber(number: saldo ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
     </div>
 
     <div class="col-md-2">
@@ -50,6 +56,9 @@
 
 </div>
 <g:if test="${pagos?.size() > 0}">
+
+    <div style="text-align: center"><h3>Detalle de pagos</h3></div>
+
     <table class="table table-condensed table-bordered table-striped table-hover">
         <thead>
         <tr style="width: 100%">

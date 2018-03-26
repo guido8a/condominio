@@ -10,6 +10,8 @@ import seguridad.Shield
  */
 class IngresoController extends Shield {
 
+    def dbConnectionService
+
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
     /**
@@ -70,10 +72,13 @@ class IngresoController extends Shield {
      * @return ingresoInstanceList: la lista de elementos filtrados, ingresoInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def pendiente() {
-        println "params: $params"
+//        println "params: $params"
         def prsn = Persona.get(params.id)
         def ingr = Ingreso.findAllByPersona(prsn, [sort: 'fecha'])
-        return [ingreso: ingr, ingrCount: ingr.size(), persona: prsn]
+        def sql = "select * from personas() where prsn__id= ${prsn.id}"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+        return [ingreso: ingr, ingrCount: ingr.size(), persona: prsn, data:data]
     }
 
     /**
@@ -259,10 +264,12 @@ class IngresoController extends Shield {
     }
 
     def obligaciones_ajax () {
-        def persona = Persona.get(params.persona)
-        def ingresos = Ingreso.findAllByPersona(persona).sort{it.obligacion.descripcion}
+//        println("params " + params)
 
-        return[ingreso: ingresos]
+        def persona = Persona.get(params.persona)
+        def ingresos= Ingreso.findAllByPersona(persona).sort{it.obligacion.descripcion}
+
+        return[ingreso: ingresos, band: params.band]
     }
 
     def pagos_ajax () {
