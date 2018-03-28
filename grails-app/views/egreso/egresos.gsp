@@ -65,7 +65,7 @@
             <div class="col-xs-6" style="margin-left: -20px;">
                 Hasta:
                 <elm:datepicker name="fechaHasta" title="Fecha hasta" class="datepicker form-control fechaH"
-                                maxDate="new Date()" value="${new Date()}"/>
+                                 value="${new Date()}"/>
             </div>
             </div>
 
