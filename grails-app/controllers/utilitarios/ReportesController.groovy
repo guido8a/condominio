@@ -4,8 +4,12 @@ import com.lowagie.text.Chapter
 import com.lowagie.text.ChapterAutoNumber
 import com.lowagie.text.Chunk
 import com.lowagie.text.Phrase
+import com.lowagie.text.pdf.DefaultFontMapper
+import com.lowagie.text.pdf.PdfTemplate
 import condominio.Ingreso
 import org.apache.poi.hwpf.usermodel.OfficeDrawing
+import org.jfree.chart.plot.PlotOrientation
+import org.jfree.data.category.DefaultCategoryDataset
 import seguridad.Persona
 
 import com.lowagie.text.Document
@@ -22,6 +26,19 @@ import com.lowagie.text.pdf.PdfReader
 import com.lowagie.text.pdf.PdfWriter
 
 import java.awt.Color
+
+import org.jfree.chart.ChartFactory
+import org.jfree.chart.JFreeChart
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator
+import org.jfree.chart.plot.PiePlot
+import org.jfree.data.general.DefaultPieDataset
+
+import java.awt.Color
+import java.awt.Graphics2D
+import java.awt.Paint
+import java.awt.geom.Rectangle2D
+import java.awt.image.BufferedImage
+
 
 class ReportesController {
 
@@ -959,6 +976,320 @@ class ReportesController {
         response.setHeader("Content-disposition", "attachment; filename=solicitudes")
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
+    }
+
+    def imprimirReporteGeneral () {
+
+//        println("params " + params)
+
+        def anioMes = params.anio + params.mes
+        def mesA
+
+        def anioMesAnterior
+        if(params.mes == '01'){
+            anioMesAnterior = (params.anio.toInteger() - 1) + "12"
+        }else{
+            mesA = "0" + (params.mes.toInteger() - 1)
+            anioMesAnterior = params.anio + mesA
+        }
+
+        def cnn = dbConnectionService.getConnection()
+//        def sqln="SELECT (date_trunc('MONTH', ('201802'||'01')::date) + INTERVAL '1 MONTH - 1 day')::DATE;"
+        def sqln = "SELECT (date_trunc('MONTH', ('${anioMes}'||'01')::date) + INTERVAL '1 MONTH - 1 day')::DATE;"
+
+        def fechaInicio = new Date().parse("dd-MM-yyy", "01-" + params.mes + "-" + params.anio)
+        def fechaFin = cnn.rows(sqln.toString()).first().date
+
+        def fechaInicioAnterior
+        if(params.mes == '01'){
+            fechaInicioAnterior = new Date().parse("dd-MM-yyy", "01-12-" + (params.anio.toInteger() - 1))
+        }else{
+            fechaInicioAnterior = new Date().parse("dd-MM-yyy", "01-" + (params.mes.toInteger() - 1) + "-" + params.anio)
+        }
+
+        def cna = dbConnectionService.getConnection()
+        def sqla = "SELECT (date_trunc('MONTH', ('${anioMesAnterior}'||'01')::date) + INTERVAL '1 MONTH - 1 day')::DATE;"
+        def fechaFinAnterior = cna.rows(sqla.toString()).first().date
+
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+
+        def baos = new ByteArrayOutputStream()
+        def name = "reporteGeneral_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def jefe = params.jefe == '1'
+        def results = [], resGraph = [], dep = null, per = null
+
+        Document document
+        document = new Document(PageSize.A4);
+        document.setMargins(74,60,30,30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Solicitud");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitle));
+        addEmptyLine(preface, 2);
+        document.add(preface);
+
+
+        /***************SQL************************/
+
+        //total de Personas
+        def cn0 = dbConnectionService.getConnection()
+        def totalPersonas = 'select count(prsnnmbr) from personas()'
+        def res0 =  cn0.rows(totalPersonas.toString())
+
+        //este mes pagado
+        def cn = dbConnectionService.getConnection()
+        def esteMes = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and pagofcpg between '${fechaInicio}' and '${fechaFin}' and oblg__id in (2,7);"
+        def res =  cn.rows(esteMes.toString())
+
+        //mes anterior
+        def cn1 = dbConnectionService.getConnection()
+        def mesAnterior = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and \n" +
+                "  pagofcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}' and oblg__id in (2,7);"
+        def res1 =  cn1.rows(mesAnterior.toString())
+
+        //valores vencidos
+        def cn2 = dbConnectionService.getConnection()
+        def vencidos = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and\n" +
+                "  pagofcpg between '${fechaInicio}' and '${fechaFin}' and oblg__id in (2,7) and\n" +
+                "  ingrfcha < '${fechaInicio}';"
+        def res2 =  cn2.rows(vencidos.toString())
+
+        //ingresos mes anterior
+        def cn3 = dbConnectionService.getConnection()
+        def ingresosAnterior = "select sum(pagovlor) from pago where pagofcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}';"
+        def res3 =  cn3.rows(ingresosAnterior.toString())
+
+        //ingresos mes actual
+        def cn4 = dbConnectionService.getConnection()
+        def ingresosActual = "select sum(pagovlor) from pago where pagofcpg between '${fechaInicio}' and '${fechaFin}';"
+        def res4 =  cn4.rows(ingresosActual.toString())
+
+        //egresos mes anterior
+        def cn5 = dbConnectionService.getConnection()
+        def egresosAnterior = "select sum(pgegvlor) from pgeg where pgegfcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}';"
+        def res5 =  cn5.rows(egresosAnterior.toString())
+
+        //egresos mes actual
+        def cn6 = dbConnectionService.getConnection()
+        def egresosActual = "select sum(pgegvlor) from pgeg where pgegfcpg between '${fechaInicio}' and '${fechaFin}';"
+        def res6 = cn6.rows(egresosActual.toString())
+
+        //valores por cobrar a la fecha y saldos
+
+        def cn7 = dbConnectionService.getConnection()
+        def valores = "select * from saldos('${fechaInicio}', '${fechaFin}');"
+        def res7 = cn7.rows(valores.toString())
+
+        /* ************************************************* Graficos *************************** */
+        boolean conGraficos
+        try {
+            def width = 550
+            def width2 = 350
+            def height = 180
+            def height2 = 180
+            PdfContentByte contentByte = pdfw.getDirectContent();
+            PdfTemplate templateSinRecepcion = contentByte.createTemplate(width2, height);
+            PdfTemplate templateRetrasados = contentByte.createTemplate(width2, height2);
+            PdfTemplate template2 = contentByte.createTemplate(width2, height);
+            PdfTemplate template3 = contentByte.createTemplate(width2, height);
+            PdfTemplate template4 = contentByte.createTemplate(width2, height2);
+            PdfTemplate template5 = contentByte.createTemplate(width2, height2);
+
+            Graphics2D graphics2dSinRecepcion = templateSinRecepcion.createGraphics(width2, height, new DefaultFontMapper());
+            Graphics2D graphics2d2 = template2.createGraphics(width2, height, new DefaultFontMapper());
+            Graphics2D graphics2d3 = template3.createGraphics(width2, height, new DefaultFontMapper());
+            Graphics2D graphics2dRetrasados = templateRetrasados.createGraphics(width2, height2, new DefaultFontMapper());
+            Graphics2D graphics2d4 = template4.createGraphics(width2, height2, new DefaultFontMapper());
+            Graphics2D graphics2d5 = template5.createGraphics(width2, height2, new DefaultFontMapper());
+
+            Rectangle2D rectangle2dSinRecepcion = new Rectangle2D.Double(0, 0, width2, height);
+            Rectangle2D rectangle2dRetrasados = new Rectangle2D.Double(0, 0, width2, height2);
+            Rectangle2D rectangle2d2 = new Rectangle2D.Double(0, 0, width2, height);
+            Rectangle2D rectangle2d3 = new Rectangle2D.Double(0, 0, width2, height);
+            Rectangle2D rectangle2d4 = new Rectangle2D.Double(0, 0, width2, height2);
+            Rectangle2D rectangle2d5 = new Rectangle2D.Double(0, 0, width2, height2);
+
+
+////        PARA GRAFICO PASTEL
+            DefaultPieDataset dataSetRet = new DefaultPieDataset();
+            DefaultPieDataset dataSetNoRec = new DefaultPieDataset();
+            DefaultPieDataset dataSet4 = new DefaultPieDataset();
+            DefaultCategoryDataset dataSetBarras = new DefaultCategoryDataset();
+            DefaultCategoryDataset dataSetBarras2 = new DefaultCategoryDataset();
+            DefaultCategoryDataset dataSetBarras3 = new DefaultCategoryDataset();
+            DefaultPieDataset dataSet5 = new DefaultPieDataset();
+
+            dataSetRet.setValue("Pagado", res.first().count.toInteger())
+            dataSetRet.setValue("No Pago", res0.first().count.toInteger() - res.first().count.toInteger())
+
+            dataSet4.setValue("Pagado", res1.first().count.toInteger())
+            dataSet4.setValue("No Pago", res0.first().count.toInteger() - res1.first().count.toInteger())
+
+            dataSet5.setValue("Pago Vencidos", res2.first().count.toInteger())
+            dataSet5.setValue("No Pago", res0.first().count.toInteger() - res2.first().count.toInteger())
+
+            dataSetBarras.addValue(res3.first().sum?.toDouble() ?: 0, 'Ingresos mes anterior' , 'Anterior: ' + (res3.first().sum == null ? 0 : res3.first().sum?.toDouble()) );
+            dataSetBarras.addValue(res4.first().sum?.toDouble() ?: 0, 'Ingresos este mes' , 'Actual: ' +  (res4.first().sum == null ? 0 :res4.first().sum?.toDouble()));
+
+            dataSetBarras2.addValue(res5.first().sum?.toDouble() ?:0, 'Egresos mes anterior' , 'Anterior: ' + ( res5.first().sum == null ? 0 : res5.first().sum?.toDouble()));
+            dataSetBarras2.addValue(res6.first().sum?.toDouble() ?:0, 'Egresos este mes' , 'Actual: ' + (res6.first().sum == null ? 0 : res6.first().sum?.toDouble()));
+
+            dataSetBarras3.addValue(res7.first().sldofnal?.toDouble() ?:0 , 'Saldo Inicial' , res7.first().sldofnal?.toDouble() ?:0);
+            dataSetBarras3.addValue(res7.first().ingrsldo?.toDouble() ?:0, 'Por Cobrar' , res7.first().ingrsldo?.toDouble() ?:0);
+            dataSetBarras3.addValue(res7.first().egrssldo?.toDouble() ?:0, 'Por Pagar' , res7.first().egrssldo?.toDouble() ?:0);
+            dataSetBarras3.addValue(res7.first().sldofnal?.toDouble() + res7.first().ingrsldo?.toDouble() - res7.first().egrssldo?.toDouble(), 'Resul. Final' , '' + (res7.first().sldofnal?.toDouble() + res7.first().ingrsldo?.toDouble() - res7.first().egrssldo?.toDouble()) );
+
+
+            JFreeChart chartSinRecepcion = ChartFactory.createPieChart("Gráfico", dataSetNoRec, true, true, false);
+            chartSinRecepcion.setTitle(
+                    new org.jfree.chart.title.TextTitle("Gráfico 2",
+                            new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
+                    )
+            );
+            JFreeChart chartRetrasados = ChartFactory.createPieChart("Gráfico 3", dataSetRet, true, true, false);
+            chartRetrasados.setTitle(
+                    new org.jfree.chart.title.TextTitle("Pagos Mes Actual",
+                            new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
+                    )
+            );
+
+            JFreeChart barChart = ChartFactory.createBarChart("","", "Ingresos", dataSetBarras , PlotOrientation.VERTICAL, true, true, false);
+            barChart.setTitle(
+                    new org.jfree.chart.title.TextTitle("Ingresos (Anterior/Actual)",
+                            new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
+                    )
+            );
+
+
+            JFreeChart barChart2 = ChartFactory.createBarChart("","", "Egresos", dataSetBarras2 , PlotOrientation.VERTICAL, true, true, false);
+            barChart2.setTitle(
+                    new org.jfree.chart.title.TextTitle("Egresos (Anterior/Actual)",
+                            new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
+                    )
+            );
+
+
+            JFreeChart barChart3 = ChartFactory.createBarChart("","", "", dataSetBarras3 , PlotOrientation.VERTICAL, true, true, false);
+            barChart3.setTitle(
+                    new org.jfree.chart.title.TextTitle("Valores por cobrar a la fecha y saldos",
+                            new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
+                    )
+            );
+
+            JFreeChart chart4 = ChartFactory.createPieChart("", dataSet4, true, true, false);
+            chart4.setTitle(
+                    new org.jfree.chart.title.TextTitle("Pagos mes anterior",
+                            new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
+                    )
+            )
+
+            JFreeChart chart5 = ChartFactory.createPieChart("", dataSet5, true, true, false);
+            chart5.setTitle(
+                    new org.jfree.chart.title.TextTitle("Pagos valores vencidos",
+                            new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
+                    )
+            )
+
+
+
+            /* getPlot method of JFreeChart class returns the PiePlot object back to us */
+            PiePlot ColorConfigurator = (PiePlot) chartSinRecepcion.getPlot(); /* get PiePlot object for changing */
+            PiePlot ColorConfigurator2 = (PiePlot) chartRetrasados.getPlot(); /* get PiePlot object for changing */
+            PiePlot ColorConfigurator4 = (PiePlot) chart4.getPlot()
+            PiePlot ColorConfigurator5 = (PiePlot) chart5.getPlot()
+
+            ColorConfigurator.setBackgroundAlpha(0f)
+            ColorConfigurator2.setBackgroundAlpha(0f)
+            ColorConfigurator4.setBackgroundAlpha(0f)
+            ColorConfigurator5.setBackgroundAlpha(0f)
+
+            /* A format mask specified to display labels. Here {0} is the section name, and {1} is the value.
+            We can also use {2} which will display a percent value */
+            ColorConfigurator.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}:{1} ({2})"));
+            ColorConfigurator2.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}:{1} ({2})"));
+            ColorConfigurator4.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}:{1} ({2})"));
+            ColorConfigurator5.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}:{1} ({2})"));
+            /* Set color of the label background on the pie chart */
+            ColorConfigurator.setLabelBackgroundPaint(new Color(220, 220, 220))
+            ColorConfigurator2.setLabelBackgroundPaint(new Color(220, 220, 220));
+            ColorConfigurator4.setLabelBackgroundPaint(new Color(220, 220, 220));
+            ColorConfigurator5.setLabelBackgroundPaint(new Color(220, 220, 220));
+
+            chartSinRecepcion.draw(graphics2dSinRecepcion, rectangle2dSinRecepcion);
+            chart4.draw(graphics2d4, rectangle2d4);
+            chart5.draw(graphics2d5, rectangle2d5);
+            barChart.draw(graphics2dSinRecepcion, rectangle2dSinRecepcion);
+            barChart2.draw(graphics2d2, rectangle2d2);
+            barChart3.draw(graphics2d3, rectangle2d3);
+            chartRetrasados.draw(graphics2dRetrasados, rectangle2dRetrasados);
+
+
+            graphics2dSinRecepcion.dispose();
+            graphics2d4.dispose();
+            graphics2d5.dispose();
+            graphics2dRetrasados.dispose();
+            graphics2d2.dispose();
+            graphics2d3.dispose();
+
+            def posyGraf1 = 550
+            def posyGraf5 = 350
+            def posyGraf55 = 150
+
+            def posyGraf2 = 600
+            def posyGraf3 = 420
+            def posyGraf4 = 230
+
+
+            contentByte.addTemplate(templateRetrasados, 110, posyGraf1);
+            contentByte.addTemplate(template4, 110, posyGraf5);
+            contentByte.addTemplate(template5, 110, posyGraf55);
+
+            document.newPage();
+
+            contentByte.addTemplate(templateSinRecepcion, 110, posyGraf2);
+            contentByte.addTemplate(template2, 110, posyGraf3);
+            contentByte.addTemplate(template3, 110, posyGraf4);
+
+        } catch (e) {
+            println "ERROR GRAFICOS::::::: "
+            e.printStackTrace();
+            conGraficos = false
+        }
+
+
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=" + name)
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+    }
+
+    def detalle () {
+
+        def cn = dbConnectionService.getConnection()
+        def sql = 'select distinct cast (extract(year from pagofcpg) as INT) from pago order by 1;'
+        def res =  cn.rows(sql.toString())
+
+        return [anios: res.date_part]
+    }
+
+    def detalle_ajax () {
+
     }
 
 

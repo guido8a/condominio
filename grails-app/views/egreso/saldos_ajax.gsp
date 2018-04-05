@@ -31,7 +31,7 @@
         <elm:datepicker name="fechaH_name" id="fechaHasta" class="datepicker form-control" value="${new Date()}"/>
     </div>
 
-    <div class="col-xs-2">
+    <div class="col-xs-1">
         <a href="#" class="btn btn-info btnBuscar" ><i class="fa fa-search"></i> Buscar</a>
     </div>
 </div>
@@ -47,7 +47,7 @@
         var desde = $("#fechaDesde").val();
         var hasta = $("#fechaHasta").val();
         $.ajax({
-          type: 'POST',
+            type: 'POST',
             url:'${createLink(controller: 'egreso', action: 'tablaSaldos_ajax')}',
             data:{
                 desde: desde,
