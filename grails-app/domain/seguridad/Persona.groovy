@@ -1,9 +1,11 @@
 package seguridad
 
+import condominio.Condominio
 import condominio.Edificio
 import condominio.TipoOcupacion
 
 class Persona {
+    Condominio condominio
     TipoOcupacion tipoOcupacion
     Edificio edificio
     String nombre
@@ -25,6 +27,7 @@ class Persona {
     String ruc
     double alicuota
     String observaciones
+    Date fechaPass
 
     static hasMany = [perfiles: Sesn]
 
@@ -38,6 +41,7 @@ class Persona {
 
         columns {
             id column: 'prsn__id'
+            condominio column: 'cndm__id'
             edificio column: 'edif__id'
             tipoOcupacion column: 'tpoc__id'
             nombre column: 'prsnnmbr'
@@ -59,9 +63,11 @@ class Persona {
             fechaNacimiento column: 'prsnfcna'
             alicuota column: 'prsnalct'
             observaciones column: 'prsnobsr'
+            fechaPass column: 'prsnfcps'
         }
     }
     static constraints = {
+        condominio(blank: false, nullable: false)
         nombre(size: 3..30, blank: false)
         apellido(size: 3..30, blank: false)
         ruc(blank: false, nullable: false)

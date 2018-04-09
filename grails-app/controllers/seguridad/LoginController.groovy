@@ -165,8 +165,8 @@ class LoginController {
                 return
             } else {
                 session.usuario = user
-                session.usuarioKerberos = user.login
-                session.time = new Date()
+//                session.time = new Date()
+                session.condominio = user.condominio
                 session.departamento = user.departamento
 
 //                println "pone valores " + session.usuario
