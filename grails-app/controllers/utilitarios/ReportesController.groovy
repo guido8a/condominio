@@ -7,7 +7,9 @@ import com.lowagie.text.Phrase
 import com.lowagie.text.pdf.DefaultFontMapper
 import com.lowagie.text.pdf.PdfTemplate
 import condominio.Ingreso
+import groovy.json.JsonBuilder
 import org.apache.poi.hwpf.usermodel.OfficeDrawing
+import org.jfree.chart.ChartUtilities
 import org.jfree.chart.plot.PlotOrientation
 import org.jfree.data.category.DefaultCategoryDataset
 import seguridad.Persona
@@ -989,7 +991,7 @@ class ReportesController {
         if(params.mes == '01'){
             anioMesAnterior = (params.anio.toInteger() - 1) + "12"
         }else{
-            mesA = "0" + (params.mes.toInteger() - 1)
+            mesA =  (params.mes == '11' || params.mes == '12') ? (params.mes.toInteger() - 1) : ("0" + (params.mes.toInteger() - 1).toString())
             anioMesAnterior = params.anio + mesA
         }
 
@@ -1244,17 +1246,16 @@ class ReportesController {
             graphics2d2.dispose();
             graphics2d3.dispose();
 
-            def posyGraf1 = 550
-            def posyGraf5 = 350
+            def posyGraf5 = 550
+            def posyGraf1 = 350
             def posyGraf55 = 150
 
             def posyGraf2 = 600
             def posyGraf3 = 420
             def posyGraf4 = 230
 
-
-            contentByte.addTemplate(templateRetrasados, 110, posyGraf1);
             contentByte.addTemplate(template4, 110, posyGraf5);
+            contentByte.addTemplate(templateRetrasados, 110, posyGraf1);
             contentByte.addTemplate(template5, 110, posyGraf55);
 
             document.newPage();
@@ -1290,7 +1291,124 @@ class ReportesController {
 
     def detalle_ajax () {
 
+
+//        println("params " + params)
+
+        def resGraph = [], dep = null, per = null
+        def anioMes = params.anio + params.mes
+        def mesA
+
+        def anioMesAnterior
+        if(params.mes == '01'){
+            anioMesAnterior = (params.anio.toInteger() - 1) + "12"
+        }else{
+            mesA =  (params.mes.toInteger() == 11 || params.mes.toInteger() == 12) ? (params.mes.toInteger() - 1) : ("0" + (params.mes.toInteger() - 1))
+            anioMesAnterior = params.anio + mesA
+        }
+
+        def cnn = dbConnectionService.getConnection()
+        def sqln = "SELECT (date_trunc('MONTH', ('${anioMes}'||'01')::date) + INTERVAL '1 MONTH - 1 day')::DATE;"
+
+        def fechaInicio = new Date().parse("dd-MM-yyy", "01-" + params.mes + "-" + params.anio)
+        def fechaFin = cnn.rows(sqln.toString()).first().date
+
+        def fechaInicioAnterior
+        if(params.mes == '01'){
+            fechaInicioAnterior = new Date().parse("dd-MM-yyy", "01-12-" + (params.anio.toInteger() - 1))
+        }else{
+            fechaInicioAnterior = new Date().parse("dd-MM-yyy", "01-" + (params.mes.toInteger() - 1) + "-" + params.anio)
+        }
+
+        def cna = dbConnectionService.getConnection()
+        def sqla = "SELECT (date_trunc('MONTH', ('${anioMesAnterior}'||'01')::date) + INTERVAL '1 MONTH - 1 day')::DATE;"
+        def fechaFinAnterior = cna.rows(sqla.toString()).first().date
+
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+
+
+        /***************SQL************************/
+
+        //total de Personas
+        def cn0 = dbConnectionService.getConnection()
+        def totalPersonas = 'select count(prsnnmbr) from personas()'
+        def res0 =  cn0.rows(totalPersonas.toString())
+
+        //este mes pagado
+        def cn = dbConnectionService.getConnection()
+        def esteMes = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and pagofcpg between '${fechaInicio}' and '${fechaFin}' and oblg__id in (2,7);"
+        def res =  cn.rows(esteMes.toString())
+
+        def pagados = res.first().count.toInteger()
+        def noPagados = res0.first().count.toInteger() - (res.first().count?.toInteger() ?: 0)
+
+        //mes anterior
+        def cn1 = dbConnectionService.getConnection()
+        def mesAnterior = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and \n" +
+                "  pagofcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}' and oblg__id in (2,7);"
+        def res1 =  cn1.rows(mesAnterior.toString())
+
+        def pagadosAnterior = res1.first().count.toInteger()
+        def noPagadosAnterior = res0.first().count.toInteger() - (res1.first().count?.toInteger() ?: 0)
+
+        //valores vencidos
+        def cn2 = dbConnectionService.getConnection()
+        def vencidos = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and\n" +
+                "  pagofcpg between '${fechaInicio}' and '${fechaFin}' and oblg__id in (2,7) and\n" +
+                "  ingrfcha < '${fechaInicio}';"
+        def res2 =  cn2.rows(vencidos.toString())
+
+        def venci = res2.first().count.toInteger()
+        def noVencidos = res0.first().count.toInteger() - (res2.first().count?.toInteger() ?: 0)
+
+        //ingresos mes anterior
+        def cn3 = dbConnectionService.getConnection()
+        def ingresosAnterior = "select sum(pagovlor) from pago where pagofcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}';"
+        def res3 =  cn3.rows(ingresosAnterior.toString())
+
+        def ingresosAnt = (res3.first().sum == null ? 0 :res3.first().sum?.toDouble())
+
+        //ingresos mes actual
+        def cn4 = dbConnectionService.getConnection()
+        def ingresosActual = "select sum(pagovlor) from pago where pagofcpg between '${fechaInicio}' and '${fechaFin}';"
+        def res4 =  cn4.rows(ingresosActual.toString())
+
+        def ingresosAct = (res4.first().sum == null ? 0 :res4.first().sum?.toDouble())
+
+        //egresos mes anterior
+        def cn5 = dbConnectionService.getConnection()
+        def egresosAnterior = "select sum(pgegvlor) from pgeg where pgegfcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}';"
+        def res5 =  cn5.rows(egresosAnterior.toString())
+
+        def egresosAnt = (res5.first().sum == null ? 0 :res5.first().sum?.toDouble())
+
+        //egresos mes actual
+        def cn6 = dbConnectionService.getConnection()
+        def egresosActual = "select sum(pgegvlor) from pgeg where pgegfcpg between '${fechaInicio}' and '${fechaFin}';"
+        def res6 = cn6.rows(egresosActual.toString())
+
+        def egresosAct = (res6.first().sum == null ? 0 :res6.first().sum?.toDouble())
+
+        //valores por cobrar a la fecha y saldos
+
+        def cn7 = dbConnectionService.getConnection()
+        def valores = "select * from saldos('${fechaInicio}', '${fechaFin}');"
+        def res7 = cn7.rows(valores.toString())
+
+        def si = res7.first().sldofnal?.toDouble() ?:0
+        def is = res7.first().ingrsldo?.toDouble() ?:0
+        def es = res7.first().egrssldo?.toDouble() ?:0
+        def sf = res7.first().sldofnal?.toDouble() + res7.first().ingrsldo?.toDouble() - res7.first().egrssldo?.toDouble()
+
+
+        def jsonGraph = new JsonBuilder(resGraph)
+
+        return[jsonGraph: jsonGraph.toString(), pagados: pagados, noPagados: noPagados, pagadosAnterior: pagadosAnterior,
+               noPagadosAnterior: noPagadosAnterior, vencidos: venci, noVencidos: noVencidos, ingresosAnt: ingresosAnt,
+               ingresosAct: ingresosAct, egresosAnt: egresosAnt, egresosAct: egresosAct, saldoInicial: si, ingresoSaldo: is, egresoSaldo: es, saldoFinal: sf]
+
     }
+
+
 
 
 

@@ -50,10 +50,10 @@
         </a>
 
     </div>
-
 </div>
 
-<div class="row" id="divDetalle">
+
+<div id="divDetalle">
 
 </div>
 
@@ -69,14 +69,14 @@
     });
 
     $(".btnBuscar").click(function () {
-        var desde = $("#fechaDesde").val();
-        var hasta = $("#fechaHasta").val();
+        var mes = $("#mesesHasta").val();
+        var anio = $("#anio").val();
         $.ajax({
             type: 'POST',
             url:'${createLink(controller: 'reportes', action: 'detalle_ajax')}',
             data:{
-                desde: desde,
-                hasta: hasta
+                mes: mes,
+                anio: anio
             },
             success: function (msg) {
                 $("#divDetalle").html(msg)
