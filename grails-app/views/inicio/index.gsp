@@ -83,7 +83,6 @@
 
     <div style="text-align: center;"><h2 class="titl">
             <p class="text-warning">${session.condominio.nombre}</p>
-            %{--<p class="text-warning">Administración de Condominios</p>--}%
         </h2>
     </div>
 
