@@ -1251,8 +1251,8 @@ class ReportesController {
             def posyGraf55 = 150
 
             def posyGraf2 = 600
-            def posyGraf3 = 420
-            def posyGraf4 = 230
+            def posyGraf3 = 380
+            def posyGraf4 = 150
 
             contentByte.addTemplate(template4, 110, posyGraf5);
             contentByte.addTemplate(templateRetrasados, 110, posyGraf1);

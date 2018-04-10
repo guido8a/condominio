@@ -3,6 +3,7 @@ package condominio
 class Edificio {
 
     static auditable = true
+    Condominio condominio
     String descripcion
 
     static mapping = {
@@ -12,6 +13,7 @@ class Edificio {
         id generator: 'identity'
         columns {
             id column: 'edif__id'
+            condominio column: 'cndm__id'
             descripcion column: 'edifdscr'
         }
     }

@@ -79,7 +79,7 @@
 
 <body>
 <div class="dialog">
-    <g:set var="inst" value="${utilitarios.Parametros.get(1)}"></g:set>
+    <g:set var="inst" value="${utilitarios.Parametros.get(1)}"/>
 
     <div style="text-align: center;"><h2 class="titl">
             <p class="text-warning">${session.condominio.nombre}</p>

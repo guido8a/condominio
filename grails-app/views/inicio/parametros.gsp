@@ -67,7 +67,7 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
             <li class="active"><a href="#generales" data-toggle="tab">Generales</a></li>
-            <li><a href="#empresa" data-toggle="tab">Empresa</a></li>
+            <li><a href="#empresa" data-toggle="tab">Condominio</a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -135,20 +135,20 @@
                             </div>
                         </li>
 
-                        <li>
-                            <i class="fa-li ${iconGen}"></i>
-                            <span id="prmt">
-                                <g:link controller="tipoComprobante" action="list">Parámetros del sistema</g:link> para fijar
-                                las variables de funcionamiento
-                            </span>
+                        %{--<li>--}%
+                            %{--<i class="fa-li ${iconGen}"></i>--}%
+                            %{--<span id="prmt">--}%
+                                %{--<g:link controller="tipoComprobante" action="list">Parámetros del sistema</g:link> para fijar--}%
+                                %{--las variables de funcionamiento--}%
+                            %{--</span>--}%
 
-                            <div class="descripcion hide">
-                                <h4>Parámetros del Sistema</h4>
+                            %{--<div class="descripcion hide">--}%
+                                %{--<h4>Parámetros del Sistema</h4>--}%
 
-                                <p>Fija las variables de funcionamiento y pertenecia del sistema</p>
+                                %{--<p>Fija las variables de funcionamiento y pertenecia del sistema</p>--}%
 
-                            </div>
-                        </li>
+                            %{--</div>--}%
+                        %{--</li>--}%
 
                     </ul>
                 </div>

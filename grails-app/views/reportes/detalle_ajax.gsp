@@ -12,19 +12,20 @@
 <script src="${resource(dir: 'js/plugins/jquery.jqplot.1.0.8r1250/plugins', file: 'jqplot.barRenderer.min.js')}"></script>
 <script src="${resource(dir: 'js/plugins/jquery.jqplot.1.0.8r1250/plugins', file: 'jqplot.categoryAxisRenderer.min.js')}"></script>
 <script src="${resource(dir: 'js/plugins/jquery.jqplot.1.0.8r1250/plugins', file: 'jqplot.highlighter.min.js')}"></script>
+<script src="${resource(dir: 'js/plugins/jquery.jqplot.1.0.8r1250/plugins', file: 'jqplot.pointLabels.min.js')}"></script>
 <link href="${resource(dir: 'js/plugins/jquery.jqplot.1.0.8r1250', file: 'jquery.jqplot.min.css')}" rel="stylesheet">
 
 <style type="text/css">
 
 .divChart {
-    height       : 360px;
-    width        : 420px;
+    height       : 300px;
+    width        : 380px;
     float        : left;
     margin-right : 10px;
 }
 
 .chartContainer {
-    height : 360px;
+    height : 300px;
     width: 1400px;
 }
 
@@ -84,7 +85,7 @@
                     },
                     legend         : {
                         show     : true,
-                        location : 'e',
+                        location : 's',
                         placement: 'outsideGrid'
 
                     }
@@ -126,10 +127,6 @@
                     seriesDefaults : {
                         renderer   : $.jqplot.BarRenderer,
                         pointLabels: { show: true }
-//                        ,
-//                        barMargin: 30,
-//                        barWidth: 260,
-//                        barPadding: 100
                     },
                     series:[
                         {label:'Anterior'},
@@ -140,13 +137,14 @@
                             renderer: $.jqplot.CategoryAxisRenderer,
                             ticks: ticks
                         }
-                    },
-
-                    legend         : {
-                        show     : true,
-                        location : 'e',
-                        placement: 'outsideGrid'
                     }
+//                    ,
+//
+//                    legend         : {
+//                        show     : true,
+//                        location : 's',
+//                        placement: 'outsideGrid'
+//                    }
                 }
             );
             $chart.bind('jqplotDataHighlight', function (ev, seriesIndex, pointIndex, data) {
@@ -192,24 +190,26 @@
     }
 
     function makeChartBars2(tipo,titulo, v1, v2, v3, v4, tit1, tit2, tit3, tit4) {
-        var data = [v1,0,0,0];
-        var data2 = [0,v2,0,0];
-        var data3 = [0,0,v3,0];
-        var data4 = [0,0,0,v4];
+//        var data = [v1,v2,v3,v4];
+        var data = [[tit1,v1],[tit2,v2],[tit3,v3],[tit4,v4]];
         var ticks = [tit1, tit2, tit3, tit4];
         if (data.length > 0) {
             var $chart = $("#chart2_" + tipo);
             $(".chartContainer").removeClass("hidden");
             $chart.removeClass("hidden");
-            $.jqplot('chart2_' + tipo, [data, data2, data3, data4],
+            $.jqplot('chart2_' + tipo, [data],
                 {
                     title          : titulo,
+//                    seriesColors:['#85802b', '#00749F', '#73C774', '#C7754C'],
                     seriesDefaults : {
                         renderer   : $.jqplot.BarRenderer,
-                        barMargin: 30,
-                        barWidth: 60
-//                        rendererOptions: {fillToZero: true}
-                    },
+                        showMarker:false,
+                        pointLabels: { show:true },
+                        rendererOptions: {
+                            varyBarColor: true
+                        }
+                    }
+                    ,
                     series:[
                         {label:tit1},
                         {label:tit2},
@@ -218,18 +218,21 @@
                     ],
                     axes: {
                         xaxis: {
-                            renderer: $.jqplot.CategoryAxisRenderer,
-                            ticks: ticks
+                            renderer: $.jqplot.CategoryAxisRenderer
+//                            ,
+//                            ticks: ticks
                         }
-                    },
-
-                    legend         : {
-                        show     : true,
-                        location : 'e',
-                        placement: 'outsideGrid'
                     }
+//                    ,
+//
+//                    legend         : {
+//                        show     : true,
+//                        location : 's',
+//                        placement: 'outsideGrid'
+//                    }
                 }
             );
+
             $chart.bind('jqplotDataHighlight', function (ev, seriesIndex, pointIndex, data) {
                 var $this = $(this);
                 $this.qtip({

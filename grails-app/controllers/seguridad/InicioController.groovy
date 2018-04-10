@@ -27,7 +27,16 @@ class InicioController extends seguridad.Shield {
 
     def parametros = {
 
-        if (session.usuario) {
+        if (session.usuario && session.perfil.codigo == 'ADM') {
+            return []
+        } else {
+            flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será registrada."
+            response.sendError(403)
+        }
+    }
+
+    def parametrosCondominio = {
+        if (session.usuario && session.perfil.codigo == 'ADC') {
             return []
         } else {
             flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será registrada."
