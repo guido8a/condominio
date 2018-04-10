@@ -67,7 +67,7 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
             <li class="active"><a href="#generales" data-toggle="tab">Generales</a></li>
-            <li><a href="#empresa" data-toggle="tab">Condominio</a></li>
+            %{--<li><a href="#condominio" data-toggle="tab">Condominio</a></li>--}%
         </ul>
 
         <!-- Tab panes -->
@@ -134,6 +134,19 @@
                                 recursos del condominio.</p>
                             </div>
                         </li>
+                        <li>
+                            <i class="fa-li ${iconGen}"></i>
+                            <span id="cndm">
+                                <g:link controller="condominio" action="list">Condominio</g:link> para
+                               el registro y edición de datos del condominio.
+                            </span>
+
+                            <div class="descripcion hide">
+                                <h4>Condominio</h4>
+
+                                <p>Para el registro y edicion de datos del condominio.</p>
+                            </div>
+                        </li>
 
                         %{--<li>--}%
                             %{--<i class="fa-li ${iconGen}"></i>--}%
@@ -157,28 +170,28 @@
                 </div>
             </div>
 
-            <div class="tab-pane" id="empresa">
-                <div class="left pull-left">
-                    <ul class="fa-ul">
-                        <li>
-                            <i class="fa-li ${iconEmpr}"></i>
-                            <span id="paramsEmp">
-                                <g:link controller="empresa" action="list">Parámetros del Condominio</g:link> para definir la forma de
-                                funcionamiento del sistema.
-                            </span>
+            %{--<div class="tab-pane" id="condominio">--}%
+                %{--<div class="left pull-left">--}%
+                    %{--<ul class="fa-ul">--}%
+                        %{--<li>--}%
+                            %{--<i class="fa-li ${iconEmpr}"></i>--}%
+                            %{--<span id="paramsEmp">--}%
+                                %{--<g:link controller="empresa" action="list">Parámetros del Condominio</g:link> para definir la forma de--}%
+                                %{--funcionamiento del sistema.--}%
+                            %{--</span>--}%
 
-                            <div class="descripcion hide">
-                                <h4>Parámetros del Condominio</h4>
+                            %{--<div class="descripcion hide">--}%
+                                %{--<h4>Parámetros del Condominio</h4>--}%
 
-                                <p>Parámetros de funcionamiento del sistema,</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                                %{--<p>Parámetros de funcionamiento del sistema,</p>--}%
+                            %{--</div>--}%
+                        %{--</li>--}%
+                    %{--</ul>--}%
+                %{--</div>--}%
 
-                <div class="empresa right pull-right">
-                </div>
-            </div>
+                %{--<div class="empresa right pull-right">--}%
+                %{--</div>--}%
+            %{--</div>--}%
 
         </div>
 

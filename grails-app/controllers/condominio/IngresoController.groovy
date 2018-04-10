@@ -74,8 +74,9 @@ class IngresoController extends Shield {
     def pendiente() {
 //        println "params: $params"
         def prsn = Persona.get(params.id)
+        def condominio = Condominio.get(session.condominio.id)
         def ingr = Ingreso.findAllByPersona(prsn, [sort: 'fecha'])
-        def sql = "select * from personas() where prsn__id= ${prsn.id}"
+        def sql = "select * from personas(${condominio?.id}) where prsn__id= ${prsn.id}"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
         return [ingreso: ingr, ingrCount: ingr.size(), persona: prsn, data:data]

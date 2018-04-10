@@ -6,6 +6,7 @@ import com.lowagie.text.Chunk
 import com.lowagie.text.Phrase
 import com.lowagie.text.pdf.DefaultFontMapper
 import com.lowagie.text.pdf.PdfTemplate
+import condominio.Condominio
 import condominio.Ingreso
 import groovy.json.JsonBuilder
 import org.apache.poi.hwpf.usermodel.OfficeDrawing
@@ -621,8 +622,9 @@ class ReportesController {
 //        println "params " + params
 
         def persona = Persona.get(params.id)
+        def condominio = Condominio.get(session.condominio.id)
 
-        def sql = "select * from personas() where prsn__id= ${persona.id}"
+        def sql = "select * from personas(${condominio?.id}) where prsn__id= ${persona.id}"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 
@@ -785,8 +787,8 @@ class ReportesController {
 //        println "params " + params
 
         def persona = Persona.get(id)
-
-        def sql = "select * from personas() where prsn__id= ${persona.id}"
+        def condominio = Condominio.get(session.condominio.id)
+        def sql = "select * from personas(${condominio?.id}) where prsn__id= ${persona.id}"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 
@@ -934,8 +936,8 @@ class ReportesController {
         byte[] b
         def pdfs = []
         def contador = 0
-
-        def sql = "select * from personas()"
+        def condominio = Condominio.get(session.condominio.id)
+        def sql = "select * from personas(${condominio?.id})"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 
@@ -1047,8 +1049,9 @@ class ReportesController {
         /***************SQL************************/
 
         //total de Personas
+        def condominio = Condominio.get(session.condominio.id)
         def cn0 = dbConnectionService.getConnection()
-        def totalPersonas = 'select count(prsnnmbr) from personas()'
+        def totalPersonas = "select count(prsnnmbr) from personas(${condominio?.id})"
         def res0 =  cn0.rows(totalPersonas.toString())
 
         //este mes pagado
@@ -1329,8 +1332,9 @@ class ReportesController {
         /***************SQL************************/
 
         //total de Personas
+        def condominio = Condominio.get(session.condominio.id)
         def cn0 = dbConnectionService.getConnection()
-        def totalPersonas = 'select count(prsnnmbr) from personas()'
+        def totalPersonas = "select count(prsnnmbr) from personas(${condominio?.id})"
         def res0 =  cn0.rows(totalPersonas.toString())
 
         //este mes pagado

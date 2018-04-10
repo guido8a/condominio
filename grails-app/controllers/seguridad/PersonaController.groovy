@@ -1,5 +1,6 @@
 package seguridad
 
+import condominio.Condominio
 import condominio.Ingreso
 import org.apache.tomcat.util.security.MD5Encoder
 import org.springframework.dao.DataIntegrityViolationException
@@ -298,7 +299,8 @@ class PersonaController extends Shield {
 
     def personal () {
         def persona = Persona.get(session.usuario.id)
-        def sql = "select * from personas() where prsn__id= ${persona.id}"
+        def condominio = Condominio.get(session.condominio.id)
+        def sql = "select * from personas(${condominio?.id}) where prsn__id= ${persona.id}"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
         return[data: data]
