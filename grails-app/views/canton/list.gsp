@@ -1,10 +1,10 @@
 
-<%@ page import="condominio.Condominio" %>
+<%@ page import="condominio.Canton" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Lista de Condominio</title>
+    <title>Lista de Canton</title>
 </head>
 <body>
 
@@ -12,70 +12,48 @@
 
 <!-- botones -->
 <div class="btn-toolbar toolbar">
-    <g:if test="${session.perfil.codigo == 'ADM'}">
-        <div class="btn-group">
-            <a href="#" class="btn btn-primary btnCrear">
-                <i class="fa fa-file-o"></i> Nuevo
-            </a>
-        </div>
-        <div class="btn-group pull-right col-md-3">
-            <div class="input-group">
-                <input type="text" class="form-control input-search" placeholder="Buscar" value="${params.search}">
-                <span class="input-group-btn">
-                    <g:link controller="condominio" action="list" class="btn btn-default btn-search">
-                        <i class="fa fa-search"></i>&nbsp;
-                    </g:link>
-                </span>
-            </div><!-- /input-group -->
-        </div>
-    </g:if>
+    <div class="btn-group">
+        <a href="#" class="btn btn-primary btnCrear">
+            <i class="fa fa-file-o"></i> Nuevo
+        </a>
+    </div>
+    <div class="btn-group pull-right col-md-3">
+        <div class="input-group">
+            <input type="text" class="form-control input-search" placeholder="Buscar" value="${params.search}">
+            <span class="input-group-btn">
+                <g:link controller="canton" action="list" class="btn btn-default btn-search">
+                    <i class="fa fa-search"></i>&nbsp;
+                </g:link>
+            </span>
+        </div><!-- /input-group -->
+    </div>
 </div>
 
 <table class="table table-condensed table-bordered table-striped table-hover">
     <thead>
     <tr>
-
-        <th>Tipo Condominio</th>
-
+        
         <g:sortableColumn property="nombre" title="Nombre" />
-
-        <g:sortableColumn property="ruc" title="Ruc" />
         
-        <th>Canton</th>
-
-        <g:sortableColumn property="direccion" title="Direccion" />
-        
-        <g:sortableColumn property="telefono" title="Telefono" />
-
-        <th># Viviendas</th>
+        <g:sortableColumn property="provincia" title="Provincia" />
         
     </tr>
     </thead>
     <tbody>
-    <g:if test="${condominioInstanceCount > 0}">
-        <g:each in="${condominioInstanceList}" status="i" var="condominioInstance">
-            <tr data-id="${condominioInstance.id}">
-
-                <td>${condominioInstance.tipoCondominio.descripcion}</td>
-
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${condominioInstance}" field="nombre"/></elm:textoBusqueda></td>
-
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${condominioInstance}" field="ruc"/></elm:textoBusqueda></td>
-
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${condominioInstance}" field="canton.nombre"/></elm:textoBusqueda></td>
-
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${condominioInstance}" field="direccion"/></elm:textoBusqueda></td>
+    <g:if test="${cantonInstanceCount > 0}">
+        <g:each in="${cantonInstanceList}" status="i" var="cantonInstance">
+            <tr data-id="${cantonInstance.id}">
                 
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${condominioInstance}" field="telefono"/></elm:textoBusqueda></td>
-
-                <td style="text-align: center">${condominioInstance?.numeroViviendas}</td>
+                <td>${cantonInstance.nombre}</td>
+                
+                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${cantonInstance}" field="provincia"/></elm:textoBusqueda></td>
                 
             </tr>
         </g:each>
     </g:if>
     <g:else>
         <tr class="danger">
-            <td class="text-center" colspan="11">
+            <td class="text-center" colspan="2">
                 <g:if test="${params.search && params.search!= ''}">
                     No se encontraron resultados para su búsqueda
                 </g:if>
@@ -88,16 +66,16 @@
     </tbody>
 </table>
 
-<elm:pagination total="${condominioInstanceCount}" params="${params}"/>
+<elm:pagination total="${cantonInstanceCount}" params="${params}"/>
 
 <script type="text/javascript">
     var id = null;
-    function submitFormCondominio() {
-        var $form = $("#frmCondominio");
+    function submitFormCanton() {
+        var $form = $("#frmCanton");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
         $btn.replaceWith(spinner);
-            openLoader("Guardando Condominio");
+            openLoader("Guardando Cantón");
                     $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
@@ -123,7 +101,7 @@
         bootbox.dialog({
             title   : "Alerta",
             message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-            "¿Está seguro que desea eliminar el Condominio seleccionado? Esta acción no se puede deshacer.</p>",
+            "¿Está seguro que desea eliminar el Cantón seleccionado? Esta acción no se puede deshacer.</p>",
             buttons : {
                 cancelar : {
                     label     : "Cancelar",
@@ -135,10 +113,10 @@
                     label     : "<i class='fa fa-trash-o'></i> Eliminar",
                     className : "btn-danger",
                     callback  : function () {
-                        openLoader("Eliminando Condominio");
+                        openLoader("Eliminando Cantón");
                                 $.ajax({
                             type    : "POST",
-                            url     : '${createLink(controller:'condominio', action:'delete_ajax')}',
+                            url     : '${createLink(controller:'canton', action:'delete_ajax')}',
                             data    : {
                                 id : itemId
                             },
@@ -164,13 +142,13 @@
         var data = id ? { id: id } : {};
                 $.ajax({
             type    : "POST",
-            url     : "${createLink(controller:'condominio', action:'form_ajax')}",
+            url     : "${createLink(controller:'canton', action:'form_ajax')}",
             data    : data,
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
-                    title   : title + " Condominio",
-                    class   : "modal-lg",
+                    title   : title + " Cantón",
+                    
                     message : msg,
                     buttons : {
                         cancelar : {
@@ -184,7 +162,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitFormCondominio();
+                                return submitFormCanton();
                             } //callback
                         } //guardar
                     } //buttons
@@ -216,13 +194,13 @@
             var id = $element.data("id");
                                 $.ajax({
                 type    : "POST",
-                url     : "${createLink(controller:'condominio', action:'show_ajax')}",
+                url     : "${createLink(controller:'canton', action:'show_ajax')}",
                 data    : {
                     id : id
                 },
                 success : function (msg) {
                     bootbox.dialog({
-                        title   : "Ver Condominio",
+                        title   : "Ver Cantón",
                         message : msg,
                         buttons : {
                             ok : {

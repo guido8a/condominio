@@ -147,22 +147,18 @@
                                 <p>Para el registro y edicion de datos del condominio.</p>
                             </div>
                         </li>
+                        <li>
+                            <i class="fa-li ${iconGen}"></i>
+                            <span id="cntn">
+                                <g:link controller="canton" action="list">Cantón</g:link> para
+                                el registro y edición de datos del cantón.
+                            </span>
 
-                        %{--<li>--}%
-                            %{--<i class="fa-li ${iconGen}"></i>--}%
-                            %{--<span id="prmt">--}%
-                                %{--<g:link controller="tipoComprobante" action="list">Parámetros del sistema</g:link> para fijar--}%
-                                %{--las variables de funcionamiento--}%
-                            %{--</span>--}%
-
-                            %{--<div class="descripcion hide">--}%
-                                %{--<h4>Parámetros del Sistema</h4>--}%
-
-                                %{--<p>Fija las variables de funcionamiento y pertenecia del sistema</p>--}%
-
-                            %{--</div>--}%
-                        %{--</li>--}%
-
+                            <div class="descripcion hide">
+                                <h4>Cantón</h4>
+                                <p>Para el registro y edicion de datos del cantón.</p>
+                            </div>
+                        </li>
                     </ul>
                 </div>
 

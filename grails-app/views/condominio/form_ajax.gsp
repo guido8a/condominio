@@ -17,55 +17,54 @@
                         Tipo Condominio
                     </label>
                     <div class="col-md-7">
-                        <g:select id="tipoCondominio" name="tipoCondominio.id" from="${condominio.TipoCondominio.list()}" optionKey="id" required="" value="${condominioInstance?.tipoCondominio?.id}" class="many-to-one form-control"/>
+                        <g:select id="tipoCondominio" name="tipoCondominio.id" from="${condominio.TipoCondominio.list()}" optionKey="id" optionValue="descripcion" required="" value="${condominioInstance?.tipoCondominio?.id}" class="many-to-one form-control"/>
                     </div>
                      *
                 </span>
             </div>
-            
-            <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'canton', 'error')} required">
-                <span class="grupo">
-                    <label for="canton" class="col-md-2 control-label">
-                        Canton
-                    </label>
-                    <div class="col-md-7">
-                        <g:select id="canton" name="canton.id" from="${condominio.Canton.list()}" optionKey="id" required="" value="${condominioInstance?.canton?.id}" class="many-to-one form-control"/>
-                    </div>
-                     *
-                </span>
-            </div>
-            
+
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'nombre', 'error')} required">
                 <span class="grupo">
                     <label for="nombre" class="col-md-2 control-label">
                         Nombre
                     </label>
                     <div class="col-md-7">
-                        <g:textField name="nombre" maxlength="63" required="" class="allCaps form-control required" value="${condominioInstance?.nombre}"/>
+                        <g:textField name="nombre" maxlength="63" required="" class="form-control required" value="${condominioInstance?.nombre}"/>
                     </div>
-                     *
+                    *
                 </span>
             </div>
-            
+
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'ruc', 'error')} ">
                 <span class="grupo">
                     <label for="ruc" class="col-md-2 control-label">
                         Ruc
                     </label>
                     <div class="col-md-7">
-                        <g:textField name="ruc" maxlength="13" class="allCaps form-control" value="${condominioInstance?.ruc}"/>
+                        <g:textField name="ruc" maxlength="13" class="digits form-control" value="${condominioInstance?.ruc}"/>
                     </div>
-                    
                 </span>
             </div>
-            
+
+            <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'canton', 'error')} required">
+                <span class="grupo">
+                    <label for="canton" class="col-md-2 control-label">
+                        Cantón
+                    </label>
+                    <div class="col-md-7">
+                        <g:select id="canton" name="canton.id" from="${condominio.Canton.list()}" optionKey="id" optionValue="nombre" required="" value="${condominioInstance?.canton?.id}" class="many-to-one form-control"/>
+                    </div>
+                     *
+                </span>
+            </div>
+
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'direccion', 'error')} ">
                 <span class="grupo">
                     <label for="direccion" class="col-md-2 control-label">
-                        Direccion
+                        Dirección
                     </label>
                     <div class="col-md-7">
-                        <g:textField name="direccion" maxlength="127" class="allCaps form-control" value="${condominioInstance?.direccion}"/>
+                        <g:textField name="direccion" maxlength="127" class="form-control" value="${condominioInstance?.direccion}"/>
                     </div>
                     
                 </span>
@@ -74,39 +73,15 @@
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'telefono', 'error')} ">
                 <span class="grupo">
                     <label for="telefono" class="col-md-2 control-label">
-                        Telefono
+                        Teléfono
                     </label>
                     <div class="col-md-7">
-                        <g:textField name="telefono" maxlength="63" class="allCaps form-control" value="${condominioInstance?.telefono}"/>
+                        <g:textField name="telefono" maxlength="63" class="digits form-control" value="${condominioInstance?.telefono}"/>
                     </div>
                     
                 </span>
             </div>
-            
-            <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'fechaInicio', 'error')} required">
-                <span class="grupo">
-                    <label for="fechaInicio" class="col-md-2 control-label">
-                        Fecha Inicio
-                    </label>
-                    <div class="col-md-5">
-                        <elm:datepicker name="fechaInicio" title="Fecha de inicio"  class="datepicker form-control required" value="${condominioInstance?.fechaInicio}"  />
-                    </div>
-                     *
-                </span>
-            </div>
-            
-            <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'fechaFin', 'error')} ">
-                <span class="grupo">
-                    <label for="fechaFin" class="col-md-2 control-label">
-                        Fecha Fin
-                    </label>
-                    <div class="col-md-5">
-                        <elm:datepicker name="fechaFin" title="Fecha de fin"  class="datepicker form-control" value="${condominioInstance?.fechaFin}" default="none" noSelection="['': '']" />
-                    </div>
-                    
-                </span>
-            </div>
-            
+
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'email', 'error')} ">
                 <span class="grupo">
                     <label for="email" class="col-md-2 control-label">
@@ -124,20 +99,43 @@
                     <label for="sigla" class="col-md-2 control-label">
                         Sigla
                     </label>
-                    <div class="col-md-7">
-                        <g:textField name="sigla" class="allCaps form-control" value="${condominioInstance?.sigla}"/>
+                    <div class="col-md-3">
+                        <g:textField name="sigla" maxlength="8" class="allCaps form-control" value="${condominioInstance?.sigla}"/>
                     </div>
-                    
+                </span>
+            </div>
+
+            <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'fechaInicio', 'error')} required">
+                <span class="grupo">
+                    <label for="fechaInicio" class="col-md-2 control-label">
+                        Fecha Inicio
+                    </label>
+                    <div class="col-md-3">
+                        <elm:datepicker name="fechaInicio" title="Fecha de inicio"  class="datepicker form-control required" value="${condominioInstance?.fechaInicio}"  />
+                    </div>
+                    *
+                </span>
+            </div>
+
+            <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'fechaFin', 'error')} ">
+                <span class="grupo">
+                    <label for="fechaFin" class="col-md-2 control-label">
+                        Fecha Fin
+                    </label>
+                    <div class="col-md-3">
+                        <elm:datepicker name="fechaFin" title="Fecha de fin"  class="datepicker form-control" value="${condominioInstance?.fechaFin}" default="none" noSelection="['': '']" />
+                    </div>
+
                 </span>
             </div>
             
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'numeroViviendas', 'error')} required">
                 <span class="grupo">
                     <label for="numeroViviendas" class="col-md-2 control-label">
-                        Numero Viviendas
+                        Número Viviendas
                     </label>
                     <div class="col-md-3">
-                        <g:field name="numeroViviendas" type="number" value="${condominioInstance.numeroViviendas}" class="digits form-control required" required=""/>
+                        <g:textField name="numeroViviendas" value="${condominioInstance.numeroViviendas}" class="digits form-control required" required=""/>
                     </div>
                      *
                 </span>

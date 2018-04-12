@@ -37,13 +37,13 @@ class CondominioController  {
             list = c.list(params) {
                 or {
                     /* TODO: cambiar aqui segun sea necesario */
-                    
-                            ilike("direccion", "%" + params.search + "%")  
-                            ilike("email", "%" + params.search + "%")  
-                            ilike("nombre", "%" + params.search + "%")  
-                            ilike("ruc", "%" + params.search + "%")  
-                            ilike("sigla", "%" + params.search + "%")  
-                            ilike("telefono", "%" + params.search + "%")  
+
+                    ilike("direccion", "%" + params.search + "%")
+                    ilike("email", "%" + params.search + "%")
+                    ilike("nombre", "%" + params.search + "%")
+                    ilike("ruc", "%" + params.search + "%")
+                    ilike("sigla", "%" + params.search + "%")
+                    ilike("telefono", "%" + params.search + "%")
                 }
             }
         } else {
@@ -61,8 +61,19 @@ class CondominioController  {
      * @return condominioInstanceList: la lista de elementos filtrados, condominioInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def list() {
-        def condominioInstanceList = getList(params, false)
-        def condominioInstanceCount = getList(params, true).size()
+
+        def condominioInstanceList
+        def condominioInstanceCount
+
+
+        if(session.perfil.codigo == 'ADM'){
+            condominioInstanceList = getList(params, false)
+            condominioInstanceCount = getList(params, true).size()
+        }else{
+            condominioInstanceList = Condominio.get(session.condominio.id)
+            condominioInstanceCount = 1
+        }
+
         return [condominioInstanceList: condominioInstanceList, condominioInstanceCount: condominioInstanceCount]
     }
 
@@ -148,26 +159,26 @@ class CondominioController  {
             return
         }
     } //delete para eliminar via ajax
-    
-            /**
-             * Acción llamada con ajax que valida que no se duplique la propiedad email
-             * @render boolean que indica si se puede o no utilizar el valor recibido
-             */
-            def validar_unique_email_ajax() {
-                params.email = params.email.toString().trim()
-                if (params.id) {
-                    def obj = Condominio.get(params.id)
-                    if (obj.email.toLowerCase() == params.email.toLowerCase()) {
-                        render true
-                        return
-                    } else {
-                        render Condominio.countByEmailIlike(params.email) == 0
-                        return
-                    }
-                } else {
-                    render Condominio.countByEmailIlike(params.email) == 0
-                    return
-                }
+
+    /**
+     * Acción llamada con ajax que valida que no se duplique la propiedad email
+     * @render boolean que indica si se puede o no utilizar el valor recibido
+     */
+    def validar_unique_email_ajax() {
+        params.email = params.email.toString().trim()
+        if (params.id) {
+            def obj = Condominio.get(params.id)
+            if (obj.email.toLowerCase() == params.email.toLowerCase()) {
+                render true
+                return
+            } else {
+                render Condominio.countByEmailIlike(params.email) == 0
+                return
             }
-            
+        } else {
+            render Condominio.countByEmailIlike(params.email) == 0
+            return
+        }
+    }
+
 }

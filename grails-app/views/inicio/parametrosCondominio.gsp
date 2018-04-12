@@ -167,22 +167,22 @@
         <div class="left pull-left">
             <ul class="fa-ul">
                 <li>
-                    <i class="fa-li ${iconEmpr}"></i>
-                    <span id="paramsEmp">
-                        <g:link controller="empresa" action="list">Parámetros del Condominio</g:link> para definir la forma de
-                        funcionamiento del sistema.
+                    <i class="fa-li ${iconGen}"></i>
+                    <span id="cndm">
+                        <g:link controller="condominio" action="list">Condominio</g:link> para
+                        el registro y edición de datos del condominio.
                     </span>
 
                     <div class="descripcion hide">
-                        <h4>Parámetros del Condominio</h4>
+                        <h4>Condominio</h4>
 
-                        <p>Parámetros de funcionamiento del sistema,</p>
+                        <p>Para el registro y edicion de datos del condominio.</p>
                     </div>
                 </li>
             </ul>
         </div>
 
-        <div class="empresa right pull-right">
+        <div class="condominio right pull-right">
         </div>
     </div>
 

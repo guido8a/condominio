@@ -169,7 +169,7 @@ como máximo 30
 
     function cargarBusqueda () {
         var vvnd = parseInt(${condominio?.viviendas})
-        console.log("cont", vvnd);
+//        console.log("cont", vvnd);
         if(vvnd > 0) {
             $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
             var desde = $(".fechaD").val();

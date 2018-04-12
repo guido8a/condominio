@@ -13,59 +13,59 @@
                     Tipo Condominio
                 </div>
                 
-                <div class="col-md-4">
-                    ${condominioInstance?.tipoCondominio?.encodeAsHTML()}
+                <div class="col-md-5">
+                    ${condominioInstance?.tipoCondominio?.descripcion?.encodeAsHTML()}
                 </div>
                 
+            </div>
+        </g:if>
+
+        <g:if test="${condominioInstance?.nombre}">
+            <div class="row">
+                <div class="col-md-3 show-label">
+                    Nombre
+                </div>
+
+                <div class="col-md-5">
+                    <g:fieldValue bean="${condominioInstance}" field="nombre"/>
+                </div>
+
+            </div>
+        </g:if>
+
+        <g:if test="${condominioInstance?.ruc}">
+            <div class="row">
+                <div class="col-md-3 show-label">
+                    Ruc
+                </div>
+
+                <div class="col-md-5">
+                    <g:fieldValue bean="${condominioInstance}" field="ruc"/>
+                </div>
+
             </div>
         </g:if>
         
         <g:if test="${condominioInstance?.canton}">
             <div class="row">
                 <div class="col-md-3 show-label">
-                    Canton
+                    Cantón
                 </div>
                 
-                <div class="col-md-4">
-                    ${condominioInstance?.canton?.encodeAsHTML()}
-                </div>
-                
-            </div>
-        </g:if>
-        
-        <g:if test="${condominioInstance?.nombre}">
-            <div class="row">
-                <div class="col-md-3 show-label">
-                    Nombre
-                </div>
-                
-                <div class="col-md-4">
-                    <g:fieldValue bean="${condominioInstance}" field="nombre"/>
+                <div class="col-md-5">
+                    ${condominioInstance?.canton?.nombre?.encodeAsHTML()}
                 </div>
                 
             </div>
         </g:if>
-        
-        <g:if test="${condominioInstance?.ruc}">
-            <div class="row">
-                <div class="col-md-3 show-label">
-                    Ruc
-                </div>
-                
-                <div class="col-md-4">
-                    <g:fieldValue bean="${condominioInstance}" field="ruc"/>
-                </div>
-                
-            </div>
-        </g:if>
-        
+
         <g:if test="${condominioInstance?.direccion}">
             <div class="row">
                 <div class="col-md-3 show-label">
-                    Direccion
+                    Dirección
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <g:fieldValue bean="${condominioInstance}" field="direccion"/>
                 </div>
                 
@@ -75,49 +75,23 @@
         <g:if test="${condominioInstance?.telefono}">
             <div class="row">
                 <div class="col-md-3 show-label">
-                    Telefono
+                    Teléfono
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <g:fieldValue bean="${condominioInstance}" field="telefono"/>
                 </div>
                 
             </div>
         </g:if>
-        
-        <g:if test="${condominioInstance?.fechaInicio}">
-            <div class="row">
-                <div class="col-md-3 show-label">
-                    Fecha Inicio
-                </div>
-                
-                <div class="col-md-4">
-                    <g:formatDate date="${condominioInstance?.fechaInicio}" format="dd-MM-yyyy" />
-                </div>
-                
-            </div>
-        </g:if>
-        
-        <g:if test="${condominioInstance?.fechaFin}">
-            <div class="row">
-                <div class="col-md-3 show-label">
-                    Fecha Fin
-                </div>
-                
-                <div class="col-md-4">
-                    <g:formatDate date="${condominioInstance?.fechaFin}" format="dd-MM-yyyy" />
-                </div>
-                
-            </div>
-        </g:if>
-        
+
         <g:if test="${condominioInstance?.email}">
             <div class="row">
                 <div class="col-md-3 show-label">
                     Email
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <g:fieldValue bean="${condominioInstance}" field="email"/>
                 </div>
                 
@@ -130,20 +104,46 @@
                     Sigla
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <g:fieldValue bean="${condominioInstance}" field="sigla"/>
                 </div>
                 
+            </div>
+        </g:if>
+
+        <g:if test="${condominioInstance?.fechaInicio}">
+            <div class="row">
+                <div class="col-md-3 show-label">
+                    Fecha Inicio
+                </div>
+
+                <div class="col-md-5">
+                    <g:formatDate date="${condominioInstance?.fechaInicio}" format="dd-MM-yyyy" />
+                </div>
+
+            </div>
+        </g:if>
+
+        <g:if test="${condominioInstance?.fechaFin}">
+            <div class="row">
+                <div class="col-md-3 show-label">
+                    Fecha Fin
+                </div>
+
+                <div class="col-md-5">
+                    <g:formatDate date="${condominioInstance?.fechaFin}" format="dd-MM-yyyy" />
+                </div>
+
             </div>
         </g:if>
         
         <g:if test="${condominioInstance?.numeroViviendas}">
             <div class="row">
                 <div class="col-md-3 show-label">
-                    Numero Viviendas
+                    Número Viviendas
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <g:fieldValue bean="${condominioInstance}" field="numeroViviendas"/>
                 </div>
                 

@@ -1,4 +1,4 @@
-<%@ page import="condominio.Obra" %>
+<%@ page import="condominio.Condominio; condominio.Obra" %>
 
 <script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
 <g:if test="${!obraInstance}">
@@ -10,40 +10,76 @@
         <g:form class="form-horizontal" name="frmObra" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${obraInstance?.id}" />
 
+            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'tipoObra', 'error')} required">
+                <span class="grupo">
+                    <label for="tipoObra" class="col-md-2 control-label">
+                        Tipo Obra
+                    </label>
+                    <div class="col-md-7">
+                        <g:select id="tipoObra" name="tipoObra.id" from="${condominio.TipoObra.list()}" optionKey="id" optionValue="descripcion" required="" value="${obraInstance?.tipoObra?.id}" class="many-to-one form-control"/>
+                    </div>
+                    *
+                </span>
+            </div>
             
             <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'descripcion', 'error')} required">
                 <span class="grupo">
                     <label for="descripcion" class="col-md-2 control-label">
-                        Descripcion
+                        Descripción
                     </label>
                     <div class="col-md-7">
-                        <g:textField name="descripcion" required="" class="allCaps form-control required" value="${obraInstance?.descripcion}"/>
+                        <g:textArea name="descripcion" required="" class="form-control required" value="${obraInstance?.descripcion}" style="resize: none"/>
                     </div>
                      *
                 </span>
             </div>
-            
-            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'observaciones', 'error')} ">
+
+            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'proveedor', 'error')} required">
                 <span class="grupo">
-                    <label for="observaciones" class="col-md-2 control-label">
-                        Observaciones
+                    <label for="proveedor" class="col-md-2 control-label">
+                        Proveedor
                     </label>
                     <div class="col-md-7">
-                        <g:textField name="observaciones" class="allCaps form-control" value="${obraInstance?.observaciones}"/>
+                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list()}" optionKey="id" required="" value="${obraInstance?.proveedor?.id}" class="many-to-one form-control"/>
                     </div>
-                    
+                    *
                 </span>
             </div>
-            
+
+            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'persona', 'error')} required">
+                <span class="grupo">
+                    <label for="persona" class="col-md-2 control-label">
+                        Solicitante
+                    </label>
+                    <div class="col-md-7">
+                        <g:select id="persona" name="persona.id" from="${seguridad.Persona.findAllByCondominio(condominio.Condominio.get(session.condominio.id))}" optionKey="id" required="" value="${obraInstance?.persona?.id}" class="many-to-one form-control"/>
+                    </div>
+                    *
+                </span>
+            </div>
+
+
             <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'fecha', 'error')} required">
                 <span class="grupo">
                     <label for="fecha" class="col-md-2 control-label">
                         Fecha
                     </label>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <elm:datepicker name="fecha"  class="datepicker form-control required" value="${obraInstance?.fecha}"  />
                     </div>
                      *
+                </span>
+            </div>
+
+            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'fechaInicio', 'error')} required">
+                <span class="grupo">
+                    <label for="fechaInicio" class="col-md-2 control-label">
+                        Fecha Inicio
+                    </label>
+                    <div class="col-md-3">
+                        <elm:datepicker name="fechaInicio"  class="datepicker form-control required" value="${obraInstance?.fechaInicio}"  />
+                    </div>
+                    *
                 </span>
             </div>
             
@@ -52,36 +88,13 @@
                     <label for="fechaFin" class="col-md-2 control-label">
                         Fecha Fin
                     </label>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <elm:datepicker name="fechaFin"  class="datepicker form-control required" value="${obraInstance?.fechaFin}"  />
                     </div>
                      *
                 </span>
             </div>
-            
-            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'fechaInicio', 'error')} required">
-                <span class="grupo">
-                    <label for="fechaInicio" class="col-md-2 control-label">
-                        Fecha Inicio
-                    </label>
-                    <div class="col-md-5">
-                        <elm:datepicker name="fechaInicio"  class="datepicker form-control required" value="${obraInstance?.fechaInicio}"  />
-                    </div>
-                     *
-                </span>
-            </div>
-            
-            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'persona', 'error')} required">
-                <span class="grupo">
-                    <label for="persona" class="col-md-2 control-label">
-                        Persona
-                    </label>
-                    <div class="col-md-7">
-                        <g:select id="persona" name="persona.id" from="${seguridad.Persona.list()}" optionKey="id" required="" value="${obraInstance?.persona?.id}" class="many-to-one form-control"/>
-                    </div>
-                     *
-                </span>
-            </div>
+
             
             <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'plazo', 'error')} required">
                 <span class="grupo">
@@ -89,7 +102,7 @@
                         Plazo
                     </label>
                     <div class="col-md-3">
-                        <g:field name="plazo" type="number" value="${obraInstance.plazo}" class="digits form-control required" required=""/>
+                        <g:textField name="plazo" value="${obraInstance?.plazo}" class="digits form-control required" required=""/>
                     </div>
                      *
                 </span>
@@ -101,36 +114,23 @@
                         Presupuesto
                     </label>
                     <div class="col-md-3">
-                        <g:field name="presupuesto" type="number" value="${fieldValue(bean: obraInstance, field: 'presupuesto')}" class="number form-control  required" required=""/>
+                        <g:textField name="presupuesto" value="${obraInstance?.presupuesto}" class="number form-control required" required=""/>
                     </div>
                      *
                 </span>
             </div>
-            
-            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'proveedor', 'error')} required">
+
+            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'observaciones', 'error')} ">
                 <span class="grupo">
-                    <label for="proveedor" class="col-md-2 control-label">
-                        Proveedor
+                    <label for="observaciones" class="col-md-2 control-label">
+                        Observaciones
                     </label>
                     <div class="col-md-7">
-                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list()}" optionKey="id" required="" value="${obraInstance?.proveedor?.id}" class="many-to-one form-control"/>
+                        <g:textArea name="observaciones" class="form-control" value="${obraInstance?.observaciones}" style="resize: none"/>
+
                     </div>
-                     *
                 </span>
             </div>
-            
-            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'tipoObra', 'error')} required">
-                <span class="grupo">
-                    <label for="tipoObra" class="col-md-2 control-label">
-                        Tipo Obra
-                    </label>
-                    <div class="col-md-7">
-                        <g:select id="tipoObra" name="tipoObra.id" from="${condominio.TipoObra.list()}" optionKey="id" required="" value="${obraInstance?.tipoObra?.id}" class="many-to-one form-control"/>
-                    </div>
-                     *
-                </span>
-            </div>
-            
         </g:form>
     </div>
 

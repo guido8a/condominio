@@ -1,6 +1,7 @@
 package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
+import seguridad.Persona
 import seguridad.Shield
 
 
@@ -38,9 +39,9 @@ class ObraController extends Shield {
             list = c.list(params) {
                 or {
                     /* TODO: cambiar aqui segun sea necesario */
-                    
-                            ilike("descripcion", "%" + params.search + "%")  
-                            ilike("observaciones", "%" + params.search + "%")  
+
+                    ilike("descripcion", "%" + params.search + "%")
+                    ilike("observaciones", "%" + params.search + "%")
                 }
             }
         } else {
@@ -145,5 +146,84 @@ class ObraController extends Shield {
             return
         }
     } //delete para eliminar via ajax
-    
+
+
+    def listaObras () {
+
+    }
+
+    def buscador_ajax () {
+//        println("params " + params)
+        def ori
+        def lista  = [:]
+
+        def condominio = Condominio.get(session.condominio.id)
+        def personas = Persona.findAllByCondominio(condominio)
+        def obrasExistentes = Obra.findAllByPersonaInList(personas)
+
+        switch (params.seleccionado){
+            case '1': ori = obrasExistentes.tipoObra.unique().sort{it.descripcion}
+                ori.each {
+                    lista.put(it.id, it.descripcion)
+                }
+                break;
+            case "2": ori = obrasExistentes.persona.unique().sort{it.nombre}
+                ori.each {
+                    lista.put(it.id, (it.nombre + " " + it.apellido))
+                }
+                break;
+            case "3": ori = obrasExistentes.proveedor.unique().sort{it.nombre}
+                ori.each {
+                    lista.put(it.id,it.nombre)
+                }
+                break;
+        }
+
+        return[lista: lista, tipo: params.seleccionado]
+    }
+
+    def tablaObras_ajax () {
+//        println("params tabla " + params)
+
+        def condominio = Condominio.get(session.condominio.id)
+        def personas = Persona.findAllByCondominio(condominio)
+        def obras
+        def tipoObra
+        def persona
+        def proveedor
+
+        if(params.combo1 == '0') {
+            obras = Obra.findAllByPersonaInList(personas)
+        }else{
+
+            if(params.combo2 && params.combo2 != '0'){
+                    switch (params.combo1){
+                        case '1':   tipoObra = TipoObra.get(params.combo2.toInteger())
+                            obras = Obra.findAllByTipoObraAndPersonaInList(tipoObra, personas)
+                            break;
+                        case "2":   persona = Persona.get(params.combo2.toInteger())
+                            obras = Obra.findAllByPersona(persona)
+                            break;
+                        case "3":   proveedor = Proveedor.get(params.combo2.toInteger())
+                            obras = Obra.findAllByProveedorAndPersonaInList(proveedor,personas)
+                            break;
+                    }
+            }
+            else{
+                if(params.texto != ''){
+                    obras = Obra.withCriteria {
+
+                        'in'("persona", personas)
+                        ilike("descripcion", "%" + params.texto + "%")
+
+                    }
+                }
+            }
+        }
+
+
+//        println("obras " + obras)
+        return [obras: obras]
+
+    }
 }
