@@ -425,6 +425,7 @@ class ReportesController {
         def name = "pagosPendientes_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
         def titulo = new Color(40,140,180)
         Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
         Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
         Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
         Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
@@ -459,7 +460,8 @@ class ReportesController {
         Paragraph preface = new Paragraph();
         addEmptyLine(preface, 1);
         preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitulo));
+//        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitulo));
+        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
         preface.add(new Paragraph("PAGOS PENDIENTES", fontTitulo));
         addEmptyLine(preface, 1);
         document.add(preface);
@@ -474,7 +476,7 @@ class ReportesController {
 
             def tablaHeaderDetalles = new PdfPTable(5);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([10,20,45,10,15]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([10,20,47,10,12]))
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Nombre", fontTh), frmtHd)
@@ -485,13 +487,13 @@ class ReportesController {
         }
 
 
-        def printTotales = {params->
+        def printTotales = { params ->
             def tablaTotal = new PdfPTable(2);
             tablaTotal.setWidthPercentage(100);
-            tablaTotal.setWidths(arregloEnteros([85,15]))
+            tablaTotal.setWidths(arregloEnteros([87,12]))
 
             addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-            addCellTabla(tablaTotal, new Paragraph("" + params.total, fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaTotal, new Paragraph("${params.total}", fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
 
             addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 5, pl: 0])
         }
@@ -502,7 +504,7 @@ class ReportesController {
 
         tablaDetalles = new PdfPTable(5);
         tablaDetalles.setWidthPercentage(100);
-        tablaDetalles.setWidths(arregloEnteros([10,20,45,10,15]))
+        tablaDetalles.setWidths(arregloEnteros([10,20,47,10,12]))
         tablaDetalles.setSpacingAfter(1f);
 
 
@@ -516,6 +518,7 @@ class ReportesController {
 
 //        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
         res.each { fila ->
             if (actual == 0) {
@@ -544,8 +547,8 @@ class ReportesController {
                     addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
                     addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
                     addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
                     total += fila.sldo
                     anterior = fila.prsndpto
                     printTotales([total:total])
@@ -554,8 +557,8 @@ class ReportesController {
                     addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
                     addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
                     addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
                     total += fila.sldo
                     anterior = fila.prsndpto
                 }
@@ -564,8 +567,8 @@ class ReportesController {
                     addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
                     addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
                     addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtDato)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
+                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
                     total += fila.sldo
                     anterior = fila.prsndpto
                 }else{
@@ -574,8 +577,8 @@ class ReportesController {
                         addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
                         addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
                         addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtDato)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtDato)
+                        addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
+                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
                         total = fila.sldo
                         anterior = fila.prsndpto
                         printTotales([total:fila.sldo])
@@ -585,8 +588,8 @@ class ReportesController {
                         addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
                         addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
                         addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtDato)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtDato)
+                        addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
+                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
                         total = fila.sldo
                         anterior = fila.prsndpto
                         adicionales ++

@@ -120,11 +120,11 @@
             </a>
             <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#planCuentas" title="Plan de cuentas o catálogo de cuentas de la contabilidad">
                 <i class="fa fa-sign-in fa-5x"></i><br/>
-                Detalle Ingresos
+                Detalle de Ingresos
             </a>
             <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#libroDiario">
                 <i class="fa fa-sign-out fa-5x"></i><br/>
-                Detalle egresos
+                Detalle de Egresos
             </a>
             <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#libroMayor">
                 <i class="fa fa-home fa-5x"></i><br/>
@@ -144,11 +144,11 @@
             <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#modalDeudas"
                title="Estado de cuenta de los condóminos">
                 <i class="fa fa-file-text-o fa-5x"></i><br/>
-                Deudas
+                Deudas Pendientes
             </a>
             <a href="#" class="link btn btn-danger btn-ajax" data-toggle="modal" data-target="#solicitud">
                 <i class="fa fa-money fa-5x"></i><br/>
-                Solicitudes de pago
+                Solicitudes de Pago
             </a>
 
             %{--
@@ -329,7 +329,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="modalsolicitud">Situación</h4>
+                <h4 class="modal-title" id="modalsolicitud">Generar cartas solicitando pagos</h4>
             </div>
 
             <div class="modal-body" id="bodysolicitud">
@@ -338,7 +338,7 @@
                         <div class="col-md-1">
                         </div>
                         <div class="col-md-3">
-                            <label>Reportar para:</label>
+                            <label>Generar para deudas con </label>
                         </div>
                         <div class="col-md-7">
                             <g:select from="${['1':'Valores superiores a 1 alícuota',
