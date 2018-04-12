@@ -38,5 +38,7 @@ class Obra {
     static constraints = {
         descripcion(blank: false, nullable: false)
         observaciones(blank: true, nullable: true)
+        fechaInicio(blank: true, nullable: true)
+        fechaFin(blank: true, nullable: true)
     }
 }

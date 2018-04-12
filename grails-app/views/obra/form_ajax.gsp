@@ -5,7 +5,7 @@
     <elm:notFound elem="Obra" genero="o" />
 </g:if>
 <g:else>
-    
+
     <div class="modal-contenido">
         <g:form class="form-horizontal" name="frmObra" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${obraInstance?.id}" />
@@ -21,7 +21,7 @@
                     *
                 </span>
             </div>
-            
+
             <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'descripcion', 'error')} required">
                 <span class="grupo">
                     <label for="descripcion" class="col-md-2 control-label">
@@ -30,7 +30,7 @@
                     <div class="col-md-7">
                         <g:textArea name="descripcion" required="" class="form-control required" value="${obraInstance?.descripcion}" style="resize: none"/>
                     </div>
-                     *
+                    *
                 </span>
             </div>
 
@@ -61,62 +61,61 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'fecha', 'error')} required">
                 <span class="grupo">
-                    <label for="fecha" class="col-md-2 control-label">
-                        Fecha
+                    <label for="fecha" class="col-md-3 control-label">
+                        Fecha de Registro
                     </label>
                     <div class="col-md-3">
                         <elm:datepicker name="fecha"  class="datepicker form-control required" value="${obraInstance?.fecha}"  />
                     </div>
-                     *
-                </span>
-            </div>
-
-            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'fechaInicio', 'error')} required">
-                <span class="grupo">
-                    <label for="fechaInicio" class="col-md-2 control-label">
-                        Fecha Inicio
-                    </label>
-                    <div class="col-md-3">
-                        <elm:datepicker name="fechaInicio"  class="datepicker form-control required" value="${obraInstance?.fechaInicio}"  />
-                    </div>
                     *
                 </span>
             </div>
-            
-            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'fechaFin', 'error')} required">
+
+            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'fechaInicio', 'error')}">
                 <span class="grupo">
-                    <label for="fechaFin" class="col-md-2 control-label">
-                        Fecha Fin
+                    <label for="fechaInicio" class="col-md-3 control-label">
+                        Fecha Inicio Obra
                     </label>
                     <div class="col-md-3">
-                        <elm:datepicker name="fechaFin"  class="datepicker form-control required" value="${obraInstance?.fechaFin}"  />
+                        <elm:datepicker name="fechaInicio"  class="datepicker form-control" value="${obraInstance?.fechaInicio}"  />
                     </div>
-                     *
+
                 </span>
             </div>
 
-            
+            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'fechaFin', 'error')}">
+                <span class="grupo">
+                    <label for="fechaFin" class="col-md-3 control-label">
+                        Fecha Fin Obra
+                    </label>
+                    <div class="col-md-3">
+                        <elm:datepicker name="fechaFin"  class="datepicker form-control" value="${obraInstance?.fechaFin}"  />
+                    </div>
+                </span>
+            </div>
+
+
             <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'plazo', 'error')} required">
                 <span class="grupo">
-                    <label for="plazo" class="col-md-2 control-label">
-                        Plazo
+                    <label for="plazo" class="col-md-3 control-label">
+                        Plazo de ejecución
                     </label>
                     <div class="col-md-3">
                         <g:textField name="plazo" value="${obraInstance?.plazo}" class="digits form-control required" required=""/>
                     </div>
-                     *
+                    *
                 </span>
             </div>
-            
+
             <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'presupuesto', 'error')} required">
                 <span class="grupo">
-                    <label for="presupuesto" class="col-md-2 control-label">
-                        Presupuesto
+                    <label for="presupuesto" class="col-md-3 control-label">
+                        Presupuesto tentativo
                     </label>
                     <div class="col-md-3">
                         <g:textField name="presupuesto" value="${obraInstance?.presupuesto}" class="number form-control required" required=""/>
                     </div>
-                     *
+                    *
                 </span>
             </div>
 
@@ -148,7 +147,7 @@
             success        : function (label) {
                 label.parents(".grupo").removeClass('has-error');
             }
-            
+
         });
         $(".form-control").keydown(function (ev) {
             if (ev.keyCode == 13) {
