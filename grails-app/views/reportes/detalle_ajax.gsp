@@ -49,14 +49,16 @@
     var jsonGraph = ${raw(jsonGraph)};
 
     makeChart("actual", "Pagos Mes Actual", ${pagados}, ${noPagados}, "Pagados", "No Pagados");
-    makeChart("anterior", "Pagos Mes Anterior", ${pagadosAnterior}, ${noPagadosAnterior}, "Pagados Mes Anterior", "No Pagados Mes Anterior");
+    makeChart("anterior", "Pagos Mes Anterior", ${pagadosAnterior}, ${noPagadosAnterior}, "Pagados Mes Anterior",
+            "No Pagados Mes Anterior");
     makeChart("vencidos", "Pagos Valores Vencidos", ${vencidos}, ${noVencidos}, "Pagos Vencidos", "Pagos no vencidos");
 
     makeChartBars("ingresos", "Ingresos", ${ingresosAnt}, ${ingresosAct}, "Anterior", "Actual");
     makeChartBars("egresos", "Egresos", ${egresosAnt}, ${egresosAct}, "Anterior", "Actual");
-    makeChartBars2("porCobrar", "Valores Por Cobrar", ${saldoInicial}, ${ingresoSaldo}, ${egresoSaldo}, ${saldoFinal}, "Saldo Inicial", "Por Cobrar", "Por Pagar", "Resultado Final");
+    makeChartBars2("porCobrar", "Valores Por Cobrar", ${saldoInicial}, ${ingresoSaldo}, ${egresoSaldo}, ${saldoFinal},
+            "Saldo Inicial", "Por Cobrar", "Por Pagar", "Resultado Final");
 
-    function makeChart(tipo,titulo, v1, v2, tit1, tit2) {
+    function makeChart(tipo, titulo, v1, v2, tit1, tit2) {
         var data = [[tit1 ,v1],[tit2 ,v2]];
         if (data.length > 0) {
             var $chart = $("#chart_" + tipo);

@@ -79,6 +79,7 @@ class PrflController extends seguridad.Shield {
                 "from (accn left join prms on prms.accn__id = accn.accn__id and prfl__id = ${prfl}), ctrl " +
                 "where mdlo__id in (" + ids + ") and " +
                 "accn.ctrl__id = ctrl.ctrl__id and tpac__id = " + tpac + " order by ctrlnmbr, accndscr"
+        println "ql: $tx"
         cn.eachRow(tx) { d ->
             resultado[i] = [d.accn__id] + [d.accndscr] + [d.accnnmbr] + [d.ctrlnmbr] + [d.prms]
             i++
@@ -213,8 +214,9 @@ class PrflController extends seguridad.Shield {
             def prms
             try {
                 prms = Prms.get(d.prms__id)
-                println "borrando ${prms.id}"
-                prms.delete()
+                println "borrando ${prms.id} --> ${d.prms__id}"
+                prms.delete(flush: true)
+                println "borrado"
             }
             catch (Exception ex) {
                 println "borrar permiso: " + prms.errors
@@ -244,7 +246,7 @@ class PrflController extends seguridad.Shield {
                 cn.execute(tx1)
             }
             catch (Exception ex) {
-                println "grabar: " + ex.getMessage()
+                println "Ex_grabar: " + ex.getMessage()
             }
         }
         cn.close()

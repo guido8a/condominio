@@ -405,7 +405,7 @@ class ReportesController {
 
     def pagosPendientes3 () {
 
-        println "params " + params
+//        println "params pagosPendientes3: " + params
 
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
 
@@ -809,6 +809,7 @@ class ReportesController {
         Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtHdr = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtDatoDere = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
@@ -818,6 +819,8 @@ class ReportesController {
         def prmsTdNoBorder = [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def prmsTdBorder = [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def prmsNmBorder = [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+        def para = persona.sexo == 'M' ? 'Señor' : 'Señora(ita)'
 
         Document document
         document = new Document(PageSize.A4);
@@ -842,17 +845,17 @@ class ReportesController {
         document.add(preface);
 
         def tabla = new PdfPTable(2);
-        tabla.setWidthPercentage(70);
-        tabla.setWidths(arregloEnteros([55,15]))
+        tabla.setWidthPercentage(90);
+        tabla.setWidths(arregloEnteros([75,15]))
 
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(100);
 //        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
-        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+//        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
         table.addCell(getCell12("Quito, ${util.fechaConFormato(fecha: new Date(), formato: 'dd MMMM yyyy')} ", PdfPCell.ALIGN_RIGHT));
         table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
-        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
-        table.addCell(getCell12("Señor(a)", PdfPCell.ALIGN_LEFT));
+//        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+        table.addCell(getCell12(para, PdfPCell.ALIGN_LEFT));
         document.add(table);
 
         Paragraph c = new Paragraph();
@@ -882,6 +885,8 @@ class ReportesController {
                 addCellTabla(tabla, new Paragraph(pendiente.sldo.toString(), fontTd10), frmtDatoDere)
             }
         }
+        addCellTabla(tabla, new Paragraph('Total', fontTh), frmtHdr)
+        addCellTabla(tabla, new Paragraph("${data[0].prsnsldo}", fontTh), frmtHdr)
         document.add(tabla)
 
         Paragraph e = new Paragraph();
@@ -891,7 +896,7 @@ class ReportesController {
         Paragraph t2 = new Paragraph();
         t2.setAlignment("Justify");
         t2.add(new Paragraph( "Desde el 1° de abril de 2018 se aplicará el cobro de intereses por mora, conforme lo determina " +
-                "nuestro Reglamento Interno en el artículo 39 literal p, a los valores adeudados hasta el 31 de enero " +
+                "nuestro Reglamento Interno en el artículo 39 literal 'p', a los valores adeudados hasta el 31 de enero " +
                 "de 2018, así como también a las deudas que superen los 2 meses de alícuotas. Por esta razón me " +
                 "permito insistir en que realice el pago lo antes posible o proponga una forma de pago enviando " +
                 "la misma al correo electrónico vinedos269@gmail.com.", info))
@@ -931,6 +936,7 @@ class ReportesController {
     }
 
     def imprimirSolicitudes () {
+        println "params imprimirSolicitudes: $params"
 
         def pl = new ByteArrayOutputStream()
         byte[] b
@@ -940,10 +946,11 @@ class ReportesController {
         def sql = "select * from personas(${condominio?.id})"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
+        def fctr = params.vlor.toInteger()
 
 
-        data.each {persona->
-            if(persona.prsnsldo > persona.alctvlor){
+        data.each {persona ->
+            if(persona.prsnsldo > (persona.alctvlor * fctr)){
                 pl = solicitudes(persona.prsn__id)
                 pdfs.add(pl.toByteArray())
                 contador++
@@ -1047,6 +1054,10 @@ class ReportesController {
 
 
         /***************SQL************************/
+        def txfcin = fechaInicio.format('yyyy-MM-dd')
+        def txfcfn = fechaFin.format('yyyy-MM-dd')
+        def txfcinAn = fechaInicioAnterior.format('yyyy-MM-dd')
+        def txfcfnAn = fechaFinAnterior.format('yyyy-MM-dd')
 
         //total de Personas
         def condominio = Condominio.get(session.condominio.id)
@@ -1056,46 +1067,46 @@ class ReportesController {
 
         //este mes pagado
         def cn = dbConnectionService.getConnection()
-        def esteMes = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and pagofcpg between '${fechaInicio}' and '${fechaFin}' and oblg__id in (2,7);"
+        def esteMes = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and pagofcpg between '${txfcin}' and '${txfcfn}' and oblg__id in (2,7);"
         def res =  cn.rows(esteMes.toString())
 
         //mes anterior
         def cn1 = dbConnectionService.getConnection()
         def mesAnterior = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and \n" +
-                "  pagofcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}' and oblg__id in (2,7);"
+                "  pagofcpg between '${txfcinAn}' and '${txfcfnAn}' and oblg__id in (2,7);"
         def res1 =  cn1.rows(mesAnterior.toString())
 
         //valores vencidos
         def cn2 = dbConnectionService.getConnection()
         def vencidos = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and\n" +
-                "  pagofcpg between '${fechaInicio}' and '${fechaFin}' and oblg__id in (2,7) and\n" +
-                "  ingrfcha < '${fechaInicio}';"
+                "  pagofcpg between '${txfcin}' and '${txfcfn}' and oblg__id in (2,7) and\n" +
+                "  ingrfcha < '${txfcin}';"
         def res2 =  cn2.rows(vencidos.toString())
 
         //ingresos mes anterior
         def cn3 = dbConnectionService.getConnection()
-        def ingresosAnterior = "select sum(pagovlor) from pago where pagofcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}';"
+        def ingresosAnterior = "select sum(pagovlor) from pago where pagofcpg between '${txfcinAn}' and '${txfcfnAn}';"
         def res3 =  cn3.rows(ingresosAnterior.toString())
 
         //ingresos mes actual
         def cn4 = dbConnectionService.getConnection()
-        def ingresosActual = "select sum(pagovlor) from pago where pagofcpg between '${fechaInicio}' and '${fechaFin}';"
+        def ingresosActual = "select sum(pagovlor) from pago where pagofcpg between '${txfcin}' and '${txfcfn}';"
         def res4 =  cn4.rows(ingresosActual.toString())
 
         //egresos mes anterior
         def cn5 = dbConnectionService.getConnection()
-        def egresosAnterior = "select sum(pgegvlor) from pgeg where pgegfcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}';"
+        def egresosAnterior = "select sum(pgegvlor) from pgeg where pgegfcpg between '${txfcinAn}' and '${txfcfnAn}';"
         def res5 =  cn5.rows(egresosAnterior.toString())
 
         //egresos mes actual
         def cn6 = dbConnectionService.getConnection()
-        def egresosActual = "select sum(pgegvlor) from pgeg where pgegfcpg between '${fechaInicio}' and '${fechaFin}';"
+        def egresosActual = "select sum(pgegvlor) from pgeg where pgegfcpg between '${txfcin}' and '${txfcfn}';"
         def res6 = cn6.rows(egresosActual.toString())
 
         //valores por cobrar a la fecha y saldos
 
         def cn7 = dbConnectionService.getConnection()
-        def valores = "select * from saldos('${fechaInicio}', '${fechaFin}');"
+        def valores = "select * from saldos('${txfcin}', '${txfcfn}');"
         def res7 = cn7.rows(valores.toString())
 
         /* ************************************************* Graficos *************************** */
@@ -1331,6 +1342,11 @@ class ReportesController {
 
         /***************SQL************************/
 
+        def txfcin = fechaInicio.format('yyyy-MM-dd')
+        def txfcfn = fechaFin.format('yyyy-MM-dd')
+        def txfcinAn = fechaInicioAnterior.format('yyyy-MM-dd')
+        def txfcfnAn = fechaFinAnterior.format('yyyy-MM-dd')
+
         //total de Personas
         def condominio = Condominio.get(session.condominio.id)
         def cn0 = dbConnectionService.getConnection()
@@ -1339,7 +1355,8 @@ class ReportesController {
 
         //este mes pagado
         def cn = dbConnectionService.getConnection()
-        def esteMes = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and pagofcpg between '${fechaInicio}' and '${fechaFin}' and oblg__id in (2,7);"
+        def esteMes = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and " +
+                "pagofcpg between '${txfcin}' and '${txfcfn}' and oblg__id in (2,7);"
         def res =  cn.rows(esteMes.toString())
 
         def pagados = res.first().count.toInteger()
@@ -1348,7 +1365,7 @@ class ReportesController {
         //mes anterior
         def cn1 = dbConnectionService.getConnection()
         def mesAnterior = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and \n" +
-                "  pagofcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}' and oblg__id in (2,7);"
+                "  pagofcpg between '${txfcinAn}' and '${txfcfnAn}' and oblg__id in (2,7);"
         def res1 =  cn1.rows(mesAnterior.toString())
 
         def pagadosAnterior = res1.first().count.toInteger()
@@ -1357,8 +1374,8 @@ class ReportesController {
         //valores vencidos
         def cn2 = dbConnectionService.getConnection()
         def vencidos = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and\n" +
-                "  pagofcpg between '${fechaInicio}' and '${fechaFin}' and oblg__id in (2,7) and\n" +
-                "  ingrfcha < '${fechaInicio}';"
+                "  pagofcpg between '${txfcin}' and '${txfcfn}' and oblg__id in (2,7) and " +
+                "  ingrfcha < '${txfcin}';"
         def res2 =  cn2.rows(vencidos.toString())
 
         def venci = res2.first().count.toInteger()
@@ -1366,28 +1383,28 @@ class ReportesController {
 
         //ingresos mes anterior
         def cn3 = dbConnectionService.getConnection()
-        def ingresosAnterior = "select sum(pagovlor) from pago where pagofcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}';"
+        def ingresosAnterior = "select sum(pagovlor) from pago where pagofcpg between '${txfcinAn}' and '${txfcfnAn}';"
         def res3 =  cn3.rows(ingresosAnterior.toString())
 
         def ingresosAnt = (res3.first().sum == null ? 0 :res3.first().sum?.toDouble())
 
         //ingresos mes actual
         def cn4 = dbConnectionService.getConnection()
-        def ingresosActual = "select sum(pagovlor) from pago where pagofcpg between '${fechaInicio}' and '${fechaFin}';"
+        def ingresosActual = "select sum(pagovlor) from pago where pagofcpg between '${txfcin}' and '${txfcfn}';"
         def res4 =  cn4.rows(ingresosActual.toString())
 
         def ingresosAct = (res4.first().sum == null ? 0 :res4.first().sum?.toDouble())
 
         //egresos mes anterior
         def cn5 = dbConnectionService.getConnection()
-        def egresosAnterior = "select sum(pgegvlor) from pgeg where pgegfcpg between '${fechaInicioAnterior}' and '${fechaFinAnterior}';"
+        def egresosAnterior = "select sum(pgegvlor) from pgeg where pgegfcpg between '${txfcinAn}' and '${txfcfnAn}';"
         def res5 =  cn5.rows(egresosAnterior.toString())
 
         def egresosAnt = (res5.first().sum == null ? 0 :res5.first().sum?.toDouble())
 
         //egresos mes actual
         def cn6 = dbConnectionService.getConnection()
-        def egresosActual = "select sum(pgegvlor) from pgeg where pgegfcpg between '${fechaInicio}' and '${fechaFin}';"
+        def egresosActual = "select sum(pgegvlor) from pgeg where pgegfcpg between '${txfcin}' and '${txfcfn}';"
         def res6 = cn6.rows(egresosActual.toString())
 
         def egresosAct = (res6.first().sum == null ? 0 :res6.first().sum?.toDouble())
@@ -1395,7 +1412,7 @@ class ReportesController {
         //valores por cobrar a la fecha y saldos
 
         def cn7 = dbConnectionService.getConnection()
-        def valores = "select * from saldos('${fechaInicio}', '${fechaFin}');"
+        def valores = "select * from saldos('${txfcin}', '${txfcfn}');"
         def res7 = cn7.rows(valores.toString())
 
         def si = res7.first().sldofnal?.toDouble() ?:0

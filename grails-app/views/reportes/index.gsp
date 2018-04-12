@@ -114,31 +114,66 @@
 <div class="row">
     <div class="col-lg-12">
         <p>
-            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#modalDeudas"
-               title="Estado de cuenta de los condóminos">
-                <i class="fa fa-file-text-o fa-5x"></i><br/>
-                Deudas
-            </a>
-            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#situacionN">
-                <i class="fa fa-money fa-5x"></i><br/>
-                Solicitudes de pago
+            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#gestorContable">
+                <i class="fa fa-building-o fa-5x"></i><br/>
+                Listado de Condóminos
             </a>
             <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#planCuentas" title="Plan de cuentas o catálogo de cuentas de la contabilidad">
                 <i class="fa fa-sign-in fa-5x"></i><br/>
                 Detalle Ingresos
             </a>
-            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#gestorContable">
-                <i class="fa fa-building-o fa-5x"></i><br/>
-                Listado de Condóminos
-            </a>
-            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#libroDiario">
-                <i class="fa fa-pencil fa-5x"></i><br/>
+            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#libroDiario">
+                <i class="fa fa-sign-out fa-5x"></i><br/>
                 Detalle egresos
             </a>
             <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#libroMayor">
-                <i class="fa fa-pencil fa-5x"></i><br/>
+                <i class="fa fa-home fa-5x"></i><br/>
                 Detalle de Obras
             </a>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <p>
+            <a href="#" class="link btn btn-primary btn-ajax" id="btnAceptarGestor">
+                <i class="fa fa-line-chart fa-5x"></i><br/>
+                Aportes y Gastos
+            </a>
+            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#modalDeudas"
+               title="Estado de cuenta de los condóminos">
+                <i class="fa fa-file-text-o fa-5x"></i><br/>
+                Deudas
+            </a>
+            <a href="#" class="link btn btn-danger btn-ajax" data-toggle="modal" data-target="#solicitud">
+                <i class="fa fa-money fa-5x"></i><br/>
+                Solicitudes de pago
+            </a>
+
+            %{--
+                        <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#modalDeudas"
+                           title="Estado de cuenta de los condóminos">
+                            <i class="fa fa-file-text-o fa-5x"></i><br/>
+                            Deudas
+                        </a>
+                        <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#solicitud">
+                            <i class="fa fa-money fa-5x"></i><br/>
+                            Solicitudes de pago
+                        </a>
+                        <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#planCuentas" title="Plan de cuentas o catálogo de cuentas de la contabilidad">
+                            <i class="fa fa-sign-in fa-5x"></i><br/>
+                            Detalle Ingresos
+                        </a>
+                        <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#libroDiario">
+                            <i class="fa fa-sign-out fa-5x"></i><br/>
+                            Detalle egresos
+                        </a>
+                        <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#libroMayor">
+                            <i class="fa fa-home fa-5x"></i><br/>
+                            Detalle de Obras
+                        </a>
+            --}%
         </p>
     </div>
 </div>
@@ -167,35 +202,6 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
                 </button>
                 <button type="button" class="btn btnAceptarPlan btn-success"><i class="fa fa-print"></i> Aceptar
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-%{--dialog de gestor contable--}%
-<div class="modal fade" id="gestorContable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="modalGestor">Gestor Contable</h4>
-            </div>
-
-            <div class="modal-body fila" style="margin-bottom: 30px">
-                <label class="uno">Contabilidad:</label>
-%{--
-                <g:select name="contContable" id="contContable"
-                          from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                          optionKey="id" optionValue="descripcion"
-                          class="form-control dos"/>
---}%
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
-                </button>
-                <button type="button" class="btn btnAceptarGestor btn-success"><i class="fa fa-print"></i> Aceptar
                 </button>
             </div>
         </div>
@@ -318,39 +324,40 @@
 </div>
 
 %{--dialog situación--}%
-<div class="modal fade" id="situacionN" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="solicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="modalSituacionN">Situación</h4>
+                <h4 class="modal-title" id="modalsolicitud">Situación</h4>
             </div>
 
-            <div class="modal-body" id="bodySituacionN">
-                <div class="fila" style="margin-bottom: 15px">
-%{--
-                    <label class="uno">Contabilidad:</label>
-                    <g:select name="contP15" id="contP15"
-                              from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                              optionKey="id" optionValue="descripcion" noSelection="['-1': 'Seleccione la contabilidad']"
-                              class="form-control dos"/>
---}%
-                </div>
+            <div class="modal-body" id="bodysolicitud">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-1">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Reportar para:</label>
+                        </div>
+                        <div class="col-md-7">
+                            <g:select from="${['1':'Valores superiores a 1 alícuota',
+                                               '2':'Valores superiores a 2 alícuotas',
+                                               '3':'Valores superiores a 3 alícuotas']}"
+                                      optionValue="value" optionKey="key" name="mesesHasta_name"
+                                      id="valorHasta" class="form-control"/>
+                        </div>
+                        <div class="col-md-1">
+                        </div>
 
-                <div id="divPeriodo15" class="fila" style="margin-bottom: 20px">
-                    <label class="uno">Período:</label>
-                </div>
-
-                <div id="divNivel" class="fila">
-                    <label class="uno">Nivel:</label>
-                    <g:select name="nivel_name" from="${niveles}" optionKey="key" optionValue="value" id="nivelSituacion" class="form-control col-md-2" style="width: 100px"/>
+                    </div>
                 </div>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
                 </button>
-                <button type="button" class="btn btnAceptarSituacionN btn-success"><i class="fa fa-print"></i> Aceptar
+                <button type="button" class="btn btnSolicitud btn-success"><i class="fa fa-print"></i> Aceptar
                 </button>
             </div>
         </div>
@@ -649,11 +656,11 @@
 
         });
 
-        $(".btnAceptarGestor").click(function () {
+        $("#btnAceptarGestor").click(function () {
             openLoader("Imprimiendo...")
             var cont = $("#contContable").val()
-            url = "${g.createLink(controller:'reportes' , action: 'gestorContable')}?cont=" + cont + "Wempresa=${session.empresa?.id}";
-            location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=gestorContable.pdf"
+            url = "${g.createLink(controller:'reportes' , action: 'detalle')}";
+            location.href = url
             closeLoader()
         });
 
@@ -975,12 +982,10 @@
             location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes3')}?fecha=" + fechaI
         });
 
-        $(".btnAceptarSituacionN").click(function () {
-            var cont = $("#contP15").val();
-            var per = $("#periodo15").val();
-            var nivel = $("#nivelSituacion").val();
-            var url = "${g.createLink(controller: 'reportes3', action: 'reporteSituacion')}?cont=" + cont + "Wperiodo=" + per + "Wempresa=${session.empresa?.id}" + "Wnivel=" + nivel;
-            location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=situacion.pdf";
+        $(".btnSolicitud").click(function () {
+            var vlor = $("#valorHasta").val();
+            console.log('vlor', vlor)
+            location.href = "${g.createLink(controller: 'reportes', action: 'imprimirSolicitudes')}?vlor=" + vlor;
         });
 
         function crearXML(mes, anio, override) {
