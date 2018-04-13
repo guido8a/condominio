@@ -69,7 +69,7 @@
                                 Ruc
                             </label>
                             <div class="col-xs-8 col-md-8">
-                                <g:textField name="ruc" required="" class="allCaps form-control required" value="${personaInstance?.ruc}"/>
+                                <g:textField name="ruc" required="" class="allCaps digits form-control required" value="${personaInstance?.ruc}"/>
                             </div>
                             *
                         </span>
@@ -89,7 +89,6 @@
                 </div>
             </div>
 
-        %{--<div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'password', 'error')} required">--}%
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="row">
@@ -118,7 +117,6 @@
 
             </div>
 
-        %{--<div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'activo', 'error')} required">--}%
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="row">
@@ -127,7 +125,7 @@
                                 Teléfono
                             </label>
                             <div class="col-xs-8 col-md-8">
-                                <g:textField name="telefono" required="" class="allCaps form-control required" value="${personaInstance?.telefono}"/>
+                                <g:textField name="telefono" required="" class="digits form-control required" value="${personaInstance?.telefono}"/>
                             </div>
                             *
                         </span>
@@ -148,7 +146,6 @@
             </div>
 
 
-        %{--<div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'observaciones', 'error')} ">--}%
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="row">
@@ -177,7 +174,6 @@
                 </div>
             </div>
 
-        %{--<div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'departamento', 'error')} required">--}%
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="row">
@@ -206,7 +202,6 @@
                 </div>
             </div>
 
-        %{--<div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'cargo', 'error')} ">--}%
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="row">
@@ -234,7 +229,6 @@
                 </div>
             </div>
 
-        %{--<div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'fechaInicio', 'error')} ">--}%
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="row">
@@ -263,7 +257,6 @@
             </div>
 
 
-        %{--<div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'fecha', 'error')} required">--}%
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="row">

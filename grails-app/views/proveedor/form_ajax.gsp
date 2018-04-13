@@ -12,7 +12,7 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'ruc', 'error')} required">
                 <span class="grupo">
-                    <label for="sexo" class="col-xs-3 col-md-3 control-label">
+                    <label for="tipoPersona" class="col-xs-3 col-md-3 control-label">
                         Tipo de persona:
                     </label>
                     <div class="col-xs-4 col-md-4">
@@ -51,7 +51,7 @@
                         Ruc
                     </label>
                     <div class="col-md-4">
-                        <g:textField name="ruc" required="" class=" form-control required" value="${proveedorInstance?.ruc}"/>
+                        <g:textField name="ruc" required="" class="digits form-control required" value="${proveedorInstance?.ruc}"/>
                     </div>
                 </span>
             </div>
@@ -74,7 +74,7 @@
                         Teléfono
                     </label>
                     <div class="col-md-5">
-                        <g:textField name="telefono" required="" class=" form-control required" value="${proveedorInstance?.telefono}"/>
+                        <g:textField name="telefono" required="" class="form-control required" value="${proveedorInstance?.telefono}"/>
                     </div>
                 </span>
             </div>

@@ -274,7 +274,6 @@ como máximo 30
     });
 
     $("#buscador_con").change(function(){
-        console.log("hola");
         var anterior = "${params.operador}";
         var opciones = $(this).find("option:selected").attr("class").split(",");
 
@@ -471,7 +470,7 @@ como máximo 30
     %{--});--}%
 
     function pagoAlicuota (id) {
-        var url = "${createLink(controller:'ingreso', action:'pendiente')}"
+        var url = "${createLink(controller:'ingreso', action:'pendiente')}";
         location.href = url + "/" + id;
     }
 

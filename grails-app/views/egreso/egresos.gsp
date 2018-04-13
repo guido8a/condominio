@@ -244,7 +244,6 @@
     });
 
     $("#buscador_con").change(function () {
-        console.log("hola");
         var anterior = "${params.operador}";
         var opciones = $(this).find("option:selected").attr("class").split(",");
 

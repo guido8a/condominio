@@ -544,52 +544,33 @@ class ReportesController {
 
             if(anterior  ==  nuevo){
                 if(nuevo ==  ultimo && (tamano.toInteger()) == contador){
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
+                    celdas(tablaDetalles,fila.prsndpto,fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
                     total += fila.sldo
                     anterior = fila.prsndpto
                     printTotales([total:total])
                     adicionales ++
                 }else{
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
+                    celdas(tablaDetalles,fila.prsndpto,fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
                     total += fila.sldo
                     anterior = fila.prsndpto
                 }
             }else{
                 if(contador == 1){
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
-                    addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
+                    celdas(tablaDetalles,fila.prsndpto,fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
                     total += fila.sldo
                     anterior = fila.prsndpto
                 }else{
                     if(tamano.toInteger() == contador){
                         printTotales([total:total])
-                        addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
+                        celdas(tablaDetalles,fila.prsndpto,fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+
                         total = fila.sldo
                         anterior = fila.prsndpto
                         printTotales([total:fila.sldo])
                         adicionales ++
                     }else{
                         printTotales([total:total])
-                        addCellTabla(tablaDetalles, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.prsn, fontTd10), frmtDato)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.oblg, fontTd10), frmtDato)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
-                        addCellTabla(tablaDetalles, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
+                        celdas(tablaDetalles,fila.prsndpto,fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
                         total = fila.sldo
                         anterior = fila.prsndpto
                         adicionales ++
@@ -618,6 +599,14 @@ class ReportesController {
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
 
+    }
+
+    def celdas (tablaDetalles, dpto, prsn, oblg, alct, sldo, fontTd10, frmtDato, frmtNmro) {
+        addCellTabla(tablaDetalles, new Paragraph(dpto, fontTd10), frmtDato)
+        addCellTabla(tablaDetalles, new Paragraph(prsn, fontTd10), frmtDato)
+        addCellTabla(tablaDetalles, new Paragraph(oblg, fontTd10), frmtDato)
+        addCellTabla(tablaDetalles, new Paragraph(alct.toString(), fontTd10), frmtNmro)
+        addCellTabla(tablaDetalles, new Paragraph(sldo.toString(), fontTd10), frmtNmro)
     }
 
     def fecha_ajax(){
