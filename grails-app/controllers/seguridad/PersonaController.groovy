@@ -145,6 +145,7 @@ class PersonaController extends Shield {
         }else{
             persona = new Persona()
             persona.fecha = new Date()
+            persona.fechaPass = new Date()
         }
         if(params.activo){
             params.activo = 1

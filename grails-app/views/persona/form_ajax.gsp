@@ -289,12 +289,10 @@
 
     <script type="text/javascript">
 
-
         $(function() {
             $(".activ").checkboxpicker({
             });
         });
-
 
         var validator = $("#frmPersona").validate({
             errorClass     : "help-block",

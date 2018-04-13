@@ -1426,6 +1426,15 @@ class ReportesController {
     }
 
 
+    def listaCondominos() {
+
+
+
+
+
+    }
+
+
 
 
 

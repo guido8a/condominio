@@ -1,5 +1,7 @@
 package seguridad
 
+import utilitarios.Parametros
+
 class LoginController {
 
     def mail
@@ -39,11 +41,6 @@ class LoginController {
 
         def connect = true
         try {
-
-//            LDAP ldap = LDAP.newInstance('ldap://' + prmt.ipLDAP, "${user.getConnectionString()}", "${pass}")
-
-            /*valida usuario en el LDAP */
-//            ldap.exists("${prmt.textoCn}")
             println "ingresa..${user.login}"
 
         } catch (e) {
@@ -70,7 +67,7 @@ class LoginController {
     def guardarPass() {
         def usu = Persona.get(params.id)
         usu.password = params.pass.toString().encodeAsMD5()
-        usu.fechaCambioPass = new Date() + 30
+        usu.fechaPass = new Date() + 30
         if (!usu.save(flush: true)) {
             println "Error: guardarPass " + usu.errors
             flash.message = "Ha ocurrido un error al guardar su nuevo password"
