@@ -891,7 +891,7 @@ class ReportesController {
 
         Paragraph t2 = new Paragraph();
         t2.setAlignment("Justify");
-        t2.add(new Paragraph( "Desde el 1° de abril de 2018 se aplicará el cobro de intereses por mora, conforme lo determina " +
+        t2.add(new Paragraph( "El cobro de intereses por mora se aplica desde el 1° de abril de 2018, conforme lo determina " +
                 "nuestro Reglamento Interno en el artículo 39 literal 'p', a los valores adeudados hasta el 31 de enero " +
                 "de 2018, así como también a las deudas que superen los 2 meses de alícuotas. Por esta razón me " +
                 "permito insistir en que realice el pago lo antes posible o proponga una forma de pago enviando " +
