@@ -114,15 +114,15 @@
 <div class="row">
     <div class="col-lg-12">
         <p>
-            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#gestorContable">
+            <a href="#" class="link btn btn-success btn-ajax" id="btnCondominos" data-toggle="modal" data-target="#gestorContable">
                 <i class="fa fa-building-o fa-5x"></i><br/>
                 Listado de Condóminos
             </a>
-            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#planCuentas" title="Plan de cuentas o catálogo de cuentas de la contabilidad">
+            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#detalleIngresos" title="Detalle de ingresos">
                 <i class="fa fa-sign-in fa-5x"></i><br/>
                 Detalle de Ingresos
             </a>
-            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#libroDiario">
+            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#detalleEgresos">
                 <i class="fa fa-sign-out fa-5x"></i><br/>
                 Detalle de Egresos
             </a>
@@ -180,33 +180,107 @@
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 %{--//dialog de contabilidad--}%
-<div class="modal fade" id="planCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="detalleIngresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Plan de Cuentas</h4>
+                <h4 class="modal-title" id="myModalLabel">Ingresos</h4>
             </div>
 
-            <div class="modal-body fila" style="margin-bottom: 30px">
-                <label class="uno">Contabilidad:</label>
-%{--
-                <g:select name="contCuentas" id="contCuentas"
-                          from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                          optionKey="id" optionValue="descripcion"
-                          class="form-control dos"/>
---}%
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-2">
+                        <label>Desde</label>
+                    </div>
+                    <div class="col-md-4">
+                        <elm:datepicker name="fechaDesdeIng_name" id="fechaDesdeIng" class="datepicker form-control" value="${new Date() - 30}"/>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-2">
+                        <label>Hasta</label>
+                    </div>
+                    <div class="col-md-4">
+                        <elm:datepicker name="fechaHastaIng_name" id="fechaHastaIng" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+
+                </div>
             </div>
+
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
                 </button>
-                <button type="button" class="btn btnAceptarPlan btn-success"><i class="fa fa-print"></i> Aceptar
+                <button type="button" class="btn btnAceptarIngresos btn-success"><i class="fa fa-print"></i> Aceptar
                 </button>
             </div>
         </div>
     </div>
 </div>
+
+
+
+<div class="modal fade" id="detalleEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelEgr">Egresos</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-2">
+                        <label>Desde</label>
+                    </div>
+                    <div class="col-md-4">
+                        <elm:datepicker name="fechaDesdeEgr_name" id="fechaDesdeEgr" class="datepicker form-control" value="${new Date() - 30}"/>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-2">
+                        <label>Hasta</label>
+                    </div>
+                    <div class="col-md-4">
+                        <elm:datepicker name="fechaHastaEgr_name" id="fechaHastaEgr" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnAceptarEgresos btn-success"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 %{--dialog comprobante--}%
 <div class="modal fade" id="comprobante" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -221,12 +295,12 @@
                 <div class="fila" style="margin-bottom: 10px">
                     <label class="uno">Contabilidad:</label>
 
-%{--
-                    <g:select name="contComp" id="contComp"
-                              from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                              optionKey="id" optionValue="descripcion"
-                              class="form-control dos"/>
---}%
+                    %{--
+                                        <g:select name="contComp" id="contComp"
+                                                  from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                                                  optionKey="id" optionValue="descripcion"
+                                                  class="form-control dos"/>
+                    --}%
                 </div>
 
                 <div class="fila" style="margin-bottom: 15px">
@@ -264,12 +338,12 @@
             <div class="modal-body" id="bodyLibro">
                 <div class="fila" style="margin-bottom: 15px">
                     <label class="uno">Contabilidad:</label>
-%{--
-                    <g:select name="contP11" id="contP11"
-                              from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                              optionKey="id" optionValue="descripcion" noSelection="['-1': 'Seleccione la contabilidad']"
-                              class="form-control dos"/>
---}%
+                    %{--
+                                        <g:select name="contP11" id="contP11"
+                                                  from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
+                                                  optionKey="id" optionValue="descripcion" noSelection="['-1': 'Seleccione la contabilidad']"
+                                                  class="form-control dos"/>
+                    --}%
                 </div>
 
                 <div id="divPeriodo11" class="fila">
@@ -704,7 +778,7 @@
 
 
         %{--$("#excelPrueba").click(function () {--}%
-            %{--location.href = "${g.createLink(controller: 'reportes3', action: 'reporteExcel')}"--}%
+        %{--location.href = "${g.createLink(controller: 'reportes3', action: 'reporteExcel')}"--}%
         %{--});--}%
 
 
@@ -793,28 +867,28 @@
             if (cont == '-1') {
                 bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione una contabilidad!")
             } else {
-                    if(fechaDesde == '' || fechaHasta == ''){
-                        bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
-                    }else{
-                        $.ajax({
-                            type: 'POST',
-                            url: '${createLink(controller: 'proceso', action: 'revisarFecha_ajax')}',
-                            data:{
-                                desde: fechaDesde,
-                                hasta: fechaHasta
-                            },
-                            success: function (msg){
-                                if(msg == 'ok'){
-                                    url = "${g.createLink(controller:'reportes2' , action: 'retenciones')}?cont=" + cont + "Wemp=${session.empresa?.id}" + "Wdesde=" + fechaDesde + "Whasta=" + fechaHasta;
-                                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=retenciones.pdf"
-                                }else{
-                                    bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
-                                    return false;
-                                }
+                if(fechaDesde == '' || fechaHasta == ''){
+                    bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: '${createLink(controller: 'proceso', action: 'revisarFecha_ajax')}',
+                        data:{
+                            desde: fechaDesde,
+                            hasta: fechaHasta
+                        },
+                        success: function (msg){
+                            if(msg == 'ok'){
+                                url = "${g.createLink(controller:'reportes2' , action: 'retenciones')}?cont=" + cont + "Wemp=${session.empresa?.id}" + "Wdesde=" + fechaDesde + "Whasta=" + fechaHasta;
+                                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=retenciones.pdf"
+                            }else{
+                                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
+                                return false;
                             }
-                        });
+                        }
+                    });
 
-                    }
+                }
             }
         });
 
@@ -978,13 +1052,13 @@
 //            var cont = $("#contP20").val();
 //            var prms = $("#periodo20").val();
             var fechaI = $("#fechaImprime").val();
-            console.log('fecha', fechaI)
+//            console.log('fecha', fechaI)
             location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes3')}?fecha=" + fechaI
         });
 
         $(".btnSolicitud").click(function () {
             var vlor = $("#valorHasta").val();
-            console.log('vlor', vlor)
+//            console.log('vlor', vlor)
             location.href = "${g.createLink(controller: 'reportes', action: 'imprimirSolicitudes')}?vlor=" + vlor;
         });
 
@@ -1058,6 +1132,35 @@
             });
         }
 
+        $("#btnCondominos").click(function () {
+            location.href = "${g.createLink(controller: 'reportes', action: 'listaCondominos')}";
+        });
+
+        $(".btnAceptarEgresos").click(function () {
+            var fechaDesde = $("#fechaDesdeEgr").val();
+            var fechaHasta = $("#fechaHastaEgr").val();
+
+            if(fechaDesde == '' || fechaHasta == ''){
+                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: '${createLink(controller: 'reportes', action: 'revisarFecha_ajax')}',
+                    data:{
+                        desde: fechaDesde,
+                        hasta: fechaHasta
+                    },
+                    success: function (msg){
+                        if(msg == 'ok'){
+                            location.href = "${g.createLink(controller:'reportes' , action: 'imprimirEgresos')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                        }else{
+                            bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
+                            return false;
+                        }
+                    }
+                });
+            }
+        });
 
     });
 </script>
