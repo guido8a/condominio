@@ -73,8 +73,9 @@
                     <th style="width: 20%">Persona</th>
                     <th style="width: 12%">Ocupante</th>
                     <th style="width: 30%">Descripción de Ingreso</th>
-                    <th style="width: 12%">Fecha</th>
-                    <th style="width: 13%">Valor</th>
+                    <th style="width: 9%">Fecha</th>
+                    <th style="width: 9%">Valor</th>
+                    <th style="width: 7%">Doc.</th>
                     <th style="width: 3%"></th>
                 </tr>
             </table>
@@ -88,8 +89,9 @@
                                 <td style="width: 20%">${ingreso.prsn}</td>
                                 <td style="width: 12%">${ingreso.tpocdscr}</td>
                                 <td style="width: 30%">${ingreso.pagodscr}</td>
-                                <td style="width: 12%">${ingreso.pagofcha}</td>
-                                <td class="derecha" style="width: 13%">${ingreso.pagovlor}</td>
+                                <td style="width: 9%">${ingreso.pagofcha}</td>
+                                <td class="derecha" style="width: 9%">${ingreso.pagovlor}</td>
+                                <td class="derecha" style="width: 7%">${ingreso.pagodcmt}</td>
                             </tr>
                         </g:each>
                     </table>

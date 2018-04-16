@@ -59,7 +59,7 @@
             <div class="col-xs-6" style="margin-left: -20px; width: 50%">
                 Desde:
                 <elm:datepicker name="fechaDesde" title="Fecha desde" id="fd" class="datepicker form-control fechaD"
-                                maxDate="new Date()" value="${new Date() - 30}"/>
+                                maxDate="new Date()" value="${fcds?: new Date() - 30}"/>
             </div>
 
             <div class="col-xs-6" style="margin-left: -20px;">
@@ -323,7 +323,7 @@
                         setTimeout(function () {
                             spinner.replaceWith($btn);
                             closeLoader();
-                            cargarBusqueda();
+//                            cargarBusqueda();
                         }, 100);
                     } else {
                         log("Error al guardar la información de persona", "error")

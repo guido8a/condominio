@@ -94,6 +94,7 @@
         if ($form.valid()) {
             $btn.replaceWith(spinner);
             openLoader("Guardando Egreso");
+            console.log('ejecuta ---')
             $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
@@ -103,7 +104,9 @@
                     log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
                     setTimeout(function() {
                         if (parts[0] == "SUCCESS") {
-                            location.reload(true);
+//                            location.reload(true);
+                            closeLoader();
+                            cargarBusqueda();
                         } else {
                             closeLoader();
                             spinner.replaceWith($btn);

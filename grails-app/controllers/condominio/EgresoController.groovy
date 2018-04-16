@@ -288,7 +288,7 @@ class EgresoController extends Shield {
         def data = cn.rows(sql.toString())
         println "....sql: $sql"
 
-        def sql2 = "select * from aportes('${fechaDesde}','${fechaHasta}') order by pagofcha"
+        def sql2 = "select * from aportes('${fechaDesde}','${fechaHasta}') order by pagodcmt"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
 
@@ -359,7 +359,7 @@ class EgresoController extends Shield {
         }
         cn.close()
 
-        return [data: data, msg: msg]
+        return [data: data, msg: msg, fcds: params.desde]
     }
 
     def armaSql(params){
