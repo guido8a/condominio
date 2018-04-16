@@ -74,7 +74,8 @@ class LoginController {
             flash.tipo = "error"
             redirect(action: 'cambiarPass')
         } else {
-            redirect(controller: "inicio", action: "index")
+//            redirect(controller: "inicio", action: "index")
+            redirect(controller: "login", action: "logout")
         }
     }
 
@@ -128,10 +129,6 @@ class LoginController {
         def cn = "inicio"
         def an = "index"
         if (usu) {
-//            if (session.cn && session.an) {
-//                cn = session.cn
-//                an = session.an
-//            }
             redirect(controller: cn, action: an)
         }
     }
@@ -186,13 +183,20 @@ class LoginController {
 
 //                    println "el md5 del pass: ${params.pass} es ${params.pass.encodeAsMD5()} contraseña: ${user.password}"
                     if (params.pass.encodeAsMD5() != user.password) {
-                            flash.message = "Contraseña incorrecta"
-                            flash.tipo = "error"
-                            flash.icon = "icon-warning"
-                            session.usuario = null
-                            session.departamento = null
-                            redirect(controller: 'login', action: "login")
-                            return
+                        flash.message = "Contraseña incorrecta"
+                        flash.tipo = "error"
+                        flash.icon = "icon-warning"
+                        session.usuario = null
+                        session.departamento = null
+                        redirect(controller: 'login', action: "login")
+                        return
+                    }
+
+
+                    if(Persona.get(session.usuario.id).fechaPass < new Date()){
+                        println("fecha entro")
+                        redirect(controller: 'login', action: 'cambiarPass')
+                        return
                     }
 
                     // registra sesion activa ------------------------------
@@ -328,7 +332,7 @@ class LoginController {
 //                    if (session.usuario.getPuedeJefe()) {
 //                        redirect(controller: "retrasadosWeb", action: "reporteRetrasadosConsolidado", params: [dpto: Persona.get(session.usuario.id).departamento.id, inicio: "1"])
 //                    } else {
-                        redirect(controller: "inicio", action: "index")
+                redirect(controller: "inicio", action: "index")
 //                    }
 
 //                }

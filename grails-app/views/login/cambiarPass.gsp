@@ -23,7 +23,7 @@
 
     <p>Su contraseña ha caducado. Por favor cámbiela.</p>
 
-    <input name="pass" id="pass" type="password" class="form-control required" notEqual="${usu.cedula}" placeholder="Nueva contraseña" required>
+    <input name="pass" id="pass" type="password" class="form-control required" notEqual="${usu.ruc}" placeholder="Nueva contraseña" required>
     <br>
     <input name="pass2" id="pass2" type="password" class="form-control required" equalTo="#pass" placeholder="Repita su contraseña" required>
 
