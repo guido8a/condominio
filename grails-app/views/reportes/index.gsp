@@ -200,7 +200,6 @@
                     </div>
                     <div class="col-md-1">
                     </div>
-
                 </div>
 
                 <div class="row">
@@ -214,10 +213,8 @@
                     </div>
                     <div class="col-md-1">
                     </div>
-
                 </div>
             </div>
-
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
@@ -269,7 +266,6 @@
                 </div>
             </div>
 
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
                 </button>
@@ -295,12 +291,6 @@
                 <div class="fila" style="margin-bottom: 10px">
                     <label class="uno">Contabilidad:</label>
 
-                    %{--
-                                        <g:select name="contComp" id="contComp"
-                                                  from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                                  optionKey="id" optionValue="descripcion"
-                                                  class="form-control dos"/>
-                    --}%
                 </div>
 
                 <div class="fila" style="margin-bottom: 15px">
@@ -338,12 +328,7 @@
             <div class="modal-body" id="bodyLibro">
                 <div class="fila" style="margin-bottom: 15px">
                     <label class="uno">Contabilidad:</label>
-                    %{--
-                                        <g:select name="contP11" id="contP11"
-                                                  from="${cratos.Contabilidad.findAllByInstitucion(session.empresa, [sort: 'fechaInicio'])}"
-                                                  optionKey="id" optionValue="descripcion" noSelection="['-1': 'Seleccione la contabilidad']"
-                                                  class="form-control dos"/>
-                    --}%
+
                 </div>
 
                 <div id="divPeriodo11" class="fila">
@@ -444,166 +429,6 @@
 
 <script type="text/javascript">
 
-    $(".btnCostoVentas").click(function () {
-        $.ajax({
-            type: 'POST',
-            url:'${createLink(controller: 'reportes2', action: 'modalCostoVentas_ajax')}',
-            data:{
-
-            },
-            success: function (msg){
-                var b = bootbox.dialog({
-                    id      : "dlgKardex3",
-                    title   : "Existencias",
-                    class: "long",
-                    message : msg,
-                    buttons : {
-                        cancelar : {
-                            label     : "<i class='fa fa-times'></i> Cancelar",
-                            className : "btn-primary",
-                            callback  : function () {
-                            }
-                        }
-                    } //buttons
-                }); //dialog
-            }
-        });
-    });
-
-
-    $(".btnKardex4").click(function () {
-        $.ajax({
-            type: 'POST',
-            url:'${createLink(controller: 'reportes3', action: 'modalKardex4_ajax')}',
-            data:{
-
-            },
-            success: function (msg){
-                var b = bootbox.dialog({
-                    id      : "dlgKardex4",
-                    title   : "Existencias x Item",
-                    class: "long",
-                    message : msg,
-                    buttons : {
-                        cancelar : {
-                            label     : "<i class='fa fa-times'></i> Cancelar",
-                            className : "btn-primary",
-                            callback  : function () {
-                            }
-                        }
-                    } //buttons
-                }); //dialog
-            }
-        });
-    });
-
-    $(".btnKardex3").click(function () {
-        $.ajax({
-            type: 'POST',
-            url:'${createLink(controller: 'reportes2', action: 'modalKardex3_ajax')}',
-            data:{
-
-            },
-            success: function (msg){
-                var b = bootbox.dialog({
-                    id      : "dlgKardex3",
-                    title   : "Existencias",
-                    class: "long",
-                    message : msg,
-                    buttons : {
-                        cancelar : {
-                            label     : "<i class='fa fa-times'></i> Cancelar",
-                            className : "btn-primary",
-                            callback  : function () {
-                            }
-                        }
-                    } //buttons
-                }); //dialog
-            }
-        });
-    });
-
-    $(".btnKardex2").click(function () {
-        $.ajax({
-            type: 'POST',
-            url:'${createLink(controller: 'reportes2', action: 'modalKardex2_ajax')}',
-            data:{
-
-            },
-            success: function (msg){
-                var b = bootbox.dialog({
-                    id      : "dlgKardex2",
-                    title   : "Kardex x Item",
-                    class: "long",
-                    message : msg,
-                    buttons : {
-                        cancelar : {
-                            label     : "<i class='fa fa-times'></i> Cancelar",
-                            className : "btn-primary",
-                            callback  : function () {
-                            }
-                        }
-                    } //buttons
-                }); //dialog
-            }
-        });
-    });
-
-    $("#cntaLibro").dblclick(function () {
-        buscarCuentas();
-    });
-
-    $("#buscarCuenta").click(function () {
-        buscarCuentas();
-    });
-
-    function buscarCuentas () {
-        $.ajax({
-            type: 'POST',
-            url:'${createLink(controller: 'cuenta', action: 'buscadorCuentas_ajax')}',
-            data:{
-
-            },
-            success: function (msg){
-                bootbox.dialog({
-                    title: 'Buscar cuenta',
-                    message: msg,
-                    class: 'long',
-                    buttons:{
-                        cancelar: {
-                            label: "<i class='fa fa-times'></i> Cancelar",
-                            className: "btn-primary",
-                            callback: function () {
-//                                bootbox.hideAll();
-                            }
-                        }
-                    }
-                })
-            }
-        });
-    }
-
-
-    cargarSelComprobante($("#compTipo option:selected").val());
-
-    $("#compTipo").change(function () {
-        var tipo = $("#compTipo option:selected").val();
-        cargarSelComprobante(tipo)
-    });
-
-    function cargarSelComprobante (sel) {
-        $.ajax({
-            type: 'POST',
-            url: '${createLink(controller: 'reportes', action: 'prefijo_ajax')}',
-            data:{
-                tipo: sel
-            },
-            success: function (msg){
-                $("#divNumComp").html(msg)
-            }
-        });
-    }
-
 
     function prepare() {
         $(".fa-ul li span").each(function () {
@@ -613,56 +438,6 @@
         });
     }
 
-    var actionUrl = "";
-
-    function updateCuenta() {
-        var per = $("#periodo2").val();
-        ////console.log(per);
-        $.ajax({
-            type    : "POST",
-            url     : "${createLink(controller: 'reportes2', action:'updateCuenta')}",
-            data    : {
-                per : per
-            },
-            success : function (msg) {
-                $("#divCuenta").html(msg);
-            }
-        });
-    }
-
-    function updatePeriodo(cual) {
-        var cont = $("#contP" + cual).val();
-
-//                console.log("cont" + cont);
-
-        $.ajax({
-            type    : "POST",
-            url     : "${createLink(action:'updatePeriodo')}",
-            data    : {
-                cont : cont,
-                cual : cual
-            },
-            success : function (msg) {
-                $("#divPeriodo" + cual).html(msg);
-            }
-        });
-    }
-
-    function updatePeriodoSinTodo(cual) {
-        var cont = $("#contP" + cual).val();
-        $.ajax({
-            type    : "POST",
-            url     : "${createLink(action:'updatePeriodoSinTodo')}",
-            data    : {
-                cont : cont,
-                cual : cual
-            },
-            success : function (msg) {
-                $("#divPeriodo" + cual).html(msg);
-            }
-        });
-
-    }
 
     $(function () {
         prepare();
@@ -723,315 +498,6 @@
             updatePeriodoSinTodo("20");
         });
 
-        $(".btnAceptarPlan").click(function () {
-            var cont = $("#contCuentas").val()
-            url = "${g.createLink(controller:'reportes' , action: 'planDeCuentas')}?cont=" + cont + "Wempresa=${session.empresa?.id}";
-            location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=planDeCuentas.pdf"
-
-        });
-
-        $("#btnAceptarGestor").click(function () {
-            openLoader("Imprimiendo...")
-            var cont = $("#contContable").val()
-            url = "${g.createLink(controller:'reportes' , action: 'detalle')}";
-            location.href = url
-            closeLoader()
-        });
-
-        $(".btnAceptarComprobante").click(function () {
-            var cont = $("#contComp").val();
-            var tipo = $("#compTipo").val();
-            var url
-            console.log("tipo " + tipo)
-            var num = $("#compNum").val();
-            $.ajax({
-                type    : "POST",
-                url     : "${createLink(controller: 'reportes3', action: 'reporteComprobante')}",
-                data    : {
-                    cont : cont,
-                    tipo : tipo,
-                    num  : num
-                },
-                success : function (msg) {
-                    var parts = msg.split("_");
-                    if (parts[0] != "NO") {
-                        switch (tipo) {
-                            case '1':
-                                url = "${g.createLink(controller: 'reportes3', action: 'imprimirCompDiario')}?id=" + msg + "Wempresa=${session.empresa?.id}";
-                                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=comprobanteIngreso.pdf";
-                                break;
-                            case '2':
-                                url = "${g.createLink(controller: 'reportes3', action: 'imprimirCompDiario')}?id=" + msg + "Wempresa=${session.empresa?.id}";
-                                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=comprobanteEgreso.pdf";
-                                break;
-                            case '3':
-                                url = "${g.createLink(controller: 'reportes3', action: 'imprimirCompDiario')}?id=" + msg + "Wempresa=${session.empresa?.id}";
-                                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=comprobanteDiario.pdf";
-                                break;
-                        }
-                    } else {
-                        bootbox.alert(parts[1])
-                    }
-                }
-            });
-        });
-
-
-        %{--$("#excelPrueba").click(function () {--}%
-        %{--location.href = "${g.createLink(controller: 'reportes3', action: 'reporteExcel')}"--}%
-        %{--});--}%
-
-
-        $(".btnAceptarBalance").click(function () {
-            var cont = $("#contP").val();
-            var per = $("#periodo").val();
-            if (cont == '-1') {
-                bootbox.alert("Debe elegir una contabilidad!")
-            } else {
-                url = "${g.createLink(controller:'reportes2' , action: 'balanceComprobacion')}?cont=" + cont + "Wemp=${session.empresa?.id}" + "Wperiodo=" + per;
-                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=balanceComprobacion.pdf"
-
-            }
-        });
-
-        $(".btnAceptarSituacion").click(function () {
-            var cont = $("#contP8").val();
-            var per = $("#periodo8").val();
-
-            if (cont == '-1') {
-                bootbox.alert("Debe elegir una contabilidad!")
-            } else {
-                url = "${g.createLink(controller:'reportes2' , action: 'situacionFinanciera')}?cont=" + cont + "Wempresa=${session.empresa?.id}" + "Wper=" + per;
-                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=situacionFinanciera.pdf"
-            }
-        });
-
-        $(".btnAceptarIntegral").click(function () {
-            var cont = $("#contP9").val();
-            var per = $("#periodo9").val();
-
-            if (cont == '-1') {
-                bootbox.alert("Debe elegir una contabilidad!")
-            } else {
-                url = "${g.createLink(controller:'reportes2' , action: 'estadoDeResultados')}?cont=" + cont + "Wempresa=${session.empresa?.id}" + "Wper=" + per;
-                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=resultadoIntegral.pdf"
-            }
-        });
-
-        $(".btnAceptarAuxiliar").click(function () {
-            var cont = $("#contP3").val();
-            var per = $("#periodo3").val();
-            var cnta = $("#idCntaLibro").val();
-            var fechaDesde = $(".fechaDe").val();
-            var fechaHasta = $(".fechaHa").val();
-
-            if (cont == '-1') {
-                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione una contabilidad!")
-            } else {
-                if(cnta == ''){
-                    bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione una cuenta!")
-                }else{
-                    if(fechaDesde == '' || fechaHasta == ''){
-                        bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
-                    }else{
-                        $.ajax({
-                            type: 'POST',
-                            url: '${createLink(controller: 'proceso', action: 'revisarFecha_ajax')}',
-                            data:{
-                                desde: fechaDesde,
-                                hasta: fechaHasta
-                            },
-                            success: function (msg){
-                                if(msg == 'ok'){
-                                    %{--url = "${g.createLink(controller:'reportes2' , action: 'libroMayor')}?cont=" + cont + "Wemp=${session.empresa?.id}" + "Wper=" + per + "Wcnta=" + cnta + "Wdesde=" + fechaDesde + "Whasta=" + fechaHasta;--}%
-                                    url = "${g.createLink(controller:'reportes2' , action: 'libroMayor')}?cont=" + cont + "Wemp=${session.empresa?.id}" + "Wcnta=" + cnta + "Wdesde=" + fechaDesde + "Whasta=" + fechaHasta;
-                                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=libroMayor.pdf"
-                                }else{
-                                    bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
-                                    return false;
-                                }
-                            }
-                        });
-
-                    }
-                }
-
-            }
-        });
-
-        $(".btnAceptarRetenciones").click(function () {
-            var cont = $("#contR").val();
-            var fechaDesde = $(".fechaDeR").val();
-            var fechaHasta = $(".fechaHaR").val();
-
-            if (cont == '-1') {
-                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione una contabilidad!")
-            } else {
-                if(fechaDesde == '' || fechaHasta == ''){
-                    bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
-                }else{
-                    $.ajax({
-                        type: 'POST',
-                        url: '${createLink(controller: 'proceso', action: 'revisarFecha_ajax')}',
-                        data:{
-                            desde: fechaDesde,
-                            hasta: fechaHasta
-                        },
-                        success: function (msg){
-                            if(msg == 'ok'){
-                                url = "${g.createLink(controller:'reportes2' , action: 'retenciones')}?cont=" + cont + "Wemp=${session.empresa?.id}" + "Wdesde=" + fechaDesde + "Whasta=" + fechaHasta;
-                                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=retenciones.pdf"
-                            }else{
-                                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
-                                return false;
-                            }
-                        }
-                    });
-
-                }
-            }
-        });
-
-        $(".btnAceptarKardex").click(function () {
-            var cont = $("#contK").val();
-            var fechaDesde = $(".fechaDeK").val();
-            var fechaHasta = $(".fechaHaK").val();
-            var bodega = $("#bode").val();
-
-            if (cont == '-1') {
-                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione una contabilidad!")
-            } else {
-                if(bode == '-1'){
-                    bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione una bodega!")
-                }else{
-                    if(fechaDesde == '' || fechaHasta == ''){
-                        bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
-                    }else{
-                        $.ajax({
-                            type: 'POST',
-                            url: '${createLink(controller: 'proceso', action: 'revisarFecha_ajax')}',
-                            data:{
-                                desde: fechaDesde,
-                                hasta: fechaHasta
-                            },
-                            success: function (msg){
-                                if(msg == 'ok'){
-                                    url = "${g.createLink(controller:'reportes2' , action: 'kardexGeneral')}?cont=" + cont + "Wemp=${session.empresa?.id}" + "Wdesde=" + fechaDesde + "Whasta=" + fechaHasta + "Wbodega=" + bodega;
-                                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=kardex.pdf"
-                                }else{
-                                    bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
-                                    return false;
-                                }
-                            }
-                        });
-
-                    }
-                }
-            }
-        });
-
-        $(".btnAceptarRetCod").click(function () {
-            var cont = $("#contRC").val();
-            var fechaDesde = $(".fechaDeRC").val();
-            var fechaHasta = $(".fechaHaRC").val();
-
-            if (cont == '-1') {
-                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione una contabilidad!")
-            } else {
-                if(fechaDesde == '' || fechaHasta == ''){
-                    bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
-                }else{
-                    $.ajax({
-                        type: 'POST',
-                        url: '${createLink(controller: 'proceso', action: 'revisarFecha_ajax')}',
-                        data:{
-                            desde: fechaDesde,
-                            hasta: fechaHasta
-                        },
-                        success: function (msg){
-                            if(msg == 'ok'){
-                                url = "${g.createLink(controller:'reportes2' , action: 'retencionesCodigo')}?cont=" + cont + "Wemp=${session.empresa?.id}" + "Wdesde=" + fechaDesde + "Whasta=" + fechaHasta;
-                                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=retencionesCodigo.pdf"
-                            }else{
-                                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
-                                return false;
-                            }
-                        }
-                    });
-
-                }
-            }
-        });
-
-
-        $(".btnAceptarCompras").click(function () {
-            var cont = $("#contC").val();
-            var fechaDesde = $(".fechaDeC").val();
-            var fechaHasta = $(".fechaHaC").val();
-            var tipo = $("#tipo").val();
-
-            if (cont == '-1') {
-                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione una contabilidad!")
-            } else {
-                if(fechaDesde == '' || fechaHasta == ''){
-                    bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
-                }else{
-                    $.ajax({
-                        type: 'POST',
-                        url: '${createLink(controller: 'proceso', action: 'revisarFecha_ajax')}',
-                        data:{
-                            desde: fechaDesde,
-                            hasta: fechaHasta
-                        },
-                        success: function (msg){
-                            if(msg == 'ok'){
-                                url = "${g.createLink(controller:'reportes2' , action: 'compras')}?cont=" + cont + "Wemp=${session.empresa?.id}" + "Wdesde=" + fechaDesde + "Whasta=" + fechaHasta + "Wtipo=" + tipo;
-                                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=compras.pdf"
-                            }else{
-                                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
-                                return false;
-                            }
-                        }
-                    });
-
-                }
-            }
-        });
-
-        $(".btnAceptarVentas").click(function () {
-            var cont = $("#contV").val();
-            var fechaDesde = $(".fechaDeV").val();
-            var fechaHasta = $(".fechaHaV").val();
-
-            if (cont == '-1') {
-                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione una contabilidad!")
-            } else {
-                if(fechaDesde == '' || fechaHasta == ''){
-                    bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
-                }else{
-                    $.ajax({
-                        type: 'POST',
-                        url: '${createLink(controller: 'proceso', action: 'revisarFecha_ajax')}',
-                        data:{
-                            desde: fechaDesde,
-                            hasta: fechaHasta
-                        },
-                        success: function (msg){
-                            if(msg == 'ok'){
-                                url = "${g.createLink(controller:'reportes2' , action: 'ventas')}?cont=" + cont + "Wemp=${session.empresa?.id}" + "Wdesde=" + fechaDesde + "Whasta=" + fechaHasta;
-                                location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=compras.pdf"
-                            }else{
-                                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
-                                return false;
-                            }
-                        }
-                    });
-
-                }
-            }
-        });
-
-
 
 
 
@@ -1041,12 +507,7 @@
             return false;
         });
 
-        $(".btnAceptarLibro").click(function () {
-            var cont = $("#contP11").val();
-            var per = $("#periodo11").val();
-            var url = "${g.createLink(controller: 'reportes3', action: 'imprimirLibroDiario')}?cont=" + cont + "Wperiodo=" + per + "Wempresa=${session.empresa?.id}";
-            location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=libroDiario.pdf";
-        });
+
 
         $(".btnDeudas").click(function () {
 //            var cont = $("#contP20").val();
@@ -1161,6 +622,35 @@
                 });
             }
         });
+
+
+        $(".btnAceptarIngresos").click(function () {
+            var fechaDesde = $("#fechaDesdeIng").val();
+            var fechaHasta = $("#fechaHastaIng").val();
+
+            if(fechaDesde == '' || fechaHasta == ''){
+                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: '${createLink(controller: 'reportes', action: 'revisarFecha_ajax')}',
+                    data:{
+                        desde: fechaDesde,
+                        hasta: fechaHasta
+                    },
+                    success: function (msg){
+                        if(msg == 'ok'){
+                            location.href = "${g.createLink(controller:'reportes' , action: 'imprimirIngresos')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                        }else{
+                            bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
+                            return false;
+                        }
+                    }
+                });
+            }
+        });
+
+
 
     });
 </script>

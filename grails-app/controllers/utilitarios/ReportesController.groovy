@@ -1696,5 +1696,121 @@ class ReportesController {
 
     }
 
+    def imprimirIngresos () {
+
+        println("params " + params)
+
+        def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
+        def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
+
+        println "fechas: '${fechaDesde}','${fechaHasta}'"
+
+        def sql2 = "select * from aportes('${fechaDesde}','${fechaHasta}') order by prsndpto"
+        def cn2 = dbConnectionService.getConnection()
+        def ingresos = cn2.rows(sql2.toString())
+
+        def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
+
+        def baos = new ByteArrayOutputStream()
+        def name = "listaIngresos_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def titulo = new Color(40, 140, 180)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
+        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+        Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTd = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
+        Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
+
+        def fondoTotal = new Color(240, 240, 240);
+
+
+        Document document
+        document = new Document(PageSize.A4.rotate());
+        document.setMargins(50, 30, 30, 28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Lista de Ingresos");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+        preface.add(new Paragraph("LISTA DE EGRESOS", fontTitulo));
+        addEmptyLine(preface, 1);
+        document.add(preface);
+
+        PdfPTable tablaDetalles = null
+
+        def printHeaderDetalle = {
+            def fondo = new Color(240, 248, 250);
+            def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+
+            def tablaHeaderDetalles = new PdfPTable(7);
+            tablaHeaderDetalles.setWidthPercentage(100);
+            tablaHeaderDetalles.setWidths(arregloEnteros([10,20,10,30,10,10,10]))
+
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Persona", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Ocupante", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Descripción de Ingreso", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Doc.", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
+            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
+        }
+
+        tablaDetalles = new PdfPTable(7);
+        tablaDetalles.setWidthPercentage(100);
+        tablaDetalles.setWidths(arregloEnteros([10,20,10,30,10,10,10]))
+        tablaDetalles.setSpacingAfter(1f);
+
+
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+        printHeaderDetalle()
+
+        ingresos.each {ingreso ->
+            addCellTabla(tablaDetalles, new Paragraph(ingreso.prsndpto, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(ingreso.prsn, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(ingreso.tpocdscr.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(ingreso.pagodscr.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(ingreso.pagofcha.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(ingreso.pagodcmt.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(ingreso.pagovlor.toString(), fontTd10), frmtNmro)
+
+        }
+
+        def tablaTotal = new PdfPTable(2);
+        tablaTotal.setWidthPercentage(100);
+        tablaTotal.setWidths(arregloEnteros([90, 10]))
+
+        addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph(totalIngresos.toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
+
+        document.add(tablaDetalles)
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=" + name)
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+
+    }
+
 
 }
