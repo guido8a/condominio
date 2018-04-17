@@ -429,6 +429,9 @@
 
 <script type="text/javascript">
 
+    $("#btnAceptarGestor").click(function () {
+       location.href="${createLink(controller: 'reportes', action: 'detalle')}"
+    });
 
     function prepare() {
         $(".fa-ul li span").each(function () {

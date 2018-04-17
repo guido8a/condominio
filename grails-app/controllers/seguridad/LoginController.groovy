@@ -194,7 +194,12 @@ class LoginController {
 
 
                     if(Persona.get(session.usuario.id).fechaPass < new Date()){
-                        println("fecha entro")
+                        redirect(controller: 'login', action: 'cambiarPass')
+                        return
+                    }
+
+
+                    if (params.pass.encodeAsMD5() == '202cb962ac59075b964b07152d234b70') {
                         redirect(controller: 'login', action: 'cambiarPass')
                         return
                     }
@@ -388,5 +393,7 @@ class LoginController {
         session.permisos = hp
 //        println "permisos menu " + session.permisos
     }
+
+
 
 }

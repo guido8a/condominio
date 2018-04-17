@@ -68,7 +68,6 @@
                         <label class="col-md-5" for="login">Usuario</label>
 
                         <div class="controls col-md-7">
-                            %{--<input type="text" id="login" placeholder="Usuario">--}%
                             <input name="login" id="login" type="text" class="form-control required"
                                    placeholder="Usuario" required autofocus >
                         </div>
@@ -78,7 +77,6 @@
                         <label class="col-md-5" for="pass">Contraseña</label>
 
                         <div class="controls col-md-7">
-                            %{--<input type="password" id="pass" placeholder="Usuario">--}%
                             <input name="pass" id="pass" type="password" class="form-control required"
                                    placeholder="Contraseña" required>
                         </div>
@@ -102,6 +100,8 @@
 </div>
 
 <script type="text/javascript">
+
+
     var $frm = $("#frmLogin");
     function doLogin() {
         if ($frm.valid()) {

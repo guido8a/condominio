@@ -1553,7 +1553,7 @@ class ReportesController {
             addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Nombre", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Apellido", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Firmas", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Firma", fontTh), frmtHd)
             addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
         }
 
@@ -1653,7 +1653,7 @@ class ReportesController {
             tablaHeaderDetalles.setWidths(arregloEnteros([38,38,12,12]))
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Proveedor", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Descripción", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Descripción de Egresos", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
             addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
@@ -1682,7 +1682,7 @@ class ReportesController {
         tablaTotal.setWidths(arregloEnteros([88, 12]))
 
         addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-        addCellTabla(tablaTotal, new Paragraph(totalEgresos.toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
 
         document.add(tablaDetalles)
@@ -1776,7 +1776,6 @@ class ReportesController {
         tablaDetalles.setWidths(arregloEnteros([10,20,10,30,10,10,10]))
         tablaDetalles.setSpacingAfter(1f);
 
-
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
@@ -1786,9 +1785,9 @@ class ReportesController {
             addCellTabla(tablaDetalles, new Paragraph(ingreso.prsndpto, fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.prsn, fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.tpocdscr.toString(), fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new Paragraph(ingreso.pagodscr.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(ingreso.pagodscr.toString(), fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.pagofcha.toString(), fontTd10), frmtNmro)
-            addCellTabla(tablaDetalles, new Paragraph(ingreso.pagodcmt.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(ingreso.pagodcmt ? ingreso.pagodcmt.toString() : '', fontTd10), frmtNmro)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.pagovlor.toString(), fontTd10), frmtNmro)
 
         }
@@ -1798,7 +1797,7 @@ class ReportesController {
         tablaTotal.setWidths(arregloEnteros([90, 10]))
 
         addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-        addCellTabla(tablaTotal, new Paragraph(totalIngresos.toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalIngresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
 
         document.add(tablaDetalles)
