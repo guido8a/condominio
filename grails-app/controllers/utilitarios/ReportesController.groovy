@@ -103,6 +103,23 @@ class ReportesController {
         return [res: res, ultimo: ultimo, cont: cont.toInteger()]
     }
 
+    private String numero(num, decimales, cero) {
+        if (num == 0 && cero.toString().toLowerCase() == "hide") {
+            return " ";
+        }
+        if (decimales == 0) {
+            return formatNumber(number: num, minFractionDigits: decimales, maxFractionDigits: decimales, locale: "ec")
+        } else {
+            def format
+            if (decimales == 2) {
+                format = "##,##0"
+            } else if (decimales == 3) {
+                format = "##,###0"
+            }
+            return formatNumber(number: num, minFractionDigits: decimales, maxFractionDigits: decimales, locale: "ec", format: format)
+        }
+    }
+
     private String numero(num, decimales) {
         return numero(num, decimales, "show")
     }
@@ -496,7 +513,7 @@ class ReportesController {
 
         def baos = new ByteArrayOutputStream()
         def name = "pagosPendientes_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
-        def titulo = new Color(40, 140, 180)
+        def titulo = new Color(30, 140, 160)
         Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
         Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
         Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
@@ -508,7 +525,7 @@ class ReportesController {
         Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
 
-        def fondoTotal = new Color(240, 240, 240);
+        def fondoTotal = new Color(245, 243, 245);
 
         def prmsTdNoBorder = [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def prmsTdBorder = [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
@@ -549,7 +566,7 @@ class ReportesController {
 
             def tablaHeaderDetalles = new PdfPTable(5);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([10, 20, 47, 10, 12]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([8, 20, 52, 9, 11]))
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Nombre", fontTh), frmtHd)
@@ -563,10 +580,10 @@ class ReportesController {
         def printTotales = { params ->
             def tablaTotal = new PdfPTable(2);
             tablaTotal.setWidthPercentage(100);
-            tablaTotal.setWidths(arregloEnteros([87, 12]))
+            tablaTotal.setWidths(arregloEnteros([89, 11]))
 
             addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-            addCellTabla(tablaTotal, new Paragraph("${params.total}", fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaTotal, new Paragraph("${numero(params.total, 2)}", fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
 
             addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 5, pl: 0])
         }
@@ -577,7 +594,7 @@ class ReportesController {
 
         tablaDetalles = new PdfPTable(5);
         tablaDetalles.setWidthPercentage(100);
-        tablaDetalles.setWidths(arregloEnteros([10, 20, 47, 10, 12]))
+        tablaDetalles.setWidths(arregloEnteros([8, 20, 52, 9, 11]))
         tablaDetalles.setSpacingAfter(1f);
 
 
