@@ -128,7 +128,10 @@ class AlicuotaController extends Shield {
             alicuotaInstance = new Alicuota()
             per = Persona.get(params."persona.id")
             alicuotasAntiguas = Alicuota.findAllByPersonaAndFechaHastaIsNull(per)
-            alicuotasAntiguas.last().fechaHasta = new Date()
+            if(alicuotasAntiguas){
+                alicuotasAntiguas.last().fechaHasta = new Date()
+            }
+
 //            println("---- " + alicuotasAntiguas)
         }
 
@@ -173,7 +176,7 @@ class AlicuotaController extends Shield {
     def tablaAlicuotas_ajax () {
 
         def persona = Persona.get(params.id)
-        def alicuotas = Alicuota.findAllByPersona(persona).sort{it.id}
+        def alicuotas = Alicuota.findAllByPersona(persona).sort{it.fechaHasta}
 
         return [alicuotas: alicuotas, persona: persona]
     }

@@ -48,16 +48,16 @@
                 </span>
             </div>
             
-            <div class="form-group keeptogether ${hasErrors(bean: alicuotaInstance, field: 'fechaHasta', 'error')} required">
-                <span class="grupo">
-                    <label for="fechaHasta" class="col-xs-9 col-md-2 control-label">
-                        Hasta
-                    </label>
-                    <div class="col-xs-10 col-md-4">
-                        <elm:datepicker name="fechaHasta"  class="datepicker form-control" value="${alicuotaInstance?.fechaHasta}"  />
-                    </div>
-                </span>
-            </div>
+            %{--<div class="form-group keeptogether ${hasErrors(bean: alicuotaInstance, field: 'fechaHasta', 'error')} required">--}%
+                %{--<span class="grupo">--}%
+                    %{--<label for="fechaHasta" class="col-xs-9 col-md-2 control-label">--}%
+                        %{--Hasta--}%
+                    %{--</label>--}%
+                    %{--<div class="col-xs-10 col-md-4">--}%
+                        %{--<elm:datepicker name="fechaHasta"  class="datepicker form-control" value="${alicuotaInstance?.fechaHasta}"  />--}%
+                    %{--</div>--}%
+                %{--</span>--}%
+            %{--</div>--}%
             
             <div class="form-group keeptogether ${hasErrors(bean: alicuotaInstance, field: 'observaciones', 'error')} ">
                 <span class="grupo">
