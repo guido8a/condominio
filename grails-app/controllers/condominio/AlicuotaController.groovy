@@ -87,17 +87,25 @@ class AlicuotaController extends Shield {
      * @render ERROR*[mensaje] cuando no se encontró el elemento
      */
     def form_ajax() {
-        println("params f" + params)
-        def alicuota = new Alicuota()
-        def prsn = Persona.get(params.id)
-        if(prsn) {
-            def alct = Alicuota.findByPersona(prsn)
-            if(alct){
-                alicuota = alct
-            }
+//        println("params f" + params)
+
+        def alicuota
+        if(params.id){
+            alicuota = Alicuota.get(params.id)
+        }else{
+            alicuota = new Alicuota()
         }
-        alicuota?.properties = params
-        return [alicuotaInstance: alicuota, persona: prsn]
+
+        def persona
+
+        if(params.persona){
+            persona = Persona.get(params.persona)
+        }else{
+            persona = alicuota.persona
+        }
+
+        return[alicuotaInstance: alicuota, persona: persona]
+
     } //form para cargar con ajax en un dialog
 
     /**
@@ -105,27 +113,30 @@ class AlicuotaController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-        println "params: $params"
-        def alicuotaInstance = new Alicuota()
+//        println "params: $params"
+        def alicuotaInstance
         def alicuotasAntiguas
+        def per
         if(params.id) {
             alicuotaInstance = Alicuota.get(params.id)
             if(!alicuotaInstance) {
                 render "ERROR*No se encontró Alicuota."
                 return
             }
-        }else{
-
-            alicuotasAntiguas = Alicuota.findAllByPersona()
-
         }
+        else{
+            alicuotaInstance = new Alicuota()
+            per = Persona.get(params."persona.id")
+            alicuotasAntiguas = Alicuota.findAllByPersonaAndFechaHastaIsNull(per)
+            alicuotasAntiguas.last().fechaHasta = new Date()
+//            println("---- " + alicuotasAntiguas)
+        }
+
+
         if(params.valor) params.valor = params.valor.toDouble()
         alicuotaInstance.properties = params
 
-
-
-
-        println "valor: ${alicuotaInstance.valor}"
+//        println "valor: ${alicuotaInstance.valor}"
         if(!alicuotaInstance.save(flush: true)) {
             render "ERROR*Ha ocurrido un error al guardar Alicuota: " + renderErrors(bean: alicuotaInstance)
             return
@@ -162,7 +173,7 @@ class AlicuotaController extends Shield {
     def tablaAlicuotas_ajax () {
 
         def persona = Persona.get(params.id)
-        def alicuotas = Alicuota.findAllByPersona(persona)
+        def alicuotas = Alicuota.findAllByPersona(persona).sort{it.id}
 
         return [alicuotas: alicuotas, persona: persona]
     }

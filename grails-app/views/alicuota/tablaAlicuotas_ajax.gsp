@@ -69,6 +69,7 @@
                         if (parts[0] == "SUCCESS") {
                             spinner.replaceWith($btn);
                             closeLoader();
+                            bootbox.hideAll();
                             cargarBusqueda();
                             return false;
 
@@ -96,7 +97,7 @@
             },
             success : function (msg) {
                 var b = bootbox.dialog({
-                    id      : "dlgAsignarPerfilxx",
+                    id      : "dlgALicu",
                     title   : "Alícuota",
 //                    class   : "modal-lg",
                     message : msg,

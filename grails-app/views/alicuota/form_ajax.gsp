@@ -10,6 +10,7 @@
         <g:form class="form-horizontal" name="frmAlicuota" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${alicuotaInstance?.id}" />
 
+
             <div class="form-group keeptogether ${hasErrors(bean: alicuotaInstance, field: 'persona', 'error')} required">
                 <span class="grupo">
                     <label for="persona" class="col-md-2 control-label">
@@ -17,7 +18,7 @@
                     </label>
                     <div class="col-md-10">
                         <g:select id="persona" name="persona.id" from="${seguridad.Persona.list()}" optionKey="id" required=""
-                                  value="${alicuotaInstance?.persona?.id?:persona?.id}" class="many-to-one form-control"/>
+                                  value="${alicuotaInstance?.persona?.id ?: persona?.id}" class="many-to-one form-control"/>
                     </div>
                 </span>
             </div>
