@@ -58,37 +58,37 @@
                 </div>
 
                 <div class="col-xs-3 col-md-4">
-                        <div class="btn-group col-xs-6 col-md-4" style="margin-left: -10px; margin-top: 20px;">
+                    <div class="btn-group col-xs-6 col-md-4" style="margin-left: -10px; margin-top: 20px;">
 
-                            <a href="#" name="busqueda" class="btn btn-info" id="btnBusqueda" title="Buscar"
-                               style="height: 34px; padding: 9px; width: 46px">
-                                <i class="fa fa-search"></i></a>
+                        <a href="#" name="busqueda" class="btn btn-info" id="btnBusqueda" title="Buscar"
+                           style="height: 34px; padding: 9px; width: 46px">
+                            <i class="fa fa-search"></i></a>
 
-                            <a href="#" name="limpiarBus" class="btn btn-warning" id="btnLimpiarBusqueda"
-                               title="Borrar criterios" style="height: 34px; padding: 9px; width: 34px">
-                                <i class="fa fa-eraser"></i></a>
-                        </div>
-                        %{--<div class="btn-group col-xs-3 col-md-3" style="margin-left: -10px; margin-top: 20px;">--}%
-                            %{--<a href="#" name="busqueda" class="btn btn-success" id="nuevo" title="Crear Persona"--}%
-                               %{--style="height: 34px; padding: 9px; width: 46px">--}%
-                                %{--<i class="fa fa-user-circle"></i></a>--}%
-                        %{--</div>--}%
-                        <div class="btn-group col-xs-1" style="margin-left: -10px; margin-top: 20px;">
-                            <a href="#" name="busqueda" class="btn btn-success" id="nuevo" title="Crear Persona"
-                               style="height: 34px; padding: 9px; width: 46px">
-                                <i class="fa fa-user-circle"></i></a>
-
-                        </div>
-                        <div class="btn-group col-xs-1" style="margin-left: 20px; margin-top: 20px;">
-
-                            <g:link action="creaIngresos" class="btn btn-info" title="Registro de aportes" style="height: 34px; padding: 9px; width: 46px">
-                                <i class="fa fa-money"></i>
-                            </g:link>
-                        </div>
+                        <a href="#" name="limpiarBus" class="btn btn-warning" id="btnLimpiarBusqueda"
+                           title="Borrar criterios" style="height: 34px; padding: 9px; width: 34px">
+                            <i class="fa fa-eraser"></i></a>
+                    </div>
                     %{--<div class="btn-group col-xs-3 col-md-3" style="margin-left: -10px; margin-top: 20px;">--}%
-                        %{--<g:link controller="reportes" action="imprimirSolicitudes" class="btn btn-warning" title="Imprimir solicitudes de pago" style="height: 34px; padding: 9px; width: 46px">--}%
-                            %{--<i class="fa fa-print"></i>--}%
-                        %{--</g:link>--}%
+                    %{--<a href="#" name="busqueda" class="btn btn-success" id="nuevo" title="Crear Persona"--}%
+                    %{--style="height: 34px; padding: 9px; width: 46px">--}%
+                    %{--<i class="fa fa-user-circle"></i></a>--}%
+                    %{--</div>--}%
+                    <div class="btn-group col-xs-1" style="margin-left: -10px; margin-top: 20px;">
+                        <a href="#" name="busqueda" class="btn btn-success" id="nuevo" title="Crear Persona"
+                           style="height: 34px; padding: 9px; width: 46px">
+                            <i class="fa fa-user-circle"></i></a>
+
+                    </div>
+                    <div class="btn-group col-xs-1" style="margin-left: 20px; margin-top: 20px;">
+
+                        <g:link action="creaIngresos" class="btn btn-info" title="Registro de aportes" style="height: 34px; padding: 9px; width: 46px">
+                            <i class="fa fa-money"></i>
+                        </g:link>
+                    </div>
+                    %{--<div class="btn-group col-xs-3 col-md-3" style="margin-left: -10px; margin-top: 20px;">--}%
+                    %{--<g:link controller="reportes" action="imprimirSolicitudes" class="btn btn-warning" title="Imprimir solicitudes de pago" style="height: 34px; padding: 9px; width: 46px">--}%
+                    %{--<i class="fa fa-print"></i>--}%
+                    %{--</g:link>--}%
                     %{--</div>--}%
                 </div>
 
@@ -241,7 +241,8 @@ como máximo 30
             icon: "fa fa-money",
             action : function ($element) {
                 var id = $element.data("id");
-                alicuotaEdit(id);
+//                alicuotaEdit(id);
+                tablaAlicuotas(id)
             }
         };
 
@@ -476,6 +477,34 @@ como máximo 30
     }
 
 
+
+    function tablaAlicuotas (id) {
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'alicuota', action:'tablaAlicuotas_ajax')}",
+            data    : {
+                id: id
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgTablaAlicuotas",
+                    title   : "Tabla de Alícuotas",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "<i class='fa fa-times'></i> Cerrar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 100);
+            } //success
+        }); //ajax
+    }
 
 
 </script>
