@@ -16,16 +16,15 @@
 
         <fieldset class="borde">
             <div class="row" style="margin-bottom: 20px;">
-                <div class="col-md-1" align="center">
+                <div class="col-sm-2" align="center">
                 <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary">
                     <i class="fa fa-arrow-left"></i> Regresar
                 </a>
                 </div>
 
-                <div class="col-md-1" align="center"></div>
-                <div class="col-md-1" align="center">Concepto de aportes</div>
+                <div class="col-sm-1" align="center">Concepto de aportes</div>
 
-                <div class="col-md-3" align="center">
+                <div class="col-sm-3" align="center">
                     <g:select class="form-control" name="obligaciones"
                               from="${condominio.Obligacion.list([sort: 'descripcion'])}" optionKey="id"
                               optionValue="${{ it.descripcion }}"

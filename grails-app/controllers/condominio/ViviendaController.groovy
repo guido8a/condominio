@@ -1,9 +1,10 @@
 package condominio
 
 import seguridad.Persona
+import seguridad.Shield
 import utilitarios.Parametros
 
-class ViviendaController {
+class ViviendaController extends Shield {
 
     def dbConnectionService
     def buscadorService

@@ -17,7 +17,12 @@
 <body>
 <elm:flashMessage tipo="${flash.tipo}" icon="${flash.icon}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
 
-<g:form name="frmLogin" action="guardarPass" class="form-signin well" role="form" style="width: 360px;">
+<div style="text-align: center">
+    <h1 class="titl" style="font-size: 24px; color: #06a">Sistema de Administración de Condominios</h1>
+    <h2 class="titl" style="font-size: 24px; color: #06a">Ingreso al sistema</h2>
+
+
+<g:form name="frmLogin" action="guardarPass" class="form-signin well" role="form" style="width: 360px; margin: auto">
     <g:hiddenField name="id" value="${usu.id}"/>
     <h2 class="text-center">Cambiar contraseña</h2>
 
@@ -34,7 +39,7 @@
         </a>
     </div>
 </g:form>
-
+</div>
 <script type="text/javascript">
     var $frm = $("#frmLogin");
     function doLogin() {
