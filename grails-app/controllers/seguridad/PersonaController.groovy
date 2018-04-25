@@ -142,10 +142,16 @@ class PersonaController extends Shield {
 
         if(params.id){
             persona = Persona.get(params.id)
+
+            if(params.password != persona.password){
+                params.password = params.password.encodeAsMD5()
+            }
+
         }else{
             persona = new Persona()
             persona.fecha = new Date()
             persona.fechaPass = new Date()
+            params.password = params.password.encodeAsMD5()
         }
         if(params.activo){
             params.activo = 1
@@ -153,9 +159,10 @@ class PersonaController extends Shield {
             params.activo = 0
         }
 
+
         persona.properties = params
 
-        persona.password = params.password.encodeAsMD5()
+
 
         if(!persona.fecha) persona.fecha = new Date()
 

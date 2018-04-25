@@ -214,6 +214,8 @@ como máximo 30
         };
 
         var id = $tr.data("id");
+        var deuda = $tr.data("deuda");
+        var codigo = $tr.data("p");
 
         var perfil = {
             label: " Asignar Perfil",
@@ -256,13 +258,24 @@ como máximo 30
             }
         };
 
+        var certificado = {
+            label: "Certificado Expensas",
+            icon: "fa fa-print",
+            separator_before : true,
+            action : function ($element) {
+                var id = $element.data("id");
+                imprimirExpensas(id);
+            }
+        };
+
 
         items.editar = editar;
         items.perfil = perfil;
         items.alicuota = alicuota;
         items.pagar = ingresos;
-
-//        if(tp == 'Compras' || tp == 'Ventas' || tp == 'Transferencias' || tp == 'Nota de crédito'){
+        if(deuda <= 0 && codigo == 'P'){
+            items.certificado = certificado;
+        }
 
         return items
     }
@@ -504,6 +517,10 @@ como máximo 30
                 }, 100);
             } //success
         }); //ajax
+    }
+
+    function imprimirExpensas (id) {
+        location.href = "${g.createLink(controller:'reportes', action: 'certificadoExpensas')}?id=" + id
     }
 
 

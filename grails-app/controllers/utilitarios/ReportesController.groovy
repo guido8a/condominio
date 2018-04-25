@@ -1831,4 +1831,136 @@ class ReportesController {
     }
 
 
+    def certificadoExpensas () {
+
+//        println "params " + params
+
+        def persona = Persona.get(params.id)
+        def condominio = Condominio.get(session.condominio.id)
+        def administrador = Persona.findByCondominioAndCargoLike(condominio, 'Administrador')
+
+
+        def baos = new ByteArrayOutputStream()
+        def name = "certificadoExpensas_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def titulo = new Color(40, 140, 180)
+        Font info = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL)
+        Font nota = new Font(Font.TIMES_ROMAN, 11, Font.ITALIC)
+        Font notaTitulo = new Font(Font.TIMES_ROMAN, 11, Font.BOLD)
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+        Font fontTitle2 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
+        Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
+        Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
+        Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
+        def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtHdr = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtDatoDere = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+
+        def fondoTotal = new Color(240, 240, 240);
+
+        def prmsTdNoBorder = [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def prmsTdBorder = [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def prmsNmBorder = [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+        def para = persona.sexo == 'M' ? 'Señor' : 'Señora(ita)'
+
+        Document document
+        document = new Document(PageSize.A4);
+        document.setMargins(74, 60, 30, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Solicitud");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph(condominio?.nombre ?: '', fontTitle));
+        addEmptyLine(preface, 1);
+        document.add(preface);
+
+        Paragraph preface2 = new Paragraph();
+        preface2.setAlignment(Element.ALIGN_CENTER);
+        preface2.add(new Paragraph(condominio?.direccion ?: '', fontTitle));
+        addEmptyLine(preface2, 1);
+        document.add(preface2);
+
+        Paragraph preface3 = new Paragraph();
+        preface3.setAlignment(Element.ALIGN_CENTER);
+        preface3.add(new Paragraph('QUITO - ECUADOR', fontTitle2));
+        addEmptyLine(preface3, 2);
+        document.add(preface3);
+
+
+//        Paragraph c = new Paragraph();
+//        c.add(new Paragraph((persona?.nombre ?: '') + ' ' + (persona?.apellido ?: ''), info))
+//        document.add(c)
+//        Paragraph d = new Paragraph();
+//        d.add(new Paragraph((persona?.edificio?.descripcion ?: '') + ', Departamento: ' + (persona?.departamento ?: ''), info))
+//        document.add(d)
+//        Paragraph p = new Paragraph();
+//        p.add(new Paragraph("Presente,", info))
+//        addEmptyLine(p, 1);
+//        document.add(p)
+
+        Paragraph t1 = new Paragraph();
+        t1.setAlignment("Justify");
+
+        t1.add(new Paragraph("Yo, ${(administrador?.apellido?.toUpperCase() ?: '') + " " + (administrador?.nombre?.toUpperCase() ?: '')} portador de la C.I. ${administrador?.ruc ?: ''} , en mi " +
+                "calidad de Administrador del ${condominio?.nombre}, luego de haber " +
+                "revisado la documentación pertinente, donde consta el nombre de " +
+                "${persona?.nombre?.toUpperCase() + " " + persona?.apellido?.toUpperCase()} con número de cédula ${persona?.ruc}, como propietario " +
+                "del departamento Nº ${persona?.departamento} y otras propiedades consignadas a este departamento" +
+                ", y previo análisis de los documentos:", info))
+        addEmptyLine(t1, 1);
+        document.add(t1)
+
+        Paragraph t2 = new Paragraph();
+        t2.setAlignment("Justify");
+        t2.add(new Paragraph( "CERTIFICO NO TENER ADEUDO ALGUNO PENDIENTE DE " +
+                "LIQUIDAR EN NINGUNO DE LOS RUBROS DE ESTA DEPENDENCIA " +
+                "ADEMÁS LEGALIZO QUE SE ENCUENTRA AL DÍA EN EL PAGO DE " +
+                "LAS ALÍCUOTAS ORDINARIAS Y EXTRAORDINARIAS DEL " +
+                "CONDOMINIO.", info))
+        addEmptyLine(t2, 1);
+        document.add(t2)
+
+        Paragraph t3 = new Paragraph();
+        t3.setAlignment("Justify");
+        t3.add(new Paragraph("Se extiende el presente CERTIFICADO DE EXPENSAS el ${util.fechaConFormato(fecha: new Date(), formato: 'dd MMMM yyyy')} " +
+                "en EL DISTRITO METROPOLITANO DE QUITO. ", info))
+        addEmptyLine(t3, 1);
+        document.add(t3)
+        Paragraph a = new Paragraph();
+        a.add(new Paragraph("Atentamente,", info))
+        addEmptyLine(a, 3);
+        document.add(a)
+        Paragraph f = new Paragraph();
+        f.add(new Paragraph((administrador?.nombre ?: '') + " " + (administrador?.apellido ?: ''), info))
+        f.add(new Paragraph("ADMINISTRADOR", info))
+        f.add(new Paragraph("Tel: ${administrador?.telefono ?: ''}, dpto. ${administrador?.departamento ?: ''}", info))
+        addEmptyLine(f, 1);
+        document.add(f)
+
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=" + name)
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+
+    }
+
+
 }

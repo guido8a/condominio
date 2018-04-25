@@ -210,7 +210,8 @@
                                 Cargo
                             </label>
                             <div class="col-xs-9 col-md-8">
-                                <g:textField name="cargo" class="form-control" value="${personaInstance?.cargo}"/>
+                                %{--<g:textField name="cargo" class="form-control" value="${personaInstance?.cargo}"/>--}%
+                                <g:select name="cargo" class="form-control" from="${["Condomino", "Administrador", "Presidente", "Representante"]}" value="${personaInstance?.cargo}"/>
                             </div>
                         </span>
                     </div>
