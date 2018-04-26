@@ -22,6 +22,18 @@
                      *
                 </span>
             </div>
+
+            <div class="form-group keeptogether ${hasErrors(bean: obligacionInstance, field: 'tipoAporte', 'error')} required">
+                <span class="grupo">
+                    <label for="valor" class="col-md-2 control-label">
+                        Tipo de Aporte
+                    </label>
+                    <div class="col-md-5">
+                       <g:select name="tipoAporte" from="${condominio.TipoAporte.list()}" optionKey="id" optionValue="descripcion" value="${obligacionInstance?.tipoAporte?.id}" class="form-control"/>
+                    </div>
+                    *
+                </span>
+            </div>
             
             <div class="form-group keeptogether ${hasErrors(bean: obligacionInstance, field: 'fecha', 'error')} required">
                 <span class="grupo">
