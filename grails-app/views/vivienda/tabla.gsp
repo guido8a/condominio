@@ -31,7 +31,7 @@
                         <th>Propietario</th>
                         <th>Valor</th>
                         <th>Aplicar <input type="checkbox" id="todosCk"/></th>
-                        <th>Observaciones: <input type="text" id="todosTx" style="width: 200px"/></th>
+                        <th>Observaciones</th>
                     </tr>
                 </thead>
                 <tbody>

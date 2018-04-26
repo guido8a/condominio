@@ -214,7 +214,9 @@ class ViviendaController extends Shield {
     }
     
     def genera () {
-        def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
+        println "params: ${params.fecha}"
+        def fc = params.fecha.split('-').toList()
+        def fecha = new Date().parse("dd-MM-yyyy", "1-${fc[1]}-${fc[2]}")
         def mesNumero = params.fecha.split("-")[1]
         def anio = params.fecha.split("-")[2]
 
@@ -225,8 +227,9 @@ class ViviendaController extends Shield {
 //        println("obsr: " + observacion)
 
         def cn = dbConnectionService.getConnection()
-        def sql = "select * from alicuota(${7},'${fecha.format('yyyy-MM-dd')}','${observacion}')"
+        def sql = "select * from alicuota('${fecha.format('yyyy-MM-dd')}','${observacion}')"
         println "sql: $sql"
+
         def res = cn.rows(sql.toString())
 
         if(res[0].alicuota == 0){

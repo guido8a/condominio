@@ -16,60 +16,48 @@
 
         <fieldset class="borde">
             <div class="row" style="margin-bottom: 20px;">
-                <div class="col-sm-2" align="center">
-                <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary">
+                <div class="col-sm-1" align="center" style="margin-top: 20px">
+                <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary" style="width: 100px;">
                     <i class="fa fa-arrow-left"></i> Regresar
                 </a>
                 </div>
 
-                %{--<div class="col-sm-3" align="center" style="margin-top: -10px">Concepto de aportes--}%
-                    %{--<g:select class="form-control" name="obligaciones"--}%
-                              %{--from="${condominio.Obligacion.list([sort: 'descripcion'])}" optionKey="id"--}%
-                              %{--optionValue="${{ it.descripcion }}"--}%
-                              %{--disabled="false" />--}%
-                %{--</div>--}%
-
-                <div class="col-md-3">
+                <div class="col-sm-2" style="margin-left: 17px">
                 Tipo de Aporte
-                    <g:select from="${condominio.TipoAporte.list()}" optionValue="descripcion" optionKey="id" name="tp" id="tipoAporte" class="form-control"/>
+                    <g:select from="${condominio.TipoAporte.list()}" optionValue="descripcion" optionKey="id"
+                              name="tp" id="tipoAporte" class="form-control"/>
                 </div>
 
-                <div class="col-md-3" >
+                <div class="col-sm-3" style="margin-left: -20px">
                     Obligaciones
+                    <a href="#" id="btn-nuevo" style="margin-top: 17px; margin-left: 20px;"><i class="fa fa-file"></i> Crear nueva</a>
+                    <a href="#" id="btn-nuevo" style="margin-top: 17px; margin-left: 20px;"><i class="fa fa-pencil"></i> Editar</a>
                     <div id="divObligaciones">
 
                     </div>
+
                 </div>
 
+                <div class="btn-group col-sm-2" style="width: 160px; margin-left: -20px">
 
-                %{--<div class="btn-group col-md-1" style="margin-top: -10px; margin-left: -20px; width: 100px;">--}%
-                    %{--Valor--}%
-                    %{--<g:textField name="valor" value="${0}" class="number form-control"/>--}%
-                %{--</div>--}%
-
-                <div class="btn-group col-md-2">
                     Fecha
                         <elm:datepicker name="fecha" id="fechaOb" class="datepicker form-control required"
                                         value="${params.fecha?: new Date()}"/>
                 </div>
 
 
-                <div class="btn-group col-md-3">
+                <div class="btn-group col-sm-1" style="margin-top: 17px">
 
-                    <a href="#" class="btn btn-azul btn-sm" id="btn-consultar"><i class="fa fa-search"></i> Consultar</a>
-                    <a href="#" class="btn btn-azul btn-sm" id=" btn-nuevo"><i class="fa fa-file-text"></i> Nuevo</a>
-                    <a href="#" class="btn btn-success btn-actualizar btn-sm"><i class="fa fa-save"></i> Guardar</a>
+                    <a href="#" class="btn btn-azul" id="btn-consultar"><i class="fa fa-search"></i></a>
                 </div>
-                %{--<div class="btn-group col-md-1">--}%
-                    %{----}%
-                %{--</div>--}%
-                %{--<div class="btn-group col-md-1">--}%
-                    %{----}%
-                %{--</div>--}%
+                <div class="btn-group col-sm-3" style="margin-top: 17px; margin-left: -40px; width: 280px;">
+                    <a href="#" class="btn btn-success btn-actualizar"><i class="fa fa-save"></i> Guardar</a>
+                    <a href="#" class="btn btn-warning btn-generar" style="margin-left: 10px"><i class="fa fa-users"></i> Aliícuotas</a>
+                </div>
 
 %{--
                 <div class="btn-group col-md-1">
-                    <a href="#" class="btn btn-warning btn-generar btn-sm"><i class="fa fa-users"></i> Mensualidades</a>
+
                 </div>
 --}%
 
