@@ -1,10 +1,10 @@
 
-<%@ page import="condominio.Obligacion" %>
+<%@ page import="condominio.TipoAporte" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Obligaciones</title>
+    <title>Lista de TipoAporte</title>
 </head>
 <body>
 
@@ -14,14 +14,14 @@
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
         <a href="#" class="btn btn-primary btnCrear">
-            <i class="fa fa-file-o"></i> Nueva Obligación
+            <i class="fa fa-file-o"></i> Nuevo Tipo
         </a>
     </div>
     <div class="btn-group pull-right col-md-3">
         <div class="input-group">
             <input type="text" class="form-control input-search" placeholder="Buscar" value="${params.search}">
             <span class="input-group-btn">
-                <g:link controller="obligacion" action="list" class="btn btn-default btn-search">
+                <g:link controller="tipoAporte" action="list" class="btn btn-default btn-search">
                     <i class="fa fa-search"></i>&nbsp;
                 </g:link>
             </span>
@@ -32,38 +32,22 @@
 <table class="table table-condensed table-bordered table-striped table-hover">
     <thead>
     <tr>
-        
-        <g:sortableColumn property="descripcion" title="Descripción" />
-        
-        <g:sortableColumn property="fecha" title="Fecha" />
-        
-        <g:sortableColumn property="tipo" title="Tipo" />
-        
-        <g:sortableColumn property="valor" title="Valor" />
-        
+        <g:sortableColumn property="descripcion" title="Descripcion" />
     </tr>
     </thead>
     <tbody>
-    <g:if test="${obligacionInstanceCount > 0}">
-        <g:each in="${obligacionInstanceList}" status="i" var="obligacionInstance">
-            <tr data-id="${obligacionInstance.id}">
+    <g:if test="${tipoAporteInstanceCount > 0}">
+        <g:each in="${tipoAporteInstanceList}" status="i" var="tipoAporteInstance">
+            <tr data-id="${tipoAporteInstance.id}">
                 
-                <td>${obligacionInstance.descripcion}</td>
+                <td>${tipoAporteInstance.descripcion}</td>
                 
-                <td><g:formatDate date="${obligacionInstance.fecha}" format="dd-MM-yyyy" /></td>
-                
-                %{--<td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${obligacionInstance}" field="tipo"/></elm:textoBusqueda></td>--}%
-
-                %{--<td><g:fieldValue bean="${obligacionInstance}" field="valor"/></td>--}%
-               <td><g:formatNumber number="${obligacionInstance?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
-
-
             </tr>
         </g:each>
     </g:if>
     <g:else>
         <tr class="danger">
-            <td class="text-center" colspan="4">
+            <td class="text-center" colspan="1">
                 <g:if test="${params.search && params.search!= ''}">
                     No se encontraron resultados para su búsqueda
                 </g:if>
@@ -76,17 +60,17 @@
     </tbody>
 </table>
 
-<elm:pagination total="${obligacionInstanceCount}" params="${params}"/>
+<elm:pagination total="${tipoAporteInstanceCount}" params="${params}"/>
 
 <script type="text/javascript">
     var id = null;
-    function submitFormObligacion() {
-        var $form = $("#frmObligacion");
+    function submitFormTipoAporte() {
+        var $form = $("#frmTipoAporte");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
         $btn.replaceWith(spinner);
-            openLoader("Guardando Obligación");
-                $.ajax({
+            openLoader("Guardando TipoAporte");
+                    $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
@@ -111,7 +95,7 @@
         bootbox.dialog({
             title   : "Alerta",
             message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-            "¿Está seguro que desea eliminar la Obligación seleccionada? Esta acción no se puede deshacer.</p>",
+            "¿Está seguro que desea eliminar el TipoAporte seleccionado? Esta acción no se puede deshacer.</p>",
             buttons : {
                 cancelar : {
                     label     : "Cancelar",
@@ -123,10 +107,10 @@
                     label     : "<i class='fa fa-trash-o'></i> Eliminar",
                     className : "btn-danger",
                     callback  : function () {
-                        openLoader("Eliminando Obligacion");
+                        openLoader("Eliminando TipoAporte");
                                 $.ajax({
                             type    : "POST",
-                            url     : '${createLink(controller:'obligacion', action:'delete_ajax')}',
+                            url     : '${createLink(controller:'tipAporte', action:'delete_ajax')}',
                             data    : {
                                 id : itemId
                             },
@@ -148,16 +132,16 @@
         });
     }
     function createEditRow(id) {
-        var title = id ? "Editar" : "Nueva";
+        var title = id ? "Editar" : "Crear";
         var data = id ? { id: id } : {};
-            $.ajax({
+                $.ajax({
             type    : "POST",
-            url     : "${createLink(controller:'obligacion', action:'form_ajax')}",
+            url     : "${createLink(controller:'tipoAporte', action:'form_ajax')}",
             data    : data,
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
-                    title   : title + " Obligación",
+                    title   : title + " TipoAporte",
                     
                     message : msg,
                     buttons : {
@@ -172,7 +156,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitFormObligacion();
+                                return submitFormTipoAporte();
                             } //callback
                         } //guardar
                     } //buttons
@@ -191,7 +175,7 @@
             return false;
         });
 
-        $("tbody>tr").contextMenu({
+                $("tbody>tr").contextMenu({
             items  : {
                 header   : {
                     label  : "Acciones",
@@ -204,13 +188,13 @@
             var id = $element.data("id");
                                 $.ajax({
                 type    : "POST",
-                url     : "${createLink(controller:'obligacion', action:'show_ajax')}",
+                url     : "${createLink(controller:'tipoAporte', action:'show_ajax')}",
                 data    : {
                     id : id
                 },
                 success : function (msg) {
                     bootbox.dialog({
-                        title   : "Ver Obligacion",
+                        title   : "Ver TipoAporte",
                         message : msg,
                         buttons : {
                             ok : {

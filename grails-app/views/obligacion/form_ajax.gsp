@@ -34,31 +34,7 @@
                      *
                 </span>
             </div>
-            
-            <div class="form-group keeptogether ${hasErrors(bean: obligacionInstance, field: 'tipo', 'error')} required">
-                <span class="grupo">
-                    <label for="tipo" class="col-md-2 control-label">
-                        Tipo
-                    </label>
-                    <div class="col-md-4">
-                        <g:select name="tipo" from="${['N': 'Normal', 'E': 'Extraordinario', 'M': 'Multas']}"
-                                  optionKey="key" optionValue="value" class="form-control "
-                                  value="${obligacionInstance?.tipo}" />
-%{--
-                        <g:select name="tipo" from="${["Normal", "Extraordinario", "Multa"]}" class="form-control "
-                                  value="${obligacionInstance?.tipo == 'N' ? 'Normal' : 'Extraordinario'}"/>
---}%
-                    </div>
 
-
-%{--
-                    <div class="col-md-6">
-                        <g:textField name="tipo" class="allCaps form-control" value="${obligacionInstance?.tipo}"/>
-                    </div>
---}%
-                     *
-                </span>
-            </div>
             
             <div class="form-group keeptogether ${hasErrors(bean: obligacionInstance, field: 'valor', 'error')} required">
                 <span class="grupo">

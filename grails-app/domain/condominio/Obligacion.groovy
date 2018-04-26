@@ -5,7 +5,6 @@ class Obligacion {
     static auditable = true
     String descripcion
     Date fecha
-    String tipo
     double valor
     TipoAporte tipoAporte
 

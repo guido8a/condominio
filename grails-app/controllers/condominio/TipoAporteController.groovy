@@ -1,13 +1,14 @@
 package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
+import condominio.seguridad.Shield
 import seguridad.Shield
 
 
 /**
- * Controlador que muestra las pantallas de manejo de Obligacion
+ * Controlador que muestra las pantallas de manejo de TipoAporte
  */
-class ObligacionController extends Shield {
+class TipoAporteController extends Shield {
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
@@ -34,7 +35,7 @@ class ObligacionController extends Shield {
         }
         def list
         if(params.search) {
-            def c = Obligacion.createCriteria()
+            def c = TipoAporte.createCriteria()
             list = c.list(params) {
                 or {
                     /* TODO: cambiar aqui segun sea necesario */
@@ -43,7 +44,7 @@ class ObligacionController extends Shield {
                 }
             }
         } else {
-            list = Obligacion.list(params)
+            list = TipoAporte.list(params)
         }
         if (!all && params.offset.toInteger() > 0 && list.size() == 0) {
             params.offset = params.offset.toInteger() - 1
@@ -54,48 +55,48 @@ class ObligacionController extends Shield {
 
     /**
      * Acción que muestra la lista de elementos
-     * @return obligacionInstanceList: la lista de elementos filtrados, obligacionInstanceCount: la cantidad total de elementos (sin máximo)
+     * @return tipoAporteInstanceList: la lista de elementos filtrados, tipoAporteInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def list() {
-        def obligacionInstanceList = getList(params, false)
-        def obligacionInstanceCount = getList(params, true).size()
-        return [obligacionInstanceList: obligacionInstanceList, obligacionInstanceCount: obligacionInstanceCount]
+        def tipoAporteInstanceList = getList(params, false)
+        def tipoAporteInstanceCount = getList(params, true).size()
+        return [tipoAporteInstanceList: tipoAporteInstanceList, tipoAporteInstanceCount: tipoAporteInstanceCount]
     }
 
     /**
      * Acción llamada con ajax que muestra la información de un elemento particular
-     * @return obligacionInstance el objeto a mostrar cuando se encontró el elemento
+     * @return tipoAporteInstance el objeto a mostrar cuando se encontró el elemento
      * @render ERROR*[mensaje] cuando no se encontró el elemento
      */
     def show_ajax() {
         if(params.id) {
-            def obligacionInstance = Obligacion.get(params.id)
-            if(!obligacionInstance) {
-                render "ERROR*No se encontró Obligacion."
+            def tipoAporteInstance = TipoAporte.get(params.id)
+            if(!tipoAporteInstance) {
+                render "ERROR*No se encontró TipoAporte."
                 return
             }
-            return [obligacionInstance: obligacionInstance]
+            return [tipoAporteInstance: tipoAporteInstance]
         } else {
-            render "ERROR*No se encontró Obligacion."
+            render "ERROR*No se encontró TipoAporte."
         }
     } //show para cargar con ajax en un dialog
 
     /**
      * Acción llamada con ajax que muestra un formaulario para crear o modificar un elemento
-     * @return obligacionInstance el objeto a modificar cuando se encontró el elemento
+     * @return tipoAporteInstance el objeto a modificar cuando se encontró el elemento
      * @render ERROR*[mensaje] cuando no se encontró el elemento
      */
     def form_ajax() {
-        def obligacionInstance = new Obligacion()
+        def tipoAporteInstance = new TipoAporte()
         if(params.id) {
-            obligacionInstance = Obligacion.get(params.id)
-            if(!obligacionInstance) {
-                render "ERROR*No se encontró Obligacion."
+            tipoAporteInstance = TipoAporte.get(params.id)
+            if(!tipoAporteInstance) {
+                render "ERROR*No se encontró TipoAporte."
                 return
             }
         }
-        obligacionInstance.properties = params
-        return [obligacionInstance: obligacionInstance]
+        tipoAporteInstance.properties = params
+        return [tipoAporteInstance: tipoAporteInstance]
     } //form para cargar con ajax en un dialog
 
     /**
@@ -103,22 +104,20 @@ class ObligacionController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-        println "params: $params"
-        params.valor = params.valor.toDouble()
-        def obligacionInstance = new Obligacion()
+        def tipoAporteInstance = new TipoAporte()
         if(params.id) {
-            obligacionInstance = Obligacion.get(params.id)
-            if(!obligacionInstance) {
-                render "ERROR*No se encontró Obligacion."
+            tipoAporteInstance = TipoAporte.get(params.id)
+            if(!tipoAporteInstance) {
+                render "ERROR*No se encontró TipoAporte."
                 return
             }
         }
-        obligacionInstance.properties = params
-        if(!obligacionInstance.save(flush: true)) {
-            render "ERROR*Ha ocurrido un error al guardar Obligacion: " + renderErrors(bean: obligacionInstance)
+        tipoAporteInstance.properties = params
+        if(!tipoAporteInstance.save(flush: true)) {
+            render "ERROR*Ha ocurrido un error al guardar TipoAporte: " + renderErrors(bean: tipoAporteInstance)
             return
         }
-        render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Obligacion exitosa."
+        render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de TipoAporte exitosa."
         return
     } //save para grabar desde ajax
 
@@ -128,21 +127,21 @@ class ObligacionController extends Shield {
      */
     def delete_ajax() {
         if(params.id) {
-            def obligacionInstance = Obligacion.get(params.id)
-            if (!obligacionInstance) {
-                render "ERROR*No se encontró Obligacion."
+            def tipoAporteInstance = TipoAporte.get(params.id)
+            if (!tipoAporteInstance) {
+                render "ERROR*No se encontró TipoAporte."
                 return
             }
             try {
-                obligacionInstance.delete(flush: true)
-                render "SUCCESS*Eliminación de Obligacion exitosa."
+                tipoAporteInstance.delete(flush: true)
+                render "SUCCESS*Eliminación de TipoAporte exitosa."
                 return
             } catch (DataIntegrityViolationException e) {
-                render "ERROR*Ha ocurrido un error al eliminar Obligacion"
+                render "ERROR*Ha ocurrido un error al eliminar TipoAporte"
                 return
             }
         } else {
-            render "ERROR*No se encontró Obligacion."
+            render "ERROR*No se encontró TipoAporte."
             return
         }
     } //delete para eliminar via ajax
