@@ -36,9 +36,7 @@
         <g:sortableColumn property="descripcion" title="Descripción" />
         
         <g:sortableColumn property="fecha" title="Fecha" />
-        
-        <g:sortableColumn property="tipo" title="Tipo" />
-        
+
         <g:sortableColumn property="valor" title="Valor" />
         
     </tr>

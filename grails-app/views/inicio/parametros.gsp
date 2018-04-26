@@ -159,6 +159,28 @@
                                 <p>Para el registro y edicion de datos del cantón.</p>
                             </div>
                         </li>
+                        <li>
+                            <i class="fa-li ${iconGen}"></i>
+                            <span id="oblg">
+                                <g:link controller="obligacion" action="list">Obligación</g:link>
+                            </span>
+
+                            <div class="descripcion hide">
+                                <h4>Obligación</h4>
+                                <p></p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-li ${iconGen}"></i>
+                            <span id="apt">
+                                <g:link controller="tipoAporte" action="list">Tipo de Aporte</g:link>
+                            </span>
+
+                            <div class="descripcion hide">
+                                <h4>Tipo de Aporte</h4>
+                                <p></p>
+                            </div>
+                        </li>
                     </ul>
                 </div>
 

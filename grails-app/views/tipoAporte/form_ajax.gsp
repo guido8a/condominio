@@ -10,14 +10,13 @@
         <g:form class="form-horizontal" name="frmTipoAporte" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${tipoAporteInstance?.id}" />
 
-            
             <div class="form-group keeptogether ${hasErrors(bean: tipoAporteInstance, field: 'descripcion', 'error')} required">
                 <span class="grupo">
                     <label for="descripcion" class="col-md-2 control-label">
-                        Descripcion
+                        Descripción
                     </label>
                     <div class="col-md-6">
-                        <g:textField name="descripcion" required="" class="allCaps form-control required" value="${tipoAporteInstance?.descripcion}"/>
+                        <g:textField name="descripcion" required="" class="form-control required" value="${tipoAporteInstance?.descripcion}"/>
                     </div>
                      *
                 </span>
