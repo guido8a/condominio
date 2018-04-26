@@ -3,7 +3,6 @@ package condominio
 class TipoAporte {
 
     static auditable = true
-    String codigo
     String descripcion
 
     static mapping = {
