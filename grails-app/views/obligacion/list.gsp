@@ -38,6 +38,8 @@
         <g:sortableColumn property="fecha" title="Fecha" />
 
         <g:sortableColumn property="valor" title="Valor" />
+
+        <th>Tipo de Aporte</th>
         
     </tr>
     </thead>
@@ -54,6 +56,8 @@
 
                 %{--<td><g:fieldValue bean="${obligacionInstance}" field="valor"/></td>--}%
                <td><g:formatNumber number="${obligacionInstance?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
+
+                <td>${obligacionInstance?.tipoAporte?.descripcion}</td>
 
 
             </tr>
