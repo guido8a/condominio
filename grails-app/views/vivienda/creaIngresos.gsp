@@ -22,34 +22,51 @@
                 </a>
                 </div>
 
-                <div class="col-sm-3" align="center" style="margin-top: -10px">Concepto de aportes
-                    <g:select class="form-control" name="obligaciones"
-                              from="${condominio.Obligacion.list([sort: 'descripcion'])}" optionKey="id"
-                              optionValue="${{ it.descripcion }}"
-                              disabled="false" />
+                %{--<div class="col-sm-3" align="center" style="margin-top: -10px">Concepto de aportes--}%
+                    %{--<g:select class="form-control" name="obligaciones"--}%
+                              %{--from="${condominio.Obligacion.list([sort: 'descripcion'])}" optionKey="id"--}%
+                              %{--optionValue="${{ it.descripcion }}"--}%
+                              %{--disabled="false" />--}%
+                %{--</div>--}%
+
+                <div class="col-md-3">
+                Tipo de Aporte
+                    <g:select from="${condominio.TipoAporte.list()}" optionValue="descripcion" optionKey="id" name="tp" id="tipoAporte" class="form-control"/>
                 </div>
 
-                <div class="btn-group col-md-1" style="margin-top: -10px; margin-left: -20px; width: 100px;">
-                    Valor
-                    <g:textField name="valor" value="${0}" class="number form-control"/>
+                <div class="col-md-3" >
+                    Obligaciones
+                    <div id="divObligaciones">
+
+                    </div>
                 </div>
 
-                <div class="btn-group col-md-2" style="margin-top: -10px">
+
+                %{--<div class="btn-group col-md-1" style="margin-top: -10px; margin-left: -20px; width: 100px;">--}%
+                    %{--Valor--}%
+                    %{--<g:textField name="valor" value="${0}" class="number form-control"/>--}%
+                %{--</div>--}%
+
+                <div class="btn-group col-md-2">
                     Fecha
                         <elm:datepicker name="fecha" id="fechaOb" class="datepicker form-control required"
                                         value="${params.fecha?: new Date()}"/>
                 </div>
 
 
-                <div class="btn-group col-md-1">
+                <div class="btn-group col-md-3">
+
                     <a href="#" class="btn btn-azul btn-sm" id="btn-consultar"><i class="fa fa-search"></i> Consultar</a>
-                </div>
-                <div class="btn-group col-md-1">
-                    <a href="#" class="btn btn-azul btn-sm" id=" btn-nuevo"><i class="fa fa-search"></i> Nuevo</a>
-                </div>
-                <div class="btn-group col-md-1">
+                    <a href="#" class="btn btn-azul btn-sm" id=" btn-nuevo"><i class="fa fa-file-text"></i> Nuevo</a>
                     <a href="#" class="btn btn-success btn-actualizar btn-sm"><i class="fa fa-save"></i> Guardar</a>
                 </div>
+                %{--<div class="btn-group col-md-1">--}%
+                    %{----}%
+                %{--</div>--}%
+                %{--<div class="btn-group col-md-1">--}%
+                    %{----}%
+                %{--</div>--}%
+
 %{--
                 <div class="btn-group col-md-1">
                     <a href="#" class="btn btn-warning btn-generar btn-sm"><i class="fa fa-users"></i> Mensualidades</a>
@@ -87,6 +104,28 @@
 
 
         <script type="text/javascript">
+
+
+            cargarObligaciones($("#tipoAporte").val());
+
+            $("#tipoAporte").change(function () {
+                var ta = $(this).val();
+                cargarObligaciones(ta);
+            });
+
+
+            function cargarObligaciones (ta) {
+                $.ajax({
+                    type: 'POST',
+                    url: '${createLink(controller: 'vivienda', action: 'obligaciones_ajax')}',
+                    data:{
+                        tipoAporte: ta
+                    },
+                    success: function (msg){
+                        $("#divObligaciones").html(msg)
+                    }
+                });
+            }
 
 
             $(".btn-generar").click(function () {

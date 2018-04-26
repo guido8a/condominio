@@ -246,6 +246,14 @@ class ViviendaController extends Shield {
         return[mes: mes]
     }
 
+    def obligaciones_ajax () {
+
+        def tipoAporte = TipoAporte.get(params.tipoAporte)
+        def obligaciones = Obligacion.findAllByTipoAporte(tipoAporte)
+
+        return[obligaciones: obligaciones]
+    }
+
 
 
 }
