@@ -1472,12 +1472,27 @@ class ReportesController extends Shield {
 
         def ingresosAnt = (res3.first().sum == null ? 0 : res3.first().sum?.toDouble())
 
+
+        def cn10 = dbConnectionService.getConnection()
+        def ingresoTotalAnt = "select sum(alctvlor) from alct where prsn__id in (select prsn__id from prsn where cndm__id = ${session.condominio.id} and prsnactv = 1) and '${txfcinAn}' between alctfcds and coalesce(alctfchs, now());"
+        def res10 = cn10.rows(ingresoTotalAnt.toString())
+
+        def ingresoTA = res10.first().sum?.toDouble() ?: 0
+
         //ingresos mes actual
         def cn4 = dbConnectionService.getConnection()
         def ingresosActual = "select sum(pagovlor) from pago where pagofcpg between '${txfcin}' and '${txfcfn}';"
         def res4 = cn4.rows(ingresosActual.toString())
 
         def ingresosAct = (res4.first().sum == null ? 0 : res4.first().sum?.toDouble())
+
+
+        def cn11 = dbConnectionService.getConnection()
+        def ingresoTotalAct = "select sum(alctvlor) from alct where prsn__id in (select prsn__id from prsn where cndm__id = ${session.condominio.id} and prsnactv = 1) and '${txfcin}' between alctfcds and coalesce(alctfchs, now());"
+        def res11 = cn11.rows(ingresoTotalAct.toString())
+
+        def ingresoTAC = res11.first().sum?.toDouble() ?: 0
+
 
         //egresos mes anterior
         def cn5 = dbConnectionService.getConnection()
@@ -1509,7 +1524,8 @@ class ReportesController extends Shield {
 
         return [jsonGraph        : jsonGraph.toString(), pagados: pagados, noPagados: noPagados, pagadosAnterior: pagadosAnterior,
                 noPagadosAnterior: noPagadosAnterior, vencidos: venci, noVencidos: noVencidos, ingresosAnt: ingresosAnt,
-                ingresosAct      : ingresosAct, egresosAnt: egresosAnt, egresosAct: egresosAct, saldoInicial: si, ingresoSaldo: is, egresoSaldo: es, saldoFinal: sf]
+                ingresosAct      : ingresosAct, egresosAnt: egresosAnt, egresosAct: egresosAct, saldoInicial: si, ingresoSaldo: is,
+                egresoSaldo: es, saldoFinal: sf, ingresoTotalAnt: ingresoTA, ingresoTotalAct: ingresoTAC]
 
     }
 

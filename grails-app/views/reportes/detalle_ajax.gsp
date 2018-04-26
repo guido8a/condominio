@@ -53,7 +53,8 @@
             "No Pagados Mes Anterior");
     makeChart("vencidos", "Pagos Valores Vencidos", ${vencidos}, ${noVencidos}, "Pagos Vencidos", "Pagos no vencidos");
 
-    makeChartBars("ingresos", "Ingresos", ${ingresosAnt}, ${ingresosAct}, "Anterior", "Actual");
+    %{--makeChartBars("ingresos", "Ingresos", ${ingresosAnt}, ${ingresosAct}, "Anterior", "Actual");--}%
+    makeChartBars6("ingresos", "Ingresos", ${ingresosAnt},${ingresoTotalAnt} ,${ingresosAct},${ingresoTotalAct}, "Anterior", "Por recaudar","Actual" , "Por recaudar ");
     makeChartBars("egresos", "Egresos", ${egresosAnt}, ${egresosAct}, "Anterior", "Actual");
     makeChartBars2("porCobrar", "Valores Por Cobrar", ${saldoInicial}, ${ingresoSaldo}, ${egresoSaldo}, ${saldoFinal},
             "Saldo Inicial", "Por Cobrar", "Por Pagar", "Resultado Final");
@@ -191,6 +192,10 @@
         }
     }
 
+
+
+
+
     function makeChartBars2(tipo,titulo, v1, v2, v3, v4, tit1, tit2, tit3, tit4) {
 //        var data = [v1,v2,v3,v4];
         var data = [[tit1,v1],[tit2,v2],[tit3,v3],[tit4,v4]];
@@ -232,6 +237,62 @@
 //                        location : 's',
 //                        placement: 'outsideGrid'
 //                    }
+                }
+            );
+
+            $chart.bind('jqplotDataHighlight', function (ev, seriesIndex, pointIndex, data) {
+                var $this = $(this);
+                $this.qtip({
+                    show     : {
+                        ready : true
+                    },
+                    position : {
+                        my     : 'bottom center',  // Position my top left...
+                        at     : 'top center', // at the bottom right of...
+                        target : "mouse",
+                        adjust : {
+                            mouse : false
+                        }
+                    },
+                    content  : "" + data[1]
+                });
+            });
+        }
+    }
+
+    function makeChartBars6(tipo,titulo, v1, v2, v3, v4, tit1, tit2, tit3, tit4) {
+//        var data = [v1,v2,v3,v4];
+        var data = [[tit1,v1],[tit2,v2],[tit3,v3],[tit4,v4]];
+        var ticks = [tit1, tit2, tit3, tit4];
+        if (data.length > 0) {
+            var $chart = $("#chart2_" + tipo);
+            $(".chartContainer").removeClass("hidden");
+            $chart.removeClass("hidden");
+            $.jqplot('chart2_' + tipo, [data],
+                {
+                    title          : titulo,
+                    seriesColors:['#73C774', '#85802b', '#73C774', '#85802b'],
+                    seriesDefaults : {
+                        renderer   : $.jqplot.BarRenderer,
+                        showMarker:false,
+                        pointLabels: { show:true },
+                        rendererOptions: {
+                            varyBarColor: true
+                        }
+                    }
+                    ,
+                    series:[
+                        {label:tit1},
+                        {label:tit2},
+                        {label:tit3},
+                        {label:tit4}
+                    ],
+                    axes: {
+                        xaxis: {
+                            renderer: $.jqplot.CategoryAxisRenderer
+                        }
+                    }
+
                 }
             );
 
