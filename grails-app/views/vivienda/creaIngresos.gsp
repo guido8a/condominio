@@ -94,7 +94,6 @@
                    type:'POST',
                     url:'${createLink(controller: 'vivienda', action: 'generar_ajax')}',
                     data:{
-
                     },
                     success: function (msg){
                         var b = bootbox.dialog({
