@@ -7,6 +7,7 @@ class Obligacion {
     Date fecha
     String tipo
     double valor
+    TipoAporte tipoAporte
 
     static mapping = {
         table 'oblg'
@@ -16,8 +17,8 @@ class Obligacion {
         columns {
             id column: 'oblg__id'
             descripcion column: 'oblgdscr'
+            tipoAporte column: 'tpap__id'
             fecha column: 'oblgfcha'
-            tipo column: 'oblgtipo'
             valor column: 'oblgvlor'
         }
     }
