@@ -27,6 +27,7 @@ import com.lowagie.text.pdf.PdfPCell
 import com.lowagie.text.pdf.PdfPTable
 import com.lowagie.text.pdf.PdfReader
 import com.lowagie.text.pdf.PdfWriter
+import seguridad.Shield
 
 import java.awt.Color
 
@@ -43,7 +44,7 @@ import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 
 
-class ReportesController {
+class ReportesController extends Shield {
 
     def dbConnectionService
 
