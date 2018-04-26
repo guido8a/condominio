@@ -249,7 +249,7 @@ como máximo 30
         };
 
         var ingresos = {
-            label: "Pago alícuota",
+            label: "Registro de Pagos",
             icon: "fa fa-money",
             separator_before : true,
             action : function ($element) {

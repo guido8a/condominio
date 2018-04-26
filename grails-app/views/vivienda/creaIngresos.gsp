@@ -22,33 +22,39 @@
                 </a>
                 </div>
 
-                <div class="col-sm-1" align="center">Concepto de aportes</div>
-
-                <div class="col-sm-3" align="center">
+                <div class="col-sm-3" align="center" style="margin-top: -10px">Concepto de aportes
                     <g:select class="form-control" name="obligaciones"
                               from="${condominio.Obligacion.list([sort: 'descripcion'])}" optionKey="id"
                               optionValue="${{ it.descripcion }}"
                               disabled="false" />
                 </div>
 
-                <div class="btn-group col-md-3">
-                    <div class="col-md-3">Fecha</div>
-                    <div class="col-md-9">
+                <div class="btn-group col-md-1" style="margin-top: -10px; margin-left: -20px; width: 100px;">
+                    Valor
+                    <g:textField name="valor" value="${0}" class="number form-control"/>
+                </div>
+
+                <div class="btn-group col-md-2" style="margin-top: -10px">
+                    Fecha
                         <elm:datepicker name="fecha" id="fechaOb" class="datepicker form-control required"
                                         value="${params.fecha?: new Date()}"/>
-                    </div>
                 </div>
 
 
                 <div class="btn-group col-md-1">
-                    <a href="#" class="btn btn-azul btn-consultar btn-sm"><i class="fa fa-search"></i> Consultar</a>
+                    <a href="#" class="btn btn-azul btn-sm" id="btn-consultar"><i class="fa fa-search"></i> Consultar</a>
+                </div>
+                <div class="btn-group col-md-1">
+                    <a href="#" class="btn btn-azul btn-sm" id=" btn-nuevo"><i class="fa fa-search"></i> Nuevo</a>
                 </div>
                 <div class="btn-group col-md-1">
                     <a href="#" class="btn btn-success btn-actualizar btn-sm"><i class="fa fa-save"></i> Guardar</a>
                 </div>
+%{--
                 <div class="btn-group col-md-1">
                     <a href="#" class="btn btn-warning btn-generar btn-sm"><i class="fa fa-users"></i> Mensualidades</a>
                 </div>
+--}%
 
             </div>
 
@@ -136,7 +142,7 @@
 //            }
 //        });
 
-                $(".btn-consultar").click(function () {
+                $("#btn-consultar").click(function () {
                     var lgar = $("#listaPrecio").val();
                     if (lgar != -1) {
                         $("#error").hide();

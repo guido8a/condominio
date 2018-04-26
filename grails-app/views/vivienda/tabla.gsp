@@ -30,8 +30,8 @@
                         <th>Apellidos</th>
                         <th>Propietario</th>
                         <th>Valor</th>
-                        <th>Aplicar</th>
-                        <th>Observaciones</th>
+                        <th>Aplicar <input type="checkbox" id="todosCk"/></th>
+                        <th>Observaciones: <input type="text" id="todosTx" style="width: 200px"/></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,13 +44,13 @@
                             <td align="center" width="6%">
                                 ${prsn?.prsndpto}
                             </td>
-                            <td align="left" width="15%">
+                            <td align="left" width="12%">
                                 ${prsn?.prsnnmbr}
                             </td>
-                            <td align="left" width="15%">
+                            <td align="left" width="12%">
                                 ${prsn?.prsnapll}
                             </td>
-                            <td align="left" width="12%">
+                            <td align="left" width="10%">
                                 ${prsn?.tpocdscr}
                             </td>
                             <td class="editable alineacion ${prsn?.ingrvlor? '':'gris'}" id="${prsn?.prsn__id}"
