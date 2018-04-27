@@ -1,4 +1,7 @@
+
+
 <html>
+
 
 <head>
 
@@ -30,7 +33,8 @@
             <th>Apellidos</th>
             <th>Propietario</th>
             <th>Valor</th>
-            <th>Aplicar <input style="margin-left: 10px" type="checkbox" id="todosCk"/></th>
+            %{--<th>Aplicar <input style="margin-left: 10px" type="checkbox" id="todosCk"/></th>--}%
+            <th>Aplicar <g:checkBox name="ck_name" style="margin-left: 10px" class="todosCk" /></th>
             <th>Observaciones</th>
         </tr>
         </thead>
@@ -60,7 +64,8 @@
                     <g:formatNumber number="${prsn?.ingrvlor?:oblg.valor}" minFractionDigits="2" maxFractionDigits="2" format="##,##0" locale="ec"/>
                 </td>
                 <td style="text-align: center;" class="chk">
-                    <input type="checkbox" class="seleccion"/>
+                    %{--<input type="checkbox" class="seleccion"/>--}%
+                    <g:checkBox name="ckl" class="seleccion"/>
                 </td>
                 <td class="observaciones">
                     <g:textField name="obsr" class="ingrobsr form-control-sm" value="${prsn?.ingrobsr}" style="width: 100%"/>
@@ -78,11 +83,14 @@
     <script type="text/javascript">
 
 
-
-//        $("#todosCk option:selected").onclick(function () {
-//           console.log("-----")
-//        });
-
+        $(".todosCk").click(function () {
+            var cc = $(".todosCk:checked").val();
+            if(cc == 'on'){
+                $(".seleccion").prop('checked',true);
+            }else{
+                $(".seleccion").prop('checked',false)
+            }
+        });
 
 
         function enviar(pag) {
