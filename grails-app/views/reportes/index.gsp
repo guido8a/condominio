@@ -150,6 +150,10 @@
                 <i class="fa fa-money fa-5x"></i><br/>
                 Solicitudes de Pago
             </a>
+            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#ingresosEgresos">
+                <i class="fa fa-line-chart fa-5x"></i><br/>
+                Ingresos y Egresos
+            </a>
 
             %{--
                         <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#modalDeudas"
@@ -423,11 +427,53 @@
     </div>
 </div>
 
+<div class="modal fade" id="ingresosEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="modalIngresoEgreso">Ingresos y Egresos</h4>
+            </div>
+
+            <div class="modal-body" id="bodysingresosEgresos">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-1">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Año </label>
+                        </div>
+                        <div class="col-md-7">
+                            <g:select from="${anios}" name="anio_name" id="anio" class="form-control"/>
+                        </div>
+                        <div class="col-md-1">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnIngresosEgresos btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 
 <script type="text/javascript">
+
+
+    $(".btnIngresosEgresos").click(function () {
+        var anio = $("#anio").val();
+        location.href="${createLink(controller: 'reportes', action: 'ingresosImprimir')}?anio=" + anio
+    });
 
     $("#btnAceptarGestor").click(function () {
        location.href="${createLink(controller: 'reportes', action: 'detalle')}"

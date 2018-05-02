@@ -13,6 +13,7 @@ class Proveedor {
     Date fecha
     String activo
     String observaciones
+    Condominio  condominio
 
     static mapping = {
         table 'prve'
@@ -31,6 +32,7 @@ class Proveedor {
             fecha column: 'prvefcha'
             activo column: 'prveactv'
             observaciones column: 'prveobsr'
+            condominio column: 'cndm__id'
         }
     }
 

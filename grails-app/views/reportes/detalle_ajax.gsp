@@ -13,6 +13,8 @@
 <script src="${resource(dir: 'js/plugins/jquery.jqplot.1.0.8r1250/plugins', file: 'jqplot.categoryAxisRenderer.min.js')}"></script>
 <script src="${resource(dir: 'js/plugins/jquery.jqplot.1.0.8r1250/plugins', file: 'jqplot.highlighter.min.js')}"></script>
 <script src="${resource(dir: 'js/plugins/jquery.jqplot.1.0.8r1250/plugins', file: 'jqplot.pointLabels.min.js')}"></script>
+<script src="${resource(dir: 'js/plugins/jquery.jqplot.1.0.8r1250/plugins', file: 'jqplot.canvasAxisLabelRenderer.min.js')}"></script>
+<script src="${resource(dir: 'js/plugins/jquery.jqplot.1.0.8r1250/plugins', file: 'jqplot.canvasTextRenderer.min.js')}"></script>
 <link href="${resource(dir: 'js/plugins/jquery.jqplot.1.0.8r1250', file: 'jquery.jqplot.min.css')}" rel="stylesheet">
 
 <style type="text/css">
@@ -29,6 +31,14 @@
     width: 1400px;
 }
 
+.divChart2 {
+    height       : 300px;
+    width        : 600px;
+    float        : left;
+    margin-right : 10px;
+}
+
+
 
 </style>
 
@@ -44,6 +54,11 @@
     <div id="chart2_porCobrar" class="divChart hidden"></div>
 </div>
 
+%{--<div class="chartContainer hidden" style="margin-left: 10px; margin-top: 40px">--}%
+    %{--<div id="chart2_lineas" class="divChart2 hidden"></div>--}%
+%{--</div>--}%
+
+
 <script type="text/javascript">
 
     var jsonGraph = ${raw(jsonGraph)};
@@ -58,6 +73,8 @@
     makeChartBars("egresos", "Egresos", ${egresosAnt}, ${egresosAct}, "Anterior", "Actual");
     makeChartBars2("porCobrar", "Valores Por Cobrar", ${saldoInicial}, ${ingresoSaldo}, ${egresoSaldo}, ${saldoFinal},
             "Saldo Inicial", "Por Cobrar", "Por Pagar", "Resultado Final");
+
+//    lineas("lineas");
 
     function makeChart(tipo, titulo, v1, v2, tit1, tit2) {
         var data = [[tit1 ,v1],[tit2 ,v2]];
@@ -315,6 +332,62 @@
             });
         }
     }
+
+    %{--function lineas (tipo) {--}%
+        %{--var $chart = $("#chart2_" + tipo);--}%
+        %{--var ticks = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre", "Octubre", "Noviembre", "Diciembre"];--}%
+
+        %{--var data = [${ingresoEgreso[0].ingrvlor},${ingresoEgreso[1].ingrvlor},${ingresoEgreso[2].ingrvlor},${ingresoEgreso[3].ingrvlor},${ingresoEgreso[4].ingrvlor},${ingresoEgreso[5].ingrvlor},${ingresoEgreso[6].ingrvlor},${ingresoEgreso[7].ingrvlor},${ingresoEgreso[8].ingrvlor}, ${ingresoEgreso[9].ingrvlor}, ${ingresoEgreso[10].ingrvlor}, ${ingresoEgreso[11].ingrvlor}];--}%
+        %{--var data = [[${ingresoEgreso[0].messnmro},${ingresoEgreso[0].ingrvlor}], [${ingresoEgreso[1].messnmro},${ingresoEgreso[1].ingrvlor}],[ ${ingresoEgreso[2].messnmro},${ingresoEgreso[2].ingrvlor}], [${ingresoEgreso[3].messnmro},${ingresoEgreso[3].ingrvlor}], [${ingresoEgreso[4].messnmro},${ingresoEgreso[4].ingrvlor}], [${ingresoEgreso[5].messnmro},${ingresoEgreso[5].ingrvlor}], [${ingresoEgreso[6].messnmro}, ${ingresoEgreso[6].ingrvlor}], [${ingresoEgreso[7].messnmro}, ${ingresoEgreso[7].ingrvlor}], [${ingresoEgreso[8].messnmro}, ${ingresoEgreso[8].ingrvlor}], [${ingresoEgreso[9].messnmro}, ${ingresoEgreso[9].ingrvlor}], [${ingresoEgreso[10].messnmro} ,${ingresoEgreso[10].ingrvlor}], [${ingresoEgreso[11].messnmro}, ${ingresoEgreso[11].ingrvlor}]];--}%
+        %{--var data2 = [[${ingresoEgreso[0].egrsvlor}, ticks[0]],[${ingresoEgreso[1].egrsvlor}, ticks[1]]];--}%
+        %{--var data2 = [${ingresoEgreso[0].egrsvlor},${ingresoEgreso[1].egrsvlor},${ingresoEgreso[2].egrsvlor},${ingresoEgreso[3].egrsvlor},${ingresoEgreso[4].egrsvlor},${ingresoEgreso[5].egrsvlor},${ingresoEgreso[6].egrsvlor},${ingresoEgreso[7].egrsvlor},${ingresoEgreso[8].egrsvlor}, ${ingresoEgreso[9].egrsvlor}, ${ingresoEgreso[10].egrsvlor}, ${ingresoEgreso[11].egrsvlor}];--}%
+
+        %{--$(".chartContainer").removeClass("hidden");--}%
+        %{--$chart.removeClass("hidden");--}%
+        %{--$.jqplot ('chart2_' + tipo, [data, data2] , {--}%
+            %{--title: 'Ingresos - Egresos',--}%
+            %{--axesDefaults: {--}%
+                %{--labelRenderer: $.jqplot.CanvasAxisLabelRenderer--}%
+            %{--},--}%
+            %{--seriesDefaults: {--}%
+                %{--rendererOptions: {--}%
+                    %{--smooth: true--}%
+                %{--}--}%
+            %{--},--}%
+            %{--axes: {--}%
+                %{--xaxis: {--}%
+                    %{--renderer: $.jqplot.CategoryAxisRenderer,--}%
+                    %{--label: "Meses",--}%
+                    %{--ticks: ticks,--}%
+                    %{--pad: 0--}%
+                %{--},--}%
+                %{--yaxis: {--}%
+                    %{--label: "Valores"--}%
+                %{--}--}%
+            %{--}--}%
+        %{--});--}%
+
+%{--//        $chart.bind('jqplotDataHighlight', function (ev, seriesIndex, pointIndex, data) {--}%
+%{--//            var $this = $(this);--}%
+%{--//            $this.qtip({--}%
+%{--//                show     : {--}%
+%{--//                    ready : true--}%
+%{--//                },--}%
+%{--//                position : {--}%
+%{--//                    my     : 'bottom center',  // Position my top left...--}%
+%{--//                    at     : 'top center', // at the bottom right of...--}%
+%{--//                    target : "mouse",--}%
+%{--//                    adjust : {--}%
+%{--//                        mouse : false--}%
+%{--//                    }--}%
+%{--//                },--}%
+%{--//                content  : " " + data[1]--}%
+%{--//            });--}%
+%{--//        })--}%
+
+
+
+    %{--}--}%
 
 
 

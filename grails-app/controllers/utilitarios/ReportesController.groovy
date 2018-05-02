@@ -12,6 +12,8 @@ import groovy.json.JsonBuilder
 import org.apache.poi.hwpf.usermodel.OfficeDrawing
 import org.jfree.chart.ChartUtilities
 import org.jfree.chart.plot.PlotOrientation
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer
+import org.jfree.chart.renderer.xy.XYSplineRenderer
 import org.jfree.data.category.DefaultCategoryDataset
 import seguridad.Persona
 
@@ -44,11 +46,19 @@ import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 
 
-class ReportesController extends Shield {
+class ReportesController extends Shield{
 
     def dbConnectionService
 
-    def index() {}
+    def index() {
+
+        def cn = dbConnectionService.getConnection()
+        def sql = 'select distinct cast (extract(year from pagofcpg) as INT) from pago order by 1;'
+        def res = cn.rows(sql.toString())
+
+        return [anios: res.date_part]
+
+    }
 
 
     def revisarFecha_ajax() {
@@ -1493,7 +1503,6 @@ class ReportesController extends Shield {
 
         def ingresoTAC = res11.first().sum?.toDouble() ?: 0
 
-
         //egresos mes anterior
         def cn5 = dbConnectionService.getConnection()
         def egresosAnterior = "select sum(pgegvlor) from pgeg where pgegfcpg between '${txfcinAn}' and '${txfcfnAn}';"
@@ -1519,14 +1528,37 @@ class ReportesController extends Shield {
         def es = res7.first().egrssldo?.toDouble() ?: 0
         def sf = res7.first().sldofnal?.toDouble() + res7.first().ingrsldo?.toDouble() - res7.first().egrssldo?.toDouble()
 
+        //grafico ingresos y egresos
+
+        def cn8 = dbConnectionService.getConnection()
+        def valores2 = "select * from ingr_egrs(${params.anio}, ${condominio?.id});"
+        def res8 = cn8.rows(valores2.toString())
+
 
         def jsonGraph = new JsonBuilder(resGraph)
 
         return [jsonGraph        : jsonGraph.toString(), pagados: pagados, noPagados: noPagados, pagadosAnterior: pagadosAnterior,
                 noPagadosAnterior: noPagadosAnterior, vencidos: venci, noVencidos: noVencidos, ingresosAnt: ingresosAnt,
                 ingresosAct      : ingresosAct, egresosAnt: egresosAnt, egresosAct: egresosAct, saldoInicial: si, ingresoSaldo: is,
-                egresoSaldo: es, saldoFinal: sf, ingresoTotalAnt: ingresoTA, ingresoTotalAct: ingresoTAC]
+                egresoSaldo: es, saldoFinal: sf, ingresoTotalAnt: ingresoTA, ingresoTotalAct: ingresoTAC, ingresoEgreso: res8]
 
+    }
+
+
+    def ingresosImprimir () {
+        println("params " + params)
+
+        def resGraph = []
+        def condominio = Condominio.get(session.condominio.id)
+        //grafico ingresos y egresos
+
+        def cn8 = dbConnectionService.getConnection()
+        def valores2 = "select * from ingr_egrs(${params.anio}, ${condominio?.id});"
+        def res8 = cn8.rows(valores2.toString())
+
+        def jsonGraph = new JsonBuilder(resGraph)
+
+        return [jsonGraph : jsonGraph.toString(), ingresoEgreso: res8, anio: params.anio]
     }
 
 
@@ -1977,6 +2009,106 @@ class ReportesController extends Shield {
         byte[] b = baos.toByteArray();
         response.setContentType("application/pdf")
         response.setHeader("Content-disposition", "attachment; filename=" + name)
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+
+    }
+
+    def imprimirGraficoIng () {
+
+        def baos = new ByteArrayOutputStream()
+
+        Document document
+        document = new Document(PageSize.A4.rotate());
+        document.setMargins(74, 60, 30, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+        document.open();
+
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Solicitud");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitle));
+        addEmptyLine(preface, 2);
+        document.add(preface);
+
+        def width2 = 800
+        def height = 350
+        PdfContentByte contentByte = pdfw.getDirectContent();
+        PdfTemplate template2 = contentByte.createTemplate(width2, height);
+
+        Graphics2D graphics2d2 = template2.createGraphics(width2, height, new DefaultFontMapper());
+
+        Rectangle2D rectangle2dSinRecepcion = new Rectangle2D.Double(0, 0, width2, height);
+
+        def condominio = Condominio.get(session.condominio.id)
+        def cn8 = dbConnectionService.getConnection()
+        def valores2 = "select * from ingr_egrs(${params.anio}, ${condominio?.id});"
+        def res8 = cn8.rows(valores2.toString())
+
+        DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
+
+        line_chart_dataset.addValue( res8[0].egrsvlor.toDouble() , "Egresos" , "Enero" );
+        line_chart_dataset.addValue( res8[1].egrsvlor.toDouble()  , "Egresos" , "Febrero" );
+        line_chart_dataset.addValue( res8[2].egrsvlor.toDouble()  , "Egresos" , "Marzo" );
+        line_chart_dataset.addValue( res8[3].egrsvlor.toDouble()  , "Egresos" , "Abril" );
+        line_chart_dataset.addValue( res8[4].egrsvlor.toDouble() , "Egresos" , "Mayo" );
+        line_chart_dataset.addValue( res8[5].egrsvlor.toDouble() , "Egresos" , "Junio" );
+        line_chart_dataset.addValue( res8[6].egrsvlor.toDouble() , "Egresos" , "Julio" );
+        line_chart_dataset.addValue( res8[7].egrsvlor.toDouble() , "Egresos" , "Agosto" );
+        line_chart_dataset.addValue( res8[8].egrsvlor.toDouble() , "Egresos" , "Septiembre" );
+        line_chart_dataset.addValue( res8[9].egrsvlor.toDouble() , "Egresos" , "Octubre" );
+        line_chart_dataset.addValue( res8[10].egrsvlor.toDouble() , "Egresos" , "Noviembre" );
+        line_chart_dataset.addValue( res8[11].egrsvlor.toDouble() , "Egresos" , "Diciembre" );
+        line_chart_dataset.addValue( res8[0].ingrvlor.toDouble() , "Ingresos" , "Enero" );
+        line_chart_dataset.addValue( res8[1].ingrvlor.toDouble()  , "Ingresos" , "Febrero" );
+        line_chart_dataset.addValue( res8[2].ingrvlor.toDouble()  , "Ingresos" , "Marzo" );
+        line_chart_dataset.addValue( res8[3].ingrvlor.toDouble()  , "Ingresos" , "Abril" );
+        line_chart_dataset.addValue( res8[4].ingrvlor.toDouble() , "Ingresos" , "Mayo" );
+        line_chart_dataset.addValue( res8[5].ingrvlor.toDouble() , "Ingresos" , "Junio" );
+        line_chart_dataset.addValue( res8[6].ingrvlor.toDouble() , "Ingresos" , "Julio" );
+        line_chart_dataset.addValue( res8[7].ingrvlor.toDouble() , "Ingresos" , "Agosto" );
+        line_chart_dataset.addValue( res8[8].ingrvlor.toDouble() , "Ingresos" , "Septiembre" );
+        line_chart_dataset.addValue( res8[9].ingrvlor.toDouble() , "Ingresos" , "Octubre" );
+        line_chart_dataset.addValue( res8[10].ingrvlor.toDouble() , "Ingresos" , "Noviembre" );
+        line_chart_dataset.addValue( res8[11].ingrvlor.toDouble() , "Ingresos" , "Diciembre" );
+
+        JFreeChart chartSinRecepcion = ChartFactory.createLineChart("Ingresos vs Egresos","Meses", "Valores",line_chart_dataset,PlotOrientation.VERTICAL,true,true,false);
+        chartSinRecepcion.setTitle(
+                new org.jfree.chart.title.TextTitle("Ingresos vs Egresos",
+                        new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
+                )
+        );
+
+//        PiePlot ColorConfigurator = (PiePlot) chartSinRecepcion.getPlot();
+
+//        ColorConfigurator.setBackgroundAlpha(0f)
+
+//        ColorConfigurator.setLabelBackgroundPaint(new Color(220, 220, 220))
+
+        chartSinRecepcion.draw(graphics2d2, rectangle2dSinRecepcion);
+
+        graphics2d2.dispose();
+
+        def posyGraf3 = 100
+
+        contentByte.addTemplate(template2, 10, posyGraf3);
+
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=" + "graficoIngresosEgresos")
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
 
