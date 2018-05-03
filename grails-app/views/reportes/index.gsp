@@ -184,7 +184,7 @@
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 %{--//dialog de contabilidad--}%
-<div class="modal fade" id="detalleIngresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-5" id="detalleIngresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -194,28 +194,28 @@
 
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-1">
+                    <div class="col-md-1 col-xs-1">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-xs-2">
                         <label>Desde</label>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-xs-7">
                         <elm:datepicker name="fechaDesdeIng_name" id="fechaDesdeIng" class="datepicker form-control" value="${new Date() - 30}"/>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-1 col-xs-1">
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-1">
+                    <div class="col-md-1 col-xs-1">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-xs-2">
                         <label>Hasta</label>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-xs-7">
                         <elm:datepicker name="fechaHastaIng_name" id="fechaHastaIng" class="datepicker form-control" value="${new Date()}"/>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-1 col-xs-1">
                     </div>
                 </div>
             </div>
@@ -232,7 +232,7 @@
 
 
 
-<div class="modal fade" id="detalleEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-5" id="detalleEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -242,31 +242,30 @@
 
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-1">
+                    <div class="col-md-1 col-xs-1">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-xs-2">
                         <label>Desde</label>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-xs-7">
                         <elm:datepicker name="fechaDesdeEgr_name" id="fechaDesdeEgr" class="datepicker form-control" value="${new Date() - 30}"/>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-1 col-xs-1">
                     </div>
 
                 </div>
 
                 <div class="row">
-                    <div class="col-md-1">
+                    <div class="col-md-1 col-xs-1">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-xs-2">
                         <label>Hasta</label>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-xs-7">
                         <elm:datepicker name="fechaHastaEgr_name" id="fechaHastaEgr" class="datepicker form-control" value="${new Date()}"/>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-1 col-xs-1">
                     </div>
-
                 </div>
             </div>
 
@@ -352,7 +351,7 @@
 </div>
 
 %{--dialog Deudas--}%
-<div class="modal fade" id="modalDeudas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-5" id="modalDeudas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -362,15 +361,15 @@
 
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-1">
+                    <div class="col-md-1 col-xs-1">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-xs-4">
                         <label>Fecha de corte de los valores adeudados:</label>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-xs-6">
                         <elm:datepicker name="fechaGenera_name" id="fechaImprime" class="datepicker form-control" value="${new Date()}"/>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-1 col-xs-1">
                     </div>
 
                 </div>
@@ -387,7 +386,7 @@
 </div>
 
 %{--dialog situación--}%
-<div class="modal fade" id="solicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-5" id="solicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -398,19 +397,19 @@
             <div class="modal-body" id="bodysolicitud">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-1">
+                        <div class="col-md-1 col-xs-1">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 col-xs-3">
                             <label>Generar para deudas con </label>
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-7 col-xs-6">
                             <g:select from="${['1':'Valores superiores a 1 alícuota',
                                                '2':'Valores superiores a 2 alícuotas',
                                                '3':'Valores superiores a 3 alícuotas']}"
                                       optionValue="value" optionKey="key" name="mesesHasta_name"
                                       id="valorHasta" class="form-control"/>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-1 col-xs-1">
                         </div>
 
                     </div>
@@ -427,7 +426,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="ingresosEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-5" id="ingresosEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -438,15 +437,15 @@
             <div class="modal-body" id="bodysingresosEgresos">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-1">
+                        <div class="col-md-1 col-xs-1">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 col-xs-3">
                             <label>Año </label>
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-7 col-xs-7">
                             <g:select from="${anios}" name="anio_name" id="anio" class="form-control"/>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-1 col-xs-1">
                         </div>
 
                     </div>
