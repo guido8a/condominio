@@ -15,6 +15,9 @@ import org.jfree.chart.plot.PlotOrientation
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer
 import org.jfree.chart.renderer.xy.XYSplineRenderer
 import org.jfree.data.category.DefaultCategoryDataset
+import org.jfree.data.xy.XYDataset
+import org.jfree.data.xy.XYSeries
+import org.jfree.data.xy.XYSeriesCollection
 import seguridad.Persona
 
 import com.lowagie.text.Document
@@ -2017,6 +2020,7 @@ class ReportesController extends Shield{
     def imprimirGraficoIng () {
 
         def baos = new ByteArrayOutputStream()
+        def condominio = Condominio.get(session.condominio.id)
 
         Document document
         document = new Document(PageSize.A4.rotate());
@@ -2027,7 +2031,7 @@ class ReportesController extends Shield{
         document.open();
 
         PdfContentByte cb = pdfw.getDirectContent();
-        document.addTitle("Solicitud");
+        document.addTitle("Ingresos vs Egresos");
         document.addSubject("Generado por el sistema Condominio");
         document.addKeywords("reporte, condominio, pagos");
         document.addAuthor("Condominio");
@@ -2038,7 +2042,7 @@ class ReportesController extends Shield{
         Paragraph preface = new Paragraph();
         addEmptyLine(preface, 1);
         preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitle));
+        preface.add(new Paragraph(condominio?.nombre ?: '', fontTitle));
         addEmptyLine(preface, 2);
         document.add(preface);
 
@@ -2051,7 +2055,7 @@ class ReportesController extends Shield{
 
         Rectangle2D rectangle2dSinRecepcion = new Rectangle2D.Double(0, 0, width2, height);
 
-        def condominio = Condominio.get(session.condominio.id)
+
         def cn8 = dbConnectionService.getConnection()
         def valores2 = "select * from ingr_egrs(${params.anio}, ${condominio?.id});"
         def res8 = cn8.rows(valores2.toString())
@@ -2083,12 +2087,62 @@ class ReportesController extends Shield{
         line_chart_dataset.addValue( res8[10].ingrvlor.toDouble() , "Ingresos" , "Noviembre" );
         line_chart_dataset.addValue( res8[11].ingrvlor.toDouble() , "Ingresos" , "Diciembre" );
 
-        JFreeChart chartSinRecepcion = ChartFactory.createLineChart("Ingresos vs Egresos","Meses", "Valores",line_chart_dataset,PlotOrientation.VERTICAL,true,true,false);
-        chartSinRecepcion.setTitle(
-                new org.jfree.chart.title.TextTitle("Ingresos vs Egresos",
-                        new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
-                )
+//        JFreeChart chartSinRecepcion = ChartFactory.createLineChart("Ingresos vs Egresos","Meses", "Valores",line_chart_dataset,PlotOrientation.VERTICAL,true,true,false);
+//        chartSinRecepcion.setTitle(
+//                new org.jfree.chart.title.TextTitle("Ingresos vs Egresos",
+//                        new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
+//                )
+//        );
+
+
+        XYSeries series = new XYSeries("Egresos");
+        series.add(1, res8[0].egrsvlor.toDouble());
+        series.add(2, res8[1].egrsvlor.toDouble());
+        series.add(3, res8[2].egrsvlor.toDouble());
+        series.add(4, res8[3].egrsvlor.toDouble());
+        series.add(5, res8[4].egrsvlor.toDouble());
+        series.add(6, res8[5].egrsvlor.toDouble());
+        series.add(7, res8[6].egrsvlor.toDouble());
+        series.add(8, res8[7].egrsvlor.toDouble());
+        series.add(9, res8[8].egrsvlor.toDouble());
+        series.add(10, res8[9].egrsvlor.toDouble());
+        series.add(11, res8[10].egrsvlor.toDouble());
+        series.add(12, res8[11].egrsvlor.toDouble());
+
+        XYSeries series2 = new XYSeries("Ingresos");
+        series2.add(1, res8[0].ingrvlor.toDouble());
+        series2.add(2, res8[1].ingrvlor.toDouble());
+        series2.add(3, res8[2].ingrvlor.toDouble());
+        series2.add(4, res8[3].ingrvlor.toDouble());
+        series2.add(5, res8[4].ingrvlor.toDouble());
+        series2.add(6, res8[5].ingrvlor.toDouble());
+        series2.add(7, res8[6].ingrvlor.toDouble());
+        series2.add(8, res8[7].ingrvlor.toDouble());
+        series2.add(9, res8[8].ingrvlor.toDouble());
+        series2.add(10, res8[9].ingrvlor.toDouble());
+        series2.add(11, res8[10].ingrvlor.toDouble());
+        series2.add(12, res8[11].ingrvlor.toDouble());
+
+
+
+
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series);
+        dataset.addSeries(series2);
+
+        JFreeChart chartSinRecepcion = ChartFactory.createXYLineChart(
+                "Ingresos vs Egresos",
+                "Meses",
+                "Valores",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
         );
+
+
+        chartSinRecepcion.getXYPlot().setRenderer(new XYSplineRenderer());
 
 //        PiePlot ColorConfigurator = (PiePlot) chartSinRecepcion.getPlot();
 
