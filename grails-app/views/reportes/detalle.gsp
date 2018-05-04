@@ -9,7 +9,7 @@
 <div style="text-align: center; margin-top: -30px"><h3>Informe mensual de Aportes y Gastos</h3></div>
 <div class="row">
     <div class="btn-group col-xs-2">
-        <a href="${createLink(controller: "reportes", action: "index")}" class="btn btn-default">
+        <a href="${createLink(controller: "reportes", action: "index")}" class="btn btn-primary">
             <i class="fa fa-arrow-left"></i> Regresar
         </a>
     </div>

@@ -566,7 +566,7 @@ class ReportesController extends Shield{
         preface.setAlignment(Element.ALIGN_CENTER);
 //        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitulo));
         preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
-        preface.add(new Paragraph("PAGOS PENDIENTES", fontTitulo));
+        preface.add(new Paragraph("Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", fontTitulo));
         addEmptyLine(preface, 1);
         document.add(preface);
 
@@ -2060,39 +2060,32 @@ class ReportesController extends Shield{
         def valores2 = "select * from ingr_egrs(${params.anio}, ${condominio?.id});"
         def res8 = cn8.rows(valores2.toString())
 
-        DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
-
-        line_chart_dataset.addValue( res8[0].egrsvlor.toDouble() , "Egresos" , "Enero" );
-        line_chart_dataset.addValue( res8[1].egrsvlor.toDouble()  , "Egresos" , "Febrero" );
-        line_chart_dataset.addValue( res8[2].egrsvlor.toDouble()  , "Egresos" , "Marzo" );
-        line_chart_dataset.addValue( res8[3].egrsvlor.toDouble()  , "Egresos" , "Abril" );
-        line_chart_dataset.addValue( res8[4].egrsvlor.toDouble() , "Egresos" , "Mayo" );
-        line_chart_dataset.addValue( res8[5].egrsvlor.toDouble() , "Egresos" , "Junio" );
-        line_chart_dataset.addValue( res8[6].egrsvlor.toDouble() , "Egresos" , "Julio" );
-        line_chart_dataset.addValue( res8[7].egrsvlor.toDouble() , "Egresos" , "Agosto" );
-        line_chart_dataset.addValue( res8[8].egrsvlor.toDouble() , "Egresos" , "Septiembre" );
-        line_chart_dataset.addValue( res8[9].egrsvlor.toDouble() , "Egresos" , "Octubre" );
-        line_chart_dataset.addValue( res8[10].egrsvlor.toDouble() , "Egresos" , "Noviembre" );
-        line_chart_dataset.addValue( res8[11].egrsvlor.toDouble() , "Egresos" , "Diciembre" );
-        line_chart_dataset.addValue( res8[0].ingrvlor.toDouble() , "Ingresos" , "Enero" );
-        line_chart_dataset.addValue( res8[1].ingrvlor.toDouble()  , "Ingresos" , "Febrero" );
-        line_chart_dataset.addValue( res8[2].ingrvlor.toDouble()  , "Ingresos" , "Marzo" );
-        line_chart_dataset.addValue( res8[3].ingrvlor.toDouble()  , "Ingresos" , "Abril" );
-        line_chart_dataset.addValue( res8[4].ingrvlor.toDouble() , "Ingresos" , "Mayo" );
-        line_chart_dataset.addValue( res8[5].ingrvlor.toDouble() , "Ingresos" , "Junio" );
-        line_chart_dataset.addValue( res8[6].ingrvlor.toDouble() , "Ingresos" , "Julio" );
-        line_chart_dataset.addValue( res8[7].ingrvlor.toDouble() , "Ingresos" , "Agosto" );
-        line_chart_dataset.addValue( res8[8].ingrvlor.toDouble() , "Ingresos" , "Septiembre" );
-        line_chart_dataset.addValue( res8[9].ingrvlor.toDouble() , "Ingresos" , "Octubre" );
-        line_chart_dataset.addValue( res8[10].ingrvlor.toDouble() , "Ingresos" , "Noviembre" );
-        line_chart_dataset.addValue( res8[11].ingrvlor.toDouble() , "Ingresos" , "Diciembre" );
-
-//        JFreeChart chartSinRecepcion = ChartFactory.createLineChart("Ingresos vs Egresos","Meses", "Valores",line_chart_dataset,PlotOrientation.VERTICAL,true,true,false);
-//        chartSinRecepcion.setTitle(
-//                new org.jfree.chart.title.TextTitle("Ingresos vs Egresos",
-//                        new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
-//                )
-//        );
+//        DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
+//
+//        line_chart_dataset.addValue( res8[0].egrsvlor.toDouble() , "Egresos" , "Enero" );
+//        line_chart_dataset.addValue( res8[1].egrsvlor.toDouble()  , "Egresos" , "Febrero" );
+//        line_chart_dataset.addValue( res8[2].egrsvlor.toDouble()  , "Egresos" , "Marzo" );
+//        line_chart_dataset.addValue( res8[3].egrsvlor.toDouble()  , "Egresos" , "Abril" );
+//        line_chart_dataset.addValue( res8[4].egrsvlor.toDouble() , "Egresos" , "Mayo" );
+//        line_chart_dataset.addValue( res8[5].egrsvlor.toDouble() , "Egresos" , "Junio" );
+//        line_chart_dataset.addValue( res8[6].egrsvlor.toDouble() , "Egresos" , "Julio" );
+//        line_chart_dataset.addValue( res8[7].egrsvlor.toDouble() , "Egresos" , "Agosto" );
+//        line_chart_dataset.addValue( res8[8].egrsvlor.toDouble() , "Egresos" , "Septiembre" );
+//        line_chart_dataset.addValue( res8[9].egrsvlor.toDouble() , "Egresos" , "Octubre" );
+//        line_chart_dataset.addValue( res8[10].egrsvlor.toDouble() , "Egresos" , "Noviembre" );
+//        line_chart_dataset.addValue( res8[11].egrsvlor.toDouble() , "Egresos" , "Diciembre" );
+//        line_chart_dataset.addValue( res8[0].ingrvlor.toDouble() , "Ingresos" , "Enero" );
+//        line_chart_dataset.addValue( res8[1].ingrvlor.toDouble()  , "Ingresos" , "Febrero" );
+//        line_chart_dataset.addValue( res8[2].ingrvlor.toDouble()  , "Ingresos" , "Marzo" );
+//        line_chart_dataset.addValue( res8[3].ingrvlor.toDouble()  , "Ingresos" , "Abril" );
+//        line_chart_dataset.addValue( res8[4].ingrvlor.toDouble() , "Ingresos" , "Mayo" );
+//        line_chart_dataset.addValue( res8[5].ingrvlor.toDouble() , "Ingresos" , "Junio" );
+//        line_chart_dataset.addValue( res8[6].ingrvlor.toDouble() , "Ingresos" , "Julio" );
+//        line_chart_dataset.addValue( res8[7].ingrvlor.toDouble() , "Ingresos" , "Agosto" );
+//        line_chart_dataset.addValue( res8[8].ingrvlor.toDouble() , "Ingresos" , "Septiembre" );
+//        line_chart_dataset.addValue( res8[9].ingrvlor.toDouble() , "Ingresos" , "Octubre" );
+//        line_chart_dataset.addValue( res8[10].ingrvlor.toDouble() , "Ingresos" , "Noviembre" );
+//        line_chart_dataset.addValue( res8[11].ingrvlor.toDouble() , "Ingresos" , "Diciembre" );
 
 
         XYSeries series = new XYSeries("Egresos");
@@ -2123,9 +2116,6 @@ class ReportesController extends Shield{
         series2.add(11, res8[10].ingrvlor.toDouble());
         series2.add(12, res8[11].ingrvlor.toDouble());
 
-
-
-
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series);
         dataset.addSeries(series2);
@@ -2141,21 +2131,12 @@ class ReportesController extends Shield{
                 false
         );
 
-
         chartSinRecepcion.getXYPlot().setRenderer(new XYSplineRenderer());
-
-//        PiePlot ColorConfigurator = (PiePlot) chartSinRecepcion.getPlot();
-
-//        ColorConfigurator.setBackgroundAlpha(0f)
-
-//        ColorConfigurator.setLabelBackgroundPaint(new Color(220, 220, 220))
-
         chartSinRecepcion.draw(graphics2d2, rectangle2dSinRecepcion);
 
         graphics2d2.dispose();
 
         def posyGraf3 = 100
-
         contentByte.addTemplate(template2, 10, posyGraf3);
 
         document.close();
