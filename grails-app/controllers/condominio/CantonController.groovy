@@ -1,12 +1,13 @@
 package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
+import seguridad.Shield
 
 
 /**
  * Controlador que muestra las pantallas de manejo de Canton
  */
-class CantonController {
+class CantonController extends Shield {
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 

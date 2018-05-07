@@ -112,7 +112,7 @@
 
 
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-md-12 col-xs-5">
         <p>
             <a href="#" class="link btn btn-success btn-ajax" id="btnCondominos" data-toggle="modal" data-target="#gestorContable">
                 <i class="fa fa-building-o fa-5x"></i><br/>
@@ -135,7 +135,7 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-md-12 col-xs-5">
         <p>
             <a href="#" class="link btn btn-primary btn-ajax" id="btnAceptarGestor">
                 <i class="fa fa-line-chart fa-5x"></i><br/>
@@ -442,7 +442,7 @@
                         <div class="col-md-3 col-xs-3">
                             <label>Año </label>
                         </div>
-                        <div class="col-md-7 col-xs-7">
+                        <div class="col-md-5 col-xs-5">
                             <g:select from="${anios}" name="anio_name" id="anio" class="form-control"/>
                         </div>
                         <div class="col-md-1 col-xs-1">
