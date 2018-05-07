@@ -41,9 +41,15 @@
     </div>
     <g:if test="${data[0].prsnsldo > data[0].alctvlor}">
         <div class="btn-group">
-            <a href="${createLink(controller: "reportes", action: "solicitud", id: persona.id)}" class="btn btn-info">
+            %{--<a href="${createLink(controller: "reportes", action: "solicitud", id: persona.id)}" class="btn btn-info">--}%
+                %{--<i class="fa fa-print"></i> Solicitud de Pago--}%
+            %{--</a>--}%
+
+            <a href="#" class="btn btn-info" data-toggle="modal" data-target="#solicitud">
                 <i class="fa fa-print"></i> Solicitud de Pago
+
             </a>
+
         </div>
     </g:if>
     <div class="btn-group">
@@ -82,8 +88,54 @@
     </tbody>
 </table>
 
+<div class="modal fade col-md-12 col-xs-5" id="solicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="modalsolicitud">Generar cartas solicitando pagos</h4>
+            </div>
+
+            <div class="modal-body" id="bodysolicitud">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-1 col-xs-1">
+                        </div>
+                        <div class="col-md-3 col-xs-3">
+                            <label>Generar para deudas con </label>
+                        </div>
+                        <div class="col-md-7 col-xs-6">
+                            <g:select from="${['1':'Valores superiores a 1 alícuota',
+                                               '2':'Valores superiores a 2 alícuotas',
+                                               '3':'Valores superiores a 3 alícuotas']}"
+                                      optionValue="value" optionKey="key" name="mesesHasta_name"
+                                      id="valorHasta" class="form-control"/>
+                        </div>
+                        <div class="col-md-1 col-xs-1">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnSolicitud btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script type="text/javascript">
+
+    $(".btnSolicitud").click(function () {
+        var vlor = $("#valorHasta").val();
+        location.href = "${g.createLink(controller: 'reportes', action: 'solicitud')}?vlor=" + vlor + "&id=" + ${persona?.id};
+    });
+
 
     $("#listarTodos").click(function () {
         cargarObligaciones(null);

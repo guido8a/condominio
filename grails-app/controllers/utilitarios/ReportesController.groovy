@@ -721,8 +721,24 @@ class ReportesController extends Shield{
 
         def pl = new ByteArrayOutputStream()
         byte[] b
+        def per = Persona.get(params.id)
 
-        pl = solicitudes(params.id)
+        def condominio = Condominio.get(session.condominio.id)
+        def sql = "select * from personas(${condominio?.id}) where prsn__id = ${per?.id}"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+        def fctr = params.vlor.toInteger()
+
+
+        data.each { persona ->
+            if (persona.prsnsldo > (persona.alctvlor * fctr)) {
+                pl = solicitudes(persona.prsn__id)
+//                pdfs.add(pl.toByteArray())
+//                contador++
+            }
+        }
+
+//        pl = solicitudes(params.id)
         b = pl.toByteArray();
 
         response.setContentType("application/pdf")
