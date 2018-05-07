@@ -57,6 +57,8 @@ class ObligacionController extends Shield {
      * @return obligacionInstanceList: la lista de elementos filtrados, obligacionInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def list() {
+        params.max = 20
+        params.sort = 'tipoAporte'
         def obligacionInstanceList = getList(params, false)
         def obligacionInstanceCount = getList(params, true).size()
         return [obligacionInstanceList: obligacionInstanceList, obligacionInstanceCount: obligacionInstanceCount]

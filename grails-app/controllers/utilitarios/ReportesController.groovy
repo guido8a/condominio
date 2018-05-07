@@ -1494,7 +1494,7 @@ class ReportesController extends Shield{
 
         //ingresos mes actual
         def cn4 = dbConnectionService.getConnection()
-        def ingresosActual = "select sum(pagovlor) from pago where pagofcpg between '${txfcin}' and '${txfcfn}';"
+        def ingresosActual = "select sum(pagovlor) from pago where pagofcpg between '${txfcin}' and '${txfcfn}'"
         def res4 = cn4.rows(ingresosActual.toString())
 
         def ingresosAct = (res4.first().sum == null ? 0 : res4.first().sum?.toDouble())
