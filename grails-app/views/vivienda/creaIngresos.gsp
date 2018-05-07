@@ -17,42 +17,48 @@
 <fieldset class="borde">
     <div class="row" style="margin-bottom: 20px;">
         <div class="col-sm-1" align="center" style="margin-top: 20px">
-            <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary" style="width: 100px;">
-                <i class="fa fa-arrow-left"></i> Regresar
+            <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary">
+                <i class="fa fa-arrow-left"></i>
             </a>
         </div>
 
-        <div class="col-sm-2" style="margin-left: 17px">
+        <div class="col-sm-2" style="margin-left: -30px">
             Tipo de Aporte
             <g:select from="${condominio.TipoAporte.list()}" optionValue="descripcion" optionKey="id"
-                      name="tp" id="tipoAporte" class="form-control"/>
+                      name="tp" id="tipoAporte" class="form-control" style="width: 180px;"/>
         </div>
 
-        <div class="col-sm-3" style="margin-left: -20px">
-            Obligaciones
-            <a href="#" id="btnNuevaOb" style="margin-top: 17px; margin-left: 20px;" class="hidden"><i class="fa fa-file"></i> Crear nueva</a>
+        <div class="col-sm-3" style="margin-left: 0px; width: 320px">
+            Concepto del Aporte
+            <a href="#" id="btnNuevaOb" style="margin-top: 17px; margin-left: 20px;" class="hidden"><i class="fa fa-file"></i> Nueva</a>
             <a href="#" id="btnEditarOb" style="margin-top: 17px; margin-left: 20px;" class="hidden"><i class="fa fa-pencil"></i> Editar</a>
             <div id="divObligaciones">
 
             </div>
-
         </div>
 
-        <div class="btn-group col-sm-2" style="width: 160px; margin-left: -20px">
+%{--
+        <div class="btn-group col-sm-1" style="width: 40px; margin-left: -28px; margin-top: 20px">
+            <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary">
+                <i class="fa fa-file-o"></i>
+            </a>
+        </div>
+--}%
 
+        <div class="btn-group col-sm-2" style="width: 160px; margin-left: -25px">
             Fecha
             <elm:datepicker name="fechaOb_name" id="fechaOb" class="datepicker form-control required"
                             value="${params.fecha?: new Date()}"/>
         </div>
 
 
-        <div class="btn-group col-sm-1" style="margin-top: 17px">
+        <div class="btn-group col-sm-1" style="margin-top: 17px; margin-left: -20px">
 
-            <a href="#" class="btn btn-azul" id="btn-consultar"><i class="fa fa-search"></i></a>
+            <a href="#" class="btn btn-azul" id="btn-consultar"><i class="fa fa-search"></i> Buscar</a>
         </div>
-        <div class="btn-group col-sm-3" style="margin-top: 17px; margin-left: -40px; width: 280px;">
+        <div class="btn-group col-sm-3" style="margin-top: 17px; margin-left: -0px; width: 300px;">
             <a href="#" class="btn btn-success btn-actualizar"><i class="fa fa-save"></i> Guardar</a>
-            <a href="#" class="btn btn-warning btn-generar" style="margin-left: 10px"><i class="fa fa-users"></i> Alícuotas</a>
+            <a href="#" class="btn btn-warning btn-generar" style="margin-left: 5px"><i class="fa fa-users"></i> Generar Alícuotas</a>
         </div>
 
     </div>
