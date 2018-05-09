@@ -40,5 +40,6 @@ class Obra {
         observaciones(blank: true, nullable: true)
         fechaInicio(blank: true, nullable: true)
         fechaFin(blank: true, nullable: true)
+        proveedor(blank:true, nullable: true)
     }
 }

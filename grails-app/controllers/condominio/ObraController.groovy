@@ -105,6 +105,18 @@ class ObraController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
+        println("params " + params)
+
+        def proveedor
+
+
+        if(params."proveedor.id" == '0'){
+            println("entro")
+            proveedor = null
+        }else{
+            proveedor = Proveedor.get(params."proveedor.id")
+        }
+
         def obraInstance = new Obra()
         if(params.id) {
             obraInstance = Obra.get(params.id)
@@ -113,7 +125,10 @@ class ObraController extends Shield {
                 return
             }
         }
+        params.presupuesto = params.presupuesto.toDouble()
         obraInstance.properties = params
+        obraInstance.proveedor = proveedor
+
         if(!obraInstance.save(flush: true)) {
             render "ERROR*Ha ocurrido un error al guardar Obra: " + renderErrors(bean: obraInstance)
             return

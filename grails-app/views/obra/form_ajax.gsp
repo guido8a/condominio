@@ -34,15 +34,14 @@
                 </span>
             </div>
 
-            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'proveedor', 'error')} required">
+            <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'proveedor', 'error')}">
                 <span class="grupo">
                     <label for="proveedor" class="col-md-2 control-label">
                         Proveedor
                     </label>
                     <div class="col-md-7">
-                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list()}" optionKey="id" required="" value="${obraInstance?.proveedor?.id}" class="many-to-one form-control"/>
+                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list()}" optionKey="id" optionValue="nombre" value="${obraInstance?.proveedor?.id}" class="many-to-one form-control" noSelection="['0':'Seleccione...']"/>
                     </div>
-                    *
                 </span>
             </div>
 
@@ -57,7 +56,6 @@
                     *
                 </span>
             </div>
-
 
             <div class="form-group keeptogether ${hasErrors(bean: obraInstance, field: 'fecha', 'error')} required">
                 <span class="grupo">
@@ -113,6 +111,7 @@
                         Presupuesto tentativo
                     </label>
                     <div class="col-md-3">
+                        %{--<g:textField name="presupuesto" value="${g.formatNumber(number: obraInstance?.presupuesto, format: '##,##0', locale: 'en_US', maxFractionDigits: 2, minFractionDigits: 2)}" class="number form-control required" required=""/>--}%
                         <g:textField name="presupuesto" value="${obraInstance?.presupuesto}" class="number form-control required" required=""/>
                     </div>
                     *

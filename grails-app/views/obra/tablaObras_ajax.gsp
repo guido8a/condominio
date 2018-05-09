@@ -12,7 +12,7 @@
             <tr data-id="${obra?.id}">
                 <td style="width: 15%">${obra?.tipoObra?.descripcion}</td>
                 <td style="width: 25%">${obra?.descripcion}</td>
-                <td style="width: 15%">${obra?.proveedor?.nombre + " " + (obra?.proveedor?.apellido ? obra?.proveedor?.apellido : '')}</td>
+                <td style="width: 15%">${(obra?.proveedor?.nombre ? obra?.proveedor?.nombre : '') + " " + (obra?.proveedor?.apellido ? obra?.proveedor?.apellido : '')}</td>
                 <td style="width: 15%">${obra?.persona?.nombre + " " + obra?.persona?.apellido}</td>
                 <td style="width: 10%">${obra?.fecha?.format("dd-MM-yyyy")}</td>
                 <td style="width: 20%">${obra?.observaciones}</td>
