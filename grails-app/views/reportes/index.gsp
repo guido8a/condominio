@@ -126,7 +126,7 @@
                 <i class="fa fa-sign-out fa-5x"></i><br/>
                 Detalle de Egresos
             </a>
-            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#libroMayor">
+            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#listaObras">
                 <i class="fa fa-home fa-5x"></i><br/>
                 Detalle de Obras
             </a>
@@ -462,6 +462,52 @@
     </div>
 </div>
 
+<div class="modal fade col-md-12 col-xs-12" id="listaObras" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelOb">Lista de Obras</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Desde</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaDesdeEgr_name" id="fechaDesdeObr" class="datepicker form-control" value="${new Date() - 30}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Hasta</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaHastaEgr_name" id="fechaHastaObr" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnAceptarObras btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
@@ -689,6 +735,33 @@
                     success: function (msg){
                         if(msg == 'ok'){
                             location.href = "${g.createLink(controller:'reportes' , action: 'imprimirIngresos')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                        }else{
+                            bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
+                            return false;
+                        }
+                    }
+                });
+            }
+        });
+
+
+        $(".btnAceptarObras").click(function () {
+            var fechaDesde = $("#fechaDesdeObr").val();
+            var fechaHasta = $("#fechaHastaObr").val();
+
+            if(fechaDesde == '' || fechaHasta == ''){
+                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: '${createLink(controller: 'reportes', action: 'revisarFecha_ajax')}',
+                    data:{
+                        desde: fechaDesde,
+                        hasta: fechaHasta
+                    },
+                    success: function (msg){
+                        if(msg == 'ok'){
+                            location.href = "${g.createLink(controller:'reportes' , action: 'reporteObras')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
                         }else{
                             bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
                             return false;
