@@ -69,6 +69,13 @@
                 <i class="fa fa-line-chart fa-5x"></i><br/>
                 Ingresos y Egresos
             </a>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-xs-12">
+        <p>
             <a href="#" class="link btn btn-success btn-ajax" id="btnCondominos" data-toggle="modal" data-target="#gestorContable">
                 <i class="fa fa-building-o fa-5x"></i><br/>
                 Listado de Condóminos
@@ -80,7 +87,7 @@
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 %{--//dialog de contabilidad--}%
-<div class="modal fade col-md-12 col-xs-5" id="detalleIngresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-12" id="detalleIngresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -128,7 +135,7 @@
 
 
 
-<div class="modal fade col-md-12 col-xs-5" id="detalleEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-12" id="detalleEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -322,7 +329,7 @@
     </div>
 </div>
 
-<div class="modal fade col-md-12 col-xs-5" id="ingresosEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-12" id="ingresosEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -338,7 +345,7 @@
                         <div class="col-md-3 col-xs-3">
                             <label>Año </label>
                         </div>
-                        <div class="col-md-5 col-xs-5">
+                        <div class="col-md-5 col-xs-7">
                             <g:select from="${anios}" name="anio_name" id="anio" class="form-control"/>
                         </div>
                         <div class="col-md-1 col-xs-1">

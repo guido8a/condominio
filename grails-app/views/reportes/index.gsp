@@ -184,7 +184,7 @@
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 %{--//dialog de contabilidad--}%
-<div class="modal fade col-md-12 col-xs-5" id="detalleIngresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-12" id="detalleIngresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -232,7 +232,7 @@
 
 
 
-<div class="modal fade col-md-12 col-xs-5" id="detalleEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-12" id="detalleEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -351,7 +351,7 @@
 </div>
 
 %{--dialog Deudas--}%
-<div class="modal fade col-md-12 col-xs-5" id="modalDeudas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-12" id="modalDeudas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -386,7 +386,7 @@
 </div>
 
 %{--dialog situación--}%
-<div class="modal fade col-md-12 col-xs-5" id="solicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-12" id="solicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -402,7 +402,7 @@
                         <div class="col-md-3 col-xs-3">
                             <label>Generar para deudas con </label>
                         </div>
-                        <div class="col-md-7 col-xs-6">
+                        <div class="col-md-7 col-xs-7">
                             <g:select from="${['1':'Valores superiores a 1 alícuota',
                                                '2':'Valores superiores a 2 alícuotas',
                                                '3':'Valores superiores a 3 alícuotas']}"
@@ -426,7 +426,7 @@
     </div>
 </div>
 
-<div class="modal fade col-md-12 col-xs-5" id="ingresosEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-12" id="ingresosEgresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -442,7 +442,7 @@
                         <div class="col-md-3 col-xs-3">
                             <label>Año </label>
                         </div>
-                        <div class="col-md-5 col-xs-5">
+                        <div class="col-md-5 col-xs-7">
                             <g:select from="${anios}" name="anio_name" id="anio" class="form-control"/>
                         </div>
                         <div class="col-md-1 col-xs-1">
