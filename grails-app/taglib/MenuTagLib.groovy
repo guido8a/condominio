@@ -87,15 +87,15 @@ class MenuTagLib {
         html += '</ul>'
 
         html += '<ul class="nav navbar-nav navbar-right">'
-        html += '<li><a href="' + g.createLink(controller: 'alertas', action: 'list') + '" '+((count>0)?' ' +
-                'style="color:#FFAB19" class="annoying"':"")+'><i class="fa fa-exclamation-triangle"></i> ' +
-                'Alertas '+alertas+'</a></li>'
+//        html += '<li><a href="' + g.createLink(controller: 'alertas', action: 'list') + '" '+((count>0)?' ' +
+//                'style="color:#FFAB19" class="annoying"':"")+'><i class="fa fa-exclamation-triangle"></i> ' +
+//                'Alertas '+alertas+'</a></li>'
 
         html += '<li class="dropdown">'
         html += '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' + usuario?.login+' ('+ prfl+')' +
                 ' <b class="caret"></b></a>'
         html += '<ul class="dropdown-menu">'
-        html += '<li><a href="' + g.createLink(controller: 'persona', action: 'personal') +
+        html += '<li><a href="' + g.createLink(controller: 'persona', action: 'configuracion') +
                 '"><i class="fa fa-cogs"></i> Configuración</a></li>'
         html += '<li class="divider"></li>'
         html += '<li><a href="' + g.createLink(controller: 'login', action: 'logout') +
@@ -202,7 +202,7 @@ class MenuTagLib {
         html += '<li class="dropdown">'
         html += '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' + usuario?.login + ' (' + session?.perfil + ')' + ' <b class="caret"></b></a>'
         html += '<ul class="dropdown-menu">'
-        html += '<li><a href="' + g.createLink(controller: 'persona', action: 'personal') + '"><i class="fa fa-cogs"></i> Configuración</a></li>'
+        html += '<li><a href="' + g.createLink(controller: 'persona', action: 'configuracion') + '"><i class="fa fa-cogs"></i> Configuración</a></li>'
         html += '<li class="divider"></li>'
         html += '<li><a href="' + g.createLink(controller: 'login', action: 'logout') + '"><i class="fa fa-power-off"></i> Salir</a></li>'
         html += '</ul>'

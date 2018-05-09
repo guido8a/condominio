@@ -329,4 +329,28 @@ class PersonaController extends Shield {
 
     }
 
+    def configuracion () {
+        def usuario = Persona.get(session.usuario.id)
+        return[usuario: usuario]
+    }
+
+    def validarPass_ajax() {
+        def usuario = Persona.get(session.usuario.id)
+        render usuario.password == params.password_actual.toString().trim().encodeAsMD5()
+    }
+
+    def savePass_ajax() {
+        def usuario = Persona.get(session.usuario.id)
+        if (usuario.password == params.password_actual.toString().trim().encodeAsMD5()) {
+            usuario.password = params.password.toString().trim().encodeAsMD5()
+            if (usuario.save(flush: true)) {
+                render "OK_Password actualizado correctamente"
+            } else {
+                render "NO_Ha ocurrido un error al actualizar el password: " + renderErrors(bean: usuario)
+            }
+        } else {
+            render "NO_El password actual no coincide"
+        }
+    }
+
 }
