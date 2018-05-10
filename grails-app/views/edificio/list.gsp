@@ -13,13 +13,13 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <a href="${createLink(controller: "inicio", action: "parametros")}" class="btn btn-default">
+        <a href="${createLink(controller: "inicio", action: "parametros")}" class="btn btn-primary">
             <i class="fa fa-arrow-left"></i> Regresar
         </a>
     </div>
 
     <div class="btn-group">
-        <a href="#" class="btn btn-default btnCrear">
+        <a href="#" class="btn btn-primary btnCrear">
             <i class="fa fa-file-o"></i> Crear
         </a>
     </div>
@@ -164,7 +164,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitForm();
+                                return submitFormEdificio();
                             } //callback
                         } //guardar
                     } //buttons
