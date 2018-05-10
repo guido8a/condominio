@@ -13,6 +13,7 @@ import groovy.json.JsonBuilder
 import org.apache.poi.hwpf.usermodel.OfficeDrawing
 import org.jfree.chart.ChartUtilities
 import org.jfree.chart.plot.PlotOrientation
+import org.jfree.chart.plot.XYPlot
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer
 import org.jfree.chart.renderer.xy.XYSplineRenderer
 import org.jfree.data.category.DefaultCategoryDataset
@@ -1788,7 +1789,6 @@ class ReportesController extends Shield{
         def condominio = Condominio.get(session.condominio.id)
         def administrador = Persona.findByCondominioAndCargoLike(condominio, 'Administrador')
 
-
         def baos = new ByteArrayOutputStream()
         def name = "certificadoExpensas_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
         def titulo = new Color(40, 140, 180)
@@ -1806,7 +1806,6 @@ class ReportesController extends Shield{
         def frmtHdr = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtDatoDere = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
-
 
         def fondoTotal = new Color(240, 240, 240);
 
@@ -1954,34 +1953,6 @@ class ReportesController extends Shield{
         def valores2 = "select * from ingr_egrs(${params.anio}, ${condominio?.id});"
         def res8 = cn8.rows(valores2.toString())
 
-//        DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
-//
-//        line_chart_dataset.addValue( res8[0].egrsvlor.toDouble() , "Egresos" , "Enero" );
-//        line_chart_dataset.addValue( res8[1].egrsvlor.toDouble()  , "Egresos" , "Febrero" );
-//        line_chart_dataset.addValue( res8[2].egrsvlor.toDouble()  , "Egresos" , "Marzo" );
-//        line_chart_dataset.addValue( res8[3].egrsvlor.toDouble()  , "Egresos" , "Abril" );
-//        line_chart_dataset.addValue( res8[4].egrsvlor.toDouble() , "Egresos" , "Mayo" );
-//        line_chart_dataset.addValue( res8[5].egrsvlor.toDouble() , "Egresos" , "Junio" );
-//        line_chart_dataset.addValue( res8[6].egrsvlor.toDouble() , "Egresos" , "Julio" );
-//        line_chart_dataset.addValue( res8[7].egrsvlor.toDouble() , "Egresos" , "Agosto" );
-//        line_chart_dataset.addValue( res8[8].egrsvlor.toDouble() , "Egresos" , "Septiembre" );
-//        line_chart_dataset.addValue( res8[9].egrsvlor.toDouble() , "Egresos" , "Octubre" );
-//        line_chart_dataset.addValue( res8[10].egrsvlor.toDouble() , "Egresos" , "Noviembre" );
-//        line_chart_dataset.addValue( res8[11].egrsvlor.toDouble() , "Egresos" , "Diciembre" );
-//        line_chart_dataset.addValue( res8[0].ingrvlor.toDouble() , "Ingresos" , "Enero" );
-//        line_chart_dataset.addValue( res8[1].ingrvlor.toDouble()  , "Ingresos" , "Febrero" );
-//        line_chart_dataset.addValue( res8[2].ingrvlor.toDouble()  , "Ingresos" , "Marzo" );
-//        line_chart_dataset.addValue( res8[3].ingrvlor.toDouble()  , "Ingresos" , "Abril" );
-//        line_chart_dataset.addValue( res8[4].ingrvlor.toDouble() , "Ingresos" , "Mayo" );
-//        line_chart_dataset.addValue( res8[5].ingrvlor.toDouble() , "Ingresos" , "Junio" );
-//        line_chart_dataset.addValue( res8[6].ingrvlor.toDouble() , "Ingresos" , "Julio" );
-//        line_chart_dataset.addValue( res8[7].ingrvlor.toDouble() , "Ingresos" , "Agosto" );
-//        line_chart_dataset.addValue( res8[8].ingrvlor.toDouble() , "Ingresos" , "Septiembre" );
-//        line_chart_dataset.addValue( res8[9].ingrvlor.toDouble() , "Ingresos" , "Octubre" );
-//        line_chart_dataset.addValue( res8[10].ingrvlor.toDouble() , "Ingresos" , "Noviembre" );
-//        line_chart_dataset.addValue( res8[11].ingrvlor.toDouble() , "Ingresos" , "Diciembre" );
-
-
         XYSeries series = new XYSeries("Egresos");
         series.add(1, res8[0].egrsvlor.toDouble());
         series.add(2, res8[1].egrsvlor.toDouble());
@@ -2024,6 +1995,8 @@ class ReportesController extends Shield{
                 true,
                 false
         );
+        XYPlot ColorConfigurator5 = (XYPlot) chartSinRecepcion.getXYPlot()
+        ColorConfigurator5.setBackgroundAlpha(0f)
 
         chartSinRecepcion.getXYPlot().setRenderer(new XYSplineRenderer());
         chartSinRecepcion.draw(graphics2d2, rectangle2dSinRecepcion);
