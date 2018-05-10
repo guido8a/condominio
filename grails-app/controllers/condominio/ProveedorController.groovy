@@ -111,6 +111,7 @@ class ProveedorController extends Shield {
      */
     def save_ajax() {
         def proveedorInstance = new Proveedor()
+        def condominio = Condominio.get(session.condominio.id)
         if(params.id) {
             proveedorInstance = Proveedor.get(params.id)
             if(!proveedorInstance) {
@@ -121,6 +122,7 @@ class ProveedorController extends Shield {
             proveedorInstance.fecha = new Date()
         }
         proveedorInstance.properties = params
+        proveedorInstance.condominio = condominio
         if(!proveedorInstance.save(flush: true)) {
             render "ERROR*Ha ocurrido un error al guardar Proveedor: " + renderErrors(bean: proveedorInstance)
             return
