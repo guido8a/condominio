@@ -1,3 +1,4 @@
+<%@ page import="condominio.Egreso; condominio.PagoEgreso" %>
 <util:renderHTML html="${msg}"/>
 
 <style type="text/css">
@@ -36,7 +37,7 @@ th, td {
     <table class="table-bordered table-condensed table-hover" width="100%">
         <g:each in="${data}" var="dato" status="z">
 
-            <tr id="${dato.egrs__id}" data-id="${dato.egrs__id}" class="${dato.egrssldo > 0 ? clase : ''} trEgreso ${z == 0 ? 'seleccionado' : ''}">
+            <tr id="${dato.egrs__id}" data-id="${dato.egrs__id}" data-tam="${condominio.PagoEgreso.findAllByEgreso(condominio.Egreso.get(dato.egrs__id)).size()}" class="${dato.egrssldo > 0 ? clase : ''} trEgreso ${z == 0 ? 'seleccionado' : ''}">
                 <td width="32%">
                     ${dato?.egrsdscr}
                 </td>

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="condominio.Egreso; condominio.PagoEgreso" contentType="text/html;charset=UTF-8" %>
 
 <%
     def buscadorServ = grailsApplication.classLoader.loadClass('utilitarios.BuscadorService').newInstance()
@@ -217,23 +217,38 @@
         };
 
         var id = $tr.data("id");
+        var sz = $tr.data("tam");
 
         var editar = {
             label: " Editar",
             icon: "fa fa-id-card-o",
-            %{--action: function () {--}%
-            %{--location.href = '${createLink(controller: "proceso", action: "nuevoProceso")}?id=' + id;--}%
-            %{--}--}%
             action: function ($element) {
                 var id = $element.data("id");
                 createEditRow(id);
             }
         };
 
+
+
+        var borrar = {
+            label: " Eliminar",
+            icon: "fa fa-trash-o",
+            action: function ($element) {
+                var id = $element.data("id");
+                eliminar(id);
+            }
+        };
+
+
         items.editar = editar;
+
+        if(sz == 0){
+            items.borrar = borrar;
+        }
 
         return items
     }
+
 
     $("#btnLimpiarBusqueda").click(function () {
         $(".fechaD, .fechaH, #criterio_con").val('');
@@ -336,35 +351,6 @@
         } //else
     }
 
-    function asignarPerfil(id) {
-        $.ajax({
-            type: "POST",
-            url: "${createLink(controller:'persona', action:'perfil_ajax')}",
-            data: {
-                id: id
-            },
-            success: function (msg) {
-                var b = bootbox.dialog({
-                    id: "dlgAsignarPerfil",
-                    title: "Asignar Perfil",
-//                    class   : "modal-lg",
-                    message: msg,
-                    buttons: {
-                        cancelar: {
-                            label: "<i class='fa fa-times'></i> Cerrar",
-                            className: "btn-primary",
-                            callback: function () {
-                            }
-                        }
-                    } //buttons
-                }); //dialog
-                setTimeout(function () {
-                    b.find(".form-control").first().focus()
-                }, 100);
-            } //success
-        }); //ajax
-    }
-
     function alicuotaEdit(id) {
         $.ajax({
             type: "POST",
@@ -435,6 +421,47 @@
         } //else
     }
 
+
+
+    function eliminar (id){
+        bootbox.dialog({
+            title   : "Alerta",
+            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
+            "¿Está seguro que desea eliminar el Egreso seleccionado? Esta acción no se puede deshacer.</p>",
+            buttons : {
+                cancelar : {
+                    label     : "Cancelar",
+                    className : "btn-primary",
+                    callback  : function () {
+                    }
+                },
+                eliminar : {
+                    label     : "<i class='fa fa-trash-o'></i> Eliminar",
+                    className : "btn-danger",
+                    callback  : function () {
+                        openLoader("Eliminando Egreso");
+                        $.ajax({
+                            type    : "POST",
+                            url     : '${createLink(controller:'egreso', action:'delete_ajax')}',
+                            data    : {
+                                id : id
+                            },
+                            success : function (msg) {
+                                var parts = msg.split("*");
+                                log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
+                                if (parts[0] == "SUCCESS") {
+                                    closeLoader();
+                                    cargarBusqueda();
+                                } else {
+                                    closeLoader();
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
 
     /******/
 

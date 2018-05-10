@@ -281,7 +281,7 @@ class EgresoController extends Shield {
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
-        println "fechas: '${fechaDesde}','${fechaHasta}'"
+//        println "fechas: '${fechaDesde}','${fechaHasta}'"
         //saldos
         def sql = "select * from saldos('${fechaDesde}','${fechaHasta}')"
         def cn = dbConnectionService.getConnection()
@@ -339,7 +339,7 @@ class EgresoController extends Shield {
     }
 
     def tablaBuscar() {
-        println "buscar .... $params"
+//        println "buscar .... $params"
         def cn = dbConnectionService.getConnection()
         params.old = params.criterio
         params.criterio = buscadorService.limpiaCriterio(params.criterio)
@@ -347,7 +347,7 @@ class EgresoController extends Shield {
 
         def sql = armaSql(params)
         params.criterio = params.old
-        println "sql: $sql"
+//        println "sql: $sql"
         def data = cn.rows(sql.toString())
 
         def msg = ""
@@ -379,7 +379,7 @@ class EgresoController extends Shield {
         def sqlOrder = "order by egrsfcha, ${params.ordenar} limit 51"
 //        println "sql: $sqlSelect $sqlWhere $sqlOrder"
 
-        println "operador: $operador"
+//        println "operador: $operador"
         if(params.operador && params.criterio) {
             if(campos.find {it.campo == params.buscador}?.size() > 0) {
                 def op = operador.find {it.valor == params.operador}
@@ -393,6 +393,8 @@ class EgresoController extends Shield {
 //        println "-->sql: $sqlSelect $sqlWhere $sqlOrder"
         "$sqlSelect $sqlWhere $sqlOrder".toString()
     }
+
+
 
 
 }
