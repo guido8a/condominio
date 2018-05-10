@@ -1061,20 +1061,25 @@ class ReportesController extends Shield{
 
         //este mes pagado
         def cn = dbConnectionService.getConnection()
-        def esteMes = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and pagofcpg between '${txfcin}' and '${txfcfn}' and oblg__id in (2,7);"
+        def esteMes = "select count(distinct prsn__id) from pago, ingr, oblg " +
+                "where pago.ingr__id = ingr.ingr__id and " +
+                "pagofcpg between '${txfcin}' and '${txfcfn}' and oblg.oblg__id = ingr.oblg__id and " +
+                "tpap__id = 1"
         def res = cn.rows(esteMes.toString())
 
         //mes anterior
         def cn1 = dbConnectionService.getConnection()
-        def mesAnterior = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and \n" +
-                "  pagofcpg between '${txfcinAn}' and '${txfcfnAn}' and oblg__id in (2,7);"
+        def mesAnterior = "select count(distinct prsn__id) from pago, ingr, oblg " +
+                "where pago.ingr__id = ingr.ingr__id and " +
+                "  pagofcpg between '${txfcinAn}' and '${txfcfnAn}' and oblg.oblg__id = ingr.oblg__id and " +
+                "tpap__id = 1"
         def res1 = cn1.rows(mesAnterior.toString())
 
         //valores vencidos
         def cn2 = dbConnectionService.getConnection()
-        def vencidos = "select count(distinct prsn__id) from pago, ingr where pago.ingr__id = ingr.ingr__id and\n" +
-                "  pagofcpg between '${txfcin}' and '${txfcfn}' and oblg__id in (2,7) and\n" +
-                "  ingrfcha < '${txfcin}';"
+        def vencidos = "select count(distinct prsn__id) from pago, ingr, oblg " +
+                "where pago.ingr__id = ingr.ingr__id and pagofcpg between '${txfcin}' and '${txfcfn}' and " +
+                "oblg.oblg__id = ingr.oblg__id and tpap__id = 1 and ingrfcha < '${txfcin}'"
         def res2 = cn2.rows(vencidos.toString())
 
         //ingresos mes anterior
