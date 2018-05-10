@@ -64,7 +64,7 @@
                     <a href="#" class="btn btn-info btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${egreso?.id}" title="Editar Pago">
                         <i class="fa fa-pencil"></i>
                     </a>
-                    <a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" title="Borrar Pago">
+                    <a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" data-ing="${egreso?.id}" title="Borrar Pago">
                         <i class="fa fa-trash-o"></i>
                     </a>
                 </td>
@@ -94,7 +94,6 @@
         if ($form.valid()) {
             $btn.replaceWith(spinner);
             openLoader("Guardando Egreso");
-            console.log('ejecuta ---')
             $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
@@ -164,6 +163,7 @@
 
     $(".btnEliminar").click(function () {
         var pago = $(this).data("id");
+        var egreso = $(this).data("egreso");
         bootbox.confirm("<i class='fa fa-warning fa-3x pull-left text-danger text-shadow'></i> Está seguro que desea eliminar el pago seleccionado?", function (res) {
             if (res) {
                 openLoader("Borrando Pago...");
@@ -177,9 +177,11 @@
                         if(msg == 'ok'){
                             closeLoader();
                             log("Pago borrado correctamente","success");
-                            setTimeout(function() {
-                                location.reload(true);
-                            }, 1000);
+//                            setTimeout(function() {
+//                                location.reload(true);
+//                            }, 1000);
+                            cargarPagosE(egreso);
+                            cargarBusqueda();
                         }else{
                             log("Error al borrar el pago","error")
                         }
@@ -215,9 +217,11 @@
                         if(msg == 'ok'){
                             closeLoader();
                             log("Egreso borrado correctamente","success");
-                            setTimeout(function() {
-                                location.reload(true);
-                            }, 1000);
+                            cargarPagosE(egreso);
+                            cargarBusqueda();
+//                            setTimeout(function() {
+//                                location.reload(true);
+//                            }, 1000);
                         }else{
                             if(msg == 'di'){
                                 closeLoader();
@@ -258,7 +262,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitFormPagoEgreso();
+                                return submitFormPagoEgreso(id);
                             } //callback
                         } //guardar
                     } //buttons
@@ -270,7 +274,7 @@
         }); //ajax
     } //createEdit
 
-    function submitFormPagoEgreso() {
+    function submitFormPagoEgreso(egreso) {
         var $form = $("#frmEgresoPago");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
@@ -284,9 +288,11 @@
                     if(msg == 'ok'){
                         log("Pago guardado correctamente!" , "success");
                         closeLoader();
-                        setTimeout(function() {
-                            location.reload(true);
-                        }, 1000);
+//                        setTimeout(function() {
+//                            location.reload(true);
+//                        }, 1000);
+                        cargarPagosE(egreso);
+                        cargarBusqueda();
                     }else{
                         if(msg == 'di'){
                             closeLoader();
