@@ -376,7 +376,7 @@ class EgresoController extends Shield {
 //        def sqlSelect = "select * from ls_egrs(${session.empresa.id}, ${cont}, ${fcds}, ${fchs}) "
         def sqlSelect = "select * from ls_egrs(${fcds}, ${fchs}) "
         def sqlWhere = "where (${wh})"
-        def sqlOrder = "order by ${params.ordenar} limit 51"
+        def sqlOrder = "order by egrsfcha, ${params.ordenar} limit 51"
 //        println "sql: $sqlSelect $sqlWhere $sqlOrder"
 
         println "operador: $operador"
