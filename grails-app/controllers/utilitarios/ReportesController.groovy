@@ -1997,6 +1997,8 @@ class ReportesController extends Shield{
         );
         XYPlot ColorConfigurator5 = (XYPlot) chartSinRecepcion.getXYPlot()
         ColorConfigurator5.setBackgroundAlpha(0f)
+        ColorConfigurator5.setDomainGridlinePaint(Color.BLACK)
+        ColorConfigurator5.setRangeGridlinePaint(Color.BLACK)
 
         chartSinRecepcion.getXYPlot().setRenderer(new XYSplineRenderer());
         chartSinRecepcion.draw(graphics2d2, rectangle2dSinRecepcion);
