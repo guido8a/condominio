@@ -1924,7 +1924,7 @@ class ReportesController extends Shield{
         document.open();
 
         PdfContentByte cb = pdfw.getDirectContent();
-        document.addTitle("Ingresos vs Egresos");
+        document.addTitle("Ingresos y Egresos");
         document.addSubject("Generado por el sistema Condominio");
         document.addKeywords("reporte, condominio, pagos");
         document.addAuthor("Condominio");
@@ -1986,7 +1986,7 @@ class ReportesController extends Shield{
         dataset.addSeries(series2);
 
         JFreeChart chartSinRecepcion = ChartFactory.createXYLineChart(
-                "Ingresos vs Egresos",
+                "Ingresos y Egresos ${params.anio}",
                 "Meses",
                 "Valores",
                 dataset,
