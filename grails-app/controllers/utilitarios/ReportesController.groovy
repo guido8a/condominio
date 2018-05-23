@@ -921,7 +921,7 @@ class ReportesController extends Shield{
         t4.add(new Paragraph("PD: ART. 39 literal p:", notaTitulo))
         t4.add(new Paragraph("«Por no pago de alícuotas ordinarias y/o extraordinarias, " +
                 "a partir del segundo mes:", nota))
-        t4.add(new Paragraph("ACCIÓN: Recorte de servicios básicos y cobro de interés por mora»", nota))
+        t4.add(new Paragraph("ACCIÓN: Recorte de servicios básicos y cobro de interés por mora» 'Suspensión del servicio de AGUA'", nota))
         document.add(t4)
 
         document.close();
