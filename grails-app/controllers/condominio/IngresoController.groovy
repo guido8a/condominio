@@ -268,7 +268,8 @@ class IngresoController extends Shield {
 //        println("params " + params)
 
         def persona = Persona.get(params.persona)
-        def ingresos= Ingreso.findAllByPersona(persona).sort{it.obligacion.descripcion}
+//        def ingresos= Ingreso.findAllByPersona(persona).sort{it.obligacion.descripcion}
+        def ingresos= Ingreso.findAllByPersona(persona).sort{it.fecha}
 
         return[ingreso: ingresos, band: params.band]
     }

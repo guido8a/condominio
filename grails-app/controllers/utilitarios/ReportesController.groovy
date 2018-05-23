@@ -531,7 +531,7 @@ class ReportesController extends Shield{
 
         def res = cn.rows(sql.toString())
         def tamano = res.size()
-        def max = 48
+        def max = 43
         def malox = 46
         def actual = 0
 //        println("tamaño " + tamano)
@@ -545,9 +545,9 @@ class ReportesController extends Shield{
         Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
         Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
         Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
-        Font fontTh = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 11, Font.BOLD);
         Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
-        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
         Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
 
@@ -592,13 +592,13 @@ class ReportesController extends Shield{
 
             def tablaHeaderDetalles = new PdfPTable(5);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([8, 20, 52, 9, 11]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([7, 7, 22, 53, 11]))
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Cuota", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Nombre", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Detalle", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Cuota", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Por Pagar", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Pendiente", fontTh), frmtHd)
             addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 6, pl: 0])
         }
 
@@ -608,8 +608,8 @@ class ReportesController extends Shield{
             tablaTotal.setWidthPercentage(100);
             tablaTotal.setWidths(arregloEnteros([89, 11]))
 
-            addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-            addCellTabla(tablaTotal, new Paragraph("${numero(params.total, 2)}", fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 16, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+            addCellTabla(tablaTotal, new Paragraph("${numero(params.total, 2)}", fontTh), [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, height: 16, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
 
             addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 5, pl: 0])
         }
@@ -620,7 +620,7 @@ class ReportesController extends Shield{
 
         tablaDetalles = new PdfPTable(5);
         tablaDetalles.setWidthPercentage(100);
-        tablaDetalles.setWidths(arregloEnteros([8, 20, 52, 9, 11]))
+        tablaDetalles.setWidths(arregloEnteros([7, 7, 22, 53, 11]))
         tablaDetalles.setSpacingAfter(1f);
 
 
@@ -642,7 +642,7 @@ class ReportesController extends Shield{
             }
             if ((actual.toInteger() + adicionales.toInteger()) >= max) {
 //                max = (max + 7)
-                max = 48
+                max = 43
                 printHeaderDetalle()
                 actual = 0
                 adicionales = 0
@@ -719,9 +719,9 @@ class ReportesController extends Shield{
 
     def celdas(tablaDetalles, dpto, prsn, oblg, alct, sldo, fontTd10, frmtDato, frmtNmro) {
         addCellTabla(tablaDetalles, new Paragraph(dpto, fontTd10), frmtDato)
+        addCellTabla(tablaDetalles, new Paragraph(alct.toString(), fontTd10), frmtNmro)
         addCellTabla(tablaDetalles, new Paragraph(prsn, fontTd10), frmtDato)
         addCellTabla(tablaDetalles, new Paragraph(oblg, fontTd10), frmtDato)
-        addCellTabla(tablaDetalles, new Paragraph(alct.toString(), fontTd10), frmtNmro)
         addCellTabla(tablaDetalles, new Paragraph(sldo.toString(), fontTd10), frmtNmro)
     }
 
