@@ -604,16 +604,12 @@
 
 
         $(".btnDeudas").click(function () {
-//            var cont = $("#contP20").val();
-//            var prms = $("#periodo20").val();
             var fechaI = $("#fechaImprime").val();
-//            console.log('fecha', fechaI)
-            location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes3')}?fecha=" + fechaI
+            location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes4')}?fecha=" + fechaI
         });
 
         $(".btnSolicitud").click(function () {
             var vlor = $("#valorHasta").val();
-//            console.log('vlor', vlor)
             location.href = "${g.createLink(controller: 'reportes', action: 'imprimirSolicitudes')}?vlor=" + vlor;
         });
 

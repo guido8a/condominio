@@ -553,9 +553,6 @@ class ReportesController extends Shield{
 
         def fondoTotal = new Color(245, 243, 245);
 
-        def prmsTdNoBorder = [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
-        def prmsTdBorder = [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
-        def prmsNmBorder = [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
         Document document
 //        document = new Document(PageSize.A4.rotate());
@@ -576,15 +573,12 @@ class ReportesController extends Shield{
         Paragraph preface = new Paragraph();
         addEmptyLine(preface, 1);
         preface.setAlignment(Element.ALIGN_CENTER);
-//        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitulo));
         preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
         preface.add(new Paragraph("Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", fontTitulo));
         addEmptyLine(preface, 1);
         document.add(preface);
 
         PdfPTable tablaDetalles = null
-
-
 
         def printHeaderDetalle = {
             def fondo = new Color(240, 248, 250);
@@ -601,7 +595,6 @@ class ReportesController extends Shield{
             addCellTabla(tablaHeaderDetalles, new Paragraph("Pendiente", fontTh), frmtHd)
             addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 6, pl: 0])
         }
-
 
         def printTotales = { params ->
             def tablaTotal = new PdfPTable(2);
@@ -632,7 +625,6 @@ class ReportesController extends Shield{
         def adicionales = 0
         def u = 0
 
-//        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
@@ -641,7 +633,6 @@ class ReportesController extends Shield{
                 printHeaderDetalle()
             }
             if ((actual.toInteger() + adicionales.toInteger()) >= max) {
-//                max = (max + 7)
                 max = 43
                 printHeaderDetalle()
                 actual = 0
@@ -697,7 +688,6 @@ class ReportesController extends Shield{
             actual++
             u = (actual.toInteger() + adicionales.toInteger())
 
-//            println("--- " + u)
             if (actual <= max) {
                 pagActual = 1
             } else {
@@ -723,6 +713,14 @@ class ReportesController extends Shield{
         addCellTabla(tablaDetalles, new Paragraph(prsn, fontTd10), frmtDato)
         addCellTabla(tablaDetalles, new Paragraph(oblg, fontTd10), frmtDato)
         addCellTabla(tablaDetalles, new Paragraph(sldo.toString(), fontTd10), frmtNmro)
+    }
+
+    def totales(tabla,total,fontTd10,frmtDato,frmtNmro) {
+        addCellTabla(tabla, new Paragraph('', fontTd10), frmtDato)
+        addCellTabla(tabla, new Paragraph('', fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph('', fontTd10), frmtDato)
+        addCellTabla(tabla, new Paragraph("TOTAL:", fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph(total.toString(), fontTd10), frmtNmro)
     }
 
     def fecha_ajax() {
@@ -2115,6 +2113,162 @@ class ReportesController extends Shield{
         }
 
         document.add(tablaDetalles)
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=" + name)
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+    }
+
+
+
+    def pagosPendientes4() {
+
+//        println "params pagosPendientes3: " + params
+
+        def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
+
+        def cn = dbConnectionService.getConnection()
+        def sql = "select * from pendiente('${fecha.format('yyy-MM-dd')}')"
+//        println("sql " + sql)
+
+        def res = cn.rows(sql.toString())
+        def tamano = res.size()
+        def max = 43
+        def malox = 46
+        def actual = 0
+
+        def baos = new ByteArrayOutputStream()
+        def name = "pagosPendientes_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def titulo = new Color(30, 140, 160)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
+        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+        Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 11, Font.BOLD);
+        Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
+        Font fontTd11 = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
+        def fondo = new Color(240, 248, 250);
+        def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+
+        def fondoTotal = new Color(245, 243, 245);
+
+        Document document
+        document = new Document(PageSize.A4);
+        document.setMargins(50, 30, 30, 28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Pagos Pendientes");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+        preface.add(new Paragraph("Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", fontTitulo));
+        addEmptyLine(preface, 1);
+        document.add(preface);
+
+        def currentPag = 1
+        def totalPags = Math.ceil(tamano / max)
+        def pagActual = 1
+        def anterior
+        def nuevo
+        def total = 0
+        def contador = 0
+        def ultimo = res.last().prsndpto
+        def adicionales = 0
+        def u = 0
+
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+        PdfPTable table = new PdfPTable(5);
+
+        table.setWidthPercentage(100);
+        table.setWidths(arregloEnteros([7, 7, 22, 50, 14]))
+//        table.addCell("Dpto.");
+        addCellTabla(table, new Paragraph("Dpto.", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Cuota", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Detalle", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Pendiente", fontTh), frmtHd)
+        table.setHeaderRows(1);
+
+        def tablaTotal = new PdfPTable(2);
+        tablaTotal.setWidthPercentage(100);
+        tablaTotal.setWidths(arregloEnteros([89, 11]))
+
+        res.each { fila ->
+
+            if ((actual.toInteger() + adicionales.toInteger()) >= max) {
+                max = 43
+                actual = 0
+                adicionales = 0
+            }
+
+            nuevo = fila.prsndpto
+            contador++
+
+            if (anterior == nuevo) {
+                if (nuevo == ultimo && (tamano.toInteger()) == contador) {
+                    celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                    total += fila.sldo
+                    anterior = fila.prsndpto
+                    totales(table, total, fontTd11, frmtDato, frmtNmro)
+                    adicionales++
+                } else {
+                    celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                    total += fila.sldo
+                    anterior = fila.prsndpto
+                }
+            } else {
+                if (contador == 1) {
+                    celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                    total += fila.sldo
+                    anterior = fila.prsndpto
+                } else {
+                    if (tamano.toInteger() == contador) {
+                        totales(table, total, fontTd11, frmtDato, frmtNmro)
+                        celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                        total = fila.sldo
+                        anterior = fila.prsndpto
+                        totales(table, fila.sldo, fontTd11, frmtDato, frmtNmro)
+                        adicionales++
+                    } else {
+                        totales(table, total, fontTd11, frmtDato, frmtNmro)
+                        celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                        total = fila.sldo
+                        anterior = fila.prsndpto
+                        adicionales++
+                    }
+                }
+            }
+
+            actual++
+            u = (actual.toInteger() + adicionales.toInteger())
+
+            if (actual <= max) {
+                pagActual = 1
+            } else {
+                pagActual = Math.ceil(actual / max).toInteger()
+            }
+
+        }
+
+        document.add(table);
+
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
