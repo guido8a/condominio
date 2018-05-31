@@ -2163,7 +2163,7 @@ class ReportesController extends Shield{
 
         Document document
         document = new Document(PageSize.A4);
-        document.setMargins(50, 30, 30, 28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        document.setMargins(50, 30, 100, 28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos);
 
         document.resetHeader()
@@ -2177,13 +2177,13 @@ class ReportesController extends Shield{
         document.addAuthor("Condominio");
         document.addCreator("Tedein SA");
 
-        Paragraph preface = new Paragraph();
-        addEmptyLine(preface, 1);
-        preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
-        preface.add(new Paragraph("Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", fontTitulo));
-        addEmptyLine(preface, 1);
-        document.add(preface);
+//        Paragraph preface = new Paragraph();
+//        addEmptyLine(preface, 1);
+//        preface.setAlignment(Element.ALIGN_CENTER);
+//        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+//        preface.add(new Paragraph("Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", fontTitulo));
+//        addEmptyLine(preface, 1);
+//        document.add(preface);
 
         def currentPag = 1
         def totalPags = Math.ceil(tamano / max)
@@ -2199,11 +2199,11 @@ class ReportesController extends Shield{
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
-        PdfPTable table = new PdfPTable(5);
+//        document.add(new Paragraph(100, ""));
 
+        PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100);
         table.setWidths(arregloEnteros([7, 7, 22, 50, 14]))
-//        table.addCell("Dpto.");
         addCellTabla(table, new Paragraph("Dpto.", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Cuota", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)
@@ -2273,13 +2273,12 @@ class ReportesController extends Shield{
         }
 
         document.add(table);
-
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
 
 
-        numerosPagina(b)
+        numerosPagina(b, fecha)
 
 //        return b
 //        PdfReader reader = new PdfReader(b);
@@ -2292,8 +2291,11 @@ class ReportesController extends Shield{
 //        response.getOutputStream().write(b)
     }
 
-    def numerosPagina (f) {
-        Font fontTd11 = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
+    def numerosPagina (f, fecha) {
+
+        def titulo = new Color(30, 140, 160)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
 
         def baos = new ByteArrayOutputStream()
         Document document
@@ -2301,14 +2303,27 @@ class ReportesController extends Shield{
 
         def pdfw = PdfWriter.getInstance(document, baos);
         document.open();
+
         PdfContentByte cb = pdfw.getDirectContent();
 
             PdfReader reader = new PdfReader(f);
             for (int i = 1; i <= reader.getNumberOfPages(); i++) {
                 document.newPage();
                 PdfImportedPage page = pdfw.getImportedPage(reader, i);
+//                page.setMatrix(1f,2f,3f,4f,5f,6f)
                 cb.addTemplate(page, 0, 0);
                 getHeaderTable(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+
+
+
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+        preface.add(new Paragraph("Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", fontTitulo));
+        addEmptyLine(preface, 1);
+        document.add(preface);
             }
 
         document.close();
@@ -2330,8 +2345,9 @@ class ReportesController extends Shield{
         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(String.format("Página %d de %d", x, y));
         return table;
-
     }
+
+
 
 
 }
