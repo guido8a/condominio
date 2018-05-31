@@ -4,6 +4,8 @@ import com.lowagie.text.Chapter
 import com.lowagie.text.ChapterAutoNumber
 import com.lowagie.text.Chunk
 import com.lowagie.text.Phrase
+import com.lowagie.text.Rectangle
+import com.lowagie.text.pdf.BaseFont
 import com.lowagie.text.pdf.DefaultFontMapper
 import com.lowagie.text.pdf.PdfTemplate
 import condominio.Condominio
@@ -11,6 +13,7 @@ import condominio.Ingreso
 import condominio.Obra
 import groovy.json.JsonBuilder
 import org.apache.poi.hwpf.usermodel.OfficeDrawing
+import org.apache.poi.xwpf.usermodel.TextAlignment
 import org.jfree.chart.ChartUtilities
 import org.jfree.chart.plot.PlotOrientation
 import org.jfree.chart.plot.XYPlot
@@ -20,6 +23,7 @@ import org.jfree.data.category.DefaultCategoryDataset
 import org.jfree.data.xy.XYDataset
 import org.jfree.data.xy.XYSeries
 import org.jfree.data.xy.XYSeriesCollection
+import org.jfree.ui.VerticalAlignment
 import seguridad.Persona
 
 import com.lowagie.text.Document
@@ -2161,6 +2165,7 @@ class ReportesController extends Shield{
         document = new Document(PageSize.A4);
         document.setMargins(50, 30, 30, 28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos);
+
         document.resetHeader()
         document.resetFooter()
 
@@ -2272,10 +2277,60 @@ class ReportesController extends Shield{
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
+
+
+        numerosPagina(b)
+
+//        return b
+//        PdfReader reader = new PdfReader(b);
+//        def n = reader.getNumberOfPages();
+//        println("paginas " + n)
+
+//        response.setContentType("application/pdf")
+//        response.setHeader("Content-disposition", "attachment; filename=" + name)
+//        response.setContentLength(b.length)
+//        response.getOutputStream().write(b)
+    }
+
+    def numerosPagina (f) {
+        Font fontTd11 = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
+
+        def baos = new ByteArrayOutputStream()
+        Document document
+        document = new Document(PageSize.A4);
+
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+
+            PdfReader reader = new PdfReader(f);
+            for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+                document.newPage();
+                PdfImportedPage page = pdfw.getImportedPage(reader, i);
+                cb.addTemplate(page, 0, 0);
+                getHeaderTable(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+            }
+
+        document.close();
+        byte[] b = baos.toByteArray();
+
         response.setContentType("application/pdf")
-        response.setHeader("Content-disposition", "attachment; filename=" + name)
+        response.setHeader("Content-disposition", "attachment; filename=" + "pagosPendientes")
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
+    }
+
+    public static PdfPTable getHeaderTable(int x, int y) {
+        PdfPTable table = new PdfPTable(2);
+        table.setTotalWidth(327);
+        table.setLockedWidth(true);
+        table.getDefaultCell().setFixedHeight(20);
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+        table.addCell("");
+        table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.addCell(String.format("Página %d de %d", x, y));
+        return table;
+
     }
 
 
