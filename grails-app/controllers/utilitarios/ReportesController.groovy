@@ -2322,14 +2322,6 @@ class ReportesController extends Shield{
             def en = reportesService.encabezado(tituloReporte, subtitulo, fontTitulo16, fontTitulo)
             reportesService.numeracion(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
 
-//            Paragraph preface = new Paragraph();
-//            addEmptyLine(preface, 1);
-//            preface.setAlignment(Element.ALIGN_CENTER);
-//            preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
-//            preface.add(new Paragraph("Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", fontTitulo));
-//            addEmptyLine(preface, 1);
-//            document.add(preface);
-
             document.add(en)
         }
 
