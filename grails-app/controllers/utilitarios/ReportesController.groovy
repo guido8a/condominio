@@ -24,6 +24,7 @@ import org.jfree.data.xy.XYDataset
 import org.jfree.data.xy.XYSeries
 import org.jfree.data.xy.XYSeriesCollection
 import org.jfree.ui.VerticalAlignment
+import org.xhtmlrenderer.pdf.ITextRenderer
 import seguridad.Persona
 
 import com.lowagie.text.Document
@@ -58,6 +59,9 @@ import java.awt.image.BufferedImage
 class ReportesController extends Shield{
 
     def dbConnectionService
+    def reportesService
+
+
 
     def index() {
 
@@ -1804,6 +1808,7 @@ class ReportesController extends Shield{
         Font notaTitulo = new Font(Font.TIMES_ROMAN, 11, Font.BOLD)
         Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
         Font fontTitle2 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
+        Font fontTitle3 = new Font(Font.TIMES_ROMAN, 18, Font.NORMAL);
         Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
         Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
         Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
@@ -1840,7 +1845,7 @@ class ReportesController extends Shield{
         Paragraph preface = new Paragraph();
         addEmptyLine(preface, 1);
         preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph(condominio?.nombre ?: '', fontTitle));
+        preface.add(new Paragraph(condominio?.nombre?.toUpperCase() ?: '', fontTitle3));
         addEmptyLine(preface, 1);
         document.add(preface);
 
@@ -1903,6 +1908,7 @@ class ReportesController extends Shield{
         Paragraph f = new Paragraph();
         f.add(new Paragraph((administrador?.nombre ?: '') + " " + (administrador?.apellido ?: ''), info))
         f.add(new Paragraph("ADMINISTRADOR", info))
+        f.add(new Paragraph("CI: ${administrador?.ruc ?: ''}", info))
         f.add(new Paragraph("Tel: ${administrador?.telefono ?: ''}, dpto. ${administrador?.departamento ?: ''}", info))
         addEmptyLine(f, 1);
         document.add(f)
@@ -2278,7 +2284,7 @@ class ReportesController extends Shield{
         byte[] b = baos.toByteArray();
 
 
-        numerosPagina(b, fecha)
+        encabezadoYnumeracion(b, session.condominio.nombre, "Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", "pagosPendientes")
 
 //        return b
 //        PdfReader reader = new PdfReader(b);
@@ -2291,7 +2297,7 @@ class ReportesController extends Shield{
 //        response.getOutputStream().write(b)
     }
 
-    def numerosPagina (f, fecha) {
+    def encabezadoYnumeracion (f, tituloReporte, subtitulo, nombreReporte) {
 
         def titulo = new Color(30, 140, 160)
         Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
@@ -2306,48 +2312,173 @@ class ReportesController extends Shield{
 
         PdfContentByte cb = pdfw.getDirectContent();
 
-            PdfReader reader = new PdfReader(f);
-            for (int i = 1; i <= reader.getNumberOfPages(); i++) {
-                document.newPage();
-                PdfImportedPage page = pdfw.getImportedPage(reader, i);
+        PdfReader reader = new PdfReader(f);
+        for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+            document.newPage();
+            PdfImportedPage page = pdfw.getImportedPage(reader, i);
 //                page.setMatrix(1f,2f,3f,4f,5f,6f)
-                cb.addTemplate(page, 0, 0);
-                getHeaderTable(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+            cb.addTemplate(page, 0, 0);
+//                getHeaderTable(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+            def en = reportesService.encabezado(tituloReporte, subtitulo, fontTitulo16, fontTitulo)
+            reportesService.numeracion(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
 
+//            Paragraph preface = new Paragraph();
+//            addEmptyLine(preface, 1);
+//            preface.setAlignment(Element.ALIGN_CENTER);
+//            preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+//            preface.add(new Paragraph("Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", fontTitulo));
+//            addEmptyLine(preface, 1);
+//            document.add(preface);
 
-
-
-        Paragraph preface = new Paragraph();
-        addEmptyLine(preface, 1);
-        preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
-        preface.add(new Paragraph("Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", fontTitulo));
-        addEmptyLine(preface, 1);
-        document.add(preface);
-            }
+            document.add(en)
+        }
 
         document.close();
         byte[] b = baos.toByteArray();
 
         response.setContentType("application/pdf")
-        response.setHeader("Content-disposition", "attachment; filename=" + "pagosPendientes")
+        response.setHeader("Content-disposition", "attachment; filename=" + nombreReporte)
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
     }
 
-    public static PdfPTable getHeaderTable(int x, int y) {
-        PdfPTable table = new PdfPTable(2);
-        table.setTotalWidth(327);
-        table.setLockedWidth(true);
-        table.getDefaultCell().setFixedHeight(20);
-        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-        table.addCell("");
-        table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-        table.addCell(String.format("Página %d de %d", x, y));
-        return table;
+//    public static PdfPTable getHeaderTable(int x, int y) {
+//        PdfPTable table = new PdfPTable(2);
+//        table.setTotalWidth(327);
+//        table.setLockedWidth(true);
+//        table.getDefaultCell().setFixedHeight(20);
+//        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+//        table.addCell("");
+//        table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+//        table.addCell(String.format("Página %d de %d", x, y));
+//        return table;
+//    }
+
+    def expensas () {
+        def persona = Persona.get(params.id)
+        return[persona: persona]
     }
 
+    def guardarTexto_ajax(){
+        def persona = Persona.get(params.persona)
+        persona.expensa = params.editor
 
+        if(persona.save(flush: true)){
+            render "ok"
+        }else{
+            render "no"
+        }
+
+    }
+
+    def expensas_pdf () {
+//        println("params exp" + params)
+
+        def persona = Persona.get(params.id)
+
+
+//        def titulo = new Color(30, 140, 160)
+//        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+//        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
+//
+//        def baos = new ByteArrayOutputStream()
+//        Document document
+//        document = new Document(PageSize.A4);
+//
+//        def pdfw = PdfWriter.getInstance(document, baos);
+//        document.open();
+//
+//        PdfContentByte cb = pdfw.getDirectContent();
+//
+//        document.add((new Paragraph(persona.expensa, fontTitulo)))
+//
+//        document.close();
+//        pdfw.close()
+
+        def baos = crearPdfExpensas(persona.expensa)
+
+        byte[] b = baos.toByteArray();
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=" + "certificadoExpensas")
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+
+        return
+
+    }
+
+    def crearPdfExpensas (texto) {
+
+        def text = (texto ?: '')
+
+        text = text.replaceAll("&lt;", "*lt*")
+        text = text.replaceAll("&gt;", "*gt*")
+        text = text.replaceAll("&amp;", "*amp*")
+        text = text.replaceAll("<p>&nbsp;</p>", "<br/>")
+        text = text.replaceAll("&nbsp;", " ")
+
+        text = text.decodeHTML()
+
+        text = text.replaceAll("\\*lt\\*", "&lt;")
+        text = text.replaceAll("\\*gt\\*", "&gt;")
+        text = text.replaceAll("\\*amp\\*", "&amp;")
+        text = text.replaceAll("\\*nbsp\\*", " ")
+        text = text.replaceAll(/<tr>\s*<\/tr>/, / /)
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        def content = "<!DOCTYPE HTML>\n<html>\n"
+        content += "<head>\n"
+        content += "<style language='text/css'>\n"
+        content += "" +
+                " div.header {\n" +
+                "   display    : block;\n" +
+                "   text-align : center;\n" +
+                "   position   : running(header);\n" +
+                "}\n" +
+                "div.footer {\n" +
+                "   display    : block;\n" +
+                "   text-align : center;\n" +
+                "   font-size  : 9pt;\n" +
+                "   position   : running(footer);\n" +
+                "} " +
+                " @page {\n" +
+                "   size   : 21cm 29.7cm;  /*width height */\n" +
+                "   margin : 2cm 2cm 2cm 2cm;\n" +
+                "}\n" +
+                "@page {\n" +
+                "   @top-center {\n" +
+                "       content : element(header)\n" +
+                "   }\n" +
+                "}" +
+                "@page {\n" +
+                "   @bottom-center {\n" +
+                "       content : element(footer)\n" +
+                "   }\n" +
+                "}" +
+                "p{\n" +
+                "   text-align: justify;\n" +
+                "   margin-bottom: 0;\n" +
+                "}\n" +
+                "th {\n" +
+                "   padding-right: 10px;\n" +
+                "}\n"
+        content += "</style>\n"
+        content += "</head>\n"
+        content += "<body>\n"
+        content += text
+        content += "</body>\n"
+        content += "</html>"
+
+        ITextRenderer renderer = new ITextRenderer();
+        renderer.setDocumentFromString(content);
+        renderer.layout();
+        renderer.createPDF(baos);
+        byte[] b = baos.toByteArray();
+
+        return baos
+
+    }
 
 
 }

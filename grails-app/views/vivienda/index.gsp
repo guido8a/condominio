@@ -264,10 +264,10 @@ como máximo 30
             separator_before : true,
             action : function ($element) {
                 var id = $element.data("id");
-                imprimirExpensas(id);
+//                imprimirExpensas(id);
+                location.href='${createLink(controller: 'reportes', action: 'expensas')}?id=' + id;
             }
         };
-
 
         items.editar = editar;
         items.perfil = perfil;

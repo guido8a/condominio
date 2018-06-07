@@ -28,6 +28,10 @@ class Persona {
     double alicuota
     String observaciones
     Date fechaPass
+    
+    String expensa
+
+
 
     static hasMany = [perfiles: Sesn]
 
@@ -64,6 +68,7 @@ class Persona {
             alicuota column: 'prsnalct'
             observaciones column: 'prsnobsr'
             fechaPass column: 'prsnfcps'
+            expensa column: 'prsncrex'
         }
     }
     static constraints = {
@@ -84,6 +89,7 @@ class Persona {
         direccion(blank: true, nullable: true)
         observaciones(blank: true, nullable: true)
         fechaNacimiento(blank: true, nullable: true)
+        expensa(blank: true, nullable: true)
     }
 
     String toString() {

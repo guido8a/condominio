@@ -1,4 +1,6 @@
-
+import com.lowagie.text.Element
+import com.lowagie.text.Rectangle
+import com.lowagie.text.pdf.PdfPTable
 
 /**
  * Tags para facilitar la creación de reportes (HTML -> PDF)
@@ -679,4 +681,5 @@ class ReportesTagLib {
 
         out << header
     }
+
 }
