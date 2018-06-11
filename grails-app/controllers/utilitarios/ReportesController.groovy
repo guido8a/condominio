@@ -2390,7 +2390,7 @@ class ReportesController extends Shield{
 //        document.close();
 //        pdfw.close()
 
-        def baos = crearPdfExpensas(persona.expensa)
+        def baos = crearPdfExpensas(persona)
 
         byte[] b = baos.toByteArray();
         response.setContentType("application/pdf")
@@ -2402,9 +2402,9 @@ class ReportesController extends Shield{
 
     }
 
-    def crearPdfExpensas (texto) {
+    def crearPdfExpensas (persona) {
 
-        def text = (texto ?: '')
+        def text = (persona.expensa ?: '')
 
         text = text.replaceAll("&lt;", "*lt*")
         text = text.replaceAll("&gt;", "*gt*")
@@ -2419,6 +2419,12 @@ class ReportesController extends Shield{
         text = text.replaceAll("\\*amp\\*", "&amp;")
         text = text.replaceAll("\\*nbsp\\*", " ")
         text = text.replaceAll(/<tr>\s*<\/tr>/, / /)
+
+
+        def nombre = "${persona.condominio.nombre.toUpperCase()}"
+        def direccion = "${persona.condominio.direccion.toUpperCase()}"
+        def q =       "QUITO - ECUADOR "
+        def titulo =  "CERTIFICADO DE EXPENSAS"
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -2455,12 +2461,20 @@ class ReportesController extends Shield{
                 "   text-align: justify;\n" +
                 "   margin-bottom: 0;\n" +
                 "}\n" +
-                "th {\n" +
-                "   padding-right: 10px;\n" +
+                ".tam {\n" +
+                "   font-size: 20pt;\n" +
+                "}\n" +
+                ".centrado {\n" +
+                "   text-align: center;\n" +
                 "}\n"
+
         content += "</style>\n"
         content += "</head>\n"
         content += "<body>\n"
+        content += "<p class='centrado tam'>" + nombre + "</p>"
+        content += "<p class='centrado'>" + direccion + "</p>"
+        content += "<p class='centrado'>" + q + "</p>"
+        content += "<p class='centrado tam' style='margin-bottom: 10px'>" + titulo + "</p>"
         content += text
         content += "</body>\n"
         content += "</html>"

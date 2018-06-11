@@ -29,7 +29,7 @@
     <textarea name='editor1' id="certificado" class="editor" rows="100" cols="80">${persona?.expensa}</textarea>
 </div>
 
-<div class="col-md-6">
+%{--<div class="col-md-6">--}%
     <div class="btn-group col-md-6" style="margin-left: -10px; margin-top: 20px;">
         <g:link controller="vivienda" action="index" class="btn btn-primary" title="Regresar a Lista de propietarios">
             <i class="fa fa-arrow-left"></i> Regresar
@@ -39,7 +39,7 @@
            title="Imprimir certificado de expensas">
             <i class="fa fa-print"></i> Imprimir</a>
     </div>
-</div>
+%{--</div>--}%
 
 
 <script type="text/javascript">
