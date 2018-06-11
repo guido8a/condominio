@@ -2320,8 +2320,11 @@ class ReportesController extends Shield{
             cb.addTemplate(page, 0, 0);
 //                getHeaderTable(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
             def en = reportesService.encabezado(tituloReporte, subtitulo, fontTitulo16, fontTitulo)
-            reportesService.numeracion(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
-
+            if(nombreReporte == 'pagosPendientes') {
+                reportesService.numeracion3(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+            } else {
+                reportesService.numeracion(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+            }
             document.add(en)
         }
 

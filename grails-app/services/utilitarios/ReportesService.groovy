@@ -39,4 +39,26 @@ class ReportesService {
         table.addCell(String.format("Página %d de %d", x, y));
         return table;
     }
+
+    def numeracion3(x, y) {
+        PdfPTable table = new PdfPTable(3)
+        table.setWidths(arregloEnteros([10, 6, 10]))
+        table.setTotalWidth(590)
+        table.setLockedWidth(true)
+        table.getDefaultCell().setFixedHeight(20)
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER)
+        table.addCell("Administrador - Telef: 098 491 6620")
+        table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT)
+        table.addCell(String.format("Página %d de %d", x, y))
+        table.addCell("Dpto. 214")
+        return table;
+    }
+
+    private static int[] arregloEnteros(array) {
+        int[] ia = new int[array.size()]
+        array.eachWithIndex { it, i ->
+            ia[i] = it.toInteger()
+        }
+        return ia
+    }
 }
