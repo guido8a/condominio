@@ -154,30 +154,6 @@
                 <i class="fa fa-line-chart fa-5x"></i><br/>
                 Ingresos y Egresos
             </a>
-
-            %{--
-                        <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#modalDeudas"
-                           title="Estado de cuenta de los condóminos">
-                            <i class="fa fa-file-text-o fa-5x"></i><br/>
-                            Deudas
-                        </a>
-                        <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#solicitud">
-                            <i class="fa fa-money fa-5x"></i><br/>
-                            Solicitudes de pago
-                        </a>
-                        <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#planCuentas" title="Plan de cuentas o catálogo de cuentas de la contabilidad">
-                            <i class="fa fa-sign-in fa-5x"></i><br/>
-                            Detalle Ingresos
-                        </a>
-                        <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#libroDiario">
-                            <i class="fa fa-sign-out fa-5x"></i><br/>
-                            Detalle egresos
-                        </a>
-                        <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#libroMayor">
-                            <i class="fa fa-home fa-5x"></i><br/>
-                            Detalle de Obras
-                        </a>
-            --}%
         </p>
     </div>
 </div>
@@ -373,10 +349,23 @@
                     </div>
 
                 </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-6 col-xs-4">
+                        <label>Torre:</label>
+                    </div>
+                    <div class="col-md-4 col-xs-6">
+                        <g:select name="torre_name" id="torre" from="${edificios}" optionKey="id" optionValue="descripcion" class="form-control"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
                 </button>
                 <button type="button" class="btn btnDeudas btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
                 </button>
@@ -605,7 +594,8 @@
 
         $(".btnDeudas").click(function () {
             var fechaI = $("#fechaImprime").val();
-            location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes4')}?fecha=" + fechaI
+            var torre = $("#torre").val();
+            location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes4')}?fecha=" + fechaI + "&torre=" + torre
         });
 
         $(".btnSolicitud").click(function () {

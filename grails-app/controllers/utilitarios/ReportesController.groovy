@@ -9,6 +9,7 @@ import com.lowagie.text.pdf.BaseFont
 import com.lowagie.text.pdf.DefaultFontMapper
 import com.lowagie.text.pdf.PdfTemplate
 import condominio.Condominio
+import condominio.Edificio
 import condominio.Ingreso
 import condominio.Obra
 import groovy.json.JsonBuilder
@@ -68,9 +69,10 @@ class ReportesController extends Shield{
         def cn = dbConnectionService.getConnection()
         def sql = 'select distinct cast (extract(year from pagofcpg) as INT) from pago order by 1;'
         def res = cn.rows(sql.toString())
+        def condominio = Condominio.get(session.condominio.id)
+        def edificios = Edificio.findAllByCondominio(condominio)
 
-        return [anios: res.date_part]
-
+        return [anios: res.date_part, edificios: edificios]
     }
 
     def reportes() {
@@ -636,72 +638,68 @@ class ReportesController extends Shield{
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
-        res.each { fila ->
-            if (actual == 0) {
-                printHeaderDetalle()
-            }
-            if ((actual.toInteger() + adicionales.toInteger()) >= max) {
-                max = 43
-                printHeaderDetalle()
-                actual = 0
-                adicionales = 0
-            }
 
-
-            nuevo = fila.prsndpto
-            contador++
-
-//            println("contador " + contador)
-//            println("tamaño " + tamano)
-//            println("anterior " + anterior)
-//            println("nuevo " + nuevo)
-
-
-            if (anterior == nuevo) {
-                if (nuevo == ultimo && (tamano.toInteger()) == contador) {
-                    celdas(tablaDetalles, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
-                    total += fila.sldo
-                    anterior = fila.prsndpto
-                    printTotales([total: total])
-                    adicionales++
-                } else {
-                    celdas(tablaDetalles, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
-                    total += fila.sldo
-                    anterior = fila.prsndpto
+              res.each { fila ->
+                if (actual == 0) {
+                    printHeaderDetalle()
                 }
-            } else {
-                if (contador == 1) {
-                    celdas(tablaDetalles, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
-                    total += fila.sldo
-                    anterior = fila.prsndpto
-                } else {
-                    if (tamano.toInteger() == contador) {
-                        printTotales([total: total])
-                        celdas(tablaDetalles, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                if ((actual.toInteger() + adicionales.toInteger()) >= max) {
+                    max = 43
+                    printHeaderDetalle()
+                    actual = 0
+                    adicionales = 0
+                }
 
-                        total = fila.sldo
+
+                nuevo = fila.prsndpto
+                contador++
+
+                if (anterior == nuevo) {
+                    if (nuevo == ultimo && (tamano.toInteger()) == contador) {
+                        celdas(tablaDetalles, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                        total += fila.sldo
                         anterior = fila.prsndpto
-                        printTotales([total: fila.sldo])
+                        printTotales([total: total])
                         adicionales++
                     } else {
-                        printTotales([total: total])
                         celdas(tablaDetalles, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
-                        total = fila.sldo
+                        total += fila.sldo
                         anterior = fila.prsndpto
-                        adicionales++
                     }
+                } else {
+                    if (contador == 1) {
+                        celdas(tablaDetalles, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                        total += fila.sldo
+                        anterior = fila.prsndpto
+                    } else {
+                        if (tamano.toInteger() == contador) {
+                            printTotales([total: total])
+                            celdas(tablaDetalles, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+
+                            total = fila.sldo
+                            anterior = fila.prsndpto
+                            printTotales([total: fila.sldo])
+                            adicionales++
+                        } else {
+                            printTotales([total: total])
+                            celdas(tablaDetalles, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                            total = fila.sldo
+                            anterior = fila.prsndpto
+                            adicionales++
+                        }
+                    }
+                }
+
+                actual++
+                u = (actual.toInteger() + adicionales.toInteger())
+
+                if (actual <= max) {
+                    pagActual = 1
+                } else {
+                    pagActual = Math.ceil(actual / max).toInteger()
                 }
             }
 
-            actual++
-            u = (actual.toInteger() + adicionales.toInteger())
-
-            if (actual <= max) {
-                pagActual = 1
-            } else {
-                pagActual = Math.ceil(actual / max).toInteger()
-            }
-        }
 
 
         document.add(tablaDetalles)
@@ -2136,13 +2134,12 @@ class ReportesController extends Shield{
 
     def pagosPendientes4() {
 
-//        println "params pagosPendientes3: " + params
+        println "params pagosPendientes4: " + params
 
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
 
         def cn = dbConnectionService.getConnection()
-        def sql = "select * from pendiente('${fecha.format('yyy-MM-dd')}')"
-//        println("sql " + sql)
+        def sql = "select * from pendiente('${fecha.format('yyy-MM-dd')}', '${params.torre}')"
 
         def res = cn.rows(sql.toString())
         def tamano = res.size()
@@ -2198,7 +2195,7 @@ class ReportesController extends Shield{
         def nuevo
         def total = 0
         def contador = 0
-        def ultimo = res.last().prsndpto
+        def ultimo = (res ? res.last().prsndpto : 0)
         def adicionales = 0
         def u = 0
 
@@ -2221,62 +2218,71 @@ class ReportesController extends Shield{
         tablaTotal.setWidthPercentage(100);
         tablaTotal.setWidths(arregloEnteros([89, 11]))
 
-        res.each { fila ->
 
-            if ((actual.toInteger() + adicionales.toInteger()) >= max) {
-                max = 43
-                actual = 0
-                adicionales = 0
-            }
+        if(res){
+            res.each { fila ->
 
-            nuevo = fila.prsndpto
-            contador++
-
-            if (anterior == nuevo) {
-                if (nuevo == ultimo && (tamano.toInteger()) == contador) {
-                    celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
-                    total += fila.sldo
-                    anterior = fila.prsndpto
-                    totales(table, total, fontTd11, frmtDato, frmtNmro)
-                    adicionales++
-                } else {
-                    celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
-                    total += fila.sldo
-                    anterior = fila.prsndpto
+                if ((actual.toInteger() + adicionales.toInteger()) >= max) {
+                    max = 43
+                    actual = 0
+                    adicionales = 0
                 }
-            } else {
-                if (contador == 1) {
-                    celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
-                    total += fila.sldo
-                    anterior = fila.prsndpto
-                } else {
-                    if (tamano.toInteger() == contador) {
-                        totales(table, total, fontTd11, frmtDato, frmtNmro)
+
+                nuevo = fila.prsndpto
+                contador++
+
+                if (anterior == nuevo) {
+                    if (nuevo == ultimo && (tamano.toInteger()) == contador) {
                         celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
-                        total = fila.sldo
+                        total += fila.sldo
                         anterior = fila.prsndpto
-                        totales(table, fila.sldo, fontTd11, frmtDato, frmtNmro)
+                        totales(table, total, fontTd11, frmtDato, frmtNmro)
                         adicionales++
                     } else {
-                        totales(table, total, fontTd11, frmtDato, frmtNmro)
                         celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
-                        total = fila.sldo
+                        total += fila.sldo
                         anterior = fila.prsndpto
-                        adicionales++
+                    }
+                } else {
+                    if (contador == 1) {
+                        celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                        total += fila.sldo
+                        anterior = fila.prsndpto
+                    } else {
+                        if (tamano.toInteger() == contador) {
+                            totales(table, total, fontTd11, frmtDato, frmtNmro)
+                            celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                            total = fila.sldo
+                            anterior = fila.prsndpto
+                            totales(table, fila.sldo, fontTd11, frmtDato, frmtNmro)
+                            adicionales++
+                        } else {
+                            totales(table, total, fontTd11, frmtDato, frmtNmro)
+                            celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                            total = fila.sldo
+                            anterior = fila.prsndpto
+                            adicionales++
+                        }
                     }
                 }
+
+                actual++
+                u = (actual.toInteger() + adicionales.toInteger())
+
+                if (actual <= max) {
+                    pagActual = 1
+                } else {
+                    pagActual = Math.ceil(actual / max).toInteger()
+                }
             }
-
-            actual++
-            u = (actual.toInteger() + adicionales.toInteger())
-
-            if (actual <= max) {
-                pagActual = 1
-            } else {
-                pagActual = Math.ceil(actual / max).toInteger()
-            }
-
+        }else{
+            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+            addCellTabla(table, new Paragraph("", fontTd10), frmtNmro)
+            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+            addCellTabla(table, new Paragraph("", fontTd10), frmtNmro)
         }
+
 
         document.add(table);
         document.close();
