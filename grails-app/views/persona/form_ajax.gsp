@@ -14,8 +14,33 @@
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="row">
+                        <label for="nombrePropietario" class="control-label col-xs-3 col-md-3">
+                            Propietario Nombre
+                        </label>
+                        <div class="col-xs-9 col-md-8">
+                            <g:textField name="nombrePropietario" maxlength="30" required="" class="form-control required"
+                                         value="${personaInstance?.nombrePropietario}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="row">
+                        <label for="apellidoPropietario" class="control-label col-xs-3 col-md-3">
+                            Propietario Apellido
+                        </label>
+                        <div class="col-xs-9 col-md-8">
+                            <g:textField name="apellidoPropietario" maxlength="30" required="" class="form-control required"
+                                         value="${personaInstance?.apellidoPropietario}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="row">
                         <label for="nombre" class="control-label col-xs-3 col-md-3">
-                            Nombre
+                            Ocupante Nombre
                         </label>
                         <div class="col-xs-9 col-md-8">
                             <g:textField name="nombre" maxlength="30" required="" class="form-control required"
@@ -26,7 +51,7 @@
                 <div class="col-xs-12 col-md-6">
                     <div class="row">
                         <label for="apellido" class="control-label col-xs-3 col-md-3">
-                            Apellido
+                            Ocupante Apellido
                         </label>
                         <div class="col-xs-9 col-md-8">
                             <g:textField name="apellido" maxlength="30" required="" class="form-control required"
@@ -37,36 +62,11 @@
             </div>
 
             <div class="row">
-                <div class="col-xs-12 col-md-6">
-                    <div class="row">
-                        <label for="edificio" class="col-xs-3 col-md-3 control-label">
-                            Edificio
-                        </label>
-                        <div class="col-xs-9 col-md-8">
-                            <g:select id="edificio" name="edificio.id" from="${condominio.Edificio.list()}"
-                                      optionKey="id" optionValue="descripcion"
-                                      value="${personaInstance?.edificio?.id}" class="many-to-one form-control"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-md-6">
-                    <div class="row">
-                        <label for="departamento" class="col-xs-3 col-md-3 control-label">
-                            Número
-                        </label>
-                        <div class="col-xs-9 col-md-8">
-                            <g:textField name="departamento" class="allCaps form-control required" required="" value="${personaInstance?.departamento}"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-12 col-md-6">
+                <div class="col-xs-12 col-md-3">
                     <div class="row">
                         <span class="grupo">
                             <label for="ruc" class="col-xs-3 col-md-3 control-label">
-                                Ruc
+                                CI/Ruc
                             </label>
                             <div class="col-xs-8 col-md-8">
                                 <g:textField name="ruc" required="" class="allCaps digits form-control required" value="${personaInstance?.ruc}"/>
@@ -75,34 +75,61 @@
                         </span>
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class="col-xs-12 col-md-3">
                     <div class="row">
-                        <label for="tipoOcupacion" class="col-xs-3 col-md-3 control-label">
-                            Tipo
+                        <label for="edificio" class="col-xs-4 col-md-4 control-label">
+                            Edificio
                         </label>
-                        <div class="col-xs-9 col-md-8">
+                        <div class="col-xs-8 col-md-7">
+                            <g:select id="edificio" name="edificio.id" from="${condominio.Edificio.list()}"
+                                      optionKey="id" optionValue="descripcion"
+                                      value="${personaInstance?.edificio?.id}" class="many-to-one form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-2">
+                    <div class="row">
+                        <label for="departamento" class="col-xs-5 col-md-5 control-label">
+                            Número
+                        </label>
+                        <div class="col-xs-7 col-md-7">
+                            <g:textField name="departamento" class="allCaps form-control required" required="" value="${personaInstance?.departamento}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-4">
+                    <div class="row">
+                        <label for="tipoOcupacion" class="col-xs-5 col-md-5 control-label">
+                            Ocupado por
+                        </label>
+                        <div class="col-xs-7 col-md-6">
                             <g:select id="tipoOcupacion" name="tipoOcupacion.id" from="${condominio.TipoOcupacion.list()}"
                                       optionKey="id" value="${personaInstance?.tipoOcupacion?.id}"
                                       class="many-to-one form-control"/>
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="row">
-                <div class="col-xs-12 col-md-6">
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-md-9">
                     <div class="row">
                         <span class="grupo">
-                            <label for="direccion" class="col-xs-3 col-md-3 control-label">
+                            <label for="direccion" class="col-xs-2 col-md-2 control-label">
                                 Dirección
                             </label>
-                            <div class="col-xs-9 col-md-8">
-                                <g:textArea name="direccion" class="form-control" value="${personaInstance?.direccion}" style="resize: none"/>
+                            <div class="col-xs-10 col-md-9">
+                                <g:textField name="direccion" class="form-control" value="${personaInstance?.direccion}" style="resize: none"/>
+                                %{--<g:textArea name="direccion" class="form-control" value="${personaInstance?.direccion}" style="resize: none"/>--}%
                             </div>
                         </span>
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class="col-xs-12 col-md-3">
                     <div class="row">
                         <span class="grupo">
                             <label for="alicuota" class="col-xs-3 col-md-3 control-label">

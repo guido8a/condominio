@@ -10,6 +10,8 @@ class Persona {
     Edificio edificio
     String nombre
     String apellido
+    String nombrePropietario
+    String apellidoPropietario
     String sexo
     Date fecha
     Date fechaInicio
@@ -50,6 +52,8 @@ class Persona {
             tipoOcupacion column: 'tpoc__id'
             nombre column: 'prsnnmbr'
             apellido column: 'prsnapll'
+            nombrePropietario column: 'prsnprnb'
+            apellidoPropietario column: 'prsnprap'
             sexo column: 'prsnsexo'
             fecha column: 'prsnfcha'
             fechaInicio column: 'prsnfcin'
@@ -75,6 +79,8 @@ class Persona {
         condominio(blank: false, nullable: false)
         nombre(size: 3..30, blank: false)
         apellido(size: 3..30, blank: false)
+        nombrePropietario(size: 3..30, blank: false)
+        apellidoPropietario(size: 3..30, blank: false)
         ruc(blank: false, nullable: false)
         sexo(inList: ["F", "M"], size: 1..1, blank: false, attributes: ['mensaje': 'Sexo de la persona'])
         mail(size: 3..63, blank: true, nullable: true)

@@ -324,8 +324,8 @@ como máximo 30
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
                     title   : title + " Persona",
-//                    class   : "long",
-                    size   :  'large',
+                    class   : "long",
+//                    size   :  'large',
                     message : msg,
                     buttons : {
                         cancelar : {

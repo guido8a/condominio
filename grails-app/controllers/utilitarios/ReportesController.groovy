@@ -721,6 +721,21 @@ class ReportesController extends Shield{
         addCellTabla(tablaDetalles, new Paragraph(sldo.toString(), fontTd10), frmtNmro)
     }
 
+    def poneDatos(tabla, fila) {
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        addCellTabla(tabla, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
+        addCellTabla(tabla, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
+        if(fila.tipo in [2,3]){
+            addCellTabla(tabla, new Paragraph(fila.prop, fontTd10), frmtDato)
+        } else {
+            addCellTabla(tabla, new Paragraph(' ' + fila.prsn, fontTd10), frmtDato)
+        }
+        addCellTabla(tabla, new Paragraph(fila.oblg, fontTd10), frmtDato)
+        addCellTabla(tabla, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
+    }
+
     def totales(tabla,total,fontTd10,frmtDato,frmtNmro) {
         addCellTabla(tabla, new Paragraph('', fontTd10), frmtDato)
         addCellTabla(tabla, new Paragraph('', fontTd10), frmtNmro)
@@ -2134,7 +2149,7 @@ class ReportesController extends Shield{
 
     def pagosPendientes4() {
 
-        println "params pagosPendientes4: " + params
+//        println "params pagosPendientes4: " + params
 
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
 
@@ -2206,8 +2221,8 @@ class ReportesController extends Shield{
 
         PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100);
-        table.setWidths(arregloEnteros([7, 7, 22, 50, 14]))
-        addCellTabla(table, new Paragraph("Dpto.", fontTh), frmtHd)
+        table.setWidths(arregloEnteros([6, 7, 26, 51, 10]))
+        addCellTabla(table, new Paragraph("Dpt.", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Cuota", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Detalle", fontTh), frmtHd)
@@ -2233,32 +2248,32 @@ class ReportesController extends Shield{
 
                 if (anterior == nuevo) {
                     if (nuevo == ultimo && (tamano.toInteger()) == contador) {
-                        celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                        poneDatos(table, fila)
                         total += fila.sldo
                         anterior = fila.prsndpto
                         totales(table, total, fontTd11, frmtDato, frmtNmro)
                         adicionales++
                     } else {
-                        celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                        poneDatos(table, fila)
                         total += fila.sldo
                         anterior = fila.prsndpto
                     }
                 } else {
                     if (contador == 1) {
-                        celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                        poneDatos(table, fila)
                         total += fila.sldo
                         anterior = fila.prsndpto
                     } else {
                         if (tamano.toInteger() == contador) {
                             totales(table, total, fontTd11, frmtDato, frmtNmro)
-                            celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                            poneDatos(table, fila)
                             total = fila.sldo
                             anterior = fila.prsndpto
                             totales(table, fila.sldo, fontTd11, frmtDato, frmtNmro)
                             adicionales++
                         } else {
                             totales(table, total, fontTd11, frmtDato, frmtNmro)
-                            celdas(table, fila.prsndpto, fila.prsn, fila.oblg, fila.alct, fila.sldo, fontTd10, frmtDato, frmtNmro)
+                            poneDatos(table, fila)
                             total = fila.sldo
                             anterior = fila.prsndpto
                             adicionales++
