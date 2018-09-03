@@ -28,7 +28,7 @@
 </style>
 
 
-<div class="" style="width: 100%;height: 300px; overflow-y: auto;">
+<div class="" style="width: 100%;height: 500px; overflow-y: auto;">
     <table class="table-bordered table-condensed table-hover" width="100%">
         <g:each in="${ingreso}" status="i" var="ingr">
             <g:set var="saldo" value="${ingr?.valor?.toDouble() - (Pago.findAllByIngreso(ingr).valor?.sum()?.toDouble() ?: 0)}"/>
