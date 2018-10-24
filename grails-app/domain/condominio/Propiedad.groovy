@@ -35,14 +35,14 @@ class Propiedad {
 
 
     static constraints = {
-//        persona(nullable: false, blank: false)
-//        tipoPropiedad(nullable: false, blank: false)
-//        fechaDesde(nullable: false, blank: false)
-//        fechaHasta(blank: true, nullable: true)
-//        valor(blank: true, nullable: true)
-//        observaciones(blank: true, nullable: true)
-//        alicuota(blank: false, nullable: false)
-//        numero(blank: false, nullable: false)
-//        area(blank: false, nullable: false)
+        persona(nullable: false, blank: false)
+        tipoPropiedad(nullable: false, blank: false)
+        fechaDesde(nullable: true, blank: true)
+        fechaHasta(blank: true, nullable: true)
+        valor(blank: true, nullable: true)
+        observaciones(blank: true, nullable: true)
+        alicuota(blank: false, nullable: false)
+        numero(blank: true, nullable: true)   // TODO: cambiar luego a false
+        area(blank: true, nullable: true)
     }
 }

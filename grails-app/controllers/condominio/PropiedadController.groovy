@@ -46,8 +46,9 @@ class PropiedadController extends Shield {
         } else {
 //            list = Propiedad.list(params)
 
-            println("pr " + Propiedad.findAllByIdIsNotNull())
+//            println("pr " + Propiedad.findAllByIdIsNotNull())
 
+            println "........1"
             list = Propiedad.list()
         }
         if (!all && params.offset.toInteger() > 0 && list.size() == 0) {

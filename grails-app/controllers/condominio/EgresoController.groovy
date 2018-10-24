@@ -329,7 +329,7 @@ class EgresoController extends Shield {
         def egreso = Egreso.get(params.egreso)
         def pagos = PagoEgreso.findAllByEgreso(egreso).sort{it.fechaPago}
 
-        def saldo = Math.round(egreso?.valor*100)/100 - Math.round((pagos.valor?.sum() ?: 0) * 100)/100
+        def saldo = Math.round(egreso?.valor?:0*100)/100 - Math.round((pagos?.valor?.sum() ?: 0) * 100)/100
 
         return[egreso: egreso, pagos: pagos, saldo: saldo]
     }
