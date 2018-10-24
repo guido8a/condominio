@@ -62,8 +62,6 @@ class ReportesController extends Shield{
     def dbConnectionService
     def reportesService
 
-
-
     def index() {
 
         def cn = dbConnectionService.getConnection()
@@ -71,6 +69,7 @@ class ReportesController extends Shield{
         def res = cn.rows(sql.toString())
         def condominio = Condominio.get(session.condominio.id)
         def edificios = Edificio.findAllByCondominio(condominio)
+
 
         return [anios: res.date_part, edificios: edificios]
     }

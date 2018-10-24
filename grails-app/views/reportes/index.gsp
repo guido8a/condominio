@@ -1,6 +1,10 @@
 <html>
+
+
 <head>
     <meta name="layout" content="main"/>
+
+
     <title>Reportes</title>
 
     <style type="text/css">
