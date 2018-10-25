@@ -60,10 +60,11 @@ class PropiedadController extends Shield {
      * @return propiedadInstanceList: la lista de elementos filtrados, propiedadInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def list() {
-        println "--> $params"
-        def propiedadInstanceList = Propiedad.findAllByPersona(Persona.get(params.id))
+//        println "--> $params"
+        def dueno = Persona.get(params.id)
+        def propiedadInstanceList = Propiedad.findAllByPersona(dueno)
         def propiedadInstanceCount = propiedadInstanceList.size()
-        return [propiedadInstanceList: propiedadInstanceList, propiedadInstanceCount: propiedadInstanceCount, dueno: params.id]
+        return [propiedadInstanceList: propiedadInstanceList, propiedadInstanceCount: propiedadInstanceCount, dueno: dueno]
     }
 
     /**
@@ -90,6 +91,13 @@ class PropiedadController extends Shield {
      * @render ERROR*[mensaje] cuando no se encontró el elemento
      */
     def form_ajax() {
+
+        def persona
+
+        if(params.dueno){
+         persona = Persona.get(params.dueno)
+        }
+
         def propiedadInstance = new Propiedad()
         if(params.id) {
             propiedadInstance = Propiedad.get(params.id)
@@ -99,7 +107,7 @@ class PropiedadController extends Shield {
             }
         }
         propiedadInstance.properties = params
-        return [propiedadInstance: propiedadInstance]
+        return [propiedadInstance: propiedadInstance, persona: persona]
     } //form para cargar con ajax en un dialog
 
     /**

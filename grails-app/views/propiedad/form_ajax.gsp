@@ -28,8 +28,12 @@
                         Persona
                     </label>
                     <div class="col-md-8">
-                        <g:select id="persona" name="persona.id" from="${seguridad.Persona.list().sort{it.apellido}}" optionKey="id" required=""
+                        %{--<g:select id="persona" name="persona.id" from="${seguridad.Persona.list().sort{it.apellido}}" optionKey="id" required=""--}%
+                                  %{--value="${propiedadInstance?.persona?.id}" class="many-to-one form-control" optionValue="${{it.apellido + " " + it.nombre + " - Departamento: " + it.departamento }}"/>--}%
+
+                        <g:select id="persona" name="persona.id" from="${persona}" optionKey="id" required=""
                                   value="${propiedadInstance?.persona?.id}" class="many-to-one form-control" optionValue="${{it.apellido + " " + it.nombre + " - Departamento: " + it.departamento }}"/>
+
                     </div>
                 </span>
             </div>
