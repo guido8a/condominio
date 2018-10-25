@@ -32,10 +32,21 @@
     %{--</div>--}%
 %{--</div>--}%
 
+
+
+
 <div class="row" style="margin-bottom: 20px">
 
 
-    <div class="col-md-3"></div>
+
+    <div class="col-md-3">
+
+        <div class="btn-group">
+            <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary">
+                <i class="fa fa-arrow-left"></i> Regresar
+            </a>
+        </div>
+    </div>
 
     <div class="col-md-1">
         <label>Persona</label>
