@@ -269,10 +269,22 @@ como máximo 30
             }
         };
 
+        var propiedades = {
+            label: "Propiedades",
+            icon: "fa fa-home",
+            separator_before : true,
+            action : function ($element) {
+                var id = $element.data("id");
+//                imprimirExpensas(id);
+                location.href='${createLink(controller: 'propiedad', action: 'list')}?id=' + id;
+            }
+        };
+
         items.editar = editar;
         items.perfil = perfil;
         items.alicuota = alicuota;
         items.pagar = ingresos;
+        items.propiedad = propiedades;
         if(deuda <= 0 && codigo == 'P'){
             items.certificado = certificado;
         }

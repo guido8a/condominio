@@ -43,8 +43,9 @@
 
 
     <div class="col-md-4">
-        <g:select from="${seguridad.Persona.list().sort{it.apellido}}"
-                  name="persona_name" id="personaId" optionValue="${{it.apellido + " " + it.nombre + " - Departamento: " + it.departamento }}" optionKey="id" class="form-control"/>
+        <g:select from="${seguridad.Persona.list().sort{it.apellido}}" name="persona_name" id="personaId"
+                  optionValue="${{it.apellido + " " + it.nombre + " - Departamento: " + it.departamento }}"
+                  optionKey="id" class="form-control" value="${dueno}"/>
     </div>
 
     <div class="btn-group">
@@ -128,6 +129,7 @@
             return false;
         } //else
     }
+
     function deleteRow(itemId) {
         bootbox.dialog({
             title   : "Alerta",
@@ -166,6 +168,7 @@
             }
         });
     }
+
     function createEditRow(id) {
         var title = id ? "Editar" : "Nueva ";
         var data = id ? { id: id } : {};

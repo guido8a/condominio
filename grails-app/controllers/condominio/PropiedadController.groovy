@@ -60,9 +60,10 @@ class PropiedadController extends Shield {
      * @return propiedadInstanceList: la lista de elementos filtrados, propiedadInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def list() {
-        def propiedadInstanceList = getList(params, false)
-        def propiedadInstanceCount = getList(params, true).size()
-        return [propiedadInstanceList: propiedadInstanceList, propiedadInstanceCount: propiedadInstanceCount]
+        println "--> $params"
+        def propiedadInstanceList = Propiedad.findAllByPersona(Persona.get(params.id))
+        def propiedadInstanceCount = propiedadInstanceList.size()
+        return [propiedadInstanceList: propiedadInstanceList, propiedadInstanceCount: propiedadInstanceCount, dueno: params.id]
     }
 
     /**
