@@ -5,108 +5,123 @@
 <head>
     <meta name="layout" content="main">
     <title>Lista de Propiedad</title>
+
+    <style type="text/css">
+
+        .centro {
+            text-align: center;
+        }
+
+        .derecha{
+            text-align: right;
+        }
+
+    </style>
+
 </head>
 <body>
 
 <elm:message tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:message>
 
-<!-- botones -->
-<div class="btn-toolbar toolbar">
-    <div class="btn-group">
-        <a href="#" class="btn btn-default btnCrear">
-            <i class="fa fa-file-o"></i> Crear
-        </a>
+%{--<!-- botones -->--}%
+%{--<div class="btn-toolbar toolbar">--}%
+    %{--<div class="btn-group">--}%
+        %{--<a href="#" class="btn btn-primary btnCrear">--}%
+            %{--<i class="fa fa-file-o"></i> Agregar Propiedad--}%
+        %{--</a>--}%
+    %{--</div>--}%
+%{--</div>--}%
+
+<div class="row" style="margin-bottom: 20px">
+
+
+    <div class="col-md-3"></div>
+
+    <div class="col-md-1">
+        <label>Persona</label>
     </div>
-    <div class="btn-group pull-right col-md-3">
-        <div class="input-group">
-            <input type="text" class="form-control input-search" placeholder="Buscar" value="${params.search}">
-            <span class="input-group-btn">
-                <g:link controller="propiedad" action="list" class="btn btn-default btn-search">
-                    <i class="fa fa-search"></i>&nbsp;
-                </g:link>
-            </span>
-        </div><!-- /input-group -->
+
+
+    <div class="col-md-4">
+        <g:select from="${seguridad.Persona.list().sort{it.apellido}}"
+                  name="persona_name" id="personaId" optionValue="${{it.apellido + " " + it.nombre + " - Departamento: " + it.departamento }}" optionKey="id" class="form-control"/>
+    </div>
+
+    <div class="btn-group">
+        <a href="#" class="btn btn-primary btnCrear">
+            <i class="fa fa-file-o"></i> Agregar Propiedad
+        </a>
     </div>
 </div>
 
-<table class="table table-condensed table-bordered table-striped table-hover">
+
+
+<table class="table table-condensed table-bordered table-striped">
     <thead>
     <tr>
-        
-        <g:sortableColumn property="alicuota" title="Alicuota" />
-        
-        <g:sortableColumn property="area" title="Area" />
-        
-        <g:sortableColumn property="fechaDesde" title="Fecha Desde" />
-        
-        <g:sortableColumn property="fechaHasta" title="Fecha Hasta" />
-        
-        <g:sortableColumn property="numero" title="Numero" />
-        
-        <g:sortableColumn property="observaciones" title="Observaciones" />
-        
+        <th style="width: 23%">Tipo de Propiedad</th>
+        <th style="width: 15%">Número</th>
+        <th style="width: 10%">Área</th>
+        <th style="width: 10%">Valor</th>
+        <th style="width: 10%">Alícuota</th>
+        <th style="width: 14%">Fecha Desde</th>
+        <th style="width: 14%">Fecha Hasta</th>
+        <th style="width: 2%"></th>
     </tr>
     </thead>
     <tbody>
-    <g:if test="${propiedadInstanceCount > 0}">
-        <g:each in="${propiedadInstanceList}" status="i" var="propiedadInstance">
-            <tr data-id="${propiedadInstance.id}">
-                
-                <td>${propiedadInstance.alicuota}</td>
-                
-                <td><g:fieldValue bean="${propiedadInstance}" field="area"/></td>
-                
-                <td><g:formatDate date="${propiedadInstance.fechaDesde}" format="dd-MM-yyyy" /></td>
-                
-                <td><g:formatDate date="${propiedadInstance.fechaHasta}" format="dd-MM-yyyy" /></td>
-                
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${propiedadInstance}" field="numero"/></elm:textoBusqueda></td>
-                
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${propiedadInstance}" field="observaciones"/></elm:textoBusqueda></td>
-                
-            </tr>
-        </g:each>
-    </g:if>
-    <g:else>
-        <tr class="danger">
-            <td class="text-center" colspan="9">
-                <g:if test="${params.search && params.search!= ''}">
-                    No se encontraron resultados para su búsqueda
-                </g:if>
-                <g:else>
-                    No se encontraron registros que mostrar
-                </g:else>
-            </td>
-        </tr>
-    </g:else>
+
     </tbody>
 </table>
 
-<elm:pagination total="${propiedadInstanceCount}" params="${params}"/>
+<div id="divTablaPropiedades">
+
+
+</div>
 
 <script type="text/javascript">
+
+
+    cargarTablaPropiedades($("#personaId option:selected").val());
+
+    $("#personaId").change(function () {
+        cargarTablaPropiedades($("#personaId option:selected").val());
+    });
+
+
+    function cargarTablaPropiedades (persona) {
+       $.ajax({
+           type: 'POST',
+            url: "${createLink(controller: 'propiedad', action: 'tablaPropiedades_ajax')}",
+            data:{
+                id: persona
+            },
+            success: function (msg){
+                $("#divTablaPropiedades").html(msg)
+            }
+        });
+    }
+
+
     var id = null;
     function submitFormPropiedad() {
         var $form = $("#frmPropiedad");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
         $btn.replaceWith(spinner);
-            openLoader("Guardando Propiedad");
+            openLoader("Guardando...");
                     $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
                 success : function (msg) {
-                var parts = msg.split("*");
-                log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                setTimeout(function() {
-                    if (parts[0] == "SUCCESS") {
-                        location.reload(true);
-                    } else {
-                        spinner.replaceWith($btn);
-                        return false;
+                    closeLoader();
+                    if(msg == 'ok'){
+                        log("Propiedad guardada correctamente","success");
+                        cargarTablaPropiedades($("#personaId option:selected").val());
+                    }else{
+                        log("Error al guardar la propiedad","error")
                     }
-                }, 1000);
             }
         });
         } else {
@@ -154,7 +169,7 @@
         });
     }
     function createEditRow(id) {
-        var title = id ? "Editar" : "Crear";
+        var title = id ? "Editar" : "Nueva ";
         var data = id ? { id: id } : {};
                 $.ajax({
             type    : "POST",
@@ -178,7 +193,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitForm();
+                                return submitFormPropiedad();
                             } //callback
                         } //guardar
                     } //buttons
@@ -197,65 +212,65 @@
             return false;
         });
 
-                $("tbody>tr").contextMenu({
-            items  : {
-                header   : {
-                    label  : "Acciones",
-                    header : true
-                },
-                ver      : {
-                    label  : "Ver",
-                    icon   : "fa fa-search",
-                    action : function ($element) {
-            var id = $element.data("id");
-                                $.ajax({
-                type    : "POST",
-                url     : "${createLink(controller:'propiedad', action:'show_ajax')}",
-                data    : {
-                    id : id
-                },
-                success : function (msg) {
-                    bootbox.dialog({
-                        title   : "Ver Propiedad",
-                        message : msg,
-                        buttons : {
-                            ok : {
-                                label     : "Aceptar",
-                                className : "btn-primary",
-                                callback  : function () {
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        }
-    },
-        editar   : {
-            label  : "Editar",
-                icon   : "fa fa-pencil",
-                action : function ($element) {
-                var id = $element.data("id");
-                createEditRow(id);
-            }
-        },
-        eliminar : {
-            label            : "Eliminar",
-                icon             : "fa fa-trash-o",
-                separator_before : true,
-                action           : function ($element) {
-                var id = $element.data("id");
-                deleteRow(id);
-            }
-        }
-    },
-        onShow : function ($element) {
-        $element.addClass("success");
-        },
-        onHide : function ($element) {
-        $(".success").removeClass("success");
-        }
-    });
+                %{--$("tbody>tr").contextMenu({--}%
+            %{--items  : {--}%
+                %{--header   : {--}%
+                    %{--label  : "Acciones",--}%
+                    %{--header : true--}%
+                %{--},--}%
+                %{--ver      : {--}%
+                    %{--label  : "Ver",--}%
+                    %{--icon   : "fa fa-search",--}%
+                    %{--action : function ($element) {--}%
+            %{--var id = $element.data("id");--}%
+                                %{--$.ajax({--}%
+                %{--type    : "POST",--}%
+                %{--url     : "${createLink(controller:'propiedad', action:'show_ajax')}",--}%
+                %{--data    : {--}%
+                    %{--id : id--}%
+                %{--},--}%
+                %{--success : function (msg) {--}%
+                    %{--bootbox.dialog({--}%
+                        %{--title   : "Ver Propiedad",--}%
+                        %{--message : msg,--}%
+                        %{--buttons : {--}%
+                            %{--ok : {--}%
+                                %{--label     : "Aceptar",--}%
+                                %{--className : "btn-primary",--}%
+                                %{--callback  : function () {--}%
+                                %{--}--}%
+                            %{--}--}%
+                        %{--}--}%
+                    %{--});--}%
+                %{--}--}%
+            %{--});--}%
+        %{--}--}%
+    %{--},--}%
+        %{--editar   : {--}%
+            %{--label  : "Editar",--}%
+                %{--icon   : "fa fa-pencil",--}%
+                %{--action : function ($element) {--}%
+                %{--var id = $element.data("id");--}%
+                %{--createEditRow(id);--}%
+            %{--}--}%
+        %{--},--}%
+        %{--eliminar : {--}%
+            %{--label            : "Eliminar",--}%
+                %{--icon             : "fa fa-trash-o",--}%
+                %{--separator_before : true,--}%
+                %{--action           : function ($element) {--}%
+                %{--var id = $element.data("id");--}%
+                %{--deleteRow(id);--}%
+            %{--}--}%
+        %{--}--}%
+    %{--},--}%
+        %{--onShow : function ($element) {--}%
+        %{--$element.addClass("success");--}%
+        %{--},--}%
+        %{--onHide : function ($element) {--}%
+        %{--$(".success").removeClass("success");--}%
+        %{--}--}%
+    %{--});--}%
     });
 </script>
 

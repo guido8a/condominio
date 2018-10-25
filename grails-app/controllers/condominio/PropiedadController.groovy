@@ -1,6 +1,7 @@
 package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
+import seguridad.Persona
 import seguridad.Shield
 
 
@@ -44,12 +45,8 @@ class PropiedadController extends Shield {
                 }
             }
         } else {
-//            list = Propiedad.list(params)
+            list = Propiedad.list(params)
 
-//            println("pr " + Propiedad.findAllByIdIsNotNull())
-
-            println "........1"
-            list = Propiedad.list()
         }
         if (!all && params.offset.toInteger() > 0 && list.size() == 0) {
             params.offset = params.offset.toInteger() - 1
@@ -109,20 +106,28 @@ class PropiedadController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
+
+//        println("params save " + params)
+
+        params.area = params.area.toDouble()
+        params.valor = params.valor.toDouble()
+        params.alicuota = params.alicuota.toDouble()
+
+
         def propiedadInstance = new Propiedad()
         if(params.id) {
             propiedadInstance = Propiedad.get(params.id)
             if(!propiedadInstance) {
-                render "ERROR*No se encontró Propiedad."
+                render "no"
                 return
             }
         }
         propiedadInstance.properties = params
         if(!propiedadInstance.save(flush: true)) {
-            render "ERROR*Ha ocurrido un error al guardar Propiedad: " + renderErrors(bean: propiedadInstance)
+            render "no"
             return
         }
-        render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Propiedad exitosa."
+        render "ok"
         return
     } //save para grabar desde ajax
 
@@ -150,5 +155,14 @@ class PropiedadController extends Shield {
             return
         }
     } //delete para eliminar via ajax
+
+    def tablaPropiedades_ajax () {
+
+        def persona = Persona.get(params.id)
+        def propiedades = Propiedad.findAllByPersona(persona)
+
+        return[propiedades: propiedades]
+
+    }
     
 }
