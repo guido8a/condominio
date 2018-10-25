@@ -139,19 +139,19 @@ class PropiedadController extends Shield {
         if(params.id) {
             def propiedadInstance = Propiedad.get(params.id)
             if (!propiedadInstance) {
-                render "ERROR*No se encontró Propiedad."
+                render "no"
                 return
             }
             try {
                 propiedadInstance.delete(flush: true)
-                render "SUCCESS*Eliminación de Propiedad exitosa."
+                render "ok"
                 return
             } catch (DataIntegrityViolationException e) {
-                render "ERROR*Ha ocurrido un error al eliminar Propiedad"
+                render "no"
                 return
             }
         } else {
-            render "ERROR*No se encontró Propiedad."
+            render "no"
             return
         }
     } //delete para eliminar via ajax

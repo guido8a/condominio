@@ -132,7 +132,7 @@
         bootbox.dialog({
             title   : "Alerta",
             message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-            "¿Está seguro que desea eliminar el Propiedad seleccionado? Esta acción no se puede deshacer.</p>",
+            "¿Está seguro que desea eliminar la propiedad seleccionada? Esta acción no se puede deshacer.</p>",
             buttons : {
                 cancelar : {
                     label     : "Cancelar",
@@ -152,14 +152,12 @@
                                 id : itemId
                             },
                             success : function (msg) {
-                                var parts = msg.split("*");
-                                log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                                if (parts[0] == "SUCCESS") {
-                                    setTimeout(function() {
-                                        location.reload(true);
-                                    }, 1000);
-                                } else {
-                                    closeLoader();
+                                closeLoader();
+                                if(msg == 'ok'){
+                                    log("Propiedad borrada correctamente","success")
+                                    cargarTablaPropiedades($("#personaId option:selected").val());
+                                }else{
+                                    log("Error al borrar la propiedad", "error")
                                 }
                             }
                         });
