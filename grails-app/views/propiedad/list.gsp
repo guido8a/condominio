@@ -37,8 +37,6 @@
 
 <div class="row" style="margin-bottom: 20px">
 
-
-
     <div class="col-md-3">
 
         <div class="btn-group">
@@ -54,9 +52,15 @@
 
 
     <div class="col-md-4">
-        <g:select from="${seguridad.Persona.list().sort{it.apellido}}" name="persona_name" id="personaId"
+        %{--<g:select from="${seguridad.Persona.list().sort{it.apellido}}" name="persona_name" id="personaId"--}%
+                  %{--optionValue="${{it.apellido + " " + it.nombre + " - Departamento: " + it.departamento }}"--}%
+                  %{--optionKey="id" class="form-control" value="${dueno}"/>--}%
+
+        <g:select from="${dueno}" name="persona_name" id="personaId"
                   optionValue="${{it.apellido + " " + it.nombre + " - Departamento: " + it.departamento }}"
                   optionKey="id" class="form-control" value="${dueno}"/>
+
+
     </div>
 
     <div class="btn-group">
@@ -186,7 +190,10 @@
                 $.ajax({
             type    : "POST",
             url     : "${createLink(controller:'propiedad', action:'form_ajax')}",
-            data    : data,
+            data    : {
+                id:id,
+                dueno: '${dueno?.id}'
+            },
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
