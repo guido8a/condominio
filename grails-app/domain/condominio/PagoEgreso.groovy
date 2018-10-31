@@ -28,4 +28,5 @@ class PagoEgreso {
             documento(blank: true, nullable: true)
             observaciones(blank: true, nullable: true)
         }
+
     }
