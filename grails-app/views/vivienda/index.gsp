@@ -150,7 +150,6 @@ como máximo 30
     </div><!-- /.modal-dialog -->
 </div>
 
-
 <script type="text/javascript">
 
 
@@ -280,6 +279,16 @@ como máximo 30
             }
         };
 
+        var detalle = {
+            label: "Imprimir Detalle Pagos",
+            icon: "fa fa-print",
+            separator_before : true,
+            action : function ($element) {
+                var id = $element.data("id");
+                cargarFechas(id);
+            }
+        };
+
         items.editar = editar;
         items.perfil = perfil;
         items.alicuota = alicuota;
@@ -288,6 +297,7 @@ como máximo 30
         if(deuda <= 0 && codigo == 'P'){
             items.certificado = certificado;
         }
+        items.detalle = detalle;
 
         return items
     }
@@ -308,6 +318,44 @@ como máximo 30
         /* regresa a la opción seleccionada */
 //        $("#oprd option[value=" + anterior + "]").prop('selected', true);
     });
+
+    function cargarFechas (id) {
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'reportes', action:'fechasDetalle_ajax')}",
+            data    : {
+                id: id
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgFechasDetalle",
+                    title   : "Fechas - Detalle de Pagos",
+//                    class   : "modal-lg",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "<i class='fa fa-times'></i> Cerrar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        aceptar : {
+                            label     : "<i class='fa fa-print'></i> Imprimir",
+                            className : "btn-success",
+                            callback  : function () {
+                                var hasta = $("#fechaHastaDet").val();
+                                var desde = $("#fechaDesdeDet").val();
+                                location.href='${createLink(controller: 'reportes', action: 'reporteDetallePagos')}?id=' + id + "&desde=" + desde + "&hasta=" + hasta ;
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 100);
+            } //success
+        }); //ajax
+    }
 
 
     function poneOperadores (opcn) {
