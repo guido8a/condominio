@@ -280,7 +280,7 @@ como máximo 30
         };
 
         var detalle = {
-            label: "Imprimir Detalle Pagos",
+            label: "Detalle Pagos",
             icon: "fa fa-print",
             separator_before : true,
             action : function ($element) {
@@ -329,7 +329,7 @@ como máximo 30
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgFechasDetalle",
-                    title   : "Fechas - Detalle de Pagos",
+                    title   : "Período para el detalle de Pagos",
 //                    class   : "modal-lg",
                     message : msg,
                     buttons : {
