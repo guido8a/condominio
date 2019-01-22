@@ -2183,7 +2183,7 @@ class ReportesController extends Shield{
         def condominio = Condominio.get(session.condominio.id)
         def personas = Persona.findAllByCondominio(condominio)
 
-        def obras = Obra.findAllByPersonaInListAndFechaBetween(personas, fechaDesde, fechaHasta)
+        def obras = Obra.findAllByPersonaInListAndFechaBetween(personas, fechaDesde, fechaHasta, [sort: 'fecha'])
 
 
         println("obras " + obras)
@@ -2234,21 +2234,22 @@ class ReportesController extends Shield{
             def fondo = new Color(240, 248, 250);
             def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
 
-            def tablaHeaderDetalles = new PdfPTable(5);
+            def tablaHeaderDetalles = new PdfPTable(6);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([35,20,15,15,15]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([30,20,10,10,10,8]))
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Descripción", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Solicitante", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Proveedor", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha Solicitud", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha Inicio", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha Fin", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor Aprox.", fontTh), frmtHd)
             addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
         }
 
-        tablaDetalles = new PdfPTable(5);
+        tablaDetalles = new PdfPTable(6);
         tablaDetalles.setWidthPercentage(100);
-        tablaDetalles.setWidths(arregloEnteros([35,20,15,15,15]))
+        tablaDetalles.setWidths(arregloEnteros([30,20,10,10,10,8]))
         tablaDetalles.setSpacingAfter(1f);
 
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
@@ -2256,13 +2257,23 @@ class ReportesController extends Shield{
 
         printHeaderDetalle()
 
+        def total = 0
         obras.each {obra ->
             addCellTabla(tablaDetalles, new Paragraph(obra?.descripcion, fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new Paragraph(obra?.persona?.nombre + " " + obra?.persona?.apellido, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph("${obra?.proveedor?.nombre?:""} ${obra?.proveedor?.apellido?:""}", fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(obra?.fecha?.format("dd-MM-yyyy"), fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(obra?.fechaInicio?.format("dd-MM-yyyy"), fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(obra?.fechaFin?.format("dd-MM-yyyy"), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(obra?.presupuesto.toString(), fontTd10), frmtNmro)
+            total += obra?.fechaFin? obra?.presupuesto : 0
         }
+
+        addCellTabla(tablaDetalles, new Paragraph("Obras realizadas", fontTh), frmtDato)
+        addCellTabla(tablaDetalles, new Paragraph("", fontTd10), frmtDato)
+        addCellTabla(tablaDetalles, new Paragraph("", fontTd10), frmtDato)
+        addCellTabla(tablaDetalles, new Paragraph("", fontTd10), frmtDato)
+        addCellTabla(tablaDetalles, new Paragraph("Total", fontTh), frmtDato)
+        addCellTabla(tablaDetalles, new Paragraph(total.toString(), fontTh), frmtNmro)
 
         document.add(tablaDetalles)
         document.close();
