@@ -1823,8 +1823,12 @@ class ReportesController extends Shield{
                 "from egresos('${fechaDesde}','${fechaHasta}') group by  2 order by 2"
         def egresos = cn2.rows(sql2.toString())
 
-        def totalEgresos = (ingresos.vlor.sum() ?: 0)
+        def totalEgresos = (egresos.vlor.sum() ?: 0)
         println "tot egresos: $totalEgresos"
+
+        sql2 = "select * from saldos('${fechaDesde}','${fechaHasta}')"
+        def saldo = cn2.rows(sql2.toString())[0].sldoinic
+
 
         def baos = new ByteArrayOutputStream()
         def name = "balance_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
@@ -1872,7 +1876,8 @@ class ReportesController extends Shield{
         def fondo = new Color(240, 248, 250);
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
         def frmtHdb = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
-
+        def frmtNm = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         def printHeaderDetalle = {
 
 
@@ -1891,35 +1896,31 @@ class ReportesController extends Shield{
         tblaIngr.setSpacingAfter(1f);
 
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
-        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
         printHeaderDetalle()
 
         addCellTabla(tblaIngr, new Paragraph("Ingresos", fontTh), frmtHd)
-        addCellTabla(tblaIngr, new Paragraph("", fontTd10), frmtNmro)
+        addCellTabla(tblaIngr, new Paragraph(g.formatNumber(number:totalIngresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
 
         ingresos.each {ingreso ->
             addCellTabla(tblaIngr, new Paragraph(ingreso.fcha, fontTd10), frmtDato)
-            addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNmro)
+            addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNm)
         }
 
-        addCellTabla(tblaIngr, new Paragraph("Total Ingresos", fontTh), frmtHd)
-        addCellTabla(tblaIngr, new Paragraph(g.formatNumber(number:totalIngresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-
         addCellTabla(tblaIngr, new Paragraph("Egresos", fontTh), frmtHd)
-        addCellTabla(tblaIngr, new Paragraph("", fontTd10), frmtNmro)
+        addCellTabla(tblaIngr, new Paragraph(g.formatNumber(number:totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
 
         egresos.each {ingreso ->
             addCellTabla(tblaIngr, new Paragraph(ingreso.fcha, fontTd10), frmtDato)
-            addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNmro)
+            addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNm)
         }
 
         def tablaTotal = new PdfPTable(2);
         tablaTotal.setWidthPercentage(100);
         tablaTotal.setWidths(arregloEnteros([8, 2]))
 
-        addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalIngresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph("Saldo al ${fechaHasta} (Ingresos - Egresos): ", fontTh), frmtNmro)
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number: totalIngresos - totalEgresos + saldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
         addCellTabla(tblaIngr, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
 
         document.add(tblaIngr)
