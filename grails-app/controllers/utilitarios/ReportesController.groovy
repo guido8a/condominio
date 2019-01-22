@@ -2676,8 +2676,108 @@ class ReportesController extends Shield{
 
     def fechasDetalle_ajax () {
 
+    }
 
 
+    def reporteEgresosProveedor () {
+
+        println("params egp " + params)
+
+        def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
+        def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
+
+        println "fechas: '${fechaDesde}','${fechaHasta}'"
+
+//        def sql3 = "select * from egresos('${fechaDesde}','${fechaHasta}') order by egrsfcha"
+        def sql3 = "select prve, sum(egrsvlor) from egresos('${fechaDesde}', '${fechaHasta}'::date) group by prve order by 2 desc;"
+        def cn3 = dbConnectionService.getConnection()
+        def egresos = cn3.rows(sql3.toString())
+
+        def totalEgresos = (egresos.sum.sum() ?: 0)
+
+        def baos = new ByteArrayOutputStream()
+        def name = "listaEgresosProveedor_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def titulo = new Color(40, 140, 180)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
+        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+        Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+
+        def fondoTotal = new Color(240, 240, 240);
+
+        Document document
+        document = new Document(PageSize.A4);
+        document.setMargins(50, 30, 30, 28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Detalle de Egresos por Proveedor del ${fechaDesde} al ${fechaHasta}");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+        preface.add(new Paragraph("Detalle de Egresos por Proveedor del ${fechaDesde} al ${fechaHasta}", fontTitulo));
+        addEmptyLine(preface, 1);
+        document.add(preface);
+
+        PdfPTable tablaDetalles = null
+
+        def printHeaderDetalle = {
+            def fondo = new Color(240, 248, 250);
+            def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+
+            def tablaHeaderDetalles = new PdfPTable(2);
+            tablaHeaderDetalles.setWidthPercentage(100);
+            tablaHeaderDetalles.setWidths(arregloEnteros([75,25]))
+
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Proveedor", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
+            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 2, pl: 0])
+        }
+
+        tablaDetalles = new PdfPTable(2);
+        tablaDetalles.setWidthPercentage(100);
+        tablaDetalles.setWidths(arregloEnteros([75,25]))
+        tablaDetalles.setSpacingAfter(1f);
+
+
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+        printHeaderDetalle()
+
+        egresos.each {egreso ->
+            addCellTabla(tablaDetalles, new Paragraph(egreso.prve, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(egreso.sum.toString(), fontTd10), frmtNmro)
+        }
+
+        def tablaTotal = new PdfPTable(2);
+        tablaTotal.setWidthPercentage(100);
+        tablaTotal.setWidths(arregloEnteros([75, 25]))
+
+        addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 2, pl: 0])
+
+        document.add(tablaDetalles)
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=" + name)
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
     }
 
 

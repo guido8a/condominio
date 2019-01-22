@@ -158,6 +158,10 @@
                 <i class="fa fa-line-chart fa-5x"></i><br/>
                 Ingresos y Egresos
             </a>
+            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#egresosProveedores">
+                <i class="fa fa-book fa-5x"></i><br/>
+                Egresos Proveedores
+            </a>
         </p>
     </div>
 </div>
@@ -502,6 +506,53 @@
     </div>
 </div>
 
+<div class="modal fade col-md-12 col-xs-12" id="egresosProveedores" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelEP">Egresos Proveedor</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Desde</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaDesdeProveedor_name" id="fechaDesdeProveedor" class="datepicker form-control" value="${new Date() - 30}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Hasta</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaHastaProveedor_name" id="fechaHastaProveedor" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnImprimirEgProveedores btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 
@@ -514,7 +565,7 @@
     });
 
     $("#btnAceptarGestor").click(function () {
-       location.href="${createLink(controller: 'reportes', action: 'detalle')}"
+        location.href="${createLink(controller: 'reportes', action: 'detalle')}"
     });
 
     function prepare() {
@@ -760,10 +811,17 @@
                 });
             }
         });
+    });
 
 
+    $(".btnImprimirEgProveedores").click(function () {
+        var fechaDesde = $("#fechaDesdeProveedor").val();
+        var fechaHasta = $("#fechaHastaProveedor").val();
+        location.href = "${g.createLink(controller:'reportes' , action: 'reporteEgresosProveedor')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
 
     });
+
+
 </script>
 
 </body>
