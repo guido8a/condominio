@@ -42,8 +42,6 @@ th, td {
                 <td width="20%" style="color:#186063">
                     ${dato?.prsnnmbr}
                 </td>
-
-                %{--<td width="40px" class="${dato.prsnetdo == 'R-S' ? 'registrado' : dato.prsnetdo == 'R' ? 'reg' : 'noReg'}">--}%
                 <td width="20%">
                     ${dato.prsnapll}
                 </td>
