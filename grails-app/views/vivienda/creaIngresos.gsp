@@ -54,7 +54,7 @@
 
         <div class="btn-group col-sm-1" style="margin-top: 17px; margin-left: -20px">
 
-            <a href="#" class="btn btn-azul" id="btn-consultar"><i class="fa fa-search"></i> Buscar</a>
+            <a href="#" class="btn btn-azul" id="btn-consultar"><i class="fa fa-search"></i> Ingresar</a>
         </div>
         <div class="btn-group col-sm-3" style="margin-top: 17px; margin-left: -0px; width: 300px;">
             <a href="#" class="btn btn-success btn-actualizar"><i class="fa fa-save"></i> Guardar</a>

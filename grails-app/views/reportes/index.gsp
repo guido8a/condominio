@@ -166,6 +166,11 @@
                 <i class="fa fa-book fa-5x"></i><br/>
                 Egresos Proveedores
             </a>
+            <a href="#" class="link btn btn-danger btn-ajax" data-toggle="modal" data-target="#monitorio">
+                <i class="fa fa-money fa-5x"></i><br/>
+                Monitorio
+            </a>
+
         </p>
     </div>
 </div>
@@ -421,6 +426,46 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
                 </button>
                 <button type="button" class="btn btnSolicitud btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade col-md-12 col-xs-12" id="monitorio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="modalmonitorio">Generar cartas solicitando pagos</h4>
+            </div>
+
+            <div class="modal-body" id="bodymonitorio">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-1 col-xs-1">
+                        </div>
+                        <div class="col-md-3 col-xs-3">
+                            <label>Generar para deudas con </label>
+                        </div>
+                        <div class="col-md-7 col-xs-7">
+                            <g:select from="${['1':'Valores superiores a 1 alícuota',
+                                               '2':'Valores superiores a 2 alícuotas',
+                                               '3':'Valores superiores a 3 alícuotas']}"
+                                      optionValue="value" optionKey="key" name="mesesHasta_name"
+                                      id="valorHasta" class="form-control"/>
+                        </div>
+                        <div class="col-md-1 col-xs-1">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnMonitorio btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
                 </button>
             </div>
         </div>
@@ -708,6 +753,11 @@
         $(".btnSolicitud").click(function () {
             var vlor = $("#valorHasta").val();
             location.href = "${g.createLink(controller: 'reportes', action: 'imprimirSolicitudes')}?vlor=" + vlor;
+        });
+
+        $(".btnMonitorio").click(function () {
+            var vlor = $("#valorHasta").val();
+            location.href = "${g.createLink(controller: 'reportes', action: 'imprimirMonitorio')}?vlor=" + vlor;
         });
 
         function crearXML(mes, anio, override) {
