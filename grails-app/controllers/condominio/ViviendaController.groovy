@@ -258,5 +258,25 @@ class ViviendaController extends Shield {
     }
 
 
+    def borrarRegistro_ajax () {
+
+//        println("params bi " + params)
+
+        def persona = Persona.get(params.persona)
+        def obligacion = Obligacion.get(params.obligacion)
+
+        def ingreso = Ingreso.findByObligacionAndPersona(obligacion, persona)
+
+        try{
+            ingreso.delete(flush: true)
+            render "ok"
+        }catch (e){
+            println("error al borrar el ingreso " + e + " " + ingreso?.errors)
+            render "no"
+        }
+
+    }
+
+
 
 }

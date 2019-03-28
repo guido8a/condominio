@@ -36,6 +36,7 @@
             %{--<th>Aplicar <input style="margin-left: 10px" type="checkbox" id="todosCk"/></th>--}%
             <th>Aplicar <g:checkBox name="ck_name" style="margin-left: 10px" class="todosCk" /></th>
             <th>Observaciones</th>
+            <th>Borrar</th>
         </tr>
         </thead>
         <tbody>
@@ -70,7 +71,11 @@
                 <td class="observaciones">
                     <g:textField name="obsr" class="ingrobsr form-control-sm" value="${prsn?.ingrobsr}" style="width: 100%"/>
                 </td>
-
+                <td style="text-align: center">
+                    <g:if test="${prsn?.ingrvlor}">
+                        <a href="#" class="btn btn-danger btn-sm btnBorrarRegistro" data-id="${prsn?.prsn__id}" data-obl="${oblg.id}" title="Eliminar registro"><i class="fa fa-trash"></i> </a>
+                    </g:if>
+                </td>
             </tr>
         </g:each>
         </tbody>
@@ -81,6 +86,37 @@
     <script type="text/javascript" src="${resource(dir: 'js', file: 'tableHandler.js')}"></script>
 
     <script type="text/javascript">
+
+
+        $(".btnBorrarRegistro").click(function () {
+            var persona = $(this).data("id");
+            var obligacion = $(this).data("obl");
+            bootbox.confirm("<i class='fa fa-warning fa-3x pull-left text-danger text-shadow'></i> Está seguro que desea eliminar este registro?", function (res) {
+                if (res) {
+                    openLoader("Borrando Registro...");
+                    $.ajax({
+                        type    : "POST",
+                        url : "${createLink(controller:'vivienda', action:'borrarRegistro_ajax')}",
+                        data    : {
+                            persona: persona,
+                            obligacion: obligacion
+                        },
+                        success : function (msg) {
+                            if(msg == 'ok'){
+                                closeLoader();
+                                log("Registro borrado correctamente","success");
+                                setTimeout(function() {
+                                    location.reload(true);
+                                }, 1000);
+                            }else{
+                                closeLoader();
+                                log("No se puede borrar este registro","error")
+                            }
+                        }
+                    });
+                }
+            });
+        });
 
 
         $(".todosCk").click(function () {
