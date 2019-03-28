@@ -1104,6 +1104,7 @@ class ReportesController extends Shield{
         addEmptyLine(f, 1);
         document.add(f)
 
+
 /*
         Paragraph t4 = new Paragraph();
         t4.setAlignment("Justify");
