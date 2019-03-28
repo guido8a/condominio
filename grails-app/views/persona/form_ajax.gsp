@@ -1,4 +1,4 @@
-<%@ page import="seguridad.Prfl; seguridad.Persona" %>
+<%@ page import="condominio.Condominio; seguridad.Prfl; seguridad.Persona" %>
 
 <script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
 <script src="${resource(dir: 'js/plugins/Toggle-Button-Checkbox/js', file: 'bootstrap-checkbox.js')}"></script>
@@ -10,6 +10,26 @@
     <div class="container-fluid">
         <g:form class="form-horizontal" name="frmPersona" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${personaInstance?.id}" />
+
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <div class="row">
+                        <label for="nombrePropietario" class="control-label col-xs-3 col-md-3">
+                            Condominio ${}
+                        </label>
+                        <g:if test="${session.perfil.codigo == 'ADM'}">
+                            <div class="col-xs-7 col-md-6">
+                                <g:select name="condominio" from="${condominio.Condominio.list().sort{it.nombre}}" class="form-control" optionKey="id" optionValue="nombre" value="${personaInstance?.condominio?.id}"/>
+                            </div>
+                        </g:if>
+                        <g:else>
+                            <div class="col-xs-7 col-md-6">
+                                <g:select name="condominio" from="${condominio.Condominio.get(session.usuario.condominio.id)}" class="form-control" optionKey="id" optionValue="nombre" value="${personaInstance?.condominio?.id}"/>
+                            </div>
+                        </g:else>
+                    </div>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-xs-12 col-md-6">

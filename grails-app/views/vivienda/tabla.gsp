@@ -91,9 +91,9 @@
         $(".btnBorrarRegistro").click(function () {
             var persona = $(this).data("id");
             var obligacion = $(this).data("obl");
-            bootbox.confirm("<i class='fa fa-warning fa-3x pull-left text-danger text-shadow'></i> Está seguro que desea eliminar este registro?", function (res) {
+            bootbox.confirm("<i class='fa fa-warning fa-3x pull-left text-danger text-shadow'></i> Está seguro que desea poner en cero este registro?", function (res) {
                 if (res) {
-                    openLoader("Borrando Registro...");
+                    openLoader("Guardando Registro...");
                     $.ajax({
                         type    : "POST",
                         url : "${createLink(controller:'vivienda', action:'borrarRegistro_ajax')}",
@@ -104,13 +104,13 @@
                         success : function (msg) {
                             if(msg == 'ok'){
                                 closeLoader();
-                                log("Registro borrado correctamente","success");
+                                log("Registro modificado correctamente","success");
                                 setTimeout(function() {
                                     location.reload(true);
                                 }, 1000);
                             }else{
                                 closeLoader();
-                                log("No se puede borrar este registro","error")
+                                log("No se puede modificar este registro","error")
                             }
                         }
                     });

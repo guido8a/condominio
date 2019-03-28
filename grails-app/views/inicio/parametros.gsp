@@ -181,6 +181,17 @@
                                 <p></p>
                             </div>
                         </li>
+                        <li>
+                            <i class="fa-li ${iconGen}"></i>
+                            <span id="tpc">
+                                <g:link controller="tipoCondominio" action="list">Tipo de Condominio</g:link>
+                            </span>
+
+                            <div class="descripcion hide">
+                                <h4>Tipo de Condominio</h4>
+                                <p></p>
+                            </div>
+                        </li>
                     </ul>
                 </div>
 

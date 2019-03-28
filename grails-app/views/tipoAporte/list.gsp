@@ -13,6 +13,11 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
+        <a href="${createLink(controller: "inicio", action: "parametros")}" class="btn btn-primary">
+            <i class="fa fa-arrow-left"></i> Regresar
+        </a>
+    </div>
+    <div class="btn-group">
         <a href="#" class="btn btn-primary btnCrear">
             <i class="fa fa-file-o"></i> Nuevo Tipo
         </a>

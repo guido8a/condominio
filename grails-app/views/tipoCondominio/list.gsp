@@ -1,10 +1,10 @@
 
-<%@ page import="condominio.Obligacion" %>
+<%@ page import="condominio.TipoCondominio" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Obligaciones</title>
+    <title>Lista de Tipo de Condominios</title>
 </head>
 <body>
 
@@ -19,14 +19,14 @@
     </div>
     <div class="btn-group">
         <a href="#" class="btn btn-primary btnCrear">
-            <i class="fa fa-file-o"></i> Nueva Obligación
+            <i class="fa fa-file-o"></i> Crear
         </a>
     </div>
     <div class="btn-group pull-right col-md-3">
         <div class="input-group">
             <input type="text" class="form-control input-search" placeholder="Buscar" value="${params.search}">
             <span class="input-group-btn">
-                <g:link controller="obligacion" action="list" class="btn btn-default btn-search">
+                <g:link controller="tipocondominio" action="list" class="btn btn-default btn-search">
                     <i class="fa fa-search"></i>&nbsp;
                 </g:link>
             </span>
@@ -38,39 +38,23 @@
     <thead>
     <tr>
         
-        <g:sortableColumn property="descripcion" title="Descripción" />
-        
-        <g:sortableColumn property="fecha" title="Fecha" />
-
-        <g:sortableColumn property="valor" title="Valor" />
-
-        <th>Tipo de Aporte</th>
+        <g:sortableColumn property="descripcion" title="Descripcion" />
         
     </tr>
     </thead>
     <tbody>
-    <g:if test="${obligacionInstanceCount > 0}">
-        <g:each in="${obligacionInstanceList}" status="i" var="obligacionInstance">
-            <tr data-id="${obligacionInstance.id}">
+    <g:if test="${tipoCondominioInstanceCount > 0}">
+        <g:each in="${tipoCondominioInstanceList}" status="i" var="tipoCondominioInstance">
+            <tr data-id="${tipoCondominioInstance.id}">
                 
-                <td>${obligacionInstance.descripcion}</td>
+                <td>${tipoCondominioInstance.descripcion}</td>
                 
-                <td><g:formatDate date="${obligacionInstance.fecha}" format="dd-MM-yyyy" /></td>
-                
-                %{--<td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${obligacionInstance}" field="tipo"/></elm:textoBusqueda></td>--}%
-
-                %{--<td><g:fieldValue bean="${obligacionInstance}" field="valor"/></td>--}%
-               <td><g:formatNumber number="${obligacionInstance?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
-
-                <td>${obligacionInstance?.tipoAporte?.descripcion}</td>
-
-
             </tr>
         </g:each>
     </g:if>
     <g:else>
         <tr class="danger">
-            <td class="text-center" colspan="4">
+            <td class="text-center" colspan="1">
                 <g:if test="${params.search && params.search!= ''}">
                     No se encontraron resultados para su búsqueda
                 </g:if>
@@ -83,17 +67,17 @@
     </tbody>
 </table>
 
-<elm:pagination total="${obligacionInstanceCount}" params="${params}"/>
+<elm:pagination total="${tipoCondominioInstanceCount}" params="${params}"/>
 
 <script type="text/javascript">
     var id = null;
-    function submitFormObligacion() {
-        var $form = $("#frmObligacion");
+    function submitFormTipoCondominio() {
+        var $form = $("#frmTipoCondominio");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
         $btn.replaceWith(spinner);
-            openLoader("Guardando Obligación");
-                $.ajax({
+            openLoader("Guardando Tipo de Condominio");
+                    $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
@@ -118,7 +102,7 @@
         bootbox.dialog({
             title   : "Alerta",
             message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-            "¿Está seguro que desea eliminar la Obligación seleccionada? Esta acción no se puede deshacer.</p>",
+            "¿Está seguro que desea eliminar el TipoCondominio seleccionado? Esta acción no se puede deshacer.</p>",
             buttons : {
                 cancelar : {
                     label     : "Cancelar",
@@ -130,10 +114,10 @@
                     label     : "<i class='fa fa-trash-o'></i> Eliminar",
                     className : "btn-danger",
                     callback  : function () {
-                        openLoader("Eliminando Obligacion");
+                        openLoader("Eliminando TipoCondominio");
                                 $.ajax({
                             type    : "POST",
-                            url     : '${createLink(controller:'obligacion', action:'delete_ajax')}',
+                            url     : '${createLink(controller:'tipoCondominio', action:'delete_ajax')}',
                             data    : {
                                 id : itemId
                             },
@@ -155,16 +139,16 @@
         });
     }
     function createEditRow(id) {
-        var title = id ? "Editar" : "Nueva";
+        var title = id ? "Editar" : "Crear";
         var data = id ? { id: id } : {};
-            $.ajax({
+                $.ajax({
             type    : "POST",
-            url     : "${createLink(controller:'obligacion', action:'form_ajax')}",
+            url     : "${createLink(controller:'tipoCondominio', action:'form_ajax')}",
             data    : data,
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
-                    title   : title + " Obligación",
+                    title   : title + " Tipo de Condominio",
                     
                     message : msg,
                     buttons : {
@@ -179,7 +163,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitFormObligacion();
+                                return submitFormTipoCondominio();
                             } //callback
                         } //guardar
                     } //buttons
@@ -198,7 +182,7 @@
             return false;
         });
 
-        $("tbody>tr").contextMenu({
+                $("tbody>tr").contextMenu({
             items  : {
                 header   : {
                     label  : "Acciones",
@@ -211,13 +195,13 @@
             var id = $element.data("id");
                                 $.ajax({
                 type    : "POST",
-                url     : "${createLink(controller:'obligacion', action:'show_ajax')}",
+                url     : "${createLink(controller:'tipoCondominio', action:'show_ajax')}",
                 data    : {
                     id : id
                 },
                 success : function (msg) {
                     bootbox.dialog({
-                        title   : "Ver Obligacion",
+                        title   : "Ver TipoCondominio",
                         message : msg,
                         buttons : {
                             ok : {

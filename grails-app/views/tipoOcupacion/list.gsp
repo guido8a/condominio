@@ -13,7 +13,7 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <a href="${createLink(controller: "inicio", action: "parametros")}" class="btn btn-default">
+        <a href="${createLink(controller: "inicio", action: "parametros")}" class="btn btn-primary">
             <i class="fa fa-arrow-left"></i> Regresar
         </a>
     </div>

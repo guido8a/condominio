@@ -267,13 +267,25 @@ class ViviendaController extends Shield {
 
         def ingreso = Ingreso.findByObligacionAndPersona(obligacion, persona)
 
+//        try{
+//            ingreso.delete(flush: true)
+//            render "ok"
+//        }catch (e){
+//            println("error al borrar el ingreso " + e + " " + ingreso?.errors)
+//            render "no"
+//        }
+
+
+        ingreso.valor = 0
+
         try{
-            ingreso.delete(flush: true)
+            ingreso.save(flush: true)
             render "ok"
         }catch (e){
-            println("error al borrar el ingreso " + e + " " + ingreso?.errors)
+            println("error al modificar el ingreso " + e + " " + ingreso?.errors)
             render "no"
         }
+
 
     }
 
