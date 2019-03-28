@@ -15,7 +15,7 @@
                 <div class="col-xs-12 col-md-12">
                     <div class="row">
                         <label for="nombrePropietario" class="control-label col-xs-3 col-md-3">
-                            Condominio ${}
+                            Condominio
                         </label>
                         <g:if test="${session.perfil.codigo == 'ADM'}">
                             <div class="col-xs-7 col-md-6">

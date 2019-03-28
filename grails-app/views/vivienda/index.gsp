@@ -55,6 +55,13 @@
                                     optionKey="campo" optionValue="nombre" optionClass="operador" id="ordenar_por"
                                     style="width: 160px" class="form-control"/>
                     </div>
+
+                    <g:if test="${session.perfil.codigo == 'ADM'}">
+                        <div class="col-xs-6 col-md-6">
+                            <b>Condominio: </b>
+                            <g:select from="${condominio.Condominio.list()}" name="condominio_name" class="form-control" id="condominioId" optionKey="id" optionValue="nombre"/>
+                        </div>
+                    </g:if>
                 </div>
 
                 <div class="col-xs-3 col-md-4">
@@ -167,8 +174,14 @@ como máximo 30
     </g:else>
 
 
+    $("#condominioId").change(function () {
+        cargarBusqueda();
+    });
+
+
     function cargarBusqueda () {
-        var vvnd = parseInt(${condominio?.viviendas})
+        var vvnd = parseInt(${condominio?.viviendas});
+        var condo = $("#condominioId option:selected").val()
 //        console.log("cont", vvnd);
         if(vvnd > 0) {
             $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
@@ -181,7 +194,8 @@ como máximo 30
                     buscador: $("#buscador_con").val(),
                     ordenar:  $("#ordenar_por").val(),
                     criterio: $("#criterio_con").val(),
-                    operador: $("#oprd").val()
+                    operador: $("#oprd").val(),
+                    condo: condo
                 },
                 success: function (msg) {
                     $("#bandeja").html(msg);

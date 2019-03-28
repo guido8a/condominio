@@ -18,6 +18,7 @@ class ViviendaController extends Shield {
     }
 
     def tablaBuscar() {
+
         println "buscar .... $params"
         def cn = dbConnectionService.getConnection()
         params.old = params.criterio
@@ -46,7 +47,14 @@ class ViviendaController extends Shield {
         def campos = buscadorService.parmProcesos()
         def operador = buscadorService.operadores()
 //        def wh = " edif.edif__id = prsn.edif__id and tpoc.tpoc__id = prsn.tpoc__id and prsnactv = 1 " //condicion fija
-        def condominio = Condominio.get(session.condominio.id)
+        def condominio
+
+        if (params.condo){
+            condominio = Condominio.get(params.condo)
+        }else{
+            condominio = Condominio.get(session.condominio.id)
+        }
+
         def sqlSelect = "select * from personas(${condominio?.id}) "
         //condicion fija
         def wh = " prsn__id is not null "
@@ -212,7 +220,7 @@ class ViviendaController extends Shield {
     def generar_ajax () {
 
     }
-    
+
     def genera () {
         println "params: ${params.fecha}"
         def fc = params.fecha.split('-').toList()
