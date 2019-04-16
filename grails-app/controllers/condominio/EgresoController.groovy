@@ -41,9 +41,9 @@ class EgresoController extends Shield {
             list = c.list(params) {
                 or {
                     /* TODO: cambiar aqui segun sea necesario */
-                    
-                            ilike("descripcion", "%" + params.search + "%")  
-                            ilike("estado", "%" + params.search + "%")  
+
+                    ilike("descripcion", "%" + params.search + "%")
+                    ilike("estado", "%" + params.search + "%")
                 }
             }
         } else {
@@ -122,8 +122,8 @@ class EgresoController extends Shield {
             }
             pagos = PagoEgreso.findAllByEgreso(egresoInstance)
         }  else {
-           egresoInstance.fecha = new Date()
-           egresoInstance.estado = 'E'
+            egresoInstance.fecha = new Date()
+            egresoInstance.estado = 'E'
         }
         params.valor = params.valor.toDouble()
 //        params.abono = params.abono.toDouble()
@@ -300,7 +300,7 @@ class EgresoController extends Shield {
         def totalEgresos = (egresos.egrsvlor.sum() ?: 0)
 
         return [data: data, desde: fechaDesde, hasta: fechaHasta, totalIngresos: totalIngresos, totalEgresos: totalEgresos,
-            ingresos: ingresos, egresos: egresos]
+                ingresos: ingresos, egresos: egresos]
     }
 
     def tablaIngresos_ajax () {
@@ -329,7 +329,8 @@ class EgresoController extends Shield {
         def egreso = Egreso.get(params.egreso)
         def pagos = PagoEgreso.findAllByEgreso(egreso).sort{it.fechaPago}
 
-        def saldo = Math.round(egreso?.valor?:0*100)/100 - Math.round((pagos?.valor?.sum() ?: 0) * 100)/100
+//        def saldo = Math.round(egreso?.valor?:0*100)/100 - Math.round((pagos?.valor?.sum() ?: 0) * 100)/100
+        def saldo = (egreso?.valor ?: 0) - (pagos?.valor?.sum() ?: 0)
 
         return[egreso: egreso, pagos: pagos, saldo: saldo]
     }
