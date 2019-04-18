@@ -40,7 +40,7 @@
                         Proveedor
                     </label>
                     <div class="col-md-7">
-                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list().sort{it.nombre}}" optionKey="id" optionValue="nombre" value="${obraInstance?.proveedor?.id}" class="many-to-one form-control" noSelection="['0':'Seleccione...']"/>
+                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list().sort{it.nombre}}" optionKey="id" optionValue="" value="${obraInstance?.proveedor?.id}" class="many-to-one form-control" noSelection="['0':'Seleccione...']"/>
                     </div>
                 </span>
             </div>
