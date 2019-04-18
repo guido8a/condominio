@@ -99,7 +99,7 @@ class Persona {
     }
 
     String toString() {
-        "${this.nombre} ${this.apellido} Departamento:(${this.departamento})"
+        "${this.nombre} ${this.apellido} - Departamento: (${this.departamento})"
     }
 
     def getEstaActivo() {

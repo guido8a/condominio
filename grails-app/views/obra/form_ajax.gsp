@@ -16,7 +16,7 @@
                         Tipo Obra
                     </label>
                     <div class="col-md-7">
-                        <g:select id="tipoObra" name="tipoObra.id" from="${condominio.TipoObra.list()}" optionKey="id" optionValue="descripcion" required="" value="${obraInstance?.tipoObra?.id}" class="many-to-one form-control"/>
+                        <g:select id="tipoObra" name="tipoObra.id" from="${condominio.TipoObra.list().sort{it.descripcion}}" optionKey="id" optionValue="descripcion" required="" value="${obraInstance?.tipoObra?.id}" class="many-to-one form-control"/>
                     </div>
                     *
                 </span>
@@ -40,7 +40,7 @@
                         Proveedor
                     </label>
                     <div class="col-md-7">
-                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list()}" optionKey="id" optionValue="nombre" value="${obraInstance?.proveedor?.id}" class="many-to-one form-control" noSelection="['0':'Seleccione...']"/>
+                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list().sort{it.nombre}}" optionKey="id" optionValue="nombre" value="${obraInstance?.proveedor?.id}" class="many-to-one form-control" noSelection="['0':'Seleccione...']"/>
                     </div>
                 </span>
             </div>
@@ -51,7 +51,7 @@
                         Solicitante
                     </label>
                     <div class="col-md-7">
-                        <g:select id="persona" name="persona.id" from="${seguridad.Persona.findAllByCondominio(condominio.Condominio.get(session.condominio.id))}" optionKey="id" required="" value="${obraInstance?.persona?.id}" class="many-to-one form-control"/>
+                        <g:select id="persona" name="persona.id" from="${seguridad.Persona.findAllByCondominio(condominio.Condominio.get(session.condominio.id)).sort{it.departamento}}" optionKey="id" required="" value="${obraInstance?.persona?.id}" class="many-to-one form-control"/>
                     </div>
                     *
                 </span>

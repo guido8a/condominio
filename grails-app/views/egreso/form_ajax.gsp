@@ -28,7 +28,7 @@
                         Proveedor
                     </label>
                     <div class="col-md-10">
-                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list()}" optionKey="id" required="" value="${egresoInstance?.proveedor?.id}" class="many-to-one form-control"/>
+                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list().sort{it.nombre}}" optionKey="id" required="" value="${egresoInstance?.proveedor?.id}" class="many-to-one form-control"/>
                     </div>
                 </span>
             </div>
