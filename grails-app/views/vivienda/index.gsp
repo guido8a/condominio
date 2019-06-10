@@ -264,7 +264,7 @@ como máximo 30
         var ingresos = {
             label: "Registro de Pagos",
             icon: "fa fa-money",
-            separator_before : true,
+//            separator_before : true,
             action : function ($element) {
                 var id = $element.data("id");
                 pagoAlicuota(id);
@@ -274,7 +274,7 @@ como máximo 30
         var certificado = {
             label: "Certificado Expensas",
             icon: "fa fa-print",
-            separator_before : true,
+//            separator_before : true,
             action : function ($element) {
                 var id = $element.data("id");
 //                imprimirExpensas(id);
@@ -303,15 +303,28 @@ como máximo 30
             }
         };
 
-        items.editar = editar;
-        items.perfil = perfil;
-        items.alicuota = alicuota;
         items.pagar = ingresos;
-        items.propiedad = propiedades;
+//        items.editar = editar;
+//        items.perfil = perfil;
+//        items.alicuota = alicuota;
+//        items.propiedad = propiedades;
+
+        items.administrar = {
+            label: "Administrar",
+            icon: "fa fa-pencil",
+            submenu: {
+                editar,
+                perfil,
+                alicuota,
+                propiedades
+            }
+        };
+
         if(deuda <= 0 && codigo == 'P'){
             items.certificado = certificado;
         }
         items.detalle = detalle;
+
 
         return items
     }
