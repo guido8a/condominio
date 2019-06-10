@@ -16,7 +16,7 @@
                     <label for="tipoPropiedad" class="col-md-3 control-label">
                         Tipo Propiedad
                     </label>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <g:select id="tipoPropiedad" name="tipoPropiedad.id" from="${condominio.TipoPropiedad.list()}" optionValue="descripcion" optionKey="id" required="" value="${propiedadInstance?.tipoPropiedad?.id}" class="many-to-one form-control"/>
                     </div>
                 </span>
@@ -44,7 +44,7 @@
                     <label for="numero" class="col-md-3 control-label">
                         Número
                     </label>
-                    <div class="col-md-8">
+                    <div class="col-md-3">
                         <g:textField name="numero" class="form-control required" value="${propiedadInstance?.numero}" required=""/>
                     </div>
                     *
@@ -92,7 +92,8 @@
                         Fecha Desde
                     </label>
                     <div class="col-md-4">
-                        <elm:datepicker name="fechaDesde"  class="datepicker form-control required" value="${propiedadInstance?.fechaDesde}"  />
+                        <elm:datepicker name="fechaDesde"  class="datepicker form-control required"
+                                        value="${propiedadInstance?.fechaDesde?: new Date()}"  />
                     </div>
                      *
                 </span>
@@ -116,7 +117,8 @@
                         Observaciones
                     </label>
                     <div class="col-md-6">
-                        <g:textArea name="observaciones" class="form-control" value="${propiedadInstance?.observaciones}" style="width: 340px; height: 90px; resize: none"/>
+                        <g:textArea name="observaciones" class="form-control" value="${propiedadInstance?.observaciones}"
+                                    style="width: 340px; height: 60px; resize: none"/>
                     </div>
                 </span>
             </div>

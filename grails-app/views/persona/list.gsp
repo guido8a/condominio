@@ -199,7 +199,7 @@
             return false;
         });
 
-                $("tbody>tr").contextMenu({
+        $("tbody>tr").contextMenu({
             items  : {
                 header   : {
                     label  : "Acciones",

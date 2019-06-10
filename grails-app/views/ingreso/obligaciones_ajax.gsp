@@ -12,7 +12,7 @@
     }
 
     .azul{
-        color: #353acb;
+        color: #953acb;
     }
 
     .verde{

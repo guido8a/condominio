@@ -54,12 +54,12 @@
         </div>
     </g:if>
     <div class="btn-group">
-        <a href="#" class="btn btn-warning" id="listarSaldo">
+        <a href="#" class="btn btn-warning  hidden" id="listarSaldo">
             <i class="fa fa-search"></i> Listar con saldo por pagar
         </a>
     </div>
     <div class="btn-group">
-        <a href="#" class="btn btn-success hidden" id="listarTodos">
+        <a href="#" class="btn btn-success" id="listarTodos">
             <i class="fa fa-search"></i> Listar todos
         </a>
     </div>
@@ -150,7 +150,8 @@
         $("#listarSaldo").addClass('hidden')
     });
 
-    cargarObligaciones(null);
+//    cargarObligaciones(null);
+    cargarObligaciones(true);
 
     function cargarObligaciones (band) {
         $.ajax({
