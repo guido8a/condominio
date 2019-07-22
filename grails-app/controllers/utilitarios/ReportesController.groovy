@@ -735,7 +735,8 @@ class ReportesController extends Shield{
         addCellTabla(tabla, new Paragraph(fila.oblg, fontTd10), frmtDato)
         addCellTabla(tabla, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
         addCellTabla(tabla, new Paragraph(fila.ingrintr.toString(), fontTd10), frmtNmro)
-        addCellTabla(tabla, new Paragraph(fila.ingrintr.toString(), fontTd10), frmtNmro)
+//        addCellTabla(tabla, new Paragraph(fila.ingrintr.toString(), fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph((fila.sldo + fila.ingrintr).toString(), fontTd10), frmtNmro)
     }
 
     def totales(tabla,total,fontTd10,frmtDato,frmtNmro) {
@@ -746,6 +747,17 @@ class ReportesController extends Shield{
         addCellTabla(tabla, new Paragraph(total.toString(), fontTd10), frmtNmro)
         addCellTabla(tabla, new Paragraph(total.toString(), fontTd10), frmtNmro)
         addCellTabla(tabla, new Paragraph(total.toString(), fontTd10), frmtNmro)
+    }
+
+
+    def totalesDeudas(tabla,total, total2, fontTd10,frmtDato,frmtNmro) {
+        addCellTabla(tabla, new Paragraph('', fontTd10), frmtDato)
+        addCellTabla(tabla, new Paragraph('', fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph('', fontTd10), frmtDato)
+        addCellTabla(tabla, new Paragraph("TOTAL:", fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph(total.toString(), fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph(total2.toString(), fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph((total + total2).toString(), fontTd10), frmtNmro)
     }
 
     def fecha_ajax() {
@@ -2569,6 +2581,8 @@ class ReportesController extends Shield{
         def anterior
         def nuevo
         def total = 0
+        def total2 = 0
+        def total3 = 0
         def contador = 0
         def ultimo = (res ? res.last().prsndpto : 0)
         def adicionales = 0
@@ -2610,31 +2624,36 @@ class ReportesController extends Shield{
                     if (nuevo == ultimo && (tamano.toInteger()) == contador) {
                         poneDatos(table, fila)
                         total += fila.sldo
+                        total2 += fila.ingrintr
                         anterior = fila.prsndpto
-                        totales(table, total, fontTd11, frmtDato, frmtNmro)
+                        totalesDeudas(table, total, total2, fontTd11, frmtDato, frmtNmro)
                         adicionales++
                     } else {
                         poneDatos(table, fila)
                         total += fila.sldo
+                        total2 += fila.ingrintr
                         anterior = fila.prsndpto
                     }
                 } else {
                     if (contador == 1) {
                         poneDatos(table, fila)
                         total += fila.sldo
+                        total2 += fila.ingrintr
                         anterior = fila.prsndpto
                     } else {
                         if (tamano.toInteger() == contador) {
-                            totales(table, total, fontTd11, frmtDato, frmtNmro)
+                            totalesDeudas(table, total, total2, fontTd11, frmtDato, frmtNmro)
                             poneDatos(table, fila)
                             total = fila.sldo
+                            total2 = fila.ingrintr
                             anterior = fila.prsndpto
-                            totales(table, fila.sldo, fontTd11, frmtDato, frmtNmro)
+                            totalesDeudas(table, fila.sldo, total2, fontTd11, frmtDato, frmtNmro)
                             adicionales++
                         } else {
-                            totales(table, total, fontTd11, frmtDato, frmtNmro)
+                            totalesDeudas(table, total, total2, fontTd11, frmtDato, frmtNmro)
                             poneDatos(table, fila)
                             total = fila.sldo
+                            total2 = fila.ingrintr
                             anterior = fila.prsndpto
                             adicionales++
                         }
