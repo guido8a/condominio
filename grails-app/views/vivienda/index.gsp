@@ -312,6 +312,7 @@ como máximo 30
         items.administrar = {
             label: "Administrar",
             icon: "fa fa-pencil",
+            separator_before : true,
             submenu: {
                 editar,
                 perfil,

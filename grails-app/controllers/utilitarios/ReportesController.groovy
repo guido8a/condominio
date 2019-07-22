@@ -734,6 +734,8 @@ class ReportesController extends Shield{
         }
         addCellTabla(tabla, new Paragraph(fila.oblg, fontTd10), frmtDato)
         addCellTabla(tabla, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph(fila.ingrintr.toString(), fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph(fila.ingrintr.toString(), fontTd10), frmtNmro)
     }
 
     def totales(tabla,total,fontTd10,frmtDato,frmtNmro) {
@@ -741,6 +743,8 @@ class ReportesController extends Shield{
         addCellTabla(tabla, new Paragraph('', fontTd10), frmtNmro)
         addCellTabla(tabla, new Paragraph('', fontTd10), frmtDato)
         addCellTabla(tabla, new Paragraph("TOTAL:", fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph(total.toString(), fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph(total.toString(), fontTd10), frmtNmro)
         addCellTabla(tabla, new Paragraph(total.toString(), fontTd10), frmtNmro)
     }
 
@@ -2515,8 +2519,6 @@ class ReportesController extends Shield{
 
     def pagosPendientes4() {
 
-//        println "params pagosPendientes4: " + params
-
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
 
         def cn = dbConnectionService.getConnection()
@@ -2561,14 +2563,6 @@ class ReportesController extends Shield{
         document.addAuthor("Condominio");
         document.addCreator("Tedein SA");
 
-//        Paragraph preface = new Paragraph();
-//        addEmptyLine(preface, 1);
-//        preface.setAlignment(Element.ALIGN_CENTER);
-//        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
-//        preface.add(new Paragraph("Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", fontTitulo));
-//        addEmptyLine(preface, 1);
-//        document.add(preface);
-
         def currentPag = 1
         def totalPags = Math.ceil(tamano / max)
         def pagActual = 1
@@ -2583,16 +2577,16 @@ class ReportesController extends Shield{
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
-//        document.add(new Paragraph(100, ""));
-
-        PdfPTable table = new PdfPTable(5);
+        PdfPTable table = new PdfPTable(7);
         table.setWidthPercentage(100);
-        table.setWidths(arregloEnteros([6, 7, 26, 51, 10]))
+        table.setWidths(arregloEnteros([6, 8, 28, 36, 10, 8, 10]))
         addCellTabla(table, new Paragraph("Dpt.", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Cuota", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Detalle", fontTh), frmtHd)
-        addCellTabla(table, new Paragraph("Pendiente", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Saldo", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Interés", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Total", fontTh), frmtHd)
         table.setHeaderRows(1);
 
         def tablaTotal = new PdfPTable(2);
@@ -2656,7 +2650,7 @@ class ReportesController extends Shield{
                     pagActual = Math.ceil(actual / max).toInteger()
                 }
             }
-        }else{
+        } else {
             addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
             addCellTabla(table, new Paragraph("", fontTd10), frmtNmro)
             addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
