@@ -874,9 +874,9 @@ class ReportesController extends Shield{
         addEmptyLine(preface, 2);
         document.add(preface);
 
-        def tabla = new PdfPTable(2);
+        def tabla = new PdfPTable(4);
         tabla.setWidthPercentage(90);
-        tabla.setWidths(arregloEnteros([75, 15]))
+        tabla.setWidths(arregloEnteros([55, 15, 15, 15]))
 
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(100);
@@ -898,25 +898,44 @@ class ReportesController extends Shield{
         p.add(new Paragraph("Presente,", info))
         addEmptyLine(p, 1);
         document.add(p)
+
+        def totalF = 0
+
+        data2.each { pendienteF ->
+            if (pendienteF.sldo > 0) {
+                totalF += (pendienteF.sldo + pendienteF.ingrintr)
+            }
+        }
+
         Paragraph t1 = new Paragraph();
         t1.setAlignment("Justify");
-
         t1.add(new Paragraph("Luego de un atento saludo, me permito solicitarle el pago de la deuda que mantiene " +
                 "con el conjunto residencial \"Los Viñedos\", la misma que asciende a un valor de " +
-                "\$ ${data[0].prsnsldo}, de acuerdo con el siguiente desglose:", info))
+                "\$ ${totalF}, de acuerdo con el siguiente desglose:", info))
         addEmptyLine(t1, 1);
         document.add(t1)
 
+        def totalIntereses = 0
+        def totalFinal = 0
+
         addCellTabla(tabla, new Paragraph("Concepto", fontTh), frmtHd)
         addCellTabla(tabla, new Paragraph("Valor", fontTh), frmtHd)
+        addCellTabla(tabla, new Paragraph("Intereses", fontTh), frmtHd)
+        addCellTabla(tabla, new Paragraph("Total", fontTh), frmtHd)
         data2.each { pendiente ->
             if (pendiente.sldo > 0) {
                 addCellTabla(tabla, new Paragraph(pendiente.oblg, fontTd10), frmtDato)
                 addCellTabla(tabla, new Paragraph(pendiente.sldo.toString(), fontTd10), frmtDatoDere)
+                addCellTabla(tabla, new Paragraph(pendiente.ingrintr.toString(), fontTd10), frmtDatoDere)
+                addCellTabla(tabla, new Paragraph((pendiente.sldo + pendiente.ingrintr).toString(), fontTd10), frmtDatoDere)
+                totalIntereses += pendiente.ingrintr
+                totalFinal += (pendiente.sldo + pendiente.ingrintr)
             }
         }
         addCellTabla(tabla, new Paragraph('Total', fontTh), frmtHdr)
         addCellTabla(tabla, new Paragraph("${data[0].prsnsldo}", fontTh), frmtHdr)
+        addCellTabla(tabla, new Paragraph("${totalIntereses}", fontTh), frmtHdr)
+        addCellTabla(tabla, new Paragraph("${totalFinal}", fontTh), frmtHdr)
         document.add(tabla)
 
         Paragraph e = new Paragraph();
