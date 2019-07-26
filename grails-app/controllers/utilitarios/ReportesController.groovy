@@ -889,7 +889,12 @@ class ReportesController extends Shield{
         document.add(table);
 
         Paragraph c = new Paragraph();
-        c.add(new Paragraph((persona?.nombre ?: '') + ' ' + (persona?.apellido ?: ''), info))
+        if(persona?.nombre != persona?.nombrePropietario) {
+            c.add(new Paragraph((persona?.nombre ?: '') + ' ' + (persona?.apellido ?: '') + ' / ' +
+                    (persona?.nombrePropietario ?: '') + ' ' + (persona?.apellidoPropietario ?: ''), info))
+        } else {
+            c.add(new Paragraph((persona?.nombre ?: '') + ' ' + (persona?.apellido ?: ''), info))
+        }
         document.add(c)
         Paragraph d = new Paragraph();
         d.add(new Paragraph((persona?.edificio?.descripcion ?: '') + ', Departamento: ' + (persona?.departamento ?: ''), info))
@@ -972,10 +977,11 @@ class ReportesController extends Shield{
 
         Paragraph t4 = new Paragraph();
         t4.setAlignment("Justify");
-        t4.add(new Paragraph("PD: ART. 39 literal p:", notaTitulo))
-        t4.add(new Paragraph("«Por no pago de alícuotas ordinarias y/o extraordinarias, " +
-                "a partir del segundo mes:", nota))
-        t4.add(new Paragraph("ACCIÓN: Recorte de servicios básicos y cobro de interés por mora» 'Suspensión del servicio de AGUA'", nota))
+//        t4.add(new Paragraph("PD: ART. 39 literal p:", notaTitulo))
+//        t4.add(new Paragraph("«Por no pago de alícuotas ordinarias y/o extraordinarias, " +
+//                "a partir del segundo mes:", nota))
+//        t4.add(new Paragraph("ACCIÓN: Recorte de servicios básicos y cobro de interés por mora» 'Suspensión del servicio de AGUA'", nota))
+        t4.add(new Paragraph("Nota: No se cobrarán los intereses si el pago se realiza hasta el 1° de Octubre de 2019", nota))
         document.add(t4)
 
         document.close();
