@@ -77,7 +77,7 @@
         uiColor: '#9AB8F3',
         extraPlugins: 'entities',
         toolbar                 : [
-            ['Font', 'FontSize', 'Scayt', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
+            ['Source', 'Font', 'FontSize', 'Scayt', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
             ['Find', 'Replace', '-', 'SelectAll'],
             ['Table', 'HorizontalRule', 'PageBreak'],
             ['Bold', 'Italic', 'Underline','Subscript', 'Superscript'],
