@@ -96,6 +96,7 @@ class Persona {
         observaciones(blank: true, nullable: true)
         fechaNacimiento(blank: true, nullable: true)
         expensa(blank: true, nullable: true)
+        fechaPass(blank: true, nullable:true)
     }
 
     String toString() {
