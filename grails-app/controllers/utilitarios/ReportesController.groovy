@@ -870,7 +870,7 @@ class ReportesController extends Shield{
         Paragraph preface = new Paragraph();
         addEmptyLine(preface, 1);
         preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitle));
+        preface.add(new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTitle));
         addEmptyLine(preface, 2);
         document.add(preface);
 
@@ -960,7 +960,7 @@ class ReportesController extends Shield{
         Paragraph t3 = new Paragraph();
         t3.setAlignment("Justify");
         t3.add(new Paragraph("Agradezco su tiempo y la oportuna atención que de a la presente, lo que nos ayudará " +
-                "a pagar oportunamente las planillas de agua, luz, mantenimeinto del ascensor, conserje, vigilancia " +
+                "a pagar oportunamente las planillas de agua, luz, mantenimiento del ascensor, conserje, vigilancia " +
                 "y destinar recursos para la limpieza, conservación y mejora de los bienes comunales. ", info))
         addEmptyLine(t3, 1);
         document.add(t3)
