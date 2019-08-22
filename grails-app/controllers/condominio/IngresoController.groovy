@@ -265,12 +265,17 @@ class IngresoController extends Shield {
     }
 
     def obligaciones_ajax () {
-//        println("params " + params)
+        println("params " + params)
 
         def persona = Persona.get(params.persona)
         def ingresos= Ingreso.findAllByPersona(persona).sort{it.fecha}
 
-        def sql = "select * from pagos(${persona?.id}) order by ingrsldo, ingrfcha"
+        def sql = "select * from pagos(${persona?.id}) order by ingrsldo desc, ingrfcha"
+        if(!params.band) {
+            sql += " limit 100"
+        } else {
+            sql += " limit 15"
+        }
         println("sql " + sql)
 
         def cn = dbConnectionService.getConnection()
