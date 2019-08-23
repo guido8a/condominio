@@ -270,11 +270,11 @@ class IngresoController extends Shield {
         def persona = Persona.get(params.persona)
         def ingresos= Ingreso.findAllByPersona(persona).sort{it.fecha}
 
-        def sql = "select * from pagos(${persona?.id}) order by ingrsldo desc, ingrfcha"
+        def sql = "select * from pagos(${persona?.id}) "
         if(!params.band) {
-            sql += " limit 100"
+            sql += "order by pagofcha desc"
         } else {
-            sql += " limit 15"
+            sql += "where coalesce(pagofcha, now()::date) > now()::date - 180 order by pagofcha desc"
         }
         println("sql " + sql)
 
