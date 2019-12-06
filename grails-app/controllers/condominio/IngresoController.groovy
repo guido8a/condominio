@@ -274,7 +274,7 @@ class IngresoController extends Shield {
         if(!params.band) {
             sql += "order by pagofcha desc"
         } else {
-            sql += "where coalesce(pagofcha, now()::date) > now()::date - 180 order by pagofcha desc"
+            sql += "where coalesce(pagofcha, now()::date) > now()::date - 180 order by ingrsldo desc, ingrfcha"
         }
         println("sql " + sql)
 

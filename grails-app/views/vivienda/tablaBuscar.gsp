@@ -15,6 +15,10 @@ th, td {
     background-color: #efefef;
     color: #444;
 }
+.noDeuda {
+    background-color: #dedede;
+    color: #444;
+}
 .reg {
     color: #286e9f;
 }
@@ -25,12 +29,14 @@ th, td {
 </style>
 
 <g:set var="clase" value="${'noActivo'}"/>
+<g:set var="clase2" value="${'noDeuda'}"/>
 
 <div class="" style="width: 99.7%;height: ${msg == '' ? 600 : 575}px; overflow-y: auto;float: right; margin-top: -20px">
     <table class="table-bordered table-condensed table-hover" width="1060px">
         <g:each in="${data}" var="dato" status="z">
 
-            <tr id="${dato.prsn__id}" data-id="${dato.prsn__id}" data-deuda="${dato.prsnsldo}" data-p="${dato.tpoccdgo}" class="${dato.prsnactv == 0 ? clase : ''}">
+            <tr id="${dato.prsn__id}" data-id="${dato.prsn__id}" data-deuda="${dato.prsnsldo}" data-p="${dato.tpoccdgo}"
+                class="${dato.prsnactv == 0 ? clase : dato.prsnsldo < dato.alctvlor ? clase2 : ''}">
                 <td width="6%">
                     ${dato?.edifdscr}
                 </td>

@@ -130,7 +130,7 @@
     <div class="alert alert-danger hidden" id="mensaje" style="text-align: center">
     </div>
 
-    <div id="bandeja">
+    <div id="detalle">
     </div>
 </div>
 
@@ -184,7 +184,7 @@ como máximo 30
         var condo = $("#condominioId option:selected").val()
 //        console.log("cont", vvnd);
         if(vvnd > 0) {
-            $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
+            $("#detalle").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
             var desde = $(".fechaD").val();
             var hasta = $(".fechaH").val();
             $.ajax({
@@ -198,10 +198,10 @@ como máximo 30
                     condo: condo
                 },
                 success: function (msg) {
-                    $("#bandeja").html(msg);
+                    $("#detalle").html(msg);
                 },
                 error: function (msg) {
-                    $("#bandeja").html("Ha ocurrido un error");
+                    $("#detalle").html("Ha ocurrido un error");
                 }
             });
         }
