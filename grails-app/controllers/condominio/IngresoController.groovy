@@ -190,28 +190,39 @@ class IngresoController extends Shield {
 
 
     def pago_ajax () {
-
+        println "--> $params"
+        def cn = dbConnectionService.getConnection()
         def pago
+        def tx = ""
+        def mora = 0, mess = 0
         def ingreso = Ingreso.get(params.id)
+        tx = "select ingrintr, mess from pendiente(now()::date, ${ingreso.persona.edificio.id}) " +
+                "where ingr__id = ${params.id}"
+        cn.eachRow(tx.toString()) { d ->
+            mora = d.ingrintr
+            mess = d.mess
+        }
+        println "---> mora: $mora, meses: $mess"
+
         if(params.pago){
             pago = Pago.get(params.pago)
         }
+
         def pagos = Pago.findAllByIngreso(ingreso)
         def saldo = (ingreso.valor - (pagos?.valor?.sum() ?: 0))
         def dscr  = "${ingreso.obligacion.descripcion} ${ingreso.observaciones?:''}"
 
-        return[ingreso: ingreso, pagos: pagos, saldo: saldo, pago: pago, dscr: dscr]
+        return[ingreso: ingreso, pagos: pagos, saldo: saldo, pago: pago, dscr: dscr, mora: mora, mess: mess]
     }
 
 
     def guardarPago_ajax (){
         println("params " + params)
-
         def ingreso = Ingreso.get(params.ingreso)
         def pagos = Pago.findAllByIngreso(ingreso)
         def saldo = (ingreso.valor - (pagos?.valor?.sum() ?: 0))
         def saldo2
-        def pago
+        def pago, mess
 
         if(params.id){
             pago = Pago.get(params.id)
@@ -242,6 +253,12 @@ class IngresoController extends Shield {
         pago.fechaPago = params.fecha
         pago.documento = params.documento
         pago.observaciones = params.observaciones
+        mess = params.mess.toInteger()
+        if(mess > 2) {
+            pago.mora = params.mora.toDouble()
+            pago.tasa = 8.0  //todo -> obtener ta de parámetros geenrales del sistema
+            pago.mess = mess
+        }
 
         if(!pago.save(flush: true)){
             println("error al guardar el pago " + pago.errors)

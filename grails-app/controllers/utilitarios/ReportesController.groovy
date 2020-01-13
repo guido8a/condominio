@@ -727,10 +727,21 @@ class ReportesController extends Shield{
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         addCellTabla(tabla, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
         addCellTabla(tabla, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
+/*
         if(fila.tipo in [2,3]){
             addCellTabla(tabla, new Paragraph(fila.prop, fontTd10), frmtDato)
         } else {
             addCellTabla(tabla, new Paragraph(' ' + fila.prsn, fontTd10), frmtDato)
+        }
+*/
+        if(fila.prop != fila.prsn) {
+            if(fila.tipo in [2,3]){
+                addCellTabla(tabla, new Paragraph(fila.prop, fontTd10), frmtDato)
+            } else {
+                addCellTabla(tabla, new Paragraph(fila.prop + ' / ' + fila.prsn, fontTd10), frmtDato)
+            }
+        } else {
+            addCellTabla(tabla, new Paragraph(fila.prsn, fontTd10), frmtDato)
         }
         addCellTabla(tabla, new Paragraph(fila.oblg, fontTd10), frmtDato)
         addCellTabla(tabla, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
@@ -2618,8 +2629,8 @@ class ReportesController extends Shield{
 
         PdfPTable table = new PdfPTable(7);
         table.setWidthPercentage(100);
-        table.setWidths(arregloEnteros([6, 8, 28, 36, 10, 8, 10]))
-        addCellTabla(table, new Paragraph("Dpt.", fontTh), frmtHd)
+        table.setWidths(arregloEnteros([5, 8, 38, 27, 10, 8, 10]))
+        addCellTabla(table, new Paragraph("Dp.", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Cuota", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Detalle", fontTh), frmtHd)

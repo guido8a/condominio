@@ -8,6 +8,9 @@ class Pago {
     Date fechaPago
     String documento
     String observaciones
+    double mora = 0;
+    double tasa = 0;
+    int mess = 0;
 
     static mapping = {
         table 'pago'
@@ -21,6 +24,9 @@ class Pago {
             fechaPago column: 'pagofcpg'
             documento column: 'pagodcmt'
             observaciones column: 'pagoobsr'
+            mora column: 'pagomora'
+            tasa column: 'pagotasa'
+            mess column: 'pagomess'
         }
     }
 

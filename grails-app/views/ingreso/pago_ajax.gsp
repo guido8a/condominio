@@ -5,6 +5,7 @@
     <g:form class="form-horizontal" name="frmIngreso" role="form" action="guardarPago_ajax" method="POST">
         <g:hiddenField name="id" value="${pago?.id}" />
         <g:hiddenField name="ingreso" value="${ingreso?.id}"/>
+        <g:hiddenField name="mess" value="${mess}"/>
 
 
         <span class="grupo">
@@ -23,10 +24,18 @@
         <div class="form-group keeptogether ${hasErrors(bean: pago, field: 'valor', 'error')} required" style="margin-top: 10px !important;">
             <span class="grupo">
                 <label for="abono" class="col-md-3 control-label">
-                    Abono
+                    Monto del pago
                 </label>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <g:textField name="abono" value="${pago?.valor}" class="number form-control required"/>
+                </div>
+            </span>
+            <span class="grupo">
+                <label for="abono" class="col-md-3 control-label">
+                    Intereses mora:
+                </label>
+                <div class="col-md-3">
+                    <g:textField name="mora" value="${pago?.mora?:mora}" class="number form-control required"/>
                 </div>
             </span>
         </div>
