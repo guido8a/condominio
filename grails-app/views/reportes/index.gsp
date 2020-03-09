@@ -453,7 +453,7 @@
                                                '2':'Valores superiores a 2 alícuotas',
                                                '3':'Valores superiores a 3 alícuotas']}"
                                       optionValue="value" optionKey="key" name="mesesHasta_name"
-                                      id="valorHasta" class="form-control"/>
+                                      id="valorHastaMn" class="form-control"/>
                         </div>
                         <div class="col-md-1 col-xs-1">
                         </div>
@@ -756,7 +756,7 @@
         });
 
         $(".btnMonitorio").click(function () {
-            var vlor = $("#valorHasta").val();
+            var vlor = $("#valorHastaMn").val();
             location.href = "${g.createLink(controller: 'reportes', action: 'imprimirMonitorio')}?vlor=" + vlor;
         });
 

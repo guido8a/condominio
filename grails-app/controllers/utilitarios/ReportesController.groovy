@@ -376,7 +376,7 @@ class ReportesController extends Shield{
         Paragraph preface = new Paragraph();
         addEmptyLine(preface, 1);
         preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitulo));
+        preface.add(new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTitulo));
         preface.add(new Paragraph("PAGOS PENDIENTES", fontTitulo));
         addEmptyLine(preface, 1);
         document.add(preface);
@@ -1002,7 +1002,6 @@ class ReportesController extends Shield{
     }
 
     def slctMonitorio(id, edif) {
-
 //        println "solicitudes ... params " + params
 
         def persona = Persona.get(id)
@@ -1010,8 +1009,11 @@ class ReportesController extends Shield{
         def sql = "select * from personas(${condominio?.id}) where prsn__id= ${persona.id}"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
+        def suma = 0;
 
-        def sql2 = "select * from pendiente('${new Date().format("yyyy-MM-dd")}', ${edif}) where prsn__id= ${persona.id} order by ingrfcha"
+        def sql2 = "select prsn__id, oblg, prsn, prsndpto, sldo, mess, ingrintr, sldo + ingrintr total " +
+                "from pendiente('${new Date().format("yyyy-MM-dd")}', ${edif}) where prsn__id = " +
+                "${persona.id} order by ingrfcha"
         def cn2 = dbConnectionService.getConnection()
         def data2 = cn2.rows(sql2.toString())
 
@@ -1027,10 +1029,11 @@ class ReportesController extends Shield{
         Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
         Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
-        def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
-        def frmtHdr = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
-        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
-        def frmtDatoDere = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def frmtHd = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtHdr = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtDatoDere = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def frmtCol4 = [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4]
 
 
         def fondoTotal = new Color(240, 240, 240);
@@ -1059,13 +1062,13 @@ class ReportesController extends Shield{
         Paragraph preface = new Paragraph();
         addEmptyLine(preface, 1);
         preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitle));
-        addEmptyLine(preface, 2);
+        preface.add(new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTitle));
+        addEmptyLine(preface, 1);
         document.add(preface);
 
-        def tabla = new PdfPTable(2);
+        def tabla = new PdfPTable(5);
         tabla.setWidthPercentage(90);
-        tabla.setWidths(arregloEnteros([75, 15]))
+        tabla.setWidths(arregloEnteros([40,10,8,10,12]))
 
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(100);
@@ -1078,12 +1081,15 @@ class ReportesController extends Shield{
         document.add(table);
 
         def prsnpara
+/*
         if(persona.nombre != persona.nombrePropietario) {
             prsnpara = "${persona.nombrePropietario} ${persona.apellidoPropietario} / ${persona.nombre} ${persona.apellido}"
         } else {
             prsnpara = "${persona.nombre} ${persona.apellido}"
         }
-        println "prsnpara: $prsnpara"
+*/
+        prsnpara = "${persona.nombrePropietario} ${persona.apellidoPropietario}"
+//        println "prsnpara: $prsnpara"
 
         Paragraph c = new Paragraph();
         c.add(new Paragraph((prsnpara), info))
@@ -1099,30 +1105,37 @@ class ReportesController extends Shield{
         t1.setAlignment("Justify");
 
         t1.add(new Paragraph("Luego de un atento saludo, me permito indicarle que conforme a lo acordado en la " +
-                "Asamblea General de condóminos realizada el 22 de enero de 2019, estamos contratando los servicios " +
-                "de un abogado para que realice los cobros pendientes, los cuales en su caso son:", info))
+                "Asamblea General de condóminos realizada el 28 de enero de 2020, se utilizará un proceso legal " +
+                "para el cobro de los valores que mantiene pendientes de pago:", info))
         addEmptyLine(t1, 1);
         document.add(t1)
 
         addCellTabla(tabla, new Paragraph("Concepto", fontTh), frmtHd)
         addCellTabla(tabla, new Paragraph("Valor", fontTh), frmtHd)
+        addCellTabla(tabla, new Paragraph("Meses", fontTh), frmtHd)
+        addCellTabla(tabla, new Paragraph("Intereses", fontTh), frmtHd)
+        addCellTabla(tabla, new Paragraph("Total", fontTh), frmtHd)
         data2.each { pendiente ->
             if (pendiente.sldo > 0) {
                 addCellTabla(tabla, new Paragraph(pendiente.oblg, fontTd10), frmtDato)
                 addCellTabla(tabla, new Paragraph(pendiente.sldo.toString(), fontTd10), frmtDatoDere)
+                addCellTabla(tabla, new Paragraph(pendiente.mess.toString(), fontTd10), frmtDatoDere)
+                addCellTabla(tabla, new Paragraph(pendiente.ingrintr.toString(), fontTd10), frmtDatoDere)
+                addCellTabla(tabla, new Paragraph(pendiente.total.toString(), fontTd10), frmtDatoDere)
+                suma += pendiente.total
             }
         }
-        addCellTabla(tabla, new Paragraph('Total', fontTh), frmtHdr)
-        addCellTabla(tabla, new Paragraph("${data[0].prsnsldo}", fontTh), frmtHdr)
+        addCellTabla(tabla, new Paragraph('Total', fontTh), frmtCol4)
+        addCellTabla(tabla, new Paragraph("${suma}", fontTh), frmtHdr)
 
-        def ttal1 = Math.round(0.1*data[0].prsnsldo*100)/100
-        def ttal2 = ttal1 + data[0].prsnsldo + 20
+        def ttal1 = Math.round(0.1 * suma * 100)/100
+        def ttal2 = ttal1 + suma + 25
 
-        addCellTabla(tabla, new Paragraph('Abogado - Gestión de cobro', fontTd10), frmtDato)
-        addCellTabla(tabla, new Paragraph("20.00", fontTd10), frmtDatoDere)
-        addCellTabla(tabla, new Paragraph('Abogado - 10% de comisión por el cobro realizado', fontTd10), frmtDato)
+        addCellTabla(tabla, new Paragraph('Abogado - Gestión de cobro', fontTd10), frmtCol4)
+        addCellTabla(tabla, new Paragraph("25.00", fontTd10), frmtDatoDere)
+        addCellTabla(tabla, new Paragraph('Abogado - 10% de comisión por el cobro realizado', fontTd10), frmtCol4)
         addCellTabla(tabla, new Paragraph("${ttal1}", fontTd10), frmtDatoDere)
-        addCellTabla(tabla, new Paragraph('Gran Total', fontTh), frmtHdr)
+        addCellTabla(tabla, new Paragraph('Gran Total', fontTh), frmtCol4)
         addCellTabla(tabla, new Paragraph("${ttal2}", fontTh), frmtHdr)
 
         document.add(tabla)
@@ -1133,21 +1146,21 @@ class ReportesController extends Shield{
 
         Paragraph t2 = new Paragraph();
         t2.setAlignment("Justify");
-        t2.add(new Paragraph( "El abogado que llevará su trámite mediante un Proceso Monitorio realizará el cobro " +
-                "de todos sus adeudos en un plazo de 15 días término, añadiendo a su deuda actual el valor de \$20 por gestión " +
+        t2.add(new Paragraph( "El abogado llevará su trámite mediante un Proceso Monitorio y ofrece realizar el cobro " +
+                "de todos sus adeudos en un plazo de 15 días término, añadiendo a su deuda actual el valor de \$25 por gestión " +
                 "de cobro y el 10% de comisión, tal como se detalla en el cuadro anterior.", info))
         addEmptyLine(t2, 1);
         document.add(t2)
 
         Paragraph t3 = new Paragraph();
         t3.setAlignment("Justify");
-        t3.add(new Paragraph("Para evitar este proceso legal le invito a acercarse a conversar con la adminstración " +
-                "hasta el viernes 8 de febrero de 2019, para acordar un compromiso de pago.", info))
+        t3.add(new Paragraph("Para evitar este proceso legal le invito a acercarse a conversar con la adminstración hasta el " +
+                "viernes 20 de febrero de 2020, para acordar un compromiso de pago.", info))
         addEmptyLine(t3, 1);
         document.add(t3)
         Paragraph a = new Paragraph();
         a.add(new Paragraph("Atentamente,", info))
-        addEmptyLine(a, 3);
+        addEmptyLine(a, 2);
         document.add(a)
         Paragraph f = new Paragraph();
         f.add(new Paragraph("Ing. Guido Ochoa Moreno", info))
@@ -1228,7 +1241,7 @@ class ReportesController extends Shield{
     }
 
     def imprimirMonitorio() {
-        println "params imprimirMonitorio: $params"
+//        println "params imprimirMonitorio: $params"
 
         def pl = new ByteArrayOutputStream()
         byte[] b
@@ -1240,8 +1253,9 @@ class ReportesController extends Shield{
         def data = cn.rows(sql.toString())
         def fctr = params.vlor.toInteger()
 
-
         data.each { persona ->
+//            println "${persona.prsndpto} -- factor: $fctr, ${persona.alctvlor * fctr}, saldo: ${persona.prsnsldo}"
+
             if (persona.prsnsldo > (persona.alctvlor * fctr)) {
                 pl = slctMonitorio(persona.prsn__id, persona.edifdscr[6])
                 pdfs.add(pl.toByteArray())
@@ -1340,7 +1354,7 @@ class ReportesController extends Shield{
         Paragraph preface = new Paragraph();
         addEmptyLine(preface, 1);
         preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph("CONJUNTO HABITACIONAL 'LOS VIÑEDOS'", fontTitle));
+        preface.add(new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTitle));
         addEmptyLine(preface, 2);
         document.add(preface);
 

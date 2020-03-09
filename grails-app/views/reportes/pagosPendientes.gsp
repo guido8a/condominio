@@ -59,7 +59,7 @@
 
 <body>
 
-<rep:headerFooter title="${'Conjunto Habitacional "Los Viñedos"'}" subtitulo="${'Pagos Pendientes'}" empresa="${''}"/>
+<rep:headerFooter title="${'Conjunto Residencial "Los Viñedos"'}" subtitulo="${'Pagos Pendientes'}" empresa="${''}"/>
 
 
 %{--<div>--}%
