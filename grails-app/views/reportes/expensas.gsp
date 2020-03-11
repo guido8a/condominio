@@ -26,7 +26,7 @@
 
 
 <div class="card">
-    <textarea name='editor1' id="certificado" class="editor" rows="100" cols="80">${persona?.expensa}</textarea>
+    <textarea name='editor1' id="certificado" class="editor" rows="100" cols="80">${persona?.expensa?:texto}</textarea>
 </div>
 
 %{--<div class="col-md-6">--}%

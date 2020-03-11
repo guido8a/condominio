@@ -2801,7 +2801,24 @@ class ReportesController extends Shield{
 
     def expensas () {
         def persona = Persona.get(params.id)
-        return[persona: persona]
+        def condominio = Condominio.get(session.condominio.id)
+//        def admn = Persona.get(condominio.administrador)
+        def admn = Persona.get(1)
+        def texto = """
+      Yo, <b>${admn.nombrePropietario} ${admn.apellidoPropietario}</b> portador de la C.I. ${admn.ruc} en mi calidad
+      de Administrador del
+      <b>Conjunto Residencial “LOS VIÑEDOS”</b>, luego de haber revisado la documentación pertinente, donde
+      constan los nombres de las siguientes personas <b>${persona.nombrePropietario} ${persona.apellidoPropietario} con número de cédula 0104124029,
+      JOHANNA VANESSA FLORES MOLINA con número de cédula 0104368071</b>,  ubicado en la Torre  1,
+      departamento Nº 134, parqueadero N° 25, secadero N° 12 y bodega N° 34, previo análisis de los documentos:
+      <br><br>CERTIFICO NO TENER ADEUDO ALGUNO PENDIENTE DE LIQUIDAR EN NINGUNO DE LOS RUBROS DE ESTA DEPENDENCIA
+      ADEMÁS LEGALIZO QUE SE ENCUENTRA AL DÍA EN EL PAGO DE LAS ALÍCUOTAS ORDINARIAS Y EXTRAORDINARIAS
+      DEL CONDOMINIO.
+      <br><br>Se extiende el presente CERTIFICADO DE EXPENSAS el 11 del mes de Febrero del año 2020 en
+      EL DISTRITO METROPOLITANO DE QUITO.
+      <br><br>Atentamente<br><br>Ing. Guido E. Ochoa Moreno<br>ADMINISTRADOR<br>CI: 0601983869
+      """
+        return[persona: persona, texto: texto]
     }
 
     def guardarTexto_ajax(){
