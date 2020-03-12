@@ -210,7 +210,8 @@ class IngresoController extends Shield {
 
         def pagos = Pago.findAllByIngreso(ingreso)
         def saldo = (ingreso.valor - (pagos?.valor?.sum() ?: 0))
-        def dscr  = "${ingreso.obligacion.descripcion} ${ingreso.observaciones?:''}"
+//        def dscr  = "${ingreso.obligacion.descripcion} ${ingreso.observaciones?:''}"
+        def dscr  = "${ingreso.observaciones?:''}"
 
         return[ingreso: ingreso, pagos: pagos, saldo: saldo, pago: pago, dscr: dscr, mora: mora, mess: mess]
     }
