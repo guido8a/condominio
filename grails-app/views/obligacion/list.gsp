@@ -9,7 +9,9 @@
 <body>
 
 <elm:message tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:message>
-
+<div style="text-align: center; margin-top: -30px;">
+    <h3>Aportes y Obligaciones</h3>
+</div>
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">

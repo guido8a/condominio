@@ -14,6 +14,10 @@
 
 <body>
 
+<div style="text-align: center; margin-top: -30px;">
+    <h3>Registro de Aportes</h3>
+</div>
+
 <fieldset class="borde">
     <div class="row" style="margin-bottom: 20px;">
         <div class="col-sm-1" align="center" style="margin-top: 20px">

@@ -20,7 +20,9 @@
 
 <body>
 
-
+<div style="text-align: center; margin-top: -30px;margin-bottom:20px">
+    <h3>Condóminos y Departamentos</h3>
+</div>
 
 <div style="margin-top: -15px;" class="vertical-container">
     <p class="css-icono" style="margin-bottom: -15px"><i class="fa fa-folder-open-o"></i></p>
