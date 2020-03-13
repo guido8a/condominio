@@ -8,14 +8,14 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <title>Balance General</title>
+    <title>Ingresos, Egresos y Saldos</title>
     <meta name="layout" content="main">
 </head>
 
 <body>
 <div class="row">
-    <div class="col-xs-3" style="top: -15px; height: 35px;">
-        <h3>Balance General</h3>
+    <div class="col-xs-4" style="top: -15px; height: 35px;">
+        <h3>Ingresos, Egresos y Saldos</h3>
     </div>
     <div class="col-xs-1">
         <label>Desde:</label>
