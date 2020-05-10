@@ -283,16 +283,16 @@ class EgresoController extends Shield {
 
 //        println "fechas: '${fechaDesde}','${fechaHasta}'"
         //saldos
-        def sql = "select * from saldos('${fechaDesde}','${fechaHasta}')"
+        def sql = "select * from saldos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}')"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
         println "....sql: $sql"
 
-        def sql2 = "select * from aportes('${fechaDesde}','${fechaHasta}') order by pagodcmt"
+        def sql2 = "select * from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by pagodcmt"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
 
-        def sql3 = "select * from egresos('${fechaDesde}','${fechaHasta}') order by egrsfcha"
+        def sql3 = "select * from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by egrsfcha"
         def cn3 = dbConnectionService.getConnection()
         def egresos = cn3.rows(sql3.toString())
 
@@ -305,7 +305,7 @@ class EgresoController extends Shield {
 
     def tablaIngresos_ajax () {
 
-        def sql2 = "select * from aportes('${params.desde}','${params.hasta}') order by egrsfcha"
+        def sql2 = "select * from aportes(${session.condominio.id}, ${session.condominio.id}, '${params.desde}','${params.hasta}') order by egrsfcha"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
 
@@ -313,7 +313,7 @@ class EgresoController extends Shield {
     }
 
     def tablaEgresos_ajax () {
-        def sql3 = "select * from egresos('${params.desde}','${params.hasta}')"
+        def sql3 = "select * from egresos(${session.condominio.id}, '${params.desde}','${params.hasta}')"
         def cn3 = dbConnectionService.getConnection()
         def egresos = cn3.rows(sql3.toString())
 

@@ -112,7 +112,7 @@
 
 <body>
 
-
+<elm:message tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:message>
 
 
 <div class="row">

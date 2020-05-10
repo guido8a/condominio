@@ -1201,10 +1201,13 @@ class ReportesController extends Shield{
 
 
         data.each { persona ->
-            if (persona.prsnsldo > (persona.alctvlor * fctr)) {
-                pl = solicitudes(persona.prsn__id, persona.edifdscr[6])
+            if (persona?.prsnsldo > (persona?.alctvlor?:0 * fctr)) {
+                pl = solicitudes(persona?.prsn__id, persona?.edifdscr[6])
                 pdfs.add(pl.toByteArray())
                 contador++
+            } else {
+                flash.message = "No hay datos..."
+                redirect(url: params.url)
             }
         }
 
@@ -1256,10 +1259,13 @@ class ReportesController extends Shield{
         data.each { persona ->
 //            println "${persona.prsndpto} -- factor: $fctr, ${persona.alctvlor * fctr}, saldo: ${persona.prsnsldo}"
 
-            if (persona.prsnsldo > (persona.alctvlor * fctr)) {
-                pl = slctMonitorio(persona.prsn__id, persona.edifdscr[6])
+            if (persona?.prsnsldo > (persona?.alctvlor?:0 * fctr)) {
+                pl = slctMonitorio(persona?.prsn__id, persona?.edifdscr[6])
                 pdfs.add(pl.toByteArray())
                 contador++
+            } else {
+                flash.message = "No hay datos..."
+                redirect(url: params.url)
             }
         }
 
@@ -1416,7 +1422,7 @@ class ReportesController extends Shield{
         //valores por cobrar a la fecha y saldos
 
         def cn7 = dbConnectionService.getConnection()
-        def valores = "select * from saldos('${txfcin}', '${txfcfn}');"
+        def valores = "select * from saldos(${session.condominio.id}, '${txfcin}', '${txfcfn}');"
         def res7 = cn7.rows(valores.toString())
 
         /* ************************************************* Graficos *************************** */
@@ -1734,7 +1740,7 @@ class ReportesController extends Shield{
         //valores por cobrar a la fecha y saldos
 
         def cn7 = dbConnectionService.getConnection()
-        def valores = "select * from saldos('${txfcin}', '${txfcfn}');"
+        def valores = "select * from saldos(${session.condominio.id}, '${txfcin}', '${txfcfn}');"
         def res7 = cn7.rows(valores.toString())
 
         def si = res7.first().sldofnal?.toDouble() ?: 0
@@ -1879,7 +1885,7 @@ class ReportesController extends Shield{
 
         println "fechas: '${fechaDesde}','${fechaHasta}'"
 
-        def sql3 = "select * from egresos('${fechaDesde}','${fechaHasta}') order by egrsfcha"
+        def sql3 = "select * from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by egrsfcha"
         def cn3 = dbConnectionService.getConnection()
         def egresos = cn3.rows(sql3.toString())
 
@@ -1988,7 +1994,7 @@ class ReportesController extends Shield{
 
         println "fechas: '${fechaDesde}','${fechaHasta}'"
 
-        def sql2 = "select * from aportes('${fechaDesde}','${fechaHasta}') order by prsndpto"
+        def sql2 = "select * from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by prsndpto"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
 
@@ -2105,20 +2111,20 @@ class ReportesController extends Shield{
         println "balance fechas: '${fechaDesde}','${fechaHasta}'"
 
         def sql2 = "select sum(pagovlor) vlor, substr(pagofcha::varchar, 1,7) fcha " +
-                "from aportes('${fechaDesde}','${fechaHasta}') group by  2 order by 2"
+                "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') group by  2 order by 2"
 
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
         def totalIngresos = (ingresos.vlor.sum() ?: 0)
 
         sql2 = "select sum(egrsvlor) vlor, substr(egrsfcha::varchar, 1,7) fcha " +
-                "from egresos('${fechaDesde}','${fechaHasta}') group by  2 order by 2"
+                "from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') group by  2 order by 2"
         def egresos = cn2.rows(sql2.toString())
 
         def totalEgresos = (egresos.vlor.sum() ?: 0)
         println "tot egresos: $totalEgresos"
 
-        sql2 = "select * from saldos('${fechaDesde}','${fechaHasta}')"
+        sql2 = "select * from saldos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}')"
         def saldo = cn2.rows(sql2.toString())[0].sldoinic
 
 
@@ -2585,7 +2591,7 @@ class ReportesController extends Shield{
 
         def cn = dbConnectionService.getConnection()
         def sql = "select * from pendiente('${fecha.format('yyy-MM-dd')}', '${params.torre}')"
-
+        println "sql: $sql"
         def res = cn.rows(sql.toString())
         def tamano = res.size()
         def max = 43
@@ -2720,11 +2726,19 @@ class ReportesController extends Shield{
                 }
             }
         } else {
-            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-            addCellTabla(table, new Paragraph("", fontTd10), frmtNmro)
-            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-            addCellTabla(table, new Paragraph("", fontTd10), frmtNmro)
+            println "...1"
+            Paragraph preface = new Paragraph();
+            addEmptyLine(preface, 1);
+            preface.setAlignment(Element.ALIGN_CENTER);
+            preface.add(new Paragraph("-- sin datos --", fontTitulo16));
+            addEmptyLine(preface, 1);
+            document.add(preface);
+
+            addCellTabla(table, new Paragraph(" ", fontTd10), frmtDato)
+            addCellTabla(table, new Paragraph(" ", fontTd10), frmtNmro)
+            addCellTabla(table, new Paragraph(" ", fontTd10), frmtDato)
+            addCellTabla(table, new Paragraph(" ", fontTd10), frmtDato)
+            addCellTabla(table, new Paragraph(" ", fontTd10), frmtNmro)
         }
 
 
@@ -2736,15 +2750,6 @@ class ReportesController extends Shield{
 
         encabezadoYnumeracion(b, session.condominio.nombre, "Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", "pagosPendientes")
 
-//        return b
-//        PdfReader reader = new PdfReader(b);
-//        def n = reader.getNumberOfPages();
-//        println("paginas " + n)
-
-//        response.setContentType("application/pdf")
-//        response.setHeader("Content-disposition", "attachment; filename=" + name)
-//        response.setContentLength(b.length)
-//        response.getOutputStream().write(b)
     }
 
     def encabezadoYnumeracion (f, tituloReporte, subtitulo, nombreReporte) {
@@ -3129,7 +3134,7 @@ class ReportesController extends Shield{
         println "fechas: '${fechaDesde}','${fechaHasta}'"
 
 //        def sql3 = "select * from egresos('${fechaDesde}','${fechaHasta}') order by egrsfcha"
-        def sql3 = "select prve, sum(egrsvlor) from egresos('${fechaDesde}', '${fechaHasta}'::date) group by prve order by 2 desc;"
+        def sql3 = "select prve, sum(egrsvlor) from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}'::date) group by prve order by 2 desc;"
         def cn3 = dbConnectionService.getConnection()
         def egresos = cn3.rows(sql3.toString())
 

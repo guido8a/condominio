@@ -83,7 +83,7 @@ class ViviendaController extends Shield {
     def tabla() {
         println "tabla " + params
         def oblg = Obligacion.get(params.oblg)
-        def sql = "select * from ingresos(${oblg.id}) order by prsndpto"
+        def sql = "select * from ingresos(${oblg.id}, ${session.condominio.id}) order by prsndpto"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 

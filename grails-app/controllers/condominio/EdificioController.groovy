@@ -104,7 +104,8 @@ class EdificioController extends Shield {
      */
     def save_ajax() {
         def edificioInstance = new Edificio()
-        def condominio = Condominio.get(session.condominio.id)
+//        def condominio = Condominio.get(session.condominio.id)
+        println "params: $params"
         if(params.id) {
             edificioInstance = Edificio.get(params.id)
             if(!edificioInstance) {
@@ -113,7 +114,8 @@ class EdificioController extends Shield {
             }
         }
         edificioInstance.properties = params
-        edificioInstance.condominio = condominio
+//        edificioInstance.condominio = condominio
+        println "edif: ${edificioInstance.condominio}"
         if(!edificioInstance.save(flush: true)) {
             render "ERROR*Ha ocurrido un error al guardar Edificio: " + renderErrors(bean: edificioInstance)
             return
