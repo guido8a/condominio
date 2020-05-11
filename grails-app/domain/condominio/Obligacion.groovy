@@ -7,6 +7,7 @@ class Obligacion {
     Date fecha
     double valor
     TipoAporte tipoAporte
+    Condominio condominio
 
     static mapping = {
         table 'oblg'
@@ -17,6 +18,7 @@ class Obligacion {
             id column: 'oblg__id'
             descripcion column: 'oblgdscr'
             tipoAporte column: 'tpap__id'
+            condominio column: 'cndm__id'
             fecha column: 'oblgfcha'
             valor column: 'oblgvlor'
         }

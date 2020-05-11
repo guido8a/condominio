@@ -61,7 +61,7 @@
                 <td class="editable alineacion ${prsn?.ingrvlor? '':'gris'}" id="${prsn?.prsn__id}"
                     data-original="${prsn?.ingrvlor}" data-valor="${prsn?.ingrvlor?:oblg.valor}"  data-ingr="${prsn?.ingr__id}"
                     data-obsrog="${prsn?.ingrobsr}"
-                    style="width:12%">
+                    style="width:12%" title="Ingrese el valor y presione Enter para aceptarlo">
                     <g:formatNumber number="${prsn?.ingrvlor?:oblg.valor}" minFractionDigits="2" maxFractionDigits="2" format="##,##0" locale="ec"/>
                 </td>
                 <td style="text-align: center;" class="chk">

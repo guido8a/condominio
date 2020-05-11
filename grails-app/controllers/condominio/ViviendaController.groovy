@@ -91,7 +91,6 @@ class ViviendaController extends Shield {
     }
 
     def actualizar() {
-
         println "actualizar $params"
         if (params.item instanceof java.lang.String) {
             params.item = [params.item]
@@ -235,7 +234,7 @@ class ViviendaController extends Shield {
 //        println("obsr: " + observacion)
 
         def cn = dbConnectionService.getConnection()
-        def sql = "select * from alicuota('${fecha.format('yyyy-MM-dd')}','${observacion}')"
+        def sql = "select * from alicuota(${session.condominio.id}, '${fecha.format('yyyy-MM-dd')}','${observacion}')"
         println "sql: $sql"
 
         def res = cn.rows(sql.toString())
@@ -258,9 +257,9 @@ class ViviendaController extends Shield {
     }
 
     def obligaciones_ajax () {
-
+        def condominio = Condominio.get(session.condominio.id)
         def tipoAporte = TipoAporte.get(params.tipoAporte)
-        def obligaciones = Obligacion.findAllByTipoAporte(tipoAporte)
+        def obligaciones = Obligacion.findAllByTipoAporteAndCondominio(tipoAporte, condominio)
 
         return[obligaciones: obligaciones]
     }

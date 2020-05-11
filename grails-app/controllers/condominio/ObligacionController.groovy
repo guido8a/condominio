@@ -59,7 +59,8 @@ class ObligacionController extends Shield {
     def list() {
         params.max = 20
         params.sort = 'tipoAporte'
-        def obligacionInstanceList = getList(params, false)
+//        def obligacionInstanceList = getList(params, false)
+        def obligacionInstanceList = Obligacion.findAllByCondominio(session.condominio, [params: params])
         def obligacionInstanceCount = getList(params, true).size()
         return [obligacionInstanceList: obligacionInstanceList, obligacionInstanceCount: obligacionInstanceCount]
     }
@@ -116,6 +117,7 @@ class ObligacionController extends Shield {
             }
         }
         obligacionInstance.properties = params
+        obligacionInstance.condominio = session.condominio
         if(!obligacionInstance.save(flush: true)) {
             render "ERROR*Ha ocurrido un error al guardar Obligacion: " + renderErrors(bean: obligacionInstance)
             return

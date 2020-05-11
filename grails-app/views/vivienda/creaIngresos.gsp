@@ -56,13 +56,12 @@
         </div>
 
 
-        <div class="btn-group col-sm-1" style="margin-top: 17px; margin-left: -20px">
-
-            <a href="#" class="btn btn-azul" id="btn-consultar"><i class="fa fa-search"></i> Ingresar</a>
+        <div class="btn-group col-sm-1" style="margin-top: 17px; margin-left: -20px; width: 150px">
+            <a href="#" class="btn btn-azul" id="btn-consultar"><i class="fa fa-search"></i> Ingresar/Buscar</a>
         </div>
         <div class="btn-group col-sm-3" style="margin-top: 17px; margin-left: -0px; width: 300px;">
             <a href="#" class="btn btn-success btn-actualizar"><i class="fa fa-save"></i> Guardar</a>
-            <a href="#" class="btn btn-warning btn-generar" style="margin-left: 5px"><i class="fa fa-users"></i> Generar Alícuotas</a>
+            <a href="#" class="btn btn-warning btn-generar" style="margin-left: 5px"><i class="fa fa-users"></i> Generar Alíc.</a>
         </div>
 
     </div>
@@ -286,6 +285,7 @@
                 var ingr  = $(this).data("ingr");
                 var obsrog = $(this).data("obsrog");
 
+                console.log('valor', valor);
                 var chk = $(this).siblings(".chk").children("input").is(":checked");
 //                        console.log(chk);
                 var obsr = $(this).siblings(".observaciones").children("input").val();
