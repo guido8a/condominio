@@ -59,10 +59,21 @@
         <div class="form-group keeptogether ${hasErrors(bean: pago, field: 'documento', 'error')} ">
             <span class="grupo">
                 <label for="documento" class="col-md-3 control-label">
-                    Documento
+                    Documento/Comp.
                 </label>
                 <div class="col-md-5">
                     <g:textField name="documento" class="allCaps form-control" value="${pago?.documento}"/>
+                </div>
+            </span>
+        </div>
+
+        <div class="form-group keeptogether ${hasErrors(bean: pago, field: 'documento', 'error')} ">
+            <span class="grupo">
+                <label for="cheque" class="col-md-3 control-label">
+                    Cheque
+                </label>
+                <div class="col-md-5">
+                    <g:textField name="cheque" class="allCaps form-control" value="${pago?.cheque}"/>
                 </div>
             </span>
         </div>

@@ -94,15 +94,20 @@ class EgresoController extends Shield {
      */
     def form_ajax() {
         def egresoInstance = new Egreso()
+        def proveedores = Proveedor.findAllByCondominio(session.condominio, [sort: 'nombre'])
+        def pago
+
         if(params.id) {
             egresoInstance = Egreso.get(params.id)
             if(!egresoInstance) {
                 render "ERROR*No se encontró Egreso."
                 return
             }
+            pago = PagoEgreso.findByEgreso(egresoInstance)
         }
+        println "pago: $pago"
         egresoInstance.properties = params
-        return [egresoInstance: egresoInstance]
+        return [egresoInstance: egresoInstance, proveedores: proveedores, pago: pago]
     } //form para cargar con ajax en un dialog
 
     /**
@@ -138,6 +143,8 @@ class EgresoController extends Shield {
                     pagos.fechaPago = egresoInstance.fecha
                     pagos.valor = egresoInstance.valor
                     pagos.observaciones = egresoInstance.descripcion
+                    pagos.cheque = params.pg_chqe
+                    pagos.documento = params.pg_cmpr
                     pagos.save(flush: true)
                 }
                 render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Egreso exitosa."
@@ -230,6 +237,7 @@ class EgresoController extends Shield {
         pago.valor = params.abono.toDouble()
         pago.fechaPago = params.fecha
         pago.documento = params.documento.toUpperCase();
+        pago.cheque = params.cheque.toUpperCase();
         pago.observaciones = params.observaciones
 
         if(!pago.save(flush: true)){
@@ -375,7 +383,7 @@ class EgresoController extends Shield {
         if(params.hasta) fchs = "'" + new Date().parse("dd-MM-yyyy",params.hasta).format('yyyy-MM-dd') + "'"
 
 //        def sqlSelect = "select * from ls_egrs(${session.empresa.id}, ${cont}, ${fcds}, ${fchs}) "
-        def sqlSelect = "select * from ls_egrs(${fcds}, ${fchs}) "
+        def sqlSelect = "select * from ls_egrs(${session.condominio.id}, ${fcds}, ${fchs}) "
         def sqlWhere = "where (${wh})"
         def sqlOrder = "order by egrsfcha, ${params.ordenar} limit 51"
 //        println "sql: $sqlSelect $sqlWhere $sqlOrder"

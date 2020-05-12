@@ -61,7 +61,7 @@ class ObligacionController extends Shield {
         params.sort = 'tipoAporte'
 //        def obligacionInstanceList = getList(params, false)
         def obligacionInstanceList = Obligacion.findAllByCondominio(session.condominio, [params: params])
-        def obligacionInstanceCount = getList(params, true).size()
+        def obligacionInstanceCount = obligacionInstanceList.size()
         return [obligacionInstanceList: obligacionInstanceList, obligacionInstanceCount: obligacionInstanceCount]
     }
 

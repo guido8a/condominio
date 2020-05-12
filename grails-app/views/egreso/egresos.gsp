@@ -92,7 +92,7 @@
                     </g:link>
                 </div>
             </div>
-            <div style="float: left; margin-top: 20px;" class="badge badge-secondary" >
+            <div style="float: left; margin-top: 20px; height: 33px;" class="badge badge-secondary" >
                 <input type="checkbox" value="Saldo > 0" id="saldo"> Saldos > 0
             </div>
 
@@ -102,9 +102,9 @@
 
 <div style="margin-top: 10px; border-bottom: solid; border-style: solid; border-width: 1px; border-color: #C0C0C0"></div>
 
-<div style="margin-top: 20px; min-height: 650px; width: 60%; float: left">
+<div style="margin-top: 20px; min-height: 650px; width: 55%; float: left">
     %{--<div class="linea"></div>--}%
-    <table class="table table-bordered table-hover table-condensed" style="width: 1070px">
+    <table class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
             <th class="alinear" style="width: 32%">Concepto</th>
@@ -123,7 +123,7 @@
     </div>
 </div>
 
-<div style="margin-top: 20px; min-height: 650px; width: 38%; float: right ">
+<div style="margin-top: 20px; min-height: 650px; width: 43%; float: right ">
     %{--<div class="linea"></div>--}%
     <div id="tdPagosEgresos" style="width: 100%">
 

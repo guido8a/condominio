@@ -11,6 +11,7 @@ class Egreso {
 //    double abono = 0
 //    Date fechaPago = new Date()
     String descripcion
+    String factura
 
     static mapping = {
         table 'egrs'
@@ -27,10 +28,12 @@ class Egreso {
 //            abono column: 'egrsabno'
 //            fechaPago column: 'egrsfcpg'
             descripcion column: 'egrsdscr'
+            factura column: 'egrsfctr'
         }
     }
 
     static constraints = {
         descripcion(blank: true, nullable: true)
+        factura(blank: true, nullable: true)
     }
 }

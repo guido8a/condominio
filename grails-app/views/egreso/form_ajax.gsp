@@ -28,7 +28,7 @@
                         Proveedor
                     </label>
                     <div class="col-md-10">
-                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list().sort{it.nombre}}" optionKey="id" required="" value="${egresoInstance?.proveedor?.id}" class="many-to-one form-control"/>
+                        <g:select id="proveedor" name="proveedor.id" from="${proveedores}" optionKey="id" required="" value="${egresoInstance?.proveedor?.id}" class="many-to-one form-control"/>
                     </div>
                 </span>
             </div>
@@ -55,6 +55,14 @@
                         <g:textField name="valor" value="${egresoInstance?.valor}" class="number form-control required"/>
                     </div>
                 </span>
+                <span class="grupo">
+                    <label for="valor" class="col-md-2 control-label">
+                        Factura
+                    </label>
+                    <div class="col-md-5">
+                        <g:textField name="factura" value="${egresoInstance?.factura}" class="form-control required"/>
+                    </div>
+                </span>
             </div>
 
             <div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'fecha', 'error')} required">
@@ -68,17 +76,40 @@
                 </span>
             </div>
 
+            <g:if test="${!pago}">
+
+            <hr style="border: 1px solid #888; margin-top: -5px;">
+
             <div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'fechaPago', 'error')} required">
                 <span class="grupo">
-                    <label class="col-md-4 control-label">
+                    <label class="col-md-6 control-label">
                         Generar pago a esta Fecha
                     </label>
-                    <div class="col-md-2">
+                    <div class="col-md-6">
                         <input type="checkbox" name="pagar" id="pagarId">
                     </div>
                 </span>
             </div>
+            <div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'fechaPago', 'error')} required">
+                <span class="grupo">
+                    <label class="col-md-2 control-label">
+                        Cheque:
+                    </label>
+                    <div class="col-md-4">
+                        <input type="text" name="pg_chqe" id="pg_chqe">
+                    </div>
+                </span>
+                <span class="grupo">
+                    <label class="col-md-2 control-label">
+                        Comprobante
+                    </label>
+                    <div class="col-md-4">
+                        <input type="text" name="pg_cmpr" id="pg_cmpr">
+                    </div>
+                </span>
+            </div>
 
+            </g:if>
             %{--<div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'abono', 'error')} required">--}%
                 %{--<span class="grupo">--}%
                     %{--<label for="abono" class="col-md-2 control-label">--}%

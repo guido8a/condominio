@@ -64,8 +64,10 @@ class ProveedorController extends Shield {
      * @return proveedorInstanceList: la lista de elementos filtrados, proveedorInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def list() {
-        def proveedorInstanceList = getList(params, false)
-        def proveedorInstanceCount = getList(params, true).size()
+//        def proveedorInstanceList = getList(params, false)
+        def proveedorInstanceList = Proveedor.findAllByCondominio(session.condominio, [params: params])
+        def proveedorInstanceCount = proveedorInstanceList.size()
+//        def proveedorInstanceCount = getList(params, true).size()
         return [proveedorInstanceList: proveedorInstanceList, proveedorInstanceCount: proveedorInstanceCount]
     }
 

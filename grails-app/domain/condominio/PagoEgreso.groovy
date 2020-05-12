@@ -8,6 +8,8 @@ class PagoEgreso {
         Date fechaPago
         String documento
         String observaciones
+        String cheque
+//        String comprobante
 
         static mapping = {
             table 'pgeg'
@@ -21,12 +23,16 @@ class PagoEgreso {
                 fechaPago column: 'pgegfcpg'
                 documento column: 'pgegdcmt'
                 observaciones column: 'pgegobsr'
+                cheque column: 'pgegchqe'
+//                comprobante column: 'pgegcmpr'
             }
         }
 
         static constraints = {
             documento(blank: true, nullable: true)
             observaciones(blank: true, nullable: true)
+            cheque(blank: true, nullable: true)
+//            comprobante(blank: true, nullable: true)
         }
 
     }
