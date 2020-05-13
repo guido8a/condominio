@@ -77,15 +77,33 @@
                     <ul class="fa-ul">
                         <li>
                             <i class="fa-li ${iconGen}"></i>
-                            <span id="tpoc">
-                                <g:link controller="tipoOcupacion" action="list">Tipo de Ocupación</g:link> de la vivienda puede
-                                ser el propietario o un arrendatario.
+                            <span id="cndm">
+                                <g:link controller="condominio" action="list">Condominio</g:link> Registro
+                                de un nuevo Condominio y edición de datos. Este nombre aparecerá en todos los documentos generados por el sistema
+                                y procesos internos.
                             </span>
 
                             <div class="descripcion hide">
-                                <h4>Tipo de Ocupación</h4>
+                                <h4>Condominio</h4>
 
-                                <p>Tipo de ocupación de la vivienda: puede ser el propietario o un arrendatario.</p>
+                                <p>Registro de un nuevo Condominio y edición de datos. Este nombre aparecerá en todos
+                                los documentos generados por el sistema y procesos internos.</p>
+                                <p>En cada condominio se deberá crear un administrador.</p>
+                                <p>Es particular a cada condominio:</p>
+                                <ul>
+                                    <li>
+                                        Edificios o zonas para organizar a los condóminos.
+                                    </li>
+                                    <li>
+                                        Condóminos con sus respectivas cuotas, pagos y requerimientos de obras.
+                                    </li>
+                                    <li>
+                                        Aportes por cada tipo.
+                                    </li>
+                                    <li>
+                                        Proveedores y sus respectivos egresos y obligaciones.
+                                    </li>
+                                </ul>
                             </div>
                         </li>
 
@@ -99,8 +117,39 @@
                             <div class="descripcion hide">
                                 <h4>Edificio</h4>
 
-                                <p>Edificio, torre o grupo de viviendas dentro del condominio.
-                                Se usa para diferenciar la zona a la cual pertenece una determinada vivienda dentro del condominio</p>
+                                <p>Edificio, torre o grupo de viviendas dentro del condominio.</p>
+                                <p>Se usa para diferenciar la zona a la cual pertenece una determinada vivienda dentro del condominio</p>
+                            </div>
+                        </li>
+
+
+
+                        <hr style="border: 1px solid #888; margin-top: 15px;">
+
+                        <li>
+                            <i class="fa-li ${iconGen}"></i>
+                            <span id="tpc">
+                                <g:link controller="tipoCondominio" action="list">Tipo de Condominio</g:link> para
+                                el registro de condominios tipo edificio de departamentos o casas individuales.
+                            </span>
+
+                            <div class="descripcion hide">
+                                <h4>Tipo de Condominio</h4>
+                                <p>Registro de condominios tipo edificio de departamentos o casas individuales.</p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <i class="fa-li ${iconGen}"></i>
+                            <span id="tpoc">
+                                <g:link controller="tipoOcupacion" action="list">Tipo de Ocupación</g:link> de la vivienda puede
+                                ser el propietario o un arrendatario.
+                            </span>
+
+                            <div class="descripcion hide">
+                                <h4>Tipo de Ocupación</h4>
+
+                                <p>Tipo de ocupación de la vivienda: puede ser el propietario o un arrendatario.</p>
                             </div>
                         </li>
 
@@ -136,19 +185,6 @@
                         </li>
                         <li>
                             <i class="fa-li ${iconGen}"></i>
-                            <span id="cndm">
-                                <g:link controller="condominio" action="list">Condominio</g:link> para
-                               el registro y edición de datos del condominio.
-                            </span>
-
-                            <div class="descripcion hide">
-                                <h4>Condominio</h4>
-
-                                <p>Para el registro y edicion de datos del condominio.</p>
-                            </div>
-                        </li>
-                        <li>
-                            <i class="fa-li ${iconGen}"></i>
                             <span id="cntn">
                                 <g:link controller="canton" action="list">Cantón</g:link> para
                                 el registro y edición de datos del cantón.
@@ -178,17 +214,6 @@
 
                             <div class="descripcion hide">
                                 <h4>Tipo de Aporte</h4>
-                                <p></p>
-                            </div>
-                        </li>
-                        <li>
-                            <i class="fa-li ${iconGen}"></i>
-                            <span id="tpc">
-                                <g:link controller="tipoCondominio" action="list">Tipo de Condominio</g:link>
-                            </span>
-
-                            <div class="descripcion hide">
-                                <h4>Tipo de Condominio</h4>
                                 <p></p>
                             </div>
                         </li>
