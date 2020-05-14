@@ -22,17 +22,16 @@ class Persona {
     String login
     String password
     Date fechaNacimiento
-    String autorizacion
+//    String autorizacion
     int activo = 1
+    int externo = 0
     String cargo
     String departamento    /* numero identificador de la vivienda */
     String ruc
     double alicuota
     String observaciones
     Date fechaPass
-    
     String expensa
-
 
 
     static hasMany = [perfiles: Sesn]
@@ -62,8 +61,9 @@ class Persona {
             telefono column: 'prsntelf'
             login column: 'prsnlogn'
             password column: 'prsnpass'
-            autorizacion column: 'prsnatrz'
+//            autorizacion column: 'prsnatrz'
             activo column: 'prsnactv'
+            externo column: 'prsnextr'
             cargo column: 'prsncrgo'
             departamento column: 'prsndpto'
             ruc column: 'prsn_ruc'
@@ -86,8 +86,9 @@ class Persona {
         mail(size: 3..63, blank: true, nullable: true)
         login(size: 4..14, blank: false, unique: true)
         password(blank: false)
-        autorizacion(matches: /^[a-zA-Z0-9ñÑáéíóúÁÉÍÚÓüÜ_-]+$/, blank: true, nullable: true, attributes: [mensaje: 'Contraseña para autorizaciones'])
-        activo(blank: false, attributes: [title: 'activo'])
+//        autorizacion(matches: /^[a-zA-Z0-9ñÑáéíóúÁÉÍÚÓüÜ_-]+$/, blank: true, nullable: true, attributes: [mensaje: 'Contraseña para autorizaciones'])
+        activo(blank: false, attributes: [title: 'Activo'])
+        activo(blank: false, attributes: [title: 'Externo'])
         telefono(blank: false, attributes: [title: 'teléfono'])
         fechaInicio(blank: true, nullable: true, attributes: [title: 'Fecha de inicio'])
         fechaFin(blank: true, nullable: true, attributes: [title: 'Fecha de finalización'])
@@ -130,6 +131,15 @@ class Persona {
 
     Boolean getEsDirector() {
         return this.cargo?.toLowerCase()?.contains("director")
+    }
+
+    Boolean getPerfil() {
+        if(this?.id) {
+            def sesn = Sesn.findByUsuario(this)
+            return sesn?.perfil
+        } else {
+            return null
+        }
     }
 
     Boolean getEsGerente() {

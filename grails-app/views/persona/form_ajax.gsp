@@ -34,6 +34,33 @@
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="row">
+                        <label for="nombre" class="control-label col-xs-4 col-md-4">
+                            Ocupante Nombre (listado)
+                        </label>
+                        <div class="col-xs-7 col-md-7">
+                            <g:textField name="nombre" maxlength="30" required="" class="form-control required"
+                                         value="${personaInstance?.nombre}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="row">
+                        <label for="apellido" class="control-label col-xs-3 col-md-4">
+                            Ocupante Apellido (listado)
+                        </label>
+                        <div class="col-xs-7 col-md-7">
+                            <g:textField name="apellido" maxlength="30" required="" class="form-control required"
+                                         value="${personaInstance?.apellido}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="row">
                         <label for="nombrePropietario" class="control-label col-xs-3 col-md-3">
                             Propietario Nombre
                         </label>
@@ -51,31 +78,6 @@
                         <div class="col-xs-9 col-md-8">
                             <g:textField name="apellidoPropietario" maxlength="30" required="" class="form-control required"
                                          value="${personaInstance?.apellidoPropietario}"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-12 col-md-6">
-                    <div class="row">
-                        <label for="nombre" class="control-label col-xs-3 col-md-3">
-                            Ocupante Nombre
-                        </label>
-                        <div class="col-xs-9 col-md-8">
-                            <g:textField name="nombre" maxlength="30" required="" class="form-control required"
-                                         value="${personaInstance?.nombre}"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-md-6">
-                    <div class="row">
-                        <label for="apellido" class="control-label col-xs-3 col-md-3">
-                            Ocupante Apellido
-                        </label>
-                        <div class="col-xs-9 col-md-8">
-                            <g:textField name="apellido" maxlength="30" required="" class="form-control required"
-                                         value="${personaInstance?.apellido}"/>
                         </div>
                     </div>
                 </div>
@@ -101,7 +103,7 @@
                             Edificio
                         </label>
                         <div class="col-xs-8 col-md-7">
-                            <g:select id="edificio" name="edificio.id" from="${condominio.Edificio.list()}"
+                            <g:select id="edificio" name="edificio.id" from="${edificio}"
                                       optionKey="id" optionValue="descripcion"
                                       value="${personaInstance?.edificio?.id}" class="many-to-one form-control"/>
                         </div>
@@ -201,7 +203,7 @@
                                 Mail
                             </label>
                             <div class="col-xs-9 col-md-8">
-                                <g:textField name="mail" maxlength="63" class="allCaps form-control" value="${personaInstance?.mail}"/>
+                                <g:textField name="mail" maxlength="63" class="form-control" value="${personaInstance?.mail}"/>
                             </div>
                         </span>
                     </div>
@@ -263,15 +265,25 @@
                         </span>
                     </div>
                 </div>
+
                 <div class="col-xs-12 col-md-6">
                     <div class="row">
                         <span class="grupo">
-                            <label for="autorizacion" class="col-xs-3 col-md-3 control-label">
-                                Autorización
+                            <label for="perfiles" class="col-xs-3 col-md-3 control-label">
+                                Perfil
                             </label>
-                            <div class="col-xs-9 col-md-8">
-                                <g:textField name="autorizacion" pattern="${personaInstance.constraints.autorizacion.matches}" class="allCaps form-control" value="${personaInstance?.autorizacion}"/>
-                            </div>
+                            <g:if test="${session.perfil.codigo == 'ADM'}">
+                                <div class="col-xs-9 col-md-8">
+                                    <g:select id="perfiles" name="perfiles" from="${prflAdm}"
+                                              optionKey="id" optionValue="descripcion" value="${personaInstance?.perfil}" class="many-to-one form-control"/>
+                                </div>
+                            </g:if>
+                            <g:else>
+                                <div class="col-xs-9 col-md-8">
+                                    <g:select id="perfiles" name="perfiles" from="${perfiles}"
+                                              optionKey="id" optionValue="descripcion" value="${personaInstance?.perfil}" class="many-to-one form-control"/>
+                                </div>
+                            </g:else>
                         </span>
                     </div>
                 </div>
@@ -312,11 +324,23 @@
                             <label for="activo" class="col-xs-3 col-md-3 control-label">
                                 Activo
                             </label>
-                            <div class="col-xs-8 col-md-8">
+                            <div class="col-xs-3 col-md-3">
                                 <g:checkBox name="activo" class="form-control activ" data-on-Label="Si"
                                             value="${personaInstance?.activo == 1}"  />
                             </div>
                         </span>
+
+                        <g:if test="${session.perfil.codigo == 'ADM'}">
+                            <span class="grupo">
+                                <label for="activo" class="col-xs-3 col-md-3 control-label">
+                                    Administrador externo
+                                </label>
+                                <div class="col-xs-3 col-md-3">
+                                    <g:checkBox name="externo" class="form-control activ" data-on-Label="Si"
+                                                value="${personaInstance?.externo == 1}"  />
+                                </div>
+                            </span>
+                        </g:if>
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-6">

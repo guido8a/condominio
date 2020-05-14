@@ -57,11 +57,21 @@ class ObligacionController extends Shield {
      * @return obligacionInstanceList: la lista de elementos filtrados, obligacionInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def list() {
-        params.max = 20
+        println "params: $params"
+        params.max = 15
         params.sort = 'tipoAporte'
 //        def obligacionInstanceList = getList(params, false)
-        def obligacionInstanceList = Obligacion.findAllByCondominio(session.condominio, [params: params])
-        def obligacionInstanceCount = obligacionInstanceList.size()
+        def obligacionInstanceList
+        def obligacionInstanceCount
+        if(!params.search) {
+            obligacionInstanceList = Obligacion.findAllByCondominio(session.condominio, [max: params.max,
+                sort: params.sort, offset: params.offset])
+            obligacionInstanceCount = Obligacion.findAllByCondominio(session.condominio).size()
+        } else {
+            obligacionInstanceList = Obligacion.findAllByCondominioAndDescripcionIlike(session.condominio, '%' + params.search + '%')
+            obligacionInstanceCount = 14
+        }
+//        def obligacionInstanceList = Obligacion.findAllByCondominio(session.condominio, [params: params])
         return [obligacionInstanceList: obligacionInstanceList, obligacionInstanceCount: obligacionInstanceCount]
     }
 

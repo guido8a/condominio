@@ -305,7 +305,9 @@ como máximo 30
             }
         };
 
-        items.pagar = ingresos;
+        if(deuda){
+            items.pagar = ingresos;
+        }
 //        items.editar = editar;
 //        items.perfil = perfil;
 //        items.alicuota = alicuota;

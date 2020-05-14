@@ -57,8 +57,14 @@ class EdificioController extends Shield {
      * @return edificioInstanceList: la lista de elementos filtrados, edificioInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def list() {
-        def edificioInstanceList = getList(params, false)
-        def edificioInstanceCount = getList(params, true).size()
+        params.max = 15
+        params.sort = 'descripcion'
+        def edificioInstanceList = Edificio.findAllByCondominio(session.condominio, [max: params.max,
+                sort: params.sort, offset: params.offset])
+        def edificioInstanceCount = Edificio.findAllByCondominio(session.condominio).size()
+
+//        def edificioInstanceList = getList(params, false)
+//        def edificioInstanceCount = getList(params, true).size()
         return [edificioInstanceList: edificioInstanceList, edificioInstanceCount: edificioInstanceCount]
     }
 

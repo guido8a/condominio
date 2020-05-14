@@ -32,7 +32,7 @@
 
 <elm:message tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:message>
 
-<h3 style="text-align: center">Pendientes de <strong>${ingreso[0].persona.nombre} ${ingreso[0].persona.apellido} &nbsp; </strong>
+<h3 style="text-align: center">Pendientes de <strong>${ingreso[0].persona?.nombre} ${ingreso[0]?.persona?.apellido} &nbsp; </strong>
     dep. <strong>(${ingreso[0].persona.departamento})</strong></h3>
 <div class="btn-toolbar toolbar">
     <div class="btn-group">

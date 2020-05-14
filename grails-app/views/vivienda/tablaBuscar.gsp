@@ -19,6 +19,10 @@ th, td {
     background-color: #dedede;
     color: #444;
 }
+.externo {
+    background-color: #ffdede;
+    color: #444;
+}
 .reg {
     color: #286e9f;
 }

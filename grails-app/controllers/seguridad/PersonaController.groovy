@@ -1,6 +1,8 @@
 package seguridad
 
+import condominio.Alicuota
 import condominio.Condominio
+import condominio.Edificio
 import condominio.Ingreso
 import org.apache.tomcat.util.security.MD5Encoder
 import org.springframework.dao.DataIntegrityViolationException
@@ -20,7 +22,7 @@ class PersonaController extends Shield {
      * Acción que redirecciona a la lista (acción "list")
      */
     def index() {
-        redirect(action:"list", params: params)
+        redirect(action: "list", params: params)
     }
 
     /**
@@ -33,12 +35,12 @@ class PersonaController extends Shield {
         params = params.clone()
         params.max = params.max ? Math.min(params.max.toInteger(), 100) : 10
         params.offset = params.offset ?: 0
-        if(all) {
+        if (all) {
             params.remove("max")
             params.remove("offset")
         }
         def list
-        if(params.search) {
+        if (params.search) {
             def c = Persona.createCriteria()
             list = c.list(params) {
                 or {
@@ -84,9 +86,9 @@ class PersonaController extends Shield {
      * @render ERROR*[mensaje] cuando no se encontró el elemento
      */
     def show_ajax() {
-        if(params.id) {
+        if (params.id) {
             def personaInstance = Persona.get(params.id)
-            if(!personaInstance) {
+            if (!personaInstance) {
                 render "ERROR*No se encontró Persona."
                 return
             }
@@ -103,76 +105,98 @@ class PersonaController extends Shield {
      */
     def form_ajax() {
         def personaInstance = new Persona()
-        def perfiles = []
-        if(params.id) {
+        def edificio = Edificio.findAllByCondominio(session.condominio, [sort: 'descripcion'])
+        def perfiles = Prfl.findAllByDescripcionInList(['Usuario', 'Revisor'], [sort: 'descripcion', order: 'desc'])
+        def prflAdm  = Prfl.findAllByDescripcionInList(['Usuario', 'Revisor', 'Administrador'], [sort: 'descripcion'])
+
+        println "perfiles: $perfiles, adm: $prflAdm"
+//        def perfil
+        if (params.id) {
             personaInstance = Persona.get(params.id)
-            if(!personaInstance) {
+            if (!personaInstance) {
                 render "ERROR*No se encontró Persona."
                 return
             }
 
-            perfiles = Sesn.withCriteria {
-                eq("usuario", personaInstance)
-                perfil {
-                    order("nombre", "asc")
-                }
-            }
+//            perfil = Sesn.findAllByUsuario(personaInstance).perfil.first()
         }
         personaInstance.properties = params
-        return [personaInstance: personaInstance, perfiles: perfiles]
+        return [personaInstance: personaInstance, perfiles: perfiles, edificio: edificio, prflAdm: prflAdm]
     } //form para cargar con ajax en un dialog
-
 
     /**
      * Acción llamada con ajax que guarda la información de un elemento
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-//        println("params " + params)
-
+        println("params " + params)
         def persona
+        def perfil
+        def perfil_frm = params.perfiles
+        params.remove("perfiles")
         params.sexo = (params.sexo == 'Masculino' ? 'M' : 'F')
-
         params.alicuota = params.alicuota.toDouble()
+        params.departamento = params.departamento.toString().toUpperCase()
 
-        if(params.fechaInicio_input){
+        if (params.fechaInicio_input) {
             params.fechaInicio_input = new Date().parse('dd-MM-yyyy', params.fechaInicio_input)
+        }
+        if (params.fechaFin_input) {
             params.fechaFin_input = new Date().parse('dd-MM-yyyy', params.fechaFin_input)
         }
 
-        if(params.id){
+        if (params.id) {
             persona = Persona.get(params.id)
 
-            if(params.password != persona.password){
+            if (params.password != persona.password) {
                 params.password = params.password.encodeAsMD5()
             }
 
-            if(!params.fechaPass){
+            if (!params.fechaPass) {
                 params.fechaPass = new Date() + 30
             }
 
-        }else{
+        } else {
             persona = new Persona()
             persona.fecha = new Date()
             persona.fechaPass = new Date()
             params.password = params.password.encodeAsMD5()
         }
+        params.activo = params.activo ? 1 : 0
+        params.externo = params.externo ? 1 : 0
+/*
         if(params.activo){
             params.activo = 1
         }else{
             params.activo = 0
         }
+*/
 
 
         persona.properties = params
 
-        if(!persona.fecha) persona.fecha = new Date()
+        if (!persona.fecha) persona.fecha = new Date()
 
-        if(!persona.save(flush: true)){
+        if (!persona.save(flush: true)) {
             println("persona " + persona.errors)
             render "no"
-
-        }else{
+        } else {
+            if(!Sesn.findByUsuario(persona)) {
+                perfil = Prfl.get(perfil_frm)
+                def sesion = new Sesn()
+                sesion.fechaInicio = new Date()
+                sesion.perfil = perfil
+                sesion.usuario = persona
+                println "define perfil: ${sesion.perfil.descripcion} apra usro: ${persona.id}"
+                sesion.save(flush: true)
+            }
+            if(!Alicuota.findByPersona(persona)) {
+                def alct = new Alicuota()
+                alct.fechaDesde = new Date() - 360
+                alct.persona = persona
+                alct.valor = params.alicuota.toDouble()
+                alct.save(flush: true)
+            }
             render "ok"
         }
 
@@ -183,7 +207,7 @@ class PersonaController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo eliminar correctamente, SUCCESS*[mensaje] cuando se eliminó correctamente
      */
     def delete_ajax() {
-        if(params.id) {
+        if (params.id) {
             def personaInstance = Persona.get(params.id)
             if (!personaInstance) {
                 render "ERROR*No se encontró Persona."
@@ -247,10 +271,10 @@ class PersonaController extends Shield {
 
     def perfil_ajax() {
         def usuario = Persona.get(params.id)
-        return[usuario: usuario]
+        return [usuario: usuario]
     }
 
-    def tablaPerfiles_ajax () {
+    def tablaPerfiles_ajax() {
 
         def perfiles = []
         def usuario = Persona.get(params.id)
@@ -261,10 +285,10 @@ class PersonaController extends Shield {
             }
         }
 
-        return[perfiles: perfiles]
+        return [perfiles: perfiles]
     }
 
-    def guardarPerfil_ajax () {
+    def guardarPerfil_ajax() {
 //        println("params gperfil " + params)
         def usuario = Persona.get(params.id)
         def perfilSeleccionado = Prfl.get(params.perfil)
@@ -276,62 +300,62 @@ class PersonaController extends Shield {
             }
         }
 
-        if(perfiles.perfil.id.contains(perfilSeleccionado.id)){
+        if (perfiles.perfil.id.contains(perfilSeleccionado.id)) {
             render "no_Este perfil ya se encuentra asignado al usuario"
-        }else{
+        } else {
             def sesion = new Sesn()
             sesion.fechaInicio = new Date()
             sesion.perfil = perfilSeleccionado
             sesion.usuario = usuario
 
 
-            if(!sesion.save(flush: true)){
+            if (!sesion.save(flush: true)) {
                 println("error al guardar el perfil")
                 render "no_Erro al guardar el perfil"
-            }else{
+            } else {
                 render "ok"
             }
         }
     }
 
-    def borrarPerfil_ajax () {
+    def borrarPerfil_ajax() {
 //        println("params " + params)
         def sesion = Sesn.get(params.id)
 
-        try{
+        try {
             sesion.delete(flush: true)
             render "ok"
-        }catch (e){
+        } catch (e) {
             println("error al borrar el perfil " + e)
             render "no"
         }
     }
 
-    def personal () {
+    def personal() {
         def persona = Persona.get(session.usuario.id)
         def condominio = Condominio.get(session.condominio.id)
         def sql = "select * from personas(${condominio?.id}) where prsn__id= ${persona.id}"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
-        return[data: data]
+        return [data: data]
     }
 
-    def deudas_ajax (){
+    def deudas_ajax() {
 
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
         def persona = Persona.get(session.usuario.id)
-        def ingresos = Ingreso.findAllByPersonaAndFechaLessThanEquals(persona,fecha).sort{it.obligacion.descripcion}
+        def ingresos = Ingreso.findAllByPersonaAndFechaLessThanEquals(persona, fecha).sort { it.obligacion.descripcion }
         def sql = "select * from pendiente('${fecha.format("yyyy-MM-dd")}') where prsn__id= ${persona.id}"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 
-        return[ingresos: ingresos, pendientes: data]
+        return [ingresos: ingresos, pendientes: data]
 
     }
 
-    def configuracion () {
+    def configuracion() {
         def usuario = Persona.get(session.usuario.id)
-        return[usuario: usuario]
+        return [usuario: usuario]
     }
 
     def validarPass_ajax() {

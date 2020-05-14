@@ -18,8 +18,7 @@ class ViviendaController extends Shield {
     }
 
     def tablaBuscar() {
-
-        println "buscar .... $params"
+//        println "buscar .... $params"
         def cn = dbConnectionService.getConnection()
         params.old = params.criterio
         params.criterio = buscadorService.limpiaCriterio(params.criterio)
@@ -56,6 +55,10 @@ class ViviendaController extends Shield {
         }
 
         def sqlSelect = "select * from personas(${condominio?.id}) "
+        if(session.perfil.codigo == 'ADM') {
+            sqlSelect = "select * from admin(${condominio?.id}) "
+        }
+
         //condicion fija
         def wh = " prsn__id is not null "
 

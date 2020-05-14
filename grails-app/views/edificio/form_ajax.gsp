@@ -14,11 +14,25 @@
                 Condominio
             </label>
 
+            <g:if test="${session.perfil.codigo == 'ADM'}">
+                <div class="col-xs-7 col-md-6">
+                    <g:select name="condominio" from="${condominio.Condominio.list().sort{it.nombre}}" class="form-control" optionKey="id" optionValue="nombre" value="${personaInstance?.condominio?.id}"/>
+                </div>
+            </g:if>
+            <g:else>
+                <div class="col-xs-7 col-md-6">
+                    <g:select name="condominio" from="${condominio.Condominio.get(session.usuario.condominio.id)}" class="form-control" optionKey="id" optionValue="nombre" value="${personaInstance?.condominio?.id}"/>
+                </div>
+            </g:else>
+
+
+%{--
             <div class="col-xs-9 col-md-9">
                 <g:select name="condominio" from="${condominio.Condominio.list().sort { it.nombre }}"
                           class="form-control" optionKey="id" optionValue="nombre"
                           value="${edificioInstance?.condominio?.id}"/>
             </div>
+--}%
 
             <div class="col-xs-12 col-md-12">
                 <div class="row">
