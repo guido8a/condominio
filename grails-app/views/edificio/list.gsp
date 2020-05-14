@@ -40,7 +40,8 @@
     <tr>
         
         <g:sortableColumn property="descripcion" title="Descripcion" />
-        
+        <g:sortableColumn property="condominio" title="condominio" />
+
     </tr>
     </thead>
     <tbody>
@@ -49,7 +50,8 @@
             <tr data-id="${edificioInstance.id}">
                 
                 <td>${edificioInstance.descripcion}</td>
-                
+                <td>${edificioInstance.condominio.nombre}</td>
+
             </tr>
         </g:each>
     </g:if>

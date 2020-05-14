@@ -102,11 +102,20 @@
                         <label for="edificio" class="col-xs-4 col-md-4 control-label">
                             Edificio
                         </label>
-                        <div class="col-xs-8 col-md-7">
-                            <g:select id="edificio" name="edificio.id" from="${edificio}"
-                                      optionKey="id" optionValue="descripcion"
-                                      value="${personaInstance?.edificio?.id}" class="many-to-one form-control"/>
-                        </div>
+                            <g:if test="${session.perfil.codigo == 'ADM'}">
+                                <div class="col-xs-7 col-md-6">
+                                    <g:select name="edificio" from="${condominio.Edificio.list().sort{it.descripcion}}"
+                                              class="form-control" optionKey="id" optionValue="descripcion"
+                                              value="${personaInstance?.edificio?.id}"/>
+                                </div>
+                            </g:if>
+                            <g:else>
+                                <div class="col-xs-7 col-md-6">
+                                    <g:select name="edificio" from="${condominio.Edificio.get(session.usuario.condominio.id)}"
+                                              class="form-control" optionKey="id" optionValue="descripcion"
+                                              value="${personaInstance?.edificio?.id}"/>
+                                </div>
+                            </g:else>
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-2">

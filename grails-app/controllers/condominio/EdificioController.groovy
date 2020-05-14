@@ -59,10 +59,16 @@ class EdificioController extends Shield {
     def list() {
         params.max = 15
         params.sort = 'descripcion'
-        def edificioInstanceList = Edificio.findAllByCondominio(session.condominio, [max: params.max,
-                sort: params.sort, offset: params.offset])
-        def edificioInstanceCount = Edificio.findAllByCondominio(session.condominio).size()
+        def edificioInstanceList
+        def edificioInstanceCount
 
+        if(session.perfil.codigo == 'ADM'){
+            edificioInstanceList = getList(params, false)
+            edificioInstanceCount = getList(params, true).size()
+        }else{
+            edificioInstanceList = Edificio.get(session.condominio.id)
+            edificioInstanceCount = 1
+        }
 //        def edificioInstanceList = getList(params, false)
 //        def edificioInstanceCount = getList(params, true).size()
         return [edificioInstanceList: edificioInstanceList, edificioInstanceCount: edificioInstanceCount]

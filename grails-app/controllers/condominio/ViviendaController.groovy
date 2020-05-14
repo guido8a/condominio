@@ -26,7 +26,7 @@ class ViviendaController extends Shield {
 
         def sql = armaSql(params)
         params.criterio = params.old
-        println "sql: $sql"
+//        println "sql: $sql"
         def data = cn.rows(sql.toString())
 
         def msg = ""
@@ -67,7 +67,7 @@ class ViviendaController extends Shield {
 
         def sqlOrder = "order by ${params.ordenar} limit 51"
 
-        println "sql: $sqlSelect $sqlWhere $sqlOrder"
+//        println "sql: $sqlSelect $sqlWhere $sqlOrder"
 //        if(params.criterio) {
         if(params.operador && params.criterio) {
             if(campos.find {it.campo == params.buscador}?.size() > 0) {
