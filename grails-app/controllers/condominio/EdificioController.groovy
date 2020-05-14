@@ -66,7 +66,7 @@ class EdificioController extends Shield {
             edificioInstanceList = getList(params, false)
             edificioInstanceCount = getList(params, true).size()
         }else{
-            edificioInstanceList = Edificio.get(session.condominio.id)
+            edificioInstanceList = Edificio.findAllByCondominio(session.condominio)
             edificioInstanceCount = 1
         }
 //        def edificioInstanceList = getList(params, false)

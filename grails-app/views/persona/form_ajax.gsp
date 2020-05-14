@@ -111,7 +111,7 @@
                             </g:if>
                             <g:else>
                                 <div class="col-xs-7 col-md-6">
-                                    <g:select name="edificio" from="${condominio.Edificio.get(session.usuario.condominio.id)}"
+                                    <g:select name="edificio" from="${condominio.Edificio.findAllByCondominio(session.usuario.condominio)}"
                                               class="form-control" optionKey="id" optionValue="descripcion"
                                               value="${personaInstance?.edificio?.id}"/>
                                 </div>
@@ -163,11 +163,11 @@
                 <div class="col-xs-12 col-md-3">
                     <div class="row">
                         <span class="grupo">
-                            <label for="alicuota" class="col-xs-3 col-md-3 control-label">
+                            <label for="alicuota" class="col-xs-3 col-md-3 control-label text-info">
                                 Alicuota
                             </label>
                             <div class="col-xs-9 col-md-8">
-                                <g:textField name="alicuota" value="${personaInstance?.alicuota}" class="number form-control"/>
+                                <g:textField name="alicuota" value="${personaInstance?.alicuota}" class="number form-control text-info"/>
                             </div>
                         </span>
                     </div>
