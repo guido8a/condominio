@@ -305,7 +305,7 @@ como máximo 30
             }
         };
 
-        if(deuda){
+        if(deuda>0){
             items.pagar = ingresos;
         }
 //        items.editar = editar;

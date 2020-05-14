@@ -197,24 +197,41 @@
                         </li>
                         <li>
                             <i class="fa-li ${iconGen}"></i>
-                            <span id="oblg">
-                                <g:link controller="obligacion" action="list">Obligación</g:link>
-                            </span>
-
-                            <div class="descripcion hide">
-                                <h4>Obligación</h4>
-                                <p></p>
-                            </div>
-                        </li>
-                        <li>
-                            <i class="fa-li ${iconGen}"></i>
                             <span id="apt">
-                                <g:link controller="tipoAporte" action="list">Tipo de Aporte</g:link>
+                                <g:link controller="tipoAporte" action="list">Tipo de Aporte</g:link> para
+                                el registro de obligaciones y aportes de los condóminos.
                             </span>
 
                             <div class="descripcion hide">
                                 <h4>Tipo de Aporte</h4>
-                                <p></p>
+                                <p>Sirve apra diferenciar entre los distintos tipos de aportes como:</p>
+                                <ul>
+                                    <li>
+                                        Cuotas por alícuota
+                                    </li>
+                                    <li>
+                                        Multas
+                                    </li>
+                                    <li>
+                                        Cuotas extraordinarias
+                                    </li>
+                                    <li>
+                                        Aportes varios
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-li ${iconGen}"></i>
+                            <span id="oblg">
+                                <g:link controller="obligacion" action="list">Obligación</g:link> para
+                                visualizar las obligaciones generadas para los condóminos. Ejemplos
+                            </span>
+
+                            <div class="descripcion hide">
+                                <h4>Obligación</h4>
+                                <p>Son los distintos aportes que se hacen para cada tipo</p>
+                                <p>Visualiza sólo los del condominio de administrador</p>
                             </div>
                         </li>
                     </ul>
