@@ -824,7 +824,6 @@ class ReportesController extends Shield{
     }
 
     def solicitudes(id, edif) {
-
 //        println "solicitudes ... params " + params
 
         def persona = Persona.get(id)
@@ -865,7 +864,7 @@ class ReportesController extends Shield{
 
         Document document
         document = new Document(PageSize.A4);
-        document.setMargins(74, 60, 30, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        document.setMargins(64, 50, 30, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos);
         document.resetHeader()
         document.resetFooter()
@@ -882,7 +881,7 @@ class ReportesController extends Shield{
         addEmptyLine(preface, 1);
         preface.setAlignment(Element.ALIGN_CENTER);
         preface.add(new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTitle));
-        addEmptyLine(preface, 2);
+        addEmptyLine(preface, 1);
         document.add(preface);
 
         def tabla = new PdfPTable(4);
@@ -970,9 +969,9 @@ class ReportesController extends Shield{
 
         Paragraph t3 = new Paragraph();
         t3.setAlignment("Justify");
-        t3.add(new Paragraph("Agradezco su tiempo y la oportuna atención que de a la presente, lo que nos ayudará " +
-                "a pagar oportunamente las planillas de agua, luz, mantenimiento del ascensor, conserje, vigilancia " +
-                "y destinar recursos para la limpieza, conservación y mejora de los bienes comunales. ", info))
+        t3.add(new Paragraph("Agradezco su oportuna atención a la presente, lo que nos ayudará " +
+                "a cubrir los gastos de servicios básicos, mantenimiento, conserje, vigilancia " +
+                "y mejora de los bienes comunales. ", info))
         addEmptyLine(t3, 1);
         document.add(t3)
         Paragraph a = new Paragraph();
@@ -983,7 +982,7 @@ class ReportesController extends Shield{
         f.add(new Paragraph("Ing. Guido Ochoa Moreno", info))
         f.add(new Paragraph("ADMINISTRADOR", info))
         f.add(new Paragraph("Cel: 0984916620, dpto. 214", info))
-        addEmptyLine(f, 1);
+//        addEmptyLine(f, 1);
         document.add(f)
 
         Paragraph t4 = new Paragraph();
@@ -1199,15 +1198,11 @@ class ReportesController extends Shield{
         def data = cn.rows(sql.toString())
         def fctr = params.vlor.toInteger()
 
-
         data.each { persona ->
             if (persona?.prsnsldo > (persona?.alctvlor?:0 * fctr)) {
                 pl = solicitudes(persona?.prsn__id, persona?.edifdscr[6])
                 pdfs.add(pl.toByteArray())
                 contador++
-            } else {
-                flash.message = "No hay datos..."
-                redirect(url: params.url)
             }
         }
 
@@ -1263,9 +1258,6 @@ class ReportesController extends Shield{
                 pl = slctMonitorio(persona?.prsn__id, persona?.edifdscr[6])
                 pdfs.add(pl.toByteArray())
                 contador++
-            } else {
-                flash.message = "No hay datos..."
-                redirect(url: params.url)
             }
         }
 
