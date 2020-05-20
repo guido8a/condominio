@@ -34,8 +34,10 @@
 
         <div class="col-sm-3" style="margin-left: 0px; width: 320px">
             Concepto del Aporte
-            <a href="#" id="btnNuevaOb" style="margin-top: 17px; margin-left: 20px;" class="hidden"><i class="fa fa-file"></i> Nueva</a>
-            <a href="#" id="btnEditarOb" style="margin-top: 17px; margin-left: 20px;" class="hidden"><i class="fa fa-pencil"></i> Editar</a>
+            %{--<a href="#" id="btnNuevaOb" style="margin-top: 17px; margin-left: 20px;" class="hidden"><i class="fa fa-file"></i> Nueva</a>--}%
+            %{--<a href="#" id="btnEditarOb" style="margin-top: 17px; margin-left: 20px;" class="hidden"><i class="fa fa-pencil"></i> Editar</a>--}%
+            <a href="#" id="btnNuevaOb" style="margin-top: 17px; margin-left: 20px;"><i class="fa fa-file"></i> Nueva</a>
+            <a href="#" id="btnEditarOb" style="margin-top: 17px; margin-left: 20px;"><i class="fa fa-pencil"></i> Editar</a>
             <div id="divObligaciones">
 
             </div>
@@ -98,11 +100,12 @@
 
     $("#tipoAporte").change(function () {
         var tpp = $(this).val();
-        cargarBotones(tpp)
+//        cargarBotones(tpp)
     });
 
+/*
     function cargarBotones (tipo) {
-        if(tipo != '1'){
+        if(tipo != '10'){
             $("#btnNuevaOb").removeClass("hidden");
             $("#btnEditarOb").removeClass("hidden")
         }else{
@@ -110,6 +113,7 @@
             $("#btnEditarOb").addClass("hidden")
         }
     }
+*/
 
     $("#btnNuevaOb").click(function () {
         createEditRow();

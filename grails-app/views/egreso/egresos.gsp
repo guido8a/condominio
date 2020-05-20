@@ -87,7 +87,7 @@
                 </div>
 
                 <div class="btn-group col-xs-3 col-md-3" style="margin-left: 10px; margin-top: 20px;">
-                    <g:link controller="proveedor" action="list" class="btn btn-primary">
+                    <g:link controller="proveedor" action="list" class="btn btn-primary" title="Proveedores">
                         <i class="fa fa-user-o"></i>
                     </g:link>
                 </div>
