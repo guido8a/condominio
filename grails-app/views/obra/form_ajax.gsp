@@ -40,7 +40,11 @@
                         Proveedor
                     </label>
                     <div class="col-md-7">
-                        <g:select id="proveedor" name="proveedor.id" from="${condominio.Proveedor.list().sort{it.nombre}}" optionKey="id" optionValue="" value="${obraInstance?.proveedor?.id}" class="many-to-one form-control" noSelection="['0':'Seleccione...']"/>
+                        <g:select id="proveedor" name="proveedor.id"
+                                  from="${condominio.Proveedor.findAllByCondominio(session.usuario.condominio, [sort: 'nombre'])}"
+                                  optionKey="id" optionValue=""
+                                  value="${obraInstance?.proveedor?.id}" class="many-to-one form-control"
+                                  noSelection="['0':'Seleccione...']"/>
                     </div>
                 </span>
             </div>
@@ -51,7 +55,10 @@
                         Solicitante
                     </label>
                     <div class="col-md-7">
-                        <g:select id="persona" name="persona.id" from="${seguridad.Persona.findAllByCondominio(condominio.Condominio.get(session.condominio.id)).sort{it.departamento}}" optionKey="id" required="" value="${obraInstance?.persona?.id}" class="many-to-one form-control"/>
+                        <g:select id="persona" name="persona.id"
+                                  from="${seguridad.Persona.findAllByCondominio(session.condominio, [sort: 'departamento'])}"
+                                  optionKey="id" required="" value="${obraInstance?.persona?.id}"
+                                  class="many-to-one form-control"/>
                     </div>
                     *
                 </span>

@@ -1847,7 +1847,7 @@ class ReportesController extends Shield{
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
 
         def condominio = Condominio.get(session.condominio.id)
-        def lista = Persona.findAllByCondominioAndActivo(condominio, 1).sort{it.departamento}
+        def lista = Persona.findAllByCondominioAndActivoAndExterno(condominio, 1, 0).sort{it.departamento}
         printHeaderDetalle()
 
         lista.each { persona ->
@@ -2591,7 +2591,6 @@ class ReportesController extends Shield{
         def actual = 0
 
         def baos = new ByteArrayOutputStream()
-        def name = "pagosPendientes_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
         def titulo = new Color(30, 140, 160)
         Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
         Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
@@ -2740,7 +2739,9 @@ class ReportesController extends Shield{
         byte[] b = baos.toByteArray();
 
 
-        encabezadoYnumeracion(b, session.condominio.nombre, "Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}", "pagosPendientes")
+        encabezadoYnumeracion(b, session.condominio.nombre,
+                "Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}",
+                "pagosPendientes.pdf")
 
     }
 

@@ -6,7 +6,7 @@ import seguridad.Persona
 //import happy.tramites.Tramite
 
 class Alerta {
-    static auditable = true
+//    static auditable = true
     Persona persona
 //    Departamento departamento
     String mensaje

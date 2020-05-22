@@ -41,6 +41,9 @@ grails.views.default.codec = "html"
 // If unspecified, controllers are prototype scoped.
 grails.controllers.defaultScope = 'singleton'
 
+// Added by the Audit-Logging plugin:
+auditLog.auditDomainClassName = 'audit.Audit'
+
 // GSP settings
 grails {
     views {

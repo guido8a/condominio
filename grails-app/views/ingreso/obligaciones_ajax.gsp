@@ -1,10 +1,4 @@
 <%@ page import="condominio.Pago" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 15/03/18
-  Time: 10:13
---%>
 <style type="text/css">
 
     .derecha{

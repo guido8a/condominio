@@ -26,6 +26,13 @@
         font-weight: bold;
     }
 
+    .seleccionado {
+        border-color: #df960b;
+        border-style: solid;
+        border-width: 2px;
+    }
+
+
     </style>
 </head>
 <body>

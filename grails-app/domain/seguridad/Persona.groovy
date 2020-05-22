@@ -33,6 +33,7 @@ class Persona {
     Date fechaPass
     String expensa
 
+    static auditable = true
 
     static hasMany = [perfiles: Sesn]
 
