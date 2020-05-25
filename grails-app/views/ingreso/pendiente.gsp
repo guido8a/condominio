@@ -156,7 +156,6 @@
         $("#listarSaldo").addClass('hidden')
     });
 
-//    cargarObligaciones(null);
     cargarObligaciones(true);
 
     function cargarObligaciones (band) {

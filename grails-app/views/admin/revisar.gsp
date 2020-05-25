@@ -31,7 +31,7 @@
         <a href="#" class="btn btn-info btnEgresos" ><i class="fa fa-search"></i> Egresos</a>
     </div>
     <div class="col-xs-1">
-        <a href="#" class="btn btn-warning btnEgresos" ><i class="fa fa-save"></i> Guardar</a>
+        <a href="#" class="btn btn-warning btnGuardar" ><i class="fa fa-save"></i> Guardar</a>
     </div>
 </div>
 
@@ -42,9 +42,7 @@
 
 <script type="text/javascript">
 
-    $(".btnBuscar").click(function () {
-        var desde = $("#fechaDesde").val();
-        var hasta = $("#fechaHasta").val();
+    function cargarIngresos(desde, hasta){
         $.ajax({
             type: 'POST',
             url:'${createLink(controller: 'admin', action: 'tablaIngresos_ajax')}',
@@ -56,6 +54,12 @@
                 $("#divSaldos").html(msg)
             }
         });
+    }
+
+    $(".btnBuscar").click(function () {
+        var desde = $("#fechaDesde").val();
+        var hasta = $("#fechaHasta").val();
+        cargarIngresos(desde, hasta);
     });
 
     $(".btnEgresos").click(function () {

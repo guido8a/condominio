@@ -203,5 +203,25 @@ class AdminController extends Shield {
     }
 
 
+    def comentario_ajax () {
+        def ingreso = Pago.get(params.id)
+        return [ingreso: ingreso, estado: params.estado, dpto: params.departamento, desc: params.descripcion, valor: params.valor, actual: params.estadoActual]
+    }
+
+    def guardarEstadoIngreso_ajax (){
+
+        def ingreso = Pago.get(params.id)
+        ingreso.estado = params.estado
+        ingreso.revision = params.comentario
+
+        if(!ingreso.save(flush:true)){
+            println("error al guardar el estado del ingreso")
+            render("NO")
+        }else{
+            render "OK"
+        }
+    }
+
+
 
 }

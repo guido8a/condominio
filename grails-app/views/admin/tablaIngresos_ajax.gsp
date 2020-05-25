@@ -25,8 +25,8 @@
                     <th style="width: 9%">Valor</th>
                     <th style="width: 7%">Doc.</th>
                     <th style="width: 4%; text-align: center" title="Revisado (Correcto)"><i class="fa fa-check-square"></i></th>
-                    <th style="width: 4%; text-align: center" title="Corregir valor"><i class="fa fa-edit"></th>
-                    <th style="width: 4%; text-align: center" title="Borrar"><i class="fa fa-trash"></th>
+                    <th style="width: 4%; text-align: center" title="Corregir valor"><i class="fa fa-edit"></i></th>
+                    <th style="width: 4%; text-align: center" title="Borrar"><i class="fa fa-trash"></i></th>
                     <th style="width: 13%" title="Comentario">Comentario</th>
                     <th style="width: 3%"></th>
                 </tr>
@@ -44,32 +44,44 @@
                                 <td style="width: 9%">${ingreso.pagofcha}</td>
                                 <td class="derecha" style="width: 9%">${ingreso.pagovlor}</td>
                                 <td class="derecha" style="width: 7%">${ingreso.pagodcmt}</td>
-                            <td style="text-align: center; width: 4%" class="chk">
-                                <g:if test="${ingreso?.prsn == 'R'}">
-                                    <i class="icon-ok"></i>
-                                </g:if>
-                                <g:else>
-                                    <input type="radio" name="rd${ingreso.pago__id}"/>
-                                </g:else>
-                            </td> 
-                            <td style="text-align: center; width: 4%" class="chk">
-                                <g:if test="${ingreso?.prsn == 'R'}">
-                                    <i class="icon-ok"></i>
-                                </g:if>
-                                <g:else>
-                                    <input type="radio" name="rd${ingreso.pago__id}"/>
-                                </g:else>
-                            </td>
-                            <td style="text-align: center; width: 4%" class="chk">
-                                <g:if test="${ingreso?.prsn == 'R'}">
-                                    <i class="icon-ok"></i>
-                                </g:if>
-                                <g:else>
-                                    <input type="radio" name="rd${ingreso.pago__id}"/>
-                                </g:else>
-                            </td>
-                                <td class="derecha" style="width: 13%"><input type="text" class="form-control-sm"
-                                   style="width: 100%"/></td>
+                                %{--<td style="text-align: center; width: 4%" class="chk">--}%
+                                %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
+                                %{--<i class="icon-ok"></i>--}%
+                                %{--</g:if>--}%
+                                %{--<g:else>--}%
+                                %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
+                                %{--</g:else>--}%
+                                %{--</td> --}%
+                                %{--<td style="text-align: center; width: 4%" class="chk">--}%
+                                %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
+                                %{--<i class="icon-ok"></i>--}%
+                                %{--</g:if>--}%
+                                %{--<g:else>--}%
+                                %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
+                                %{--</g:else>--}%
+                                %{--</td>--}%
+                                %{--<td style="text-align: center; width: 4%" class="chk">--}%
+                                %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
+                                %{--<i class="icon-ok"></i>--}%
+                                %{--</g:if>--}%
+                                %{--<g:else>--}%
+                                %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
+                                %{--</g:else>--}%
+                                %{--</td>--}%
+                                <td style="text-align: center; width: 12%; font-size: 14px">
+                                    <g:radioGroup  name="${ingreso.pago__id}"
+                                                   values="['R','C', 'B']"
+                                                   labels="['', '', '']"
+                                                   value="${ingreso.pagoetdo}" style="margin-right: 17px;
+                                                   margin-left: 5px" class="seleccion"
+                                                   data-dpto="${ingreso.prsndpto}" data-desc="${ingreso.pagodscr}" data-valor="${ingreso.pagovlor}" data-est="${ingreso.pagoetdo}">
+                                        ${it.radio}
+                                    </g:radioGroup>
+                                </td>
+
+                                <td class="derecha" style="width: 14%"><input type="text" readonly class="form-control-sm"
+                                                                              style="width: 100%" value="${ingreso.pagorevs}"/>
+                                </td>
                             </tr>
                         </g:each>
                     </table>
@@ -87,6 +99,71 @@
 
 <script type="text/javascript">
 
+    $(".seleccion").click(function () {
+        var id = $(this).attr('name');
+        var estado = $(this).attr('value');
+        var departamento = $(this).data('dpto');
+        var descripcion = $(this).data('desc');
+        var valor = $(this).data("valor");
+        var estadoActual = $(this).data("est");
+
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'admin', action: 'comentario_ajax')}',
+            data:{
+                id:id,
+                estado: estado,
+                departamento: departamento,
+                descripcion: descripcion,
+                valor: valor,
+                estadoActual: estadoActual
+            },
+            success: function (msg){
+                var b = bootbox.dialog({
+                    id      : "dlgEstado",
+                    title   : "Estado del ingreso",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return guardarEstado(id, estado, $("#comentarioIngreso").val());
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+            }
+        })
+    });
+
+    function guardarEstado(id, estado, comentario){
+        $.ajax({
+            type: 'POST',
+            url:'${createLink(controller: 'admin', action: 'guardarEstadoIngreso_ajax')}',
+            data:{
+                id:id,
+                estado:estado,
+                comentario: comentario
+            },
+            success: function (msg) {
+                if(msg == 'OK'){
+                    log("Estado guardado correctamente","success");
+                    cargarIngresos($("#fechaDesde").val(), $("#fechaHasta").val());
+                }else{
+                    log("Error al guardar el estado","error")
+                }
+            }
+        });
+    }
+
     %{--cargarIngresos('${desde}', '${hasta}');--}%
     %{--cargarEgresos('${desde}', '${hasta}');--}%
 
@@ -94,7 +171,6 @@
      function cargarIngresos (desde, hasta){
      $.ajax({
      type: 'POST',
-     url: "${createLink(controller: 'egreso', action: 'tablaIngresos_ajax')}",
      async: true,
      data:{
      desde: desde,
