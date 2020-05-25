@@ -152,9 +152,7 @@ class AdminController extends Shield {
     }
 
     def tablaIngresos_ajax () {
-
 //        println("params " + params)
-
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
@@ -162,44 +160,19 @@ class AdminController extends Shield {
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
 
-        def sql3 = "select * from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by egrsfcha"
-        def cn3 = dbConnectionService.getConnection()
-        def egresos = cn3.rows(sql3.toString())
-
-        def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
-        def totalEgresos = (egresos.egrsvlor.sum() ?: 0)
-
-        return [desde: fechaDesde, hasta: fechaHasta, totalIngresos: totalIngresos, totalEgresos: totalEgresos,
-                ingresos: ingresos, egresos: egresos]
+        return [desde: fechaDesde, hasta: fechaHasta, ingresos: ingresos]
     }
 
     def tablaEgresos_ajax () {
-
 //        println("params " + params)
-
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
-//        println "fechas: '${fechaDesde}','${fechaHasta}'"
-        //saldos
-        def sql = "select * from saldos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}')"
-        def cn = dbConnectionService.getConnection()
-        def data = cn.rows(sql.toString())
-        println "....sql: $sql"
-
-        def sql2 = "select * from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by pagodcmt"
-        def cn2 = dbConnectionService.getConnection()
-        def ingresos = cn2.rows(sql2.toString())
-
-        def sql3 = "select * from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by egrsfcha"
+        def sql3 = "select * from rev_egrs(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by egrsfcha"
         def cn3 = dbConnectionService.getConnection()
         def egresos = cn3.rows(sql3.toString())
 
-        def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
-        def totalEgresos = (egresos.egrsvlor.sum() ?: 0)
-
-        return [data: data, desde: fechaDesde, hasta: fechaHasta, totalIngresos: totalIngresos, totalEgresos: totalEgresos,
-                ingresos: ingresos, egresos: egresos]
+        return [desde: fechaDesde, hasta: fechaHasta, egresos: egresos]
     }
 
 
