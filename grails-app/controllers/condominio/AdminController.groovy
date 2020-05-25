@@ -160,7 +160,7 @@ class AdminController extends Shield {
 
 //        println "fechas: '${fechaDesde}','${fechaHasta}'"
         //saldos
-        def sql = "select * from saldos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}')"
+        def sql = "select * from rev_ingr(${session.condominio.id}, '${fechaDesde}','${fechaHasta}')"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
         println "....sql: $sql"
