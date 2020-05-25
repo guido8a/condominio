@@ -79,8 +79,8 @@
                                     </g:radioGroup>
                                 </td>
 
-                                <td class="derecha" style="width: 14%"><input type="text" readonly class="form-control-sm"
-                                                                              style="width: 100%" value="${ingreso.pagorevs}"/>
+                                <td style="width: 14%">
+                                    ${ingreso.pagorevs ?: ''}
                                 </td>
                             </tr>
                         </g:each>
