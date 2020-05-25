@@ -158,14 +158,7 @@ class AdminController extends Shield {
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
-//        println "fechas: '${fechaDesde}','${fechaHasta}'"
-        //saldos
-        def sql = "select * from rev_ingr(${session.condominio.id}, '${fechaDesde}','${fechaHasta}')"
-        def cn = dbConnectionService.getConnection()
-        def data = cn.rows(sql.toString())
-        println "....sql: $sql"
-
-        def sql2 = "select * from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by pagodcmt"
+        def sql2 = "select * from rev_ingr(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by pagodcmt"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
 
@@ -176,7 +169,7 @@ class AdminController extends Shield {
         def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
         def totalEgresos = (egresos.egrsvlor.sum() ?: 0)
 
-        return [data: data, desde: fechaDesde, hasta: fechaHasta, totalIngresos: totalIngresos, totalEgresos: totalEgresos,
+        return [desde: fechaDesde, hasta: fechaHasta, totalIngresos: totalIngresos, totalEgresos: totalEgresos,
                 ingresos: ingresos, egresos: egresos]
     }
 
