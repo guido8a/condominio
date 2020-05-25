@@ -11,6 +11,9 @@ class Pago {
     double mora = 0;
     double tasa = 0;
     int mess = 0;
+    String estado
+    String revision
+
 
     static mapping = {
         table 'pago'
@@ -27,11 +30,15 @@ class Pago {
             mora column: 'pagomora'
             tasa column: 'pagotasa'
             mess column: 'pagomess'
+            estado column: 'pagoetdo'
+            revision column: 'pagorevs'
         }
     }
 
     static constraints = {
         documento(blank: true, nullable: true)
         observaciones(blank: true, nullable: true)
+        estado(blank: true, nullable: true)
+        revision(blank: true, nullable: true)
     }
 }

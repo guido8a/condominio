@@ -9,7 +9,8 @@ class PagoEgreso {
         String documento
         String observaciones
         String cheque
-//        String comprobante
+        String estado
+        String revision
 
         static mapping = {
             table 'pgeg'
@@ -24,7 +25,8 @@ class PagoEgreso {
                 documento column: 'pgegdcmt'
                 observaciones column: 'pgegobsr'
                 cheque column: 'pgegchqe'
-//                comprobante column: 'pgegcmpr'
+                estado column: 'pgegetdo'
+                revision column: 'pgegrevs'
             }
         }
 
@@ -32,7 +34,8 @@ class PagoEgreso {
             documento(blank: true, nullable: true)
             observaciones(blank: true, nullable: true)
             cheque(blank: true, nullable: true)
-//            comprobante(blank: true, nullable: true)
+            estado(blank: true, nullable: true)
+            revision(blank: true, nullable: true)
         }
 
     }
