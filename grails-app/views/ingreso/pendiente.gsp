@@ -29,10 +29,9 @@
     .seleccionado {
         border-color: #df960b;
         border-style: solid;
-        border-width: 2px;
+        border-width: medium;
+        background-color: #e0e8ff;
     }
-
-
     </style>
 </head>
 <body>

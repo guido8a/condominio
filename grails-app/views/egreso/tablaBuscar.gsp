@@ -21,10 +21,11 @@ th, td {
 }
 .seleccionado {
     border-color: #df960b;
-    /*border-color: #7d8894;*/
     border-style: solid;
-    border-width: 2px;
+    border-width: medium;
+    background-color: #e0e8ff;
 }
+
 .noReg {
     font-weight: bold;
     color: #aa6;

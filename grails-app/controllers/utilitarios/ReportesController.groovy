@@ -823,8 +823,8 @@ class ReportesController extends Shield{
         return cell;
     }
 
-    def solicitudes(id, edif) {
-//        println "solicitudes ... params " + params
+    def solicitudes(id) {
+//        println "solicitudes ... params $id"
 
         def persona = Persona.get(id)
         def condominio = Condominio.get(session.condominio.id)
@@ -832,7 +832,7 @@ class ReportesController extends Shield{
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 
-        def sql2 = "select * from pendiente('${new Date().format("yyyy-MM-dd")}', ${edif}) where prsn__id= ${persona.id} order by ingrfcha"
+        def sql2 = "select * from pendiente('${new Date().format("yyyy-MM-dd")}', ${persona.edificio.id}) where prsn__id= ${persona.id} order by ingrfcha"
         def cn2 = dbConnectionService.getConnection()
         def data2 = cn2.rows(sql2.toString())
 
@@ -1000,7 +1000,7 @@ class ReportesController extends Shield{
 
     }
 
-    def slctMonitorio(id, edif) {
+    def slctMonitorio(id) {
 //        println "solicitudes ... params " + params
 
         def persona = Persona.get(id)
@@ -1011,7 +1011,7 @@ class ReportesController extends Shield{
         def suma = 0;
 
         def sql2 = "select prsn__id, oblg, prsn, prsndpto, sldo, mess, ingrintr, sldo + ingrintr total " +
-                "from pendiente('${new Date().format("yyyy-MM-dd")}', ${edif}) where prsn__id = " +
+                "from pendiente('${new Date().format("yyyy-MM-dd")}', ${persona.edificio.id}) where prsn__id = " +
                 "${persona.id} order by ingrfcha"
         def cn2 = dbConnectionService.getConnection()
         def data2 = cn2.rows(sql2.toString())
@@ -1198,9 +1198,10 @@ class ReportesController extends Shield{
         def data = cn.rows(sql.toString())
         def fctr = params.vlor.toInteger()
 
+        println "sql: $sql"
         data.each { persona ->
             if (persona?.prsnsldo > (persona?.alctvlor?:0 * fctr)) {
-                pl = solicitudes(persona?.prsn__id, persona?.edifdscr[6])
+                pl = solicitudes(persona?.prsn__id)
                 pdfs.add(pl.toByteArray())
                 contador++
             }
@@ -1255,7 +1256,7 @@ class ReportesController extends Shield{
 //            println "${persona.prsndpto} -- factor: $fctr, ${persona.alctvlor * fctr}, saldo: ${persona.prsnsldo}"
 
             if (persona?.prsnsldo > (persona?.alctvlor?:0 * fctr)) {
-                pl = slctMonitorio(persona?.prsn__id, persona?.edifdscr[6])
+                pl = slctMonitorio(persona?.prsn__id)
                 pdfs.add(pl.toByteArray())
                 contador++
             }

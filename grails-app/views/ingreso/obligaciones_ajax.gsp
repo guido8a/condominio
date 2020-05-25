@@ -13,12 +13,6 @@
         color: #53cf6d;
     }
 
-    .seleccionado {
-        border-color: #df960b;
-        border-style: solid;
-        border-width: 2px;
-    }
-
 </style>
 
 

@@ -1,10 +1,10 @@
 
-<%@ page import="condominio.Edificio" %>
+<%@ page import="condominio.Admin" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Lista de Edificio</title>
+    <title>Administradores</title>
 </head>
 <body>
 
@@ -12,24 +12,19 @@
 
 <!-- botones -->
 <div class="btn-toolbar toolbar">
-    <g:if test="${session.perfil.codigo == 'ADM'}">
-        <div class="btn-group">
-            <a href="${createLink(controller: "inicio", action: "parametros")}" class="btn btn-primary">
-                <i class="fa fa-arrow-left"></i> Regresar
-            </a>
-        </div>
-    </g:if>
-
     <div class="btn-group">
-        <a href="#" class="btn btn-primary btnCrear">
-            <i class="fa fa-file-o"></i> Crear
+        <a href="#" class="btn btn-default btnCrear">
+            <i class="fa fa-file-o"></i> Nueva Administración
         </a>
+    </div>
+    <div class="btn-group col-md-6" style="text-align: center; top: -20px">
+        <h3>Administraciones del Condominio</h3>
     </div>
     <div class="btn-group pull-right col-md-3">
         <div class="input-group">
             <input type="text" class="form-control input-search" placeholder="Buscar" value="${params.search}">
             <span class="input-group-btn">
-                <g:link controller="edificio" action="list" class="btn btn-default btn-search">
+                <g:link controller="admin" action="list" class="btn btn-default btn-search">
                     <i class="fa fa-search"></i>&nbsp;
                 </g:link>
             </span>
@@ -40,26 +35,31 @@
 <table class="table table-condensed table-bordered table-striped table-hover">
     <thead>
     <tr>
-        
-        <g:sortableColumn property="descripcion" title="Descripcion" />
-        <g:sortableColumn property="condominio" title="condominio" />
+        <th>Administrador</th>
+        <th>Revisor</th>
+        <g:sortableColumn property="fechaInicio" title="Fecha Inicio" />
+        <g:sortableColumn property="saldoInicio" title="Saldo Incial" />
+        <g:sortableColumn property="fechaFin" title="Fecha Fin" />
+        <g:sortableColumn property="observaciones" title="Observaciones" />
 
     </tr>
     </thead>
     <tbody>
-    <g:if test="${edificioInstanceCount > 0}">
-        <g:each in="${edificioInstanceList}" status="i" var="edificioInstance">
-            <tr data-id="${edificioInstance.id}">
-                
-                <td>${edificioInstance.descripcion}</td>
-                <td>${edificioInstance.condominio.nombre}</td>
-
+    <g:if test="${adminInstanceCount > 0}">
+        <g:each in="${adminInstanceList}" status="i" var="adminInstance">
+            <tr data-id="${adminInstance.id}">
+                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${adminInstance}" field="administrador"/></elm:textoBusqueda></td>
+                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${adminInstance}" field="revisor"/></elm:textoBusqueda></td>
+                <td><g:formatDate date="${adminInstance.fechaInicio}" format="dd-MM-yyyy" /></td>
+                <td><g:fieldValue bean="${adminInstance}" field="saldoInicial"/></td>
+                <td>${adminInstance.fechaFin}</td>
+                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${adminInstance}" field="observaciones"/></elm:textoBusqueda></td>
             </tr>
         </g:each>
     </g:if>
     <g:else>
         <tr class="danger">
-            <td class="text-center" colspan="1">
+            <td class="text-center" colspan="7">
                 <g:if test="${params.search && params.search!= ''}">
                     No se encontraron resultados para su búsqueda
                 </g:if>
@@ -72,16 +72,16 @@
     </tbody>
 </table>
 
-<elm:pagination total="${edificioInstanceCount}" params="${params}"/>
+<elm:pagination total="${adminInstanceCount}" params="${params}"/>
 
 <script type="text/javascript">
     var id = null;
-    function submitFormEdificio() {
-        var $form = $("#frmEdificio");
+    function submitFormAdmin() {
+        var $form = $("#frmAdmin");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
         $btn.replaceWith(spinner);
-            openLoader("Guardando Edificio");
+            openLoader("Guardando Administrador");
                     $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
@@ -103,12 +103,12 @@
             return false;
         } //else
     }
-    
+
     function deleteRow(itemId) {
         bootbox.dialog({
             title   : "Alerta",
             message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-            "¿Está seguro que desea eliminar el Edificio seleccionado? Esta acción no se puede deshacer.</p>",
+            "¿Está seguro que desea eliminar el Administrador seleccionado? Esta acción no se puede deshacer.</p>",
             buttons : {
                 cancelar : {
                     label     : "Cancelar",
@@ -120,10 +120,10 @@
                     label     : "<i class='fa fa-trash-o'></i> Eliminar",
                     className : "btn-danger",
                     callback  : function () {
-                        openLoader("Eliminando Edificio");
+                        openLoader("Eliminando Admin");
                                 $.ajax({
                             type    : "POST",
-                            url     : '${createLink(controller:'edificio', action:'delete_ajax')}',
+                            url     : '${createLink(controller:'admin', action:'delete_ajax')}',
                             data    : {
                                 id : itemId
                             },
@@ -145,16 +145,16 @@
         });
     }
     function createEditRow(id) {
-        var title = id ? "Editar" : "Crear";
+        var title = id ? "Editar el Administrador" : "Crear un Administrador";
         var data = id ? { id: id } : {};
                 $.ajax({
             type    : "POST",
-            url     : "${createLink(controller:'edificio', action:'form_ajax')}",
+            url     : "${createLink(controller:'admin', action:'form_ajax')}",
             data    : data,
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
-                    title   : title + " Edificio",
+                    title   : title,
                     
                     message : msg,
                     buttons : {
@@ -169,7 +169,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitFormEdificio();
+                                return submitFormAdmin();
                             } //callback
                         } //guardar
                     } //buttons
@@ -201,13 +201,13 @@
             var id = $element.data("id");
                                 $.ajax({
                 type    : "POST",
-                url     : "${createLink(controller:'edificio', action:'show_ajax')}",
+                url     : "${createLink(controller:'admin', action:'show_ajax')}",
                 data    : {
                     id : id
                 },
                 success : function (msg) {
                     bootbox.dialog({
-                        title   : "Ver Edificio",
+                        title   : "Ver Admin",
                         message : msg,
                         buttons : {
                             ok : {
