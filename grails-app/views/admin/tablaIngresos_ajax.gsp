@@ -49,7 +49,7 @@
                                     <i class="icon-ok"></i>
                                 </g:if>
                                 <g:else>
-                                    <input type="radio" name="rd${ingreso.prsndpto}"/>
+                                    <input type="radio" name="rd${ingreso.pago__id}"/>
                                 </g:else>
                             </td> 
                             <td style="text-align: center; width: 4%" class="chk">
@@ -57,7 +57,7 @@
                                     <i class="icon-ok"></i>
                                 </g:if>
                                 <g:else>
-                                    <input type="radio" name="rd${ingreso.prsndpto}"/>
+                                    <input type="radio" name="rd${ingreso.pago__id}"/>
                                 </g:else>
                             </td>
                             <td style="text-align: center; width: 4%" class="chk">
@@ -65,7 +65,7 @@
                                     <i class="icon-ok"></i>
                                 </g:if>
                                 <g:else>
-                                    <input type="radio" name="rd${ingreso.prsndpto}"/>
+                                    <input type="radio" name="rd${ingreso.pago__id}"/>
                                 </g:else>
                             </td>
                                 <td class="derecha" style="width: 13%"><input type="text" class="form-control-sm"
