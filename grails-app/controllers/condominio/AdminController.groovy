@@ -39,8 +39,8 @@ class AdminController extends Shield {
             list = c.list(params) {
                 or {
                     /* TODO: cambiar aqui segun sea necesario */
-                    
-                            ilike("observaciones", "%" + params.search + "%")  
+
+                    ilike("observaciones", "%" + params.search + "%")
                 }
             }
         } else {
@@ -178,14 +178,19 @@ class AdminController extends Shield {
 
     def comentario_ajax () {
         def ingreso = Pago.get(params.id)
-        return [ingreso: ingreso, estado: params.estado, dpto: params.departamento, desc: params.descripcion, valor: params.valor, actual: params.estadoActual]
+        return [ingreso: ingreso, dpto: params.departamento, desc: params.descripcion, valor: params.valor, actual: params.estadoActual, comentario: params.comentario]
     }
 
     def guardarEstadoIngreso_ajax (){
 
         def ingreso = Pago.get(params.id)
-        ingreso.estado = params.estado
-//        ingreso.revision = params.comentario
+
+        if(params.estado){
+            ingreso.estado = params.estado
+        }
+        if(params.comentario){
+            ingreso.revision = params.comentario
+        }
 
         if(!ingreso.save(flush:true)){
             println("error al guardar el estado del ingreso")

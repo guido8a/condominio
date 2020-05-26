@@ -96,56 +96,57 @@ th, td {
                                     </div>
                                 </td>
 
-                                %{--<td style="text-align: center; width: 4%" class="chk">--}%
-                                %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
-                                %{--<i class="icon-ok"></i>--}%
-                                %{--</g:if>--}%
-                                %{--<g:else>--}%
-                                %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
-                                %{--</g:else>--}%
-                                %{--</td>--}%
-                                %{--<td style="text-align: center; width: 4%" class="chk">--}%
-                                %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
-                                %{--<i class="icon-ok"></i>--}%
-                                %{--</g:if>--}%
-                                %{--<g:else>--}%
-                                %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
-                                %{--</g:else>--}%
-                                %{--</td>--}%
-                                %{--<td style="text-align: center; width: 4%" class="chk">--}%
-                                %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
-                                %{--<i class="icon-ok"></i>--}%
-                                %{--</g:if>--}%
-                                %{--<g:else>--}%
-                                %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
-                                %{--</g:else>--}%
-                                %{--</td>--}%
+                            %{--<td style="text-align: center; width: 4%" class="chk">--}%
+                            %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
+                            %{--<i class="icon-ok"></i>--}%
+                            %{--</g:if>--}%
+                            %{--<g:else>--}%
+                            %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
+                            %{--</g:else>--}%
+                            %{--</td>--}%
+                            %{--<td style="text-align: center; width: 4%" class="chk">--}%
+                            %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
+                            %{--<i class="icon-ok"></i>--}%
+                            %{--</g:if>--}%
+                            %{--<g:else>--}%
+                            %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
+                            %{--</g:else>--}%
+                            %{--</td>--}%
+                            %{--<td style="text-align: center; width: 4%" class="chk">--}%
+                            %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
+                            %{--<i class="icon-ok"></i>--}%
+                            %{--</g:if>--}%
+                            %{--<g:else>--}%
+                            %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
+                            %{--</g:else>--}%
+                            %{--</td>--}%
 
 
 
-                                %{--<td style="text-align: center; width: 12%; font-size: 14px">--}%
-                                %{--<g:radioGroup  name="${ingreso.pago__id}"--}%
-                                %{--values="['R','C', 'B']"--}%
-                                %{--labels="['', '', '']"--}%
-                                %{--value="${ingreso.pagoetdo}" style="margin-right: 17px;--}%
-                                %{--margin-left: 5px" class="seleccion"--}%
-                                %{--data-dpto="${ingreso.prsndpto}" data-desc="${ingreso.pagodscr}" data-valor="${ingreso.pagovlor}" data-est="${ingreso.pagoetdo}">--}%
-                                %{--${it.radio}--}%
-                                %{--</g:radioGroup>--}%
-                                %{--</td>--}%
-                                 <g:if test="${ingresos.size() <= 13}">
-                                     <td style="width: 5%">
-                                         <a href="#" class="btn btn-info btnComentarios" ><i class="fa fa-pencil"></i></a>
-                                     </td>
-                                 </g:if>
+                            %{--<td style="text-align: center; width: 12%; font-size: 14px">--}%
+                            %{--<g:radioGroup  name="${ingreso.pago__id}"--}%
+                            %{--values="['R','C', 'B']"--}%
+                            %{--labels="['', '', '']"--}%
+                            %{--value="${ingreso.pagoetdo}" style="margin-right: 17px;--}%
+                            %{--margin-left: 5px" class="seleccion"--}%
+                            %{--data-dpto="${ingreso.prsndpto}" data-desc="${ingreso.pagodscr}" data-valor="${ingreso.pagovlor}" data-est="${ingreso.pagoetdo}">--}%
+                            %{--${it.radio}--}%
+                            %{--</g:radioGroup>--}%
+                            %{--</td>--}%
+                                <g:if test="${ingresos.size() <= 13}">
+                                    <td style="width: 5%">
+                                        <a href="#" name="${ingreso.pago__id}" class="btn btn-info btnComentarios"
+                                           data-dpto="${ingreso.prsndpto}" data-desc="${ingreso.pagodscr}" data-valor="${ingreso.pagovlor}"
+                                           data-est="${ingreso.pagoetdo}" data-com="${ingreso.pagorevs}"><i class="fa fa-pencil"></i></a>
+                                    </td>
+                                </g:if>
                                 <g:else>
                                     <td style="width: 4%">
-                                        <a href="#" class="btn btn-info btnComentarios" ><i class="fa fa-pencil"></i></a>
+                                        <a href="#" name="${ingreso.pago__id}" class="btn btn-info btnComentarios"
+                                           data-dpto="${ingreso.prsndpto}" data-desc="${ingreso.pagodscr}" data-valor="${ingreso.pagovlor}"
+                                           data-est="${ingreso.pagoetdo}" data-com="${ingreso.pagorevs}"><i class="fa fa-pencil"></i></a>
                                     </td>
-                                    %{--<td style="width: 1%">--}%
-                                    %{--</td>--}%
                                 </g:else>
-
                             </tr>
                         </g:each>
                     </table>
@@ -170,65 +171,107 @@ th, td {
     $(".seleccion").click(function () {
         var id = $(this).children().attr('name');
         var estado = $(this).children().attr('value');
-        guardarEstado(id, estado)
+        guardarEstado(id, estado, null)
+    });
+
+    $(".btnComentarios").click(function () {
+        var id = $(this).attr('name');
+        var departamento = $(this).data('dpto');
+        var descripcion = $(this).data('desc');
+        var valor = $(this).data("valor");
+        var estadoActual = $(this).data("est");
+        var comentario = $(this).data("com");
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'admin', action: 'comentario_ajax')}',
+            data:{
+                id:id,
+                departamento: departamento,
+                descripcion: descripcion,
+                valor: valor,
+                estadoActual: estadoActual,
+                comentario: comentario
+            },
+            success: function (msg){
+                var b = bootbox.dialog({
+                    id      : "dlgComentario",
+                    title   : "Comentario",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return guardarEstado(id, null, $("#comentarioIngreso").val());
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+            }
+        })
     });
 
 
     %{--$(".seleccion").click(function () {--}%
-    %{--var id = $(this).attr('name');--}%
-    %{--var estado = $(this).attr('value');--}%
-    %{--var departamento = $(this).data('dpto');--}%
-    %{--var descripcion = $(this).data('desc');--}%
-    %{--var valor = $(this).data("valor");--}%
-    %{--var estadoActual = $(this).data("est");--}%
+        %{--var id = $(this).attr('name');--}%
+        %{--var estado = $(this).attr('value');--}%
+        %{--var departamento = $(this).data('dpto');--}%
+        %{--var descripcion = $(this).data('desc');--}%
+        %{--var valor = $(this).data("valor");--}%
+        %{--var estadoActual = $(this).data("est");--}%
 
-    %{--$.ajax({--}%
-    %{--type: 'POST',--}%
-    %{--url: '${createLink(controller: 'admin', action: 'comentario_ajax')}',--}%
-    %{--data:{--}%
-    %{--id:id,--}%
-    %{--estado: estado,--}%
-    %{--departamento: departamento,--}%
-    %{--descripcion: descripcion,--}%
-    %{--valor: valor,--}%
-    %{--estadoActual: estadoActual--}%
-    %{--},--}%
-    %{--success: function (msg){--}%
-    %{--var b = bootbox.dialog({--}%
-    %{--id      : "dlgEstado",--}%
-    %{--title   : "Estado del ingreso",--}%
-    %{--message : msg,--}%
-    %{--buttons : {--}%
-    %{--cancelar : {--}%
-    %{--label     : "Cancelar",--}%
-    %{--className : "btn-primary",--}%
-    %{--callback  : function () {--}%
-    %{--}--}%
-    %{--},--}%
-    %{--guardar  : {--}%
-    %{--id        : "btnSave",--}%
-    %{--label     : "<i class='fa fa-save'></i> Guardar",--}%
-    %{--className : "btn-success",--}%
-    %{--callback  : function () {--}%
-    %{--return guardarEstado(id, estado, $("#comentarioIngreso").val());--}%
-    %{--} //callback--}%
-    %{--} //guardar--}%
-    %{--} //buttons--}%
-    %{--}); //dialog--}%
-    %{--}--}%
-    %{--})--}%
+        %{--$.ajax({--}%
+            %{--type: 'POST',--}%
+            %{--url: '${createLink(controller: 'admin', action: 'comentario_ajax')}',--}%
+            %{--data:{--}%
+                %{--id:id,--}%
+                %{--estado: estado,--}%
+                %{--departamento: departamento,--}%
+                %{--descripcion: descripcion,--}%
+                %{--valor: valor,--}%
+                %{--estadoActual: estadoActual--}%
+            %{--},--}%
+            %{--success: function (msg){--}%
+                %{--var b = bootbox.dialog({--}%
+                    %{--id      : "dlgEstado",--}%
+                    %{--title   : "Estado del ingreso",--}%
+                    %{--message : msg,--}%
+                    %{--buttons : {--}%
+                        %{--cancelar : {--}%
+                            %{--label     : "Cancelar",--}%
+                            %{--className : "btn-primary",--}%
+                            %{--callback  : function () {--}%
+                            %{--}--}%
+                        %{--},--}%
+                        %{--guardar  : {--}%
+                            %{--id        : "btnSave",--}%
+                            %{--label     : "<i class='fa fa-save'></i> Guardar",--}%
+                            %{--className : "btn-success",--}%
+                            %{--callback  : function () {--}%
+                                %{--return guardarEstado(id, estado, $("#comentarioIngreso").val());--}%
+                            %{--} //callback--}%
+                        %{--} //guardar--}%
+                    %{--} //buttons--}%
+                %{--}); //dialog--}%
+            %{--}--}%
+        %{--})--}%
     %{--});--}%
 
-    //    function guardarEstado(id, estado, comentario){
-    function guardarEstado(id, estado){
+    function guardarEstado(id, estado, comentario){
         $.ajax({
             type: 'POST',
             url:'${createLink(controller: 'admin', action: 'guardarEstadoIngreso_ajax')}',
             data:{
                 id:id,
-                estado:estado
-//                ,
-//                comentario: comentario
+                estado:estado,
+                comentario: comentario
             },
             success: function (msg) {
                 if(msg == 'OK'){
