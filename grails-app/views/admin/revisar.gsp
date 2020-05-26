@@ -3,6 +3,23 @@
 <head>
     <title>Revisar</title>
     <meta name="layout" content="main">
+
+    <script src="${resource(dir: 'js', file: 'jquery.twbs-toggle-buttons.js')}"></script>
+    <script src="${resource(dir: 'js', file: 'TwbsToggleButtons.js')}"></script>
+
+    <style>
+    .ui-radio:nth-child(1) .ui-radio-on span.ui-btn-inner{
+        background-color:green;
+    }
+    .ui-radio:nth-child(2) .ui-radio-on span.ui-btn-inner{
+        background-color:grey;
+    }
+    .ui-radio:nth-child(3) .ui-radio-on span.ui-btn-inner{
+        background-color:red;
+    }​
+
+    </style>
+
 </head>
 
 <body>

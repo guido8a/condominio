@@ -185,7 +185,7 @@ class AdminController extends Shield {
 
         def ingreso = Pago.get(params.id)
         ingreso.estado = params.estado
-        ingreso.revision = params.comentario
+//        ingreso.revision = params.comentario
 
         if(!ingreso.save(flush:true)){
             println("error al guardar el estado del ingreso")
