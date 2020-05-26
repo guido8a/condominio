@@ -8,7 +8,40 @@
     text-align: right;
 }
 
+.marco{
+    background-color: white;
+    color: black;
+    border: 2px solid #bcbec7; /* Green */
+}
 
+.button, .button2, .button3 {
+    transition-duration: 0.4s;
+}
+
+.button:hover {
+    background-color: #47954b; /* Green */
+    color: white;
+}
+
+.button2:hover {
+    background-color: #d37937; /* Green */
+    color: white;
+}
+
+.button3:hover {
+    background-color: #891523; /* Green */
+    color: white;
+}
+
+table {
+    table-layout: fixed;
+    overflow-x: scroll;
+}
+th, td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
 
 </style>
 
@@ -30,9 +63,9 @@
                     %{--<th style="width: 4%; text-align: center" title="Revisado (Correcto)"><i class="fa fa-check-square"></i></th>--}%
                     %{--<th style="width: 4%; text-align: center" title="Corregir valor"><i class="fa fa-edit"></i></th>--}%
                     %{--<th style="width: 4%; text-align: center" title="Borrar"><i class="fa fa-trash"></i></th>--}%
-                    <th style="width: 21%">Opciones</th>
-                    <th style="width: 4%" title="Comentario">Comentario</th>
-                    <th style="width: 3%"></th>
+                    <th style="width: 19%">Opciones</th>
+                    <th style="width: 8%" title="Comentario">Comentario</th>
+                    <th style="width: 1%"></th>
                 </tr>
             </table>
 
@@ -49,15 +82,15 @@
                                 <td class="derecha" style="width: 9%">${ingreso.pagovlor}</td>
                                 <td class="derecha" style="width: 7%">${ingreso.pagodcmt}</td>
 
-                                <td style="text-align: center; width: 22%; font-size: 14px">
+                                <td style="text-align: center; width: 21%; font-size: 14px">
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-sm ${ingreso.pagoetdo == 'R' ? 'active' : 'inactive'} seleccion" role="button" data-twbs-toggle-buttons-class-active="btn-success">
+                                        <label class="marco button btn btn-sm ${ingreso.pagoetdo == 'R' ? 'active' : 'inactive'} seleccion" role="button" data-twbs-toggle-buttons-class-active="btn-success">
                                             <input  type="radio" name="${ingreso.pago__id}" value="R">Revisado
                                         </label>
-                                        <label class="btn btn-sm ${ingreso.pagoetdo == 'C' ? 'active' : 'inactive'} seleccion" role="button" data-twbs-toggle-buttons-class-active="btn-warning">
+                                        <label class="marco button2 btn btn-sm ${ingreso.pagoetdo == 'C' ? 'active' : 'inactive'} seleccion" role="button" data-twbs-toggle-buttons-class-active="btn-warning">
                                             <input type="radio" name="${ingreso.pago__id}" value="C">Corregir
                                         </label>
-                                        <label class="btn btn-sm ${ingreso.pagoetdo == 'B' ? 'active' : 'inactive'} seleccion" role="button" data-twbs-toggle-buttons-class-active="btn-danger">
+                                        <label class="marco button3 btn btn-sm ${ingreso.pagoetdo == 'B' ? 'active' : 'inactive'} seleccion" role="button" data-twbs-toggle-buttons-class-active="btn-danger">
                                             <input  type="radio" name="${ingreso.pago__id}" value="B">Borrar
                                         </label>
                                     </div>
@@ -100,10 +133,19 @@
                                 %{--${it.radio}--}%
                                 %{--</g:radioGroup>--}%
                                 %{--</td>--}%
+                                 <g:if test="${ingresos.size() <= 13}">
+                                     <td style="width: 5%">
+                                         <a href="#" class="btn btn-info btnComentarios" ><i class="fa fa-pencil"></i></a>
+                                     </td>
+                                 </g:if>
+                                <g:else>
+                                    <td style="width: 4%">
+                                        <a href="#" class="btn btn-info btnComentarios" ><i class="fa fa-pencil"></i></a>
+                                    </td>
+                                    %{--<td style="width: 1%">--}%
+                                    %{--</td>--}%
+                                </g:else>
 
-                                <td style="width: 4%">
-                                    ${ingreso.pagorevs ?: ''}
-                                </td>
                             </tr>
                         </g:each>
                     </table>
@@ -123,8 +165,6 @@
 
     $(".btn-group-toggle").twbsToggleButtons({
         twbsBtnSelector: "[role='button']"
-    }).on("twbsToggleButtons:activate", function (e){
-        console.log(e);
     });
 
     $(".seleccion").click(function () {
@@ -132,10 +172,6 @@
         var estado = $(this).children().attr('value');
         guardarEstado(id, estado)
     });
-
-
-
-
 
 
     %{--$(".seleccion").click(function () {--}%
@@ -196,7 +232,7 @@
             },
             success: function (msg) {
                 if(msg == 'OK'){
-                    log("Estado guardado correctamente","success");
+//                    log("Estado guardado correctamente","success");
                     cargarIngresos($("#fechaDesde").val(), $("#fechaHasta").val());
                 }else{
                     log("Error al guardar el estado","error")

@@ -7,19 +7,6 @@
     <script src="${resource(dir: 'js', file: 'jquery.twbs-toggle-buttons.js')}"></script>
     <script src="${resource(dir: 'js', file: 'TwbsToggleButtons.js')}"></script>
 
-    <style>
-    .ui-radio:nth-child(1) .ui-radio-on span.ui-btn-inner{
-        background-color:green;
-    }
-    .ui-radio:nth-child(2) .ui-radio-on span.ui-btn-inner{
-        background-color:grey;
-    }
-    .ui-radio:nth-child(3) .ui-radio-on span.ui-btn-inner{
-        background-color:red;
-    }​
-
-    </style>
-
 </head>
 
 <body>
@@ -47,9 +34,9 @@
     <div class="col-xs-1">
         <a href="#" class="btn btn-info btnEgresos" ><i class="fa fa-search"></i> Egresos</a>
     </div>
-    <div class="col-xs-1">
-        <a href="#" class="btn btn-warning btnGuardar" ><i class="fa fa-save"></i> Guardar</a>
-    </div>
+    %{--<div class="col-xs-1">--}%
+        %{--<a href="#" class="btn btn-warning btnGuardar" ><i class="fa fa-save"></i> Guardar</a>--}%
+    %{--</div>--}%
 </div>
 
 <div class="row" id="divSaldos">
