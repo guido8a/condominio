@@ -156,7 +156,7 @@ class AdminController extends Shield {
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
-        def sql2 = "select * from rev_ingr(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by pagodcmt"
+        def sql2 = "select * from rev_ingr(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by pagodcmt, pago__id"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
 
@@ -203,7 +203,7 @@ class AdminController extends Shield {
     def guardarRevision_ajax () {
         println("params " + params)
         def ingreso = Pago.get(params.id)
-        ingreso.estadoAdministrador = (params.estado ? '1' : null)
+        ingreso.estadoAdministrador = (params.estado == 'true' ? 'S' : null)
 
         if(!ingreso.save(flush: true)){
             render "no"

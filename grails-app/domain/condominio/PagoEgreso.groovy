@@ -11,6 +11,7 @@ class PagoEgreso {
         String cheque
         String estado
         String revision
+        String estadoAdministrador
 
         static mapping = {
             table 'pgeg'
@@ -27,6 +28,7 @@ class PagoEgreso {
                 cheque column: 'pgegchqe'
                 estado column: 'pgegetdo'
                 revision column: 'pgegrevs'
+                estadoAdministrador column: 'pgegedad'
             }
         }
 
@@ -36,6 +38,7 @@ class PagoEgreso {
             cheque(blank: true, nullable: true)
             estado(blank: true, nullable: true)
             revision(blank: true, nullable: true)
+            estadoAdministrador(blank: true, nullable: true)
         }
 
     }
