@@ -186,6 +186,8 @@ label {
         var valor = $(this).data("valor");
         var estadoActual = $(this).data("est");
         var comentario = $(this).data("com");
+
+        <g:if test="${session.perfil.codigo == 'RVS'}">
         $.ajax({
             type: 'POST',
             url: '${createLink(controller: 'admin', action: 'comentario_ajax')}',
@@ -220,7 +222,37 @@ label {
                     } //buttons
                 }); //dialog
             }
-        })
+        });
+        </g:if>
+        <g:else>
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'admin', action: 'showComentario_ajax')}',
+            data:{
+                id:id,
+                departamento: departamento,
+                descripcion: descripcion,
+                valor: valor,
+                estadoActual: estadoActual,
+                comentario: comentario
+            },
+            success: function (msg){
+                var b = bootbox.dialog({
+                    id      : "dlgComentario",
+                    title   : "Comentario",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+            }
+        });
+        </g:else>
     });
 
     function guardarEstado(id, estado, comentario){

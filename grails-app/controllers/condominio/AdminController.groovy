@@ -235,4 +235,17 @@ class AdminController extends Shield {
         }
     }
 
+    def showComentario_ajax () {
+
+        def ingreso
+
+        if(params.proveedor){
+            ingreso = PagoEgreso.get(params.id)
+        }else{
+            ingreso = Pago.get(params.id)
+        }
+
+        return [ingreso: ingreso, dpto: params.departamento, desc: params.descripcion, valor: params.valor, actual: params.estadoActual, comentario: ingreso?.revision, proveedor: params.proveedor]
+    }
+
 }

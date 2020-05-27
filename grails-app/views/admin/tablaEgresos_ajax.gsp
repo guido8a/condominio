@@ -43,6 +43,13 @@ th, td {
     word-wrap: break-word;
 }
 
+<g:if test="${session.perfil.codigo != 'RVS'}">
+label {
+    pointer-events: none;
+    cursor: default;
+}
+</g:if>
+
 </style>
 
 <div class="row">
@@ -56,7 +63,9 @@ th, td {
                     <th style="width: 24%">Descripción</th>
                     <th style="width: 10%">Fecha</th>
                     <th style="width: 9%">Valor</th>
-                    <th style="width: 6%">Revi.</th>
+                    <g:if test="${session.perfil.codigo == 'ADC'}">
+                        <th style="width: 6%">Revi.</th>
+                    </g:if>
                     <th style="width: 19%">Opciones</th>
                     <th style="width: 6%" title="Comentario">Comen.</th>
                     <th style="width: 1%"></th>
@@ -73,11 +82,13 @@ th, td {
                                 <td style="width: 10%">${egreso.egrsfcha}</td>
                                 <td class="derecha" style="width: 10%">${egreso.egrsvlor}</td>
 
-                                <td style="width: 5%">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input revisarEgresos" type="checkbox" value="option1" data-id="${egreso.pgeg__id}" ${egreso.egrsedad == 'S' ? 'checked' : ''}>
-                                    </div>
-                                </td>
+                                <g:if test="${session.perfil.codigo == 'ADC'}">
+                                    <td style="width: 5%">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input revisarEgresos" type="checkbox" value="option1" data-id="${egreso.pgeg__id}" ${egreso.egrsedad == 'S' ? 'checked' : ''}>
+                                        </div>
+                                    </td>
+                                </g:if>
 
                                 <td style="text-align: center; width: 21%; font-size: 14px">
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -180,6 +191,8 @@ th, td {
         var valor = $(this).data("valor");
         var estadoActual = $(this).data("est");
         var comentario = $(this).data("com");
+
+        <g:if test="${session.perfil.codigo == 'RVS'}">
         $.ajax({
             type: 'POST',
             url: '${createLink(controller: 'admin', action: 'comentario_ajax')}',
@@ -214,7 +227,37 @@ th, td {
                     } //buttons
                 }); //dialog
             }
-        })
+        });
+        </g:if>
+        <g:else>
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'admin', action: 'showComentario_ajax')}',
+            data:{
+                id:id,
+                proveedor: proveedor,
+                descripcion: descripcion,
+                valor: valor,
+                estadoActual: estadoActual,
+                comentario: comentario
+            },
+            success: function (msg){
+                var b = bootbox.dialog({
+                    id      : "dlgComentario",
+                    title   : "Comentario",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+            }
+        });
+        </g:else>
     });
 
     function cargarEgresos (desde, hasta){
