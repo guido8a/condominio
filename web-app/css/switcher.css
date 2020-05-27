@@ -26,11 +26,11 @@
   text-align: center;
 }
 .ui-switcher[aria-checked=false]:before {
-  content: 'OFF';
+  content: 'No';
   right: 7px;
 }
 .ui-switcher[aria-checked=true]:before {
-  content: 'ON';
+  content: 'OK';
   left: 7px;
 }
 .ui-switcher[aria-checked=true] {
