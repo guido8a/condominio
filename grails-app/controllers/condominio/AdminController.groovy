@@ -200,6 +200,17 @@ class AdminController extends Shield {
         }
     }
 
+    def guardarRevision_ajax () {
+        println("params " + params)
+        def ingreso = Pago.get(params.id)
+        ingreso.estadoAdministrador = (params.estado ? '1' : null)
 
+        if(!ingreso.save(flush: true)){
+            render "no"
+            println("error al guardar el estado del ingreso por administrador")
+        }else{
+            render "ok"
+        }
+    }
 
 }

@@ -6,6 +6,8 @@
 
     <script src="${resource(dir: 'js', file: 'jquery.twbs-toggle-buttons.js')}"></script>
     <script src="${resource(dir: 'js', file: 'TwbsToggleButtons.js')}"></script>
+    <script src="${resource(dir: 'js', file: 'jquery.switcher.js')}"></script>
+    <link href="${resource(dir: 'css', file: 'switcher.css')}" rel="stylesheet">
 
 </head>
 

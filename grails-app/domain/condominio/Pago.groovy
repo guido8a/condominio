@@ -13,7 +13,7 @@ class Pago {
     int mess = 0;
     String estado
     String revision
-
+    String estadoAdministrador
 
     static mapping = {
         table 'pago'
@@ -32,6 +32,7 @@ class Pago {
             mess column: 'pagomess'
             estado column: 'pagoetdo'
             revision column: 'pagorevs'
+            estadoAdministrador column: 'pagoedad'
         }
     }
 
@@ -40,5 +41,6 @@ class Pago {
         observaciones(blank: true, nullable: true)
         estado(blank: true, nullable: true)
         revision(blank: true, nullable: true)
+        estadoAdministrador(blank: true, nullable: true)
     }
 }

@@ -54,17 +54,18 @@ th, td {
             <table class="table-bordered table-condensed" style="width: 100%">
                 <tr style="width:100%;">
                     <th style="width: 5%">Dpto.</th>
-                    <th style="width: 15%">Persona</th>
-                    <th style="width: 12%">Ocupante</th>
-                    <th style="width: 15%">Descripción de Ingreso</th>
-                    <th style="width: 9%">Fecha</th>
-                    <th style="width: 9%">Valor</th>
+                    <th style="width: 14%">Persona</th>
+                    <th style="width: 10%">Ocupante</th>
+                    <th style="width: 14%">Descripción de Ingreso</th>
+                    <th style="width: 8%">Fecha</th>
+                    <th style="width: 8%">Valor</th>
                     <th style="width: 7%">Doc.</th>
                     %{--<th style="width: 4%; text-align: center" title="Revisado (Correcto)"><i class="fa fa-check-square"></i></th>--}%
                     %{--<th style="width: 4%; text-align: center" title="Corregir valor"><i class="fa fa-edit"></i></th>--}%
                     %{--<th style="width: 4%; text-align: center" title="Borrar"><i class="fa fa-trash"></i></th>--}%
                     <th style="width: 19%">Opciones</th>
-                    <th style="width: 8%" title="Comentario">Comentario</th>
+                    <th style="width: 5%">Rev.</th>
+                    <th style="width: 5%" title="Comentario">Com.</th>
                     <th style="width: 1%"></th>
                 </tr>
             </table>
@@ -96,43 +97,50 @@ th, td {
                                     </div>
                                 </td>
 
-                            %{--<td style="text-align: center; width: 4%" class="chk">--}%
-                            %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
-                            %{--<i class="icon-ok"></i>--}%
-                            %{--</g:if>--}%
-                            %{--<g:else>--}%
-                            %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
-                            %{--</g:else>--}%
-                            %{--</td>--}%
-                            %{--<td style="text-align: center; width: 4%" class="chk">--}%
-                            %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
-                            %{--<i class="icon-ok"></i>--}%
-                            %{--</g:if>--}%
-                            %{--<g:else>--}%
-                            %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
-                            %{--</g:else>--}%
-                            %{--</td>--}%
-                            %{--<td style="text-align: center; width: 4%" class="chk">--}%
-                            %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
-                            %{--<i class="icon-ok"></i>--}%
-                            %{--</g:if>--}%
-                            %{--<g:else>--}%
-                            %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
-                            %{--</g:else>--}%
-                            %{--</td>--}%
+                                %{--<td style="text-align: center; width: 4%" class="chk">--}%
+                                %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
+                                %{--<i class="icon-ok"></i>--}%
+                                %{--</g:if>--}%
+                                %{--<g:else>--}%
+                                %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
+                                %{--</g:else>--}%
+                                %{--</td>--}%
+                                %{--<td style="text-align: center; width: 4%" class="chk">--}%
+                                %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
+                                %{--<i class="icon-ok"></i>--}%
+                                %{--</g:if>--}%
+                                %{--<g:else>--}%
+                                %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
+                                %{--</g:else>--}%
+                                %{--</td>--}%
+                                %{--<td style="text-align: center; width: 4%" class="chk">--}%
+                                %{--<g:if test="${ingreso?.prsn == 'R'}">--}%
+                                %{--<i class="icon-ok"></i>--}%
+                                %{--</g:if>--}%
+                                %{--<g:else>--}%
+                                %{--<input type="radio" name="rd${ingreso.pago__id}"/>--}%
+                                %{--</g:else>--}%
+                                %{--</td>--}%
 
 
 
-                            %{--<td style="text-align: center; width: 12%; font-size: 14px">--}%
-                            %{--<g:radioGroup  name="${ingreso.pago__id}"--}%
-                            %{--values="['R','C', 'B']"--}%
-                            %{--labels="['', '', '']"--}%
-                            %{--value="${ingreso.pagoetdo}" style="margin-right: 17px;--}%
-                            %{--margin-left: 5px" class="seleccion"--}%
-                            %{--data-dpto="${ingreso.prsndpto}" data-desc="${ingreso.pagodscr}" data-valor="${ingreso.pagovlor}" data-est="${ingreso.pagoetdo}">--}%
-                            %{--${it.radio}--}%
-                            %{--</g:radioGroup>--}%
-                            %{--</td>--}%
+                                %{--<td style="text-align: center; width: 12%; font-size: 14px">--}%
+                                %{--<g:radioGroup  name="${ingreso.pago__id}"--}%
+                                %{--values="['R','C', 'B']"--}%
+                                %{--labels="['', '', '']"--}%
+                                %{--value="${ingreso.pagoetdo}" style="margin-right: 17px;--}%
+                                %{--margin-left: 5px" class="seleccion"--}%
+                                %{--data-dpto="${ingreso.prsndpto}" data-desc="${ingreso.pagodscr}" data-valor="${ingreso.pagovlor}" data-est="${ingreso.pagoetdo}">--}%
+                                %{--${it.radio}--}%
+                                %{--</g:radioGroup>--}%
+                                %{--</td>--}%
+
+                                <td style="width: 5%">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input revisar" type="checkbox" value="option1" data-id="${ingreso.pago__id}">
+                                    </div>
+                                </td>
+
                                 <g:if test="${ingresos.size() <= 13}">
                                     <td style="width: 5%">
                                         <a href="#" name="${ingreso.pago__id}" class="btn btn-info btnComentarios"
@@ -163,6 +171,33 @@ th, td {
 
 
 <script type="text/javascript">
+
+    $(".revisar").click(function () {
+
+        openLoader("Guardando...");
+
+        var es = $(this).is(":checked");
+        var id = $(this).data("id");
+
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'admin', action: 'guardarRevision_ajax')}',
+            data:{
+                estado:es,
+                id:id
+            },
+            success:function(msg){
+                closeLoader();
+                if(msg == 'ok'){
+                    cargarIngresos($("#fechaDesde").val(), $("#fechaHasta").val());
+                }else{
+                    log("Error al cambiar el estado")
+                }
+            }
+        })
+    });
+
+    $.switcher('input[type=checkbox]');
 
     $(".btn-group-toggle").twbsToggleButtons({
         twbsBtnSelector: "[role='button']"
@@ -220,51 +255,52 @@ th, td {
 
 
     %{--$(".seleccion").click(function () {--}%
-        %{--var id = $(this).attr('name');--}%
-        %{--var estado = $(this).attr('value');--}%
-        %{--var departamento = $(this).data('dpto');--}%
-        %{--var descripcion = $(this).data('desc');--}%
-        %{--var valor = $(this).data("valor");--}%
-        %{--var estadoActual = $(this).data("est");--}%
+    %{--var id = $(this).attr('name');--}%
+    %{--var estado = $(this).attr('value');--}%
+    %{--var departamento = $(this).data('dpto');--}%
+    %{--var descripcion = $(this).data('desc');--}%
+    %{--var valor = $(this).data("valor");--}%
+    %{--var estadoActual = $(this).data("est");--}%
 
-        %{--$.ajax({--}%
-            %{--type: 'POST',--}%
-            %{--url: '${createLink(controller: 'admin', action: 'comentario_ajax')}',--}%
-            %{--data:{--}%
-                %{--id:id,--}%
-                %{--estado: estado,--}%
-                %{--departamento: departamento,--}%
-                %{--descripcion: descripcion,--}%
-                %{--valor: valor,--}%
-                %{--estadoActual: estadoActual--}%
-            %{--},--}%
-            %{--success: function (msg){--}%
-                %{--var b = bootbox.dialog({--}%
-                    %{--id      : "dlgEstado",--}%
-                    %{--title   : "Estado del ingreso",--}%
-                    %{--message : msg,--}%
-                    %{--buttons : {--}%
-                        %{--cancelar : {--}%
-                            %{--label     : "Cancelar",--}%
-                            %{--className : "btn-primary",--}%
-                            %{--callback  : function () {--}%
-                            %{--}--}%
-                        %{--},--}%
-                        %{--guardar  : {--}%
-                            %{--id        : "btnSave",--}%
-                            %{--label     : "<i class='fa fa-save'></i> Guardar",--}%
-                            %{--className : "btn-success",--}%
-                            %{--callback  : function () {--}%
-                                %{--return guardarEstado(id, estado, $("#comentarioIngreso").val());--}%
-                            %{--} //callback--}%
-                        %{--} //guardar--}%
-                    %{--} //buttons--}%
-                %{--}); //dialog--}%
-            %{--}--}%
-        %{--})--}%
+    %{--$.ajax({--}%
+    %{--type: 'POST',--}%
+    %{--url: '${createLink(controller: 'admin', action: 'comentario_ajax')}',--}%
+    %{--data:{--}%
+    %{--id:id,--}%
+    %{--estado: estado,--}%
+    %{--departamento: departamento,--}%
+    %{--descripcion: descripcion,--}%
+    %{--valor: valor,--}%
+    %{--estadoActual: estadoActual--}%
+    %{--},--}%
+    %{--success: function (msg){--}%
+    %{--var b = bootbox.dialog({--}%
+    %{--id      : "dlgEstado",--}%
+    %{--title   : "Estado del ingreso",--}%
+    %{--message : msg,--}%
+    %{--buttons : {--}%
+    %{--cancelar : {--}%
+    %{--label     : "Cancelar",--}%
+    %{--className : "btn-primary",--}%
+    %{--callback  : function () {--}%
+    %{--}--}%
+    %{--},--}%
+    %{--guardar  : {--}%
+    %{--id        : "btnSave",--}%
+    %{--label     : "<i class='fa fa-save'></i> Guardar",--}%
+    %{--className : "btn-success",--}%
+    %{--callback  : function () {--}%
+    %{--return guardarEstado(id, estado, $("#comentarioIngreso").val());--}%
+    %{--} //callback--}%
+    %{--} //guardar--}%
+    %{--} //buttons--}%
+    %{--}); //dialog--}%
+    %{--}--}%
+    %{--})--}%
     %{--});--}%
 
     function guardarEstado(id, estado, comentario){
+        openLoader("Guardando...");
         $.ajax({
             type: 'POST',
             url:'${createLink(controller: 'admin', action: 'guardarEstadoIngreso_ajax')}',
@@ -274,6 +310,7 @@ th, td {
                 comentario: comentario
             },
             success: function (msg) {
+                closeLoader();
                 if(msg == 'OK'){
 //                    log("Estado guardado correctamente","success");
                     cargarIngresos($("#fechaDesde").val(), $("#fechaHasta").val());
