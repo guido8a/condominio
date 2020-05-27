@@ -43,6 +43,13 @@ th, td {
     word-wrap: break-word;
 }
 
+<g:if test="${session.perfil.codigo != 'RVS'}">
+label {
+    pointer-events: none;
+    cursor: default;
+}
+</g:if>
+
 </style>
 
 <div class="row">
@@ -59,9 +66,11 @@ th, td {
                     <th style="width: 8%">Fecha</th>
                     <th style="width: 8%">Valor</th>
                     <th style="width: 7%">Doc.</th>
-                    <th style="width: 5%">Rev.</th>
+                    <g:if test="${session.perfil.codigo == 'ADC'}">
+                        <th style="width: 5%">Revi.</th>
+                    </g:if>
                     <th style="width: 19%">Opciones</th>
-                    <th style="width: 5%" title="Comentario">Com.</th>
+                    <th style="width: 5%" title="Comentario">Comen.</th>
                     <th style="width: 1%"></th>
                 </tr>
             </table>
@@ -79,22 +88,24 @@ th, td {
                                 <td class="derecha" style="width: 9%">${ingreso.pagovlor}</td>
                                 <td class="derecha" style="width: 7%">${ingreso.pagodcmt}</td>
 
-                                <td style="width: 5%">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input revisar" type="checkbox" value="option1" data-id="${ingreso.pago__id}" ${ingreso.pagoedad == 'S' ? 'checked' : ''}>
-                                    </div>
-                                </td>
+                                <g:if test="${session.perfil.codigo == 'ADC'}">
+                                    <td style="width: 5%">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input revisar" type="checkbox" value="option1" data-id="${ingreso.pago__id}" ${ingreso.pagoedad == 'S' ? 'checked' : ''}>
+                                        </div>
+                                    </td>
+                                </g:if>
 
                                 <td style="text-align: center; width: 21%; font-size: 14px">
-                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <div class="btn-group btn-group-toggle" data-toggle="buttons" >
                                         <label class="marco button btn btn-sm ${ingreso.pagoetdo == 'R' ? 'active' : 'inactive'} seleccion" role="button" data-twbs-toggle-buttons-class-active="btn-success">
-                                            <input  type="radio" name="${ingreso.pago__id}" value="R">Revisado
+                                            <input type="radio" name="${ingreso.pago__id}" value="R">Revisado
                                         </label>
                                         <label class="marco button2 btn btn-sm ${ingreso.pagoetdo == 'C' ? 'active' : 'inactive'} seleccion" role="button" data-twbs-toggle-buttons-class-active="btn-warning">
                                             <input type="radio" name="${ingreso.pago__id}" value="C">Corregir
                                         </label>
                                         <label class="marco button3 btn btn-sm ${ingreso.pagoetdo == 'B' ? 'active' : 'inactive'} seleccion" role="button" data-twbs-toggle-buttons-class-active="btn-danger">
-                                            <input  type="radio" name="${ingreso.pago__id}" value="B">Borrar
+                                            <input type="radio" name="${ingreso.pago__id}" value="B">Borrar
                                         </label>
                                     </div>
                                 </td>
@@ -129,6 +140,7 @@ th, td {
 
 <script type="text/javascript">
 
+
     $(".revisar").click(function () {
         openLoader("Guardando...");
 
@@ -139,7 +151,8 @@ th, td {
             url: '${createLink(controller: 'admin', action: 'guardarRevision_ajax')}',
             data:{
                 estado:es,
-                id:id
+                id:id,
+                tipo: 1
             },
             success:function(msg){
                 closeLoader();
@@ -158,11 +171,13 @@ th, td {
         twbsBtnSelector: "[role='button']"
     });
 
+    <g:if test="${session.perfil.codigo == 'RVS'}">
     $(".seleccion").click(function () {
         var id = $(this).children().attr('name');
         var estado = $(this).children().attr('value');
         guardarEstado(id, estado, null)
     });
+    </g:if>
 
     $(".btnComentarios").click(function () {
         var id = $(this).attr('name');
@@ -216,7 +231,8 @@ th, td {
             data:{
                 id:id,
                 estado:estado,
-                comentario: comentario
+                comentario: comentario,
+                tipo: 1
             },
             success: function (msg) {
                 closeLoader();

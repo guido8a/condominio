@@ -168,7 +168,7 @@ class AdminController extends Shield {
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
-        def sql3 = "select * from rev_egrs(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by egrsfcha"
+        def sql3 = "select * from rev_egrs(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by egrsfcha, pgeg__id"
         def cn3 = dbConnectionService.getConnection()
         def egresos = cn3.rows(sql3.toString())
 
@@ -177,23 +177,37 @@ class AdminController extends Shield {
 
 
     def comentario_ajax () {
-        def ingreso = Pago.get(params.id)
-        return [ingreso: ingreso, dpto: params.departamento, desc: params.descripcion, valor: params.valor, actual: params.estadoActual, comentario: params.comentario]
+
+        def ingreso
+
+        if(params.proveedor){
+            ingreso = PagoEgreso.get(params.id)
+        }else{
+            ingreso = Pago.get(params.id)
+        }
+
+        return [ingreso: ingreso, dpto: params.departamento, desc: params.descripcion, valor: params.valor, actual: params.estadoActual, comentario: ingreso?.revision, proveedor: params.proveedor]
     }
 
     def guardarEstadoIngreso_ajax (){
 
-        def ingreso = Pago.get(params.id)
+        def item
+
+        if(params.tipo == '1'){
+            item = Pago.get(params.id)
+        }else{
+            item = PagoEgreso.get(params.id)
+        }
 
         if(params.estado){
-            ingreso.estado = params.estado
+            item.estado = params.estado
         }
         if(params.comentario){
-            ingreso.revision = params.comentario
+            item.revision = params.comentario
         }
 
-        if(!ingreso.save(flush:true)){
-            println("error al guardar el estado del ingreso")
+        if(!item.save(flush:true)){
+            println("error al guardar el estado del ingreso/egreso")
             render("NO")
         }else{
             render "OK"
@@ -202,12 +216,20 @@ class AdminController extends Shield {
 
     def guardarRevision_ajax () {
         println("params " + params)
-        def ingreso = Pago.get(params.id)
-        ingreso.estadoAdministrador = (params.estado == 'true' ? 'S' : null)
 
-        if(!ingreso.save(flush: true)){
+        def item
+
+        if(params.tipo == '1'){
+            item = Pago.get(params.id)
+        }else{
+            item = PagoEgreso.get(params.id)
+        }
+
+        item.estadoAdministrador = (params.estado == 'true' ? 'S' : null)
+
+        if(!item.save(flush: true)){
             render "no"
-            println("error al guardar el estado del ingreso por administrador")
+            println("error al guardar el estado por administrador")
         }else{
             render "ok"
         }
