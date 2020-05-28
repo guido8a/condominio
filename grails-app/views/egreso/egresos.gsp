@@ -209,7 +209,8 @@
 
     function createContextMenu(node) {
         var $tr = $(node);
-        var no = $tr.hasClass("revisado");
+        var revisado = $tr.hasClass("revisado");
+        var saldo = $tr.hasClass("saldo");
         var items = {
             header: {
                 label: "Acciones",
@@ -239,10 +240,16 @@
             }
         };
 
-        if(!no){
-            items.editar = editar;
+        if(!revisado){
+            if(saldo){
+                items.editar = editar;
+            }
         }
 
+
+//        if(!revisado){
+//            items.editar = editar;
+//        }
 
         if(sz == 0){
             items.borrar = borrar;
