@@ -2813,6 +2813,7 @@ class ReportesController extends Shield{
       <br><br>CERTIFICO NO TENER ADEUDO ALGUNO PENDIENTE DE LIQUIDAR EN NINGUNO DE LOS RUBROS DE ESTA DEPENDENCIA
       ADEMÁS LEGALIZO QUE SE ENCUENTRA AL DÍA EN EL PAGO DE LAS ALÍCUOTAS ORDINARIAS Y EXTRAORDINARIAS
       DEL CONDOMINIO.
+      <table background-color="#7c7c7c"><tr><td>No modificar -- Esta tabla se genera en forma automática</td></tr></table>
       <br><br>Se extiende el presente CERTIFICADO DE EXPENSAS el 11 del mes de Febrero del año 2020 en
       EL DISTRITO METROPOLITANO DE QUITO.
       <br><br>Atentamente<br><br>Ing. Guido E. Ochoa Moreno<br>ADMINISTRADOR<br>CI: 0601983869
