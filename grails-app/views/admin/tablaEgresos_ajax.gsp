@@ -156,11 +156,13 @@ label {
         twbsBtnSelector: "[role='button']"
     });
 
+    <g:if test="${session.perfil.codigo == 'RVS'}">
     $(".seleccionEgresos").click(function () {
         var id = $(this).children().attr('name');
         var estado = $(this).children().attr('value');
         guardarEstadoEgreso(id, estado, null)
     });
+    </g:if>
 
     function guardarEstadoEgreso(id, estado, comentario){
         openLoader("Guardando...");
@@ -259,20 +261,4 @@ label {
         });
         </g:else>
     });
-
-    function cargarEgresos (desde, hasta){
-        $.ajax({
-            type: 'POST',
-            url: '${createLink(controller: 'egreso', action: 'tablaEgresos_ajax')}',
-            async: true,
-            data:{
-                desde: desde,
-                hasta: hasta
-            },
-            success: function (msg){
-                $("#tablaEgresos").html(msg)
-            }
-        })
-    }
-
 </script>

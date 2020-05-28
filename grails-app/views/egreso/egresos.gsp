@@ -209,6 +209,7 @@
 
     function createContextMenu(node) {
         var $tr = $(node);
+        var no = $tr.hasClass("revisado");
         var items = {
             header: {
                 label: "Acciones",
@@ -229,7 +230,6 @@
         };
 
 
-
         var borrar = {
             label: " Eliminar",
             icon: "fa fa-trash-o",
@@ -239,8 +239,10 @@
             }
         };
 
+        if(!no){
+            items.editar = editar;
+        }
 
-        items.editar = editar;
 
         if(sz == 0){
             items.borrar = borrar;

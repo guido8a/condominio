@@ -61,12 +61,14 @@
                 <td class="derecha" style="width: 15%"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
                 <td style="width: 20%">${pagoUsuario?.observaciones}</td>
                 <td style="text-align: center; width: 15%">
-                    <a href="#" class="btn btn-info btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${egreso?.id}" title="Editar Pago">
-                        <i class="fa fa-pencil"></i>
-                    </a>
-                    <a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" data-ing="${egreso?.id}" title="Borrar Pago">
-                        <i class="fa fa-trash-o"></i>
-                    </a>
+                    <g:if test="${pagoUsuario?.estado != 'R'}">
+                        <a href="#" class="btn btn-info btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${egreso?.id}" title="Editar Pago">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" data-ing="${egreso?.id}" title="Borrar Pago">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </g:if>
                 </td>
             </tr>
         </g:each>

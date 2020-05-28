@@ -37,8 +37,7 @@ th, td {
 <div class="" style="width: 100%;height: ${msg == '' ? 600 : 575}px; overflow-y: auto;float: left; margin-top: -20px">
     <table class="table-bordered table-condensed table-hover" width="100%">
         <g:each in="${data}" var="dato" status="z">
-
-            <tr id="${dato.egrs__id}" data-id="${dato.egrs__id}" data-tam="${condominio.PagoEgreso.findAllByEgreso(condominio.Egreso.get(dato.egrs__id)).size()}" class="${dato.egrssldo > 0 ? clase : ''} trEgreso ${z == 0 ? 'seleccionado' : ''}">
+            <tr id="${dato.egrs__id}" data-estado="${condominio.PagoEgreso.get(dato.egrs__id).estado}" data-id="${dato.egrs__id}" data-tam="${condominio.PagoEgreso.findAllByEgreso(condominio.Egreso.get(dato.egrs__id)).size()}" class="${dato.egrssldo > 0 ? clase : ''} trEgreso ${z == 0 ? 'seleccionado' : ''}">
                 <td width="32%">
                     ${dato?.egrsdscr}
                 </td>
@@ -50,16 +49,12 @@ th, td {
                 <td width="12%" style="color:#186063">
                     ${dato?.egrsfcha}
                 </td>
-
-                %{--<td width="40px" class="${dato.prsnetdo == 'R-S' ? 'registrado' : dato.prsnetdo == 'R' ? 'reg' : 'noReg'}">--}%
                 <td width="8%">
                     ${dato.egrsvlor}
                 </td>
-
                 <td width="8%" class="text-info">
                     ${dato?.egrssldo}
                 </td>
-
             </tr>
         </g:each>
     </table>
@@ -68,7 +63,11 @@ th, td {
 
 <script type="text/javascript">
     $(function () {
+
+
+
         $("tr").contextMenu({
+
             items  : createContextMenu,
             onShow : function ($element) {
                 $element.addClass("trHighlight");

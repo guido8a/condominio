@@ -68,9 +68,7 @@
         cargarIngresos(desde, hasta);
     });
 
-    $(".btnEgresos").click(function () {
-        var desde = $("#fechaDesde").val();
-        var hasta = $("#fechaHasta").val();
+    function cargarEgresos(desde, hasta){
         $.ajax({
             type: 'POST',
             url:'${createLink(controller: 'admin', action: 'tablaEgresos_ajax')}',
@@ -82,6 +80,12 @@
                 $("#divSaldos").html(msg)
             }
         });
+    }
+
+    $(".btnEgresos").click(function () {
+        var desde = $("#fechaDesde").val();
+        var hasta = $("#fechaHasta").val();
+        cargarEgresos(desde, hasta)
     });
 
 </script>
