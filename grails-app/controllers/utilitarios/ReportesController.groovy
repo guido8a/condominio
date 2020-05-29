@@ -13,6 +13,7 @@ import condominio.Edificio
 import condominio.Ingreso
 import condominio.Obra
 import condominio.Pago
+import condominio.Texto
 import groovy.json.JsonBuilder
 import org.apache.poi.hwpf.usermodel.OfficeDrawing
 import org.apache.poi.xwpf.usermodel.TextAlignment
@@ -2813,7 +2814,6 @@ class ReportesController extends Shield{
       <br><br>CERTIFICO NO TENER ADEUDO ALGUNO PENDIENTE DE LIQUIDAR EN NINGUNO DE LOS RUBROS DE ESTA DEPENDENCIA
       ADEMÁS LEGALIZO QUE SE ENCUENTRA AL DÍA EN EL PAGO DE LAS ALÍCUOTAS ORDINARIAS Y EXTRAORDINARIAS
       DEL CONDOMINIO.
-      <table background-color="#7c7c7c"><tr><td>No modificar -- Esta tabla se genera en forma automática</td></tr></table>
       <br><br>Se extiende el presente CERTIFICADO DE EXPENSAS el 11 del mes de Febrero del año 2020 en
       EL DISTRITO METROPOLITANO DE QUITO.
       <br><br>Atentamente<br><br>Ing. Guido E. Ochoa Moreno<br>ADMINISTRADOR<br>CI: 0601983869
@@ -2830,7 +2830,6 @@ class ReportesController extends Shield{
         }else{
             render "no"
         }
-
     }
 
     def expensas_pdf () {
@@ -3222,7 +3221,41 @@ class ReportesController extends Shield{
 
     def solicitudPago () {
         def condominio = Condominio.get(params.id)
-        return [condominio:condominio]
+        def texto = Texto.findByCondominio(condominio)
+
+        if(!texto){
+            texto = new Texto()
+            texto.codigo = 'SLCT'
+            texto.condominio = condominio
+            texto.save(flush: true)
+        }
+
+        def parrafo1 = "Luego de un atento saludo, me permito solicitarle el pago de la deuda que mantiene con el conjunto" +
+                "<br/> residencial '${condominio?.nombre}', la misma que asciende a un valor de \$ 000.00, de acuerdo con el " +
+                "<br/> siguiente desglose:"
+        def parrafo2 = "El cobro de intereses por mora se aplica desde el 1° de abril de XXXX, conforme lo determina" +
+                "<br/> nuestro Reglamento Interno en el artículo 39 literal 'p', a los valores adeudados hasta el 31 de enero" +
+                "<br/> de XXXX, así como también a las deudas que superen los 2 meses de alícuotas. Por esta razón me" +
+                "<br/> permito insistir en que realice el pago lo antes posible o proponga una forma de pago enviando la" +
+                "<br/> misma al correo electrónico ${condominio?.email ?: ''}." +
+                "<br/> Agradezco su oportuna atención a la presente, lo que nos ayudará a cubrir los gastos de servicios" +
+                "<br/> básicos, mantenimiento, conserje, vigilancia y mejora de los bienes comunales." +
+                "<br/> Atentamente,"
+
+        return [condominio:condominio, parrafo1: parrafo1, parrafo2: parrafo2, texto: texto]
+    }
+
+    def guardarParrafosSolicitud_ajax() {
+
+        def texto = Texto.get(params.id)
+        texto.parrafoUno = params.parrafo1
+        texto.parrafoDos = params.parrafo2
+
+        if(!texto.save(flush: true)){
+            render "no"
+        }else{
+            render "ok"
+        }
     }
 
 }
