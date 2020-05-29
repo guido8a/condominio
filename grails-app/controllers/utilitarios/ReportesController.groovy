@@ -3247,17 +3247,16 @@ class ReportesController extends Shield{
             texto.save(flush: true)
         }
 
-        def parrafo1 = "Luego de un atento saludo, me permito solicitarle el pago de la deuda que mantiene con el conjunto" +
-                "<br/> residencial '${condominio?.nombre}', la misma que asciende a un valor de \$ 000.00, de acuerdo con el " +
-                "<br/> siguiente desglose:"
-        def parrafo2 = "El cobro de intereses por mora se aplica desde el 1° de abril de XXXX, conforme lo determina" +
-                "<br/> nuestro Reglamento Interno en el artículo 39 literal 'p', a los valores adeudados hasta el 31 de enero" +
-                "<br/> de XXXX, así como también a las deudas que superen los 2 meses de alícuotas. Por esta razón me" +
-                "<br/> permito insistir en que realice el pago lo antes posible o proponga una forma de pago enviando la" +
-                "<br/> misma al correo electrónico ${condominio?.email ?: ''}." +
-                "<br/> Agradezco su oportuna atención a la presente, lo que nos ayudará a cubrir los gastos de servicios" +
-                "<br/> básicos, mantenimiento, conserje, vigilancia y mejora de los bienes comunales." +
-                "<br/> Atentamente,"
+        def parrafo1 = "Luego de un atento saludo, me permito solicitarle el pago de la deuda que mantiene con el " +
+                "conjunto residencial ${condominio?.nombre}, la misma que se detalla a continuación:"
+        def parrafo2 = "El cobro de intereses por mora se aplica desde el 1° de abril de XXXX, conforme lo determina " +
+                "nuestro Reglamento Interno en el artículo 39 literal 'p', a los valores adeudados hasta el 31 de enero " +
+                "de XXXX, así como también a las deudas que superen los 2 meses de alícuotas. Por esta razón me " +
+                "permito insistir en que realice el pago lo antes posible o proponga una forma de pago enviando la " +
+                "misma al correo electrónico ${condominio?.email ?: ''}.<br>" +
+                "Agradezco su oportuna atención a la presente, lo que nos ayudará a cubrir los gastos de servicios " +
+                "básicos, mantenimiento, conserje, vigilancia y mejora de los bienes comunales." +
+                "<br/><br/> Atentamente,"
 
         return [condominio:condominio, parrafo1: parrafo1, parrafo2: parrafo2, texto: texto]
     }

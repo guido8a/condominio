@@ -21,57 +21,6 @@
 
 
 
-%{--<div class="panel-group" id="accordion">--}%
-
-%{--<g:set var="abierto" value="${false}"/>--}%
-%{--<g:set var="abierto" value="${true}"/>--}%
-
-%{--<div class="panel panel-default">--}%
-%{--<div class="panel-heading">--}%
-%{--<h4 class="panel-title">--}%
-%{--<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">--}%
-%{--Párrafo Uno--}%
-%{--</a>--}%
-%{--</h4>--}%
-%{--</div>--}%
-
-%{--<div id="collapseOne" class="panel-collapse collapse">--}%
-%{--<div class="panel-body">--}%
-
-%{--</div>--}%
-%{--</div>--}%
-%{--</div>--}%
-%{--<div class="panel panel-default">--}%
-%{--<div class="panel-heading">--}%
-%{--<h4 class="panel-title">--}%
-%{--<a data-toggle="collapse" data-parent="#accordion" href="#collapseTabla">--}%
-%{--Tabla--}%
-%{--</a>--}%
-%{--</h4>--}%
-%{--</div>--}%
-
-%{--<div id="collapseTabla" class="panel-collapse collapse">--}%
-%{--<div class="panel-body">--}%
-
-%{--</div>--}%
-%{--</div>--}%
-%{--</div>--}%
-%{--<div class="panel panel-default">--}%
-%{--<div class="panel-heading">--}%
-%{--<h4 class="panel-title">--}%
-%{--<a data-toggle="collapse" data-parent="#accordion" href="#collapseDos">--}%
-%{--Párrafo Dos--}%
-%{--</a>--}%
-%{--</h4>--}%
-%{--</div>--}%
-
-%{--<div id="collapseDos" class="panel-collapse collapse">--}%
-%{--<div class="panel-body">--}%
-
-%{--</div>--}%
-%{--</div>--}%
-%{--</div>--}%
-%{--</div>--}%
 <div class="btn-group col-md-6" style="margin-bottom: 10px;">
     <g:link controller="condominio" action="list" class="btn btn-primary" title="Regresar a lista de condominios">
         <i class="fa fa-arrow-left"></i> Regresar
@@ -80,48 +29,51 @@
 </div>
 
 <div class="accordion" id="accordionExample">
-    <div class="card">
-        <div class="card-header" id="headingUno">
-            <h2 class="mb-0">
-                <button class="btn btn-primary btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseUno" aria-expanded="false" aria-controls="collapseUno">
+    %{--<div class="card">  --}%
+        %{--<div class="card-header" id="headingUno">--}%
+            %{--<h2 class="mb-0">--}%
+                <button class="btn btn-primary btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapseUno" aria-expanded="false" aria-controls="collapseUno">
                     Párrafo Uno
                 </button>
-            </h2>
-        </div>
-        <div id="collapseUno" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-            <div class="card-body">
-                <textarea name='editor1' id="parrafoUno" class="editor" rows="100" cols="80">${texto?.parrafoUno ?: parrafo1}</textarea>
+            %{--</h2>--}%
+        %{--</div>--}%
+        %{--<div id="collapseUno" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">--}%
+            <div class="card-body" >
+                <textarea name='editor1' id="parrafoUno" class="editor">${texto?.parrafoUno ?: parrafo1}</textarea>
             </div>
-        </div>
-    </div>
+        %{--</div>--}%
+    %{--</div>--}%
     <div class="card">
         <div class="card-header" id="headingTwo">
             <h2 class="mb-0">
                 <button class="btn btn-primary btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Tabla
+                    La tabla que ocupa este espacio se generará por cada persona en la impresión del reporte
                 </button>
             </h2>
         </div>
+%{--
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
             <div class="card-body">
                 <strong>NOTA:</strong> La tabla que ocupa este espacio se generará por cada persona en la impresión del reporte
             </div>
         </div>
+--}%
     </div>
-    <div class="card">
-        <div class="card-header" id="headingThree">
-            <h2 class="mb-0">
+    %{--<div class="card">--}%
+        %{--<div class="card-header" id="headingThree">--}%
+            %{--<h2 class="mb-0">--}%
                 <button class="btn btn-primary btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                     Párrafo Dos
                 </button>
-            </h2>
-        </div>
-        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+            %{--</h2>--}%
+        %{--</div>--}%
+        %{--<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">--}%
             <div class="card-body">
                 <textarea name='editor2' id="parrafoDos" class="editor" rows="100" cols="80">${texto?.parrafoDos ?: parrafo2}</textarea>
             </div>
-        </div>
-    </div>
+        %{--</div>--}%
+    %{--</div>--}%
 </div>
 
 
@@ -175,7 +127,7 @@
     %{--});--}%
 
     CKEDITOR.replace( 'editor1', {
-        height                  : 150,
+        height                  : 100,
         width                   : 1140,
         resize_enabled          : false,
         language: 'es',
@@ -191,7 +143,7 @@
     });
 
     CKEDITOR.replace( 'editor2', {
-        height                  : 200,
+        height                  : 180,
         width                   : 1140,
         resize_enabled          : false,
         language: 'es',
