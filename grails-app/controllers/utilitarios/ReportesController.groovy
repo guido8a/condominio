@@ -5,6 +5,7 @@ import com.lowagie.text.ChapterAutoNumber
 import com.lowagie.text.Chunk
 import com.lowagie.text.Phrase
 import com.lowagie.text.Rectangle
+import com.lowagie.text.html.simpleparser.HTMLWorker
 import com.lowagie.text.pdf.BaseFont
 import com.lowagie.text.pdf.DefaultFontMapper
 import com.lowagie.text.pdf.PdfTemplate
@@ -829,6 +830,18 @@ class ReportesController extends Shield{
 
         def persona = Persona.get(id)
         def condominio = Condominio.get(session.condominio.id)
+        def texto = Texto.findByCondominio(condominio)
+        def p1 = texto.parrafoUno.decodeHTML()
+        def p2 = texto.parrafoDos.decodeHTML()
+
+//        p1 = p1.replaceAll("\\*lt\\*", "&lt;")
+//        p1 = p1.replaceAll("\\*gt\\*", "&gt;")
+//        p1 = p1.replaceAll("\\*amp\\*", "&amp;")
+//        p1 = p1.replaceAll("\\*nbsp\\*", " ")
+//        p1 = p1.replaceAll(/<tr>\s*<\/tr>/, / /)
+//        p1 = p1.replaceAll(/<p>\s*<\/p>/, / /)
+
+
         def sql = "select * from personas(${condominio?.id}) where prsn__id= ${persona.id}"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
@@ -925,9 +938,10 @@ class ReportesController extends Shield{
 
         Paragraph t1 = new Paragraph();
         t1.setAlignment("Justify");
-        t1.add(new Paragraph("Luego de un atento saludo, me permito solicitarle el pago de la deuda que mantiene " +
-                "con el conjunto residencial \"Los Viñedos\", la misma que asciende a un valor de " +
-                "\$ ${totalF}, de acuerdo con el siguiente desglose:", info))
+//        t1.add(new Paragraph("Luego de un atento saludo, me permito solicitarle el pago de la deuda que mantiene " +
+//                "con el conjunto residencial \"Los Viñedos\", la misma que asciende a un valor de " +
+//                "\$ ${totalF}, de acuerdo con el siguiente desglose:", info))
+        t1.add(new Paragraph(cambiarHtml(p1), info))
         addEmptyLine(t1, 1);
         document.add(t1)
 
@@ -960,11 +974,14 @@ class ReportesController extends Shield{
 
         Paragraph t2 = new Paragraph();
         t2.setAlignment("Justify");
-        t2.add(new Paragraph( "El cobro de intereses por mora se aplica desde el 1° de abril de 2018, conforme lo determina " +
-                "nuestro Reglamento Interno en el artículo 39 literal 'p', a los valores adeudados hasta el 31 de enero " +
-                "de 2018, así como también a las deudas que superen los 2 meses de alícuotas. Por esta razón me " +
-                "permito insistir en que realice el pago lo antes posible o proponga una forma de pago enviando " +
-                "la misma al correo electrónico vinedos269@gmail.com.", info))
+//        t2.add(new Paragraph( "El cobro de intereses por mora se aplica desde el 1° de abril de 2018, conforme lo determina " +
+//                "nuestro Reglamento Interno en el artículo 39 literal 'p', a los valores adeudados hasta el 31 de enero " +
+//                "de 2018, así como también a las deudas que superen los 2 meses de alícuotas. Por esta razón me " +
+//                "permito insistir en que realice el pago lo antes posible o proponga una forma de pago enviando " +
+//                "la misma al correo electrónico vinedos269@gmail.com.", info))
+
+
+        t2.add(new Paragraph(cambiarHtml(p2), info))
         addEmptyLine(t2, 1);
         document.add(t2)
 
@@ -3256,6 +3273,18 @@ class ReportesController extends Shield{
         }else{
             render "ok"
         }
+    }
+
+    def cambiarHtml(texto){
+        String gt = ''
+        ArrayList p2 = new ArrayList()
+        StringReader sh2 = new StringReader(texto)
+        p2 = HTMLWorker.parseToList(sh2, null)
+        for (int k = 0; k < p2[0].size(); ++k){
+            gt += p2[0].get(k)
+        }
+
+        return gt
     }
 
 }

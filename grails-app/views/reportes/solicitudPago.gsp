@@ -134,6 +134,7 @@
     $("#btnGuardar").click(function () {
         var par1 = CKEDITOR.instances['parrafoUno'].getData();
         var par2 = CKEDITOR.instances['parrafoDos'].getData();
+
         $.ajax({
            type: 'POST',
             url:'${createLink(controller: 'reportes', action: 'guardarParrafosSolicitud_ajax')}',
