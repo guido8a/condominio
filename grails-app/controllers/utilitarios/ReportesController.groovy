@@ -3220,5 +3220,9 @@ class ReportesController extends Shield{
         response.getOutputStream().write(b)
     }
 
+    def solicitudPago () {
+        def condominio = Condominio.get(params.id)
+        return [condominio:condominio]
+    }
 
 }

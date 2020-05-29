@@ -250,6 +250,14 @@
                         createEditRow(id);
                     }
                 },
+                pago   : {
+                    label  : "Solicitud de Pago",
+                    icon   : "fa fa-dollar",
+                    action : function ($element) {
+                        var id = $element.data("id");
+                        location.href="${createLink(controller: 'reportes', action: 'solicitudPago')}?id=" + id
+                    }
+                },
                 eliminar : {
                     label            : "Eliminar",
                     icon             : "fa fa-trash-o",
