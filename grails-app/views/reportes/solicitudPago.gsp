@@ -85,7 +85,7 @@
         </div>
         <div id="collapseUno" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
             <div class="card-body">
-                <textarea name='editor1' id="solicitud" class="editor" rows="100" cols="80">${persona?.expensa?:texto}</textarea>
+                <textarea name='editor1' id="parrafoUno" class="editor" rows="100" cols="80">${persona?.expensa?:texto}</textarea>
             </div>
         </div>
     </div>
@@ -113,7 +113,7 @@
         </div>
         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
             <div class="card-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                <textarea name='editor2' id="parrafoDos" class="editor" rows="100" cols="80">${persona?.expensa?:texto}</textarea>
             </div>
         </div>
     </div>
@@ -159,8 +159,24 @@
     %{--});--}%
 
     CKEDITOR.replace( 'editor1', {
-        height                  : 500,
-        width                   : 1100,
+        height                  : 200,
+        width                   : 1140,
+        resize_enabled          : false,
+        language: 'es',
+        uiColor: '#9AB8F3',
+        extraPlugins: 'entities',
+        toolbar                 : [
+            ['Source', 'Font', 'FontSize', 'Scayt', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
+            ['Find', 'Replace', '-', 'SelectAll'],
+            ['Table', 'HorizontalRule', 'PageBreak'],
+            ['Bold', 'Italic', 'Underline','Subscript', 'Superscript'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-']
+        ]
+    });
+
+    CKEDITOR.replace( 'editor2', {
+        height                  : 200,
+        width                   : 1140,
         resize_enabled          : false,
         language: 'es',
         uiColor: '#9AB8F3',
