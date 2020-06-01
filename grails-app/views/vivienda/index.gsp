@@ -159,8 +159,53 @@ como máximo 30
     </div><!-- /.modal-dialog -->
 </div>
 
-<script type="text/javascript">
 
+
+
+%{--Dialogo solicitudes--}%
+<div class="modal fade col-md-12 col-xs-12" id="solicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="modalsolicitud">Generar cartas solicitando pagos</h4>
+            </div>
+
+            <div class="modal-body" id="bodysolicitud">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-1 col-xs-1">
+                        </div>
+                        <div class="col-md-3 col-xs-3">
+                            <label>Generar para deudas con </label>
+                        </div>
+                        <div class="col-md-7 col-xs-7">
+                            <g:select from="${['1':'Valores superiores a 1 alícuota',
+                                               '2':'Valores superiores a 2 alícuotas',
+                                               '3':'Valores superiores a 3 alícuotas']}"
+                                      optionValue="value" optionKey="key" name="mesesHasta_name"
+                                      id="valorHasta" class="form-control"/>
+                        </div>
+                        <div class="col-md-1 col-xs-1">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnSolicitud btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
 
     $(function () {
         $("#limpiaBuscar").click(function () {
@@ -305,6 +350,26 @@ como máximo 30
             }
         };
 
+        var solicitudPago = {
+            label: "Solicitud de Pago",
+            icon: "fa fa-print",
+            separator_before : true,
+            action : function ($element) {
+                var id = $element.data("id");
+                seleccionarAlicuotas(id);
+            }
+        };
+
+        var solicitudMonitorio = {
+            label: "Solicitud de Monitorio",
+            icon: "fa fa-print",
+            separator_before : true,
+            action : function ($element) {
+                var id = $element.data("id");
+//                cargarFechas(id);
+            }
+        };
+
         if(deuda>0){
             items.pagar = ingresos;
         }
@@ -322,6 +387,16 @@ como máximo 30
                 perfil,
                 alicuota,
                 propiedades
+            }
+        };
+
+        items.solicitudes = {
+            label: "Solicitudes",
+            icon: "fa fa-clipboard",
+            separator_before : true,
+            submenu: {
+                solicitudPago,
+                solicitudMonitorio
             }
         };
 
@@ -614,6 +689,48 @@ como máximo 30
     function imprimirExpensas (id) {
         location.href = "${g.createLink(controller:'reportes', action: 'certificadoExpensas')}?id=" + id
     }
+
+    function seleccionarAlicuotas (id) {
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'reportes', action:'alicuotas_ajax')}",
+            data    : {
+                id: id
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgSeleccionarAlicuotas",
+                    title   : "Seleccionar Alícuotas",
+//                    class   : "modal-lg",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "<i class='fa fa-times'></i> Cerrar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        aceptar : {
+                            label     : "<i class='fa fa-print'></i> Imprimir",
+                            className : "btn-success",
+                            callback  : function () {
+                                openLoader("Espere...");
+                                var vlor = $("#valorHasta").val();
+                                %{--location.href = "${g.createLink(controller: 'reportes', action: 'imprimirSolicitudes')}?vlor=" + vlor;--}%
+                                location.href = "${g.createLink(controller: 'reportes', action: 'reporteSolicitudPago')}?vlor=" + vlor + "&id=" + id;
+                                closeLoader();
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 100);
+            } //success
+        }); //ajax
+    }
+
+
 
 
 </script>

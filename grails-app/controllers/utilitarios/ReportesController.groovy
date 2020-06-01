@@ -834,13 +834,6 @@ class ReportesController extends Shield{
         def p1 = texto.parrafoUno.decodeHTML()
         def p2 = texto.parrafoDos.decodeHTML()
 
-//        p1 = p1.replaceAll("\\*lt\\*", "&lt;")
-//        p1 = p1.replaceAll("\\*gt\\*", "&gt;")
-//        p1 = p1.replaceAll("\\*amp\\*", "&amp;")
-//        p1 = p1.replaceAll("\\*nbsp\\*", " ")
-//        p1 = p1.replaceAll(/<tr>\s*<\/tr>/, / /)
-//        p1 = p1.replaceAll(/<p>\s*<\/p>/, / /)
-
 
         def sql = "select * from personas(${condominio?.id}) where prsn__id= ${persona.id}"
         def cn = dbConnectionService.getConnection()
@@ -3284,6 +3277,202 @@ class ReportesController extends Shield{
         }
 
         return gt
+    }
+
+    def alicuotas_ajax(){
+
+    }
+
+    def reporteSolicitudPago () {
+
+        def persona = Persona.get(params.id)
+        def condominio = Condominio.get(session.condominio.id)
+        def texto = Texto.findByCondominio(condominio)
+        def para = persona.sexo == 'M' ? 'Señor' : 'Señora(ita)'
+
+        def sql = "select * from personas(${condominio?.id}) where prsn__id= ${persona.id}"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+
+        def sql2 = "select * from pendiente('${new Date().format("yyyy-MM-dd")}', ${persona.edificio.id}) where prsn__id= ${persona.id} order by ingrfcha"
+        def cn2 = dbConnectionService.getConnection()
+        def data2 = cn2.rows(sql2.toString())
+
+        def sql3 = "select prsnnmbr, prsnapll, prsntelf, prsndpto from prsn, admn where prsn.prsn__id = admn.prsn__id and cndm__id = '${condominio?.id}' and admnfcfn is null"
+        def cn3 = dbConnectionService.getConnection()
+        def data3 = cn3.rows(sql3.toString())
+
+        def totalIntereses = 0
+        def totalFinal = 0
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        def texto1 = formatearTexto(texto?.parrafoUno ?: '')
+        def texto2 = formatearTexto(texto?.parrafoDos ?: '')
+        def nombreAPoner = ''
+
+        if(persona?.nombre != persona?.nombrePropietario) {
+            nombreAPoner =  (persona?.nombre ?: '') + ' ' + (persona?.apellido ?: '') + ' / ' + (persona?.nombrePropietario ?: '') + ' ' + (persona?.apellidoPropietario ?: '')
+        } else {
+            nombreAPoner = (persona?.nombre ?: '') + ' ' + (persona?.apellido ?: '')
+        }
+
+        def content = "<!DOCTYPE HTML>\n<html>\n"
+        content += "<head>\n"
+        content += "<style language='text/css'>\n"
+        content += "" +
+                " div.header {\n" +
+                "   display    : block;\n" +
+                "   text-align : center;\n" +
+                "   position   : running(header);\n" +
+                "}\n" +
+                "div.footer {\n" +
+                "   display    : block;\n" +
+                "   text-align : center;\n" +
+                "   font-size  : 9pt;\n" +
+                "   position   : running(footer);\n" +
+                "} " +
+                " @page {\n" +
+                "   size   : 21cm 29.7cm;  /*width height */\n" +
+                "   margin : 2.0cm 1.5cm 1.5cm 2.0cm;\n" +
+                "}\n" +
+                "@page {\n" +
+                "   @top-center {\n" +
+                "       content : element(header)\n" +
+                "   }\n" +
+                "}" +
+                "@page {\n" +
+                "   @bottom-center {\n" +
+                "       content : element(footer)\n" +
+                "   }\n" +
+                "}" +
+                ".hoja {\n" +
+                "   width       : 16.5cm; /*21-2.5-3*/\n" +
+                "   font-family : arial;\n" +
+                "   font-size   : 12pt;\n" +
+                "}\n" +
+                "table {\n" +
+                "   border-collapse: collapse;\n" +
+                "}\n"
+                "table, th, td {\n" +
+                "   border: 1px solid black;\n" +
+                "}\n"
+        content += "</style>\n"
+        content += "</head>\n"
+        content += "<body>\n"
+        content += "<div class='footer'>" +
+                (condominio?.nombre ?: '') + "  •  " + (condominio?.direccion ?: '') + "  •  " + (condominio?.telefono ?: '') +
+                "</div>"
+
+        content += "<div class='hoja'>\n"
+        content += "<p style='font-size:16pt; font-weight : bold; text-align: center'>" + (condominio?.nombre?.toUpperCase() ?: '') + "</p>\n"
+        content += "<p style='font-size:12pt; text-align: right'>" + "Quito, " + util.fechaConFormato(fecha: new Date(), formato: 'dd MMMM yyyy') + "</p>\n"
+
+        content += "<p style='font-size:12pt; text-align: left'>" + para + "</p>\n"
+        content += "<p style='font-size:12pt; text-align: left; margin-top: -13px'>" + nombreAPoner + "</p>\n"
+        content += "<p style='font-size:12pt; text-align: left; margin-top: -13px'>" +  (persona?.edificio?.descripcion ?: '') + ', Departamento: ' + (persona?.departamento ?: '')+ "</p>\n"
+        content += "<p style='font-size:12pt; text-align: left; margin-top: -13px'>" + "Presente," + "</p>\n"
+        content += texto1
+        content += "<div style='text-align:center'>"
+        content += "<table border='1' style='width: 90%;'>"
+        content += "<thead>"
+        content += "<tr>"
+        content += "<th width='55%' style='text-align:center'>"
+        content += "Concepto"
+        content += "</th>"
+        content += "<th width='15%' style='text-align:center'>"
+        content += "Valor"
+        content += "</th>"
+        content += "<th width='15%' style='text-align:center'>"
+        content += "Intereses"
+        content += "</th>"
+        content += "<th width='15%' style='text-align:center'>"
+        content += "Total"
+        content += "</th>"
+        content += "</tr>"
+        content += "</thead>"
+        content += "<tbody>"
+        data2.each {pendiente->
+            if (pendiente.sldo > 0) {
+                content += "<tr>"
+                content += "<td>"
+                content += pendiente.oblg
+                content += "</td>"
+                content += "<td style='text-align: right'>"
+                content += pendiente.sldo
+                content += "</td>"
+                content += "<td style='text-align: right'>"
+                content += pendiente.ingrintr
+                content += "</td>"
+                content += "<td style='text-align: right'>"
+                content += (pendiente.sldo + pendiente.ingrintr)
+                content += "</td>"
+                content += "</tr>"
+                totalIntereses += pendiente.ingrintr
+                totalFinal += (pendiente.sldo + pendiente.ingrintr)
+            }
+        }
+        content += "<tr style='font-weight : bold'>"
+        content += "<td>"
+        content += "Total"
+        content += "</td>"
+        content += "<td style='text-align: right'>"
+        content += data[0].prsnsldo
+        content += "</td>"
+        content += "<td style='text-align: right'>"
+        content += totalIntereses
+        content += "</td>"
+        content += "<td style='text-align: right'>"
+        content +=  totalFinal
+        content += "</td>"
+        content += "</tr>"
+        content += "</tbody>"
+        content += "</table>"
+        content += "</div>"
+        content += texto2
+        content += "Agradezco su oportuna atención a la presente, lo que nos ayudará a cubrir los gastos de servicios\n" +
+                "básicos, mantenimiento, conserje, vigilancia y mejora de los bienes comunales."
+        content += "<br/>"
+        content += "<p style='margin-bottom: 60px'>Atentamente,</p>"
+        content += data3[0].prsnnmbr + " " + data3[0].prsnapll + "<br/>"
+        content += "ADMINISTRADOR <br/>"
+        content += "Cel: " + (data3[0].prsntelf ?: '') + ", dpto.: " + (data3[0].prsndpto ?: '') + "<br/>"
+        content += "</div>\n"
+        content += "</body>\n"
+        content += "</html>"
+
+        ITextRenderer renderer = new ITextRenderer();
+        renderer.setDocumentFromString(content);
+        renderer.layout();
+        renderer.createPDF(baos);
+        byte[] b = baos.toByteArray();
+
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=solicituPago_${persona?.nombre + "_" + persona?.apellido + "_" +new Date().format("dd-MM-yyyy")}")
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+
+    }
+
+    def formatearTexto(text){
+        text = text.replaceAll("&lt;", "*lt*")
+        text = text.replaceAll("&gt;", "*gt*")
+        text = text.replaceAll("&amp;", "*amp*")
+        text = text.replaceAll("<p>&nbsp;</p>", "<br/>")
+        text = text.replaceAll("&nbsp;", " ")
+
+        text = text.decodeHTML()
+
+        text = text.replaceAll("\\*lt\\*", "&lt;")
+        text = text.replaceAll("\\*gt\\*", "&gt;")
+        text = text.replaceAll("\\*amp\\*", "&amp;")
+        text = text.replaceAll("\\*nbsp\\*", " ")
+        text = text.replaceAll(/<tr>\s*<\/tr>/, / /)    //2 <tr> seguidos <tr>espacios</tr>
+
+
+        text = text.replaceAll(~"\\?\\_debugResources=y\\&n=[0-9]*", "")
+
+        return text
     }
 
 }
