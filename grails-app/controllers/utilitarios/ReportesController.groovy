@@ -74,7 +74,7 @@ class ReportesController extends Shield{
         def edificios = Edificio.findAllByCondominio(condominio)
 
 
-        return [anios: res.date_part, edificios: edificios]
+        return [anios: res.date_part, edificios: edificios, condominio: condominio]
     }
 
     def reportes() {
@@ -3250,8 +3250,9 @@ class ReportesController extends Shield{
                 "Agradezco su oportuna atención a la presente, lo que nos ayudará a cubrir los gastos de servicios " +
                 "básicos, mantenimiento, conserje, vigilancia y mejora de los bienes comunales." +
                 "<br/><br/> Atentamente,"
+        def nota = "Nota: No se cobrarán los intereses si el pago se realiza hasta el 1° de Octubre de xxxx"
 
-        return [condominio:condominio, parrafo1: parrafo1, parrafo2: parrafo2, texto: texto]
+        return [condominio:condominio, parrafo1: parrafo1, parrafo2: parrafo2, texto: texto, nota: nota]
     }
 
     def guardarParrafosSolicitud_ajax() {
@@ -3259,6 +3260,7 @@ class ReportesController extends Shield{
         def texto = Texto.get(params.id)
         texto.parrafoUno = params.parrafo1
         texto.parrafoDos = params.parrafo2
+        texto.nota = params.nota
 
         if(!texto.save(flush: true)){
             render "no"
@@ -3309,6 +3311,7 @@ class ReportesController extends Shield{
 
         def texto1 = formatearTexto(texto?.parrafoUno ?: '')
         def texto2 = formatearTexto(texto?.parrafoDos ?: '')
+        def nota = formatearTexto(texto?.nota ?: '')
         def nombreAPoner = ''
 
         if(persona?.nombre != persona?.nombrePropietario) {
@@ -3354,7 +3357,7 @@ class ReportesController extends Shield{
                 "table {\n" +
                 "   border-collapse: collapse;\n" +
                 "}\n"
-                "table, th, td {\n" +
+        "table, th, td {\n" +
                 "   border: 1px solid black;\n" +
                 "}\n"
         content += "</style>\n"
@@ -3437,6 +3440,7 @@ class ReportesController extends Shield{
         content += data3[0].prsnnmbr + " " + data3[0].prsnapll + "<br/>"
         content += "ADMINISTRADOR <br/>"
         content += "Cel: " + (data3[0].prsntelf ?: '') + ", dpto.: " + (data3[0].prsndpto ?: '') + "<br/>"
+        content += nota
         content += "</div>\n"
         content += "</body>\n"
         content += "</html>"
@@ -3451,7 +3455,6 @@ class ReportesController extends Shield{
         response.setHeader("Content-disposition", "attachment; filename=solicituPago_${persona?.nombre + "_" + persona?.apellido + "_" +new Date().format("dd-MM-yyyy")}")
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
-
     }
 
     def formatearTexto(text){
@@ -3469,10 +3472,20 @@ class ReportesController extends Shield{
         text = text.replaceAll("\\*nbsp\\*", " ")
         text = text.replaceAll(/<tr>\s*<\/tr>/, / /)    //2 <tr> seguidos <tr>espacios</tr>
 
-
         text = text.replaceAll(~"\\?\\_debugResources=y\\&n=[0-9]*", "")
 
         return text
     }
 
+    def tablaSolicitudPago_ajax() {
+
+        def condominio = Condominio.get(params.id)
+        def valor = params.valor
+
+        def sql = "select * from personas(${condominio?.id}) where prsnsldo > alctvlor * ${valor} order by edifdscr, prsndpto"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+
+        return [condominio: condominio, alicuota:valor, personas: data]
+    }
 }

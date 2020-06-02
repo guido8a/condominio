@@ -733,16 +733,11 @@
             updatePeriodoSinTodo("20");
         });
 
-
-
-
         $("#btnTodosPrv").button().click(function () {
             $("#hidVal").val("-1");
             $("#txtValor").val("Todos");
             return false;
         });
-
-
 
         $(".btnDeudas").click(function () {
             var fechaI = $("#fechaImprime").val();
@@ -752,7 +747,31 @@
 
         $(".btnSolicitud").click(function () {
             var vlor = $("#valorHasta").val();
-            location.href = "${g.createLink(controller: 'reportes', action: 'imprimirSolicitudes')}?vlor=" + vlor;
+            %{--location.href = "${g.createLink(controller: 'reportes', action: 'imprimirSolicitudes')}?vlor=" + vlor;--}%
+
+            $.ajax({
+                type: 'POST',
+                url: '${createLink(controller: 'reportes', action: 'tablaSolicitudPago_ajax')}',
+                data:{
+                    id: '${condominio?.id}',
+                    valor: vlor
+                },
+                success: function(msg){
+                    bootbox.dialog({
+                        title   : "Personas con solicitud de pago",
+                        message : msg,
+                        class   : "modal-lg",
+                        buttons : {
+                              cancelar      : {
+                                label     : "Cancelar",
+                                className : "btn-default",
+                                callback  : function () {
+                                }
+                            }
+                        }
+                    });
+                }
+            });
         });
 
         $(".btnMonitorio").click(function () {
