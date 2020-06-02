@@ -54,7 +54,11 @@
         openLoader("Cargando...");
         var vlor = '${alicuota}';
         var id = $(this).data("id");
-        location.href = "${g.createLink(controller: 'reportes', action: 'reporteSolicitudPago')}?vlor=" + vlor + "&id=" + id;
+        if(${tipo == '1'}){
+            location.href = "${g.createLink(controller: 'reportes', action: 'reporteSolicitudPago')}?vlor=" + vlor + "&id=" + id;
+        }else{
+            location.href = "${g.createLink(controller: 'reportes', action: 'reporteSolicitudMonitorio')}?vlor=" + vlor + "&id=" + id;
+        }
         closeLoader();
     });
 </script>

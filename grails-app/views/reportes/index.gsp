@@ -754,7 +754,8 @@
                 url: '${createLink(controller: 'reportes', action: 'tablaSolicitudPago_ajax')}',
                 data:{
                     id: '${condominio?.id}',
-                    valor: vlor
+                    valor: vlor,
+                    tipo: 1
                 },
                 success: function(msg){
                     bootbox.dialog({
@@ -776,7 +777,32 @@
 
         $(".btnMonitorio").click(function () {
             var vlor = $("#valorHastaMn").val();
-            location.href = "${g.createLink(controller: 'reportes', action: 'imprimirMonitorio')}?vlor=" + vlor;
+            %{--location.href = "${g.createLink(controller: 'reportes', action: 'imprimirMonitorio')}?vlor=" + vlor;--}%
+//
+            $.ajax({
+                type: 'POST',
+                url: '${createLink(controller: 'reportes', action: 'tablaSolicitudPago_ajax')}',
+                data:{
+                    id: '${condominio?.id}',
+                    valor: vlor,
+                    tipo: 2
+                },
+                success: function(msg){
+                    bootbox.dialog({
+                        title   : "Personas con solicitud de monitorio",
+                        message : msg,
+                        class   : "modal-lg",
+                        buttons : {
+                            cancelar      : {
+                                label     : "Cancelar",
+                                className : "btn-default",
+                                callback  : function () {
+                                }
+                            }
+                        }
+                    });
+                }
+            });
         });
 
         function crearXML(mes, anio, override) {

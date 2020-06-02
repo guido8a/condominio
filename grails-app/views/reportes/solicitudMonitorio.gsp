@@ -1,6 +1,13 @@
 <%--
   Created by IntelliJ IDEA.
   User: fabricio
+  Date: 02/06/20
+  Time: 11:53
+--%>
+
+<%--
+  Created by IntelliJ IDEA.
+  User: fabricio
   Date: 29/05/20
   Time: 9:57
 --%>
@@ -8,21 +15,21 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Solicitud de Pago</title>
+    <title>Solicitud de Monitorio</title>
 
     <script src="${resource(dir: 'js/plugins/ckeditor', file: 'ckeditor.js')}"></script>
 
     <style>
-        .colo{
-            color: #f8fffd;
-        }
+    .colo{
+        color: #f8fffd;
+    }
     </style>
 </head>
 
 <body>
 
 <div style="text-align: center; margin-top: -30px;">
-    <h3><strong>Solicitud de pago</strong> <br/> <strong>Condominio:</strong> ${condominio?.nombre}</h3>
+    <h3><strong>Solicitud de monitorio</strong> <br/> <strong>Condominio:</strong> ${condominio?.nombre}</h3>
 </div>
 
 
@@ -59,12 +66,12 @@
         <textarea name='editor2' id="parrafoDos" class="editor" rows="100" cols="80">${texto?.parrafoDos ?: parrafo2}</textarea>
     </div>
 
-    <button class="btn btn-primary btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-       <strong class="colo">Nota</strong>
-    </button>
-    <div class="card-body">
-        <textarea name='editor3' id="nota" class="editor" rows="100" cols="80">${texto?.nota ?: nota}</textarea>
-    </div>
+    %{--<button class="btn btn-primary btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">--}%
+        %{--<strong class="colo">Nota</strong>--}%
+    %{--</button>--}%
+    %{--<div class="card-body">--}%
+        %{--<textarea name='editor3' id="nota" class="editor" rows="100" cols="80">${texto?.nota ?: nota}</textarea>--}%
+    %{--</div>--}%
 </div>
 
 
@@ -73,7 +80,7 @@
     $("#btnGuardar").click(function () {
         var par1 = CKEDITOR.instances['parrafoUno'].getData();
         var par2 = CKEDITOR.instances['parrafoDos'].getData();
-        var par3 = CKEDITOR.instances['nota'].getData();
+//        var par3 = CKEDITOR.instances['nota'].getData();
 
         $.ajax({
             type: 'POST',
@@ -82,8 +89,9 @@
                 id: '${texto?.id}',
                 parrafo1: par1,
                 parrafo2: par2,
-                nota: par3,
-                tipo: 1
+                tipo: 2
+//                ,
+//                nota: par3
             },
             success: function (msg) {
                 if(msg == 'ok'){
@@ -127,21 +135,21 @@
         ]
     });
 
-    CKEDITOR.replace( 'editor3', {
-        height                  : 80,
-        width                   : 1140,
-        resize_enabled          : false,
-        language: 'es',
-        uiColor: '#9AB8F3',
-        extraPlugins: 'entities',
-        toolbar                 : [
-            ['Source', 'Font', 'FontSize', 'Scayt', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
-            ['Find', 'Replace', '-', 'SelectAll'],
-            ['Table', 'HorizontalRule', 'PageBreak'],
-            ['Bold', 'Italic', 'Underline','Subscript', 'Superscript'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-']
-        ]
-    });
+//    CKEDITOR.replace( 'editor3', {
+//        height                  : 80,
+//        width                   : 1140,
+//        resize_enabled          : false,
+//        language: 'es',
+//        uiColor: '#9AB8F3',
+//        extraPlugins: 'entities',
+//        toolbar                 : [
+//            ['Source', 'Font', 'FontSize', 'Scayt', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
+//            ['Find', 'Replace', '-', 'SelectAll'],
+//            ['Table', 'HorizontalRule', 'PageBreak'],
+//            ['Bold', 'Italic', 'Underline','Subscript', 'Superscript'],
+//            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-']
+//        ]
+//    });
 
 </script>
 

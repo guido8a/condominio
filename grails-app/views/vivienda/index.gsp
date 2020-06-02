@@ -390,15 +390,15 @@ como máximo 30
             }
         };
 
-        items.solicitudes = {
-            label: "Solicitudes",
-            icon: "fa fa-clipboard",
-            separator_before : true,
-            submenu: {
-                solicitudPago,
-                solicitudMonitorio
-            }
-        };
+//        items.solicitudes = {
+//            label: "Solicitudes",
+//            icon: "fa fa-clipboard",
+//            separator_before : true,
+//            submenu: {
+//                solicitudPago,
+//                solicitudMonitorio
+//            }
+//        };
 
         if(deuda <= 0 && codigo == 'P'){
             items.certificado = certificado;

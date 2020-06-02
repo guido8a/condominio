@@ -3231,7 +3231,7 @@ class ReportesController extends Shield{
 
     def solicitudPago () {
         def condominio = Condominio.get(params.id)
-        def texto = Texto.findByCondominio(condominio)
+        def texto = Texto.findByCondominioAndCodigo(condominio,'SLCT')
 
         if(!texto){
             texto = new Texto()
@@ -3248,8 +3248,7 @@ class ReportesController extends Shield{
                 "permito insistir en que realice el pago lo antes posible o proponga una forma de pago enviando la " +
                 "misma al correo electrónico ${condominio?.email ?: ''}.<br>" +
                 "Agradezco su oportuna atención a la presente, lo que nos ayudará a cubrir los gastos de servicios " +
-                "básicos, mantenimiento, conserje, vigilancia y mejora de los bienes comunales." +
-                "<br/><br/> Atentamente,"
+                "básicos, mantenimiento, conserje, vigilancia y mejora de los bienes comunales."
         def nota = "Nota: No se cobrarán los intereses si el pago se realiza hasta el 1° de Octubre de xxxx"
 
         return [condominio:condominio, parrafo1: parrafo1, parrafo2: parrafo2, texto: texto, nota: nota]
@@ -3260,7 +3259,9 @@ class ReportesController extends Shield{
         def texto = Texto.get(params.id)
         texto.parrafoUno = params.parrafo1
         texto.parrafoDos = params.parrafo2
-        texto.nota = params.nota
+        if(params.tipo == '1'){
+            texto.nota = params.nota
+        }
 
         if(!texto.save(flush: true)){
             render "no"
@@ -3478,7 +3479,6 @@ class ReportesController extends Shield{
     }
 
     def tablaSolicitudPago_ajax() {
-
         def condominio = Condominio.get(params.id)
         def valor = params.valor
 
@@ -3486,6 +3486,227 @@ class ReportesController extends Shield{
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 
-        return [condominio: condominio, alicuota:valor, personas: data]
+        return [condominio: condominio, alicuota:valor, personas: data, tipo: params.tipo]
+    }
+
+    def solicitudMonitorio(){
+        def condominio = Condominio.get(params.id)
+        def texto = Texto.findByCondominioAndCodigo(condominio,'MNTR')
+
+        if(!texto){
+            texto = new Texto()
+            texto.codigo = 'MNTR'
+            texto.condominio = condominio
+            texto.save(flush: true)
+        }
+
+        def parrafo1 = "Luego de un atento saludo, me permito indicarle que conforme a lo acordado en la Asamblea " +
+                "General de condóminos realizada el 28 de enero de 2020, se utilizará un proceso legal para el " +
+                "cobro de los valores que mantiene pendientes de pago:"
+        def parrafo2 = "El abogado llevará su trámite mediante un Proceso Monitorio y ofrece realizar el cobro de " +
+                "todos sus adeudos en un plazo de 15 días término, añadiendo a su deuda actual el valor de \$ 25" +
+                "por gestión de cobro y el 10% de comisión, tal como se detalla en el cuadro anterior." +
+                "Para evitar este proceso legal le invito a acercarse a conversar con la adminstración hasta el" +
+                "viernes 20 de febrero de 2020, para acordar un compromiso de pago."
+
+        return [condominio:condominio, parrafo1: parrafo1, parrafo2: parrafo2, texto: texto]
+    }
+
+    def reporteSolicitudMonitorio() {
+        def persona = Persona.get(params.id)
+        def condominio = Condominio.get(session.condominio.id)
+        def texto = Texto.findByCondominio(condominio)
+        def para = persona.sexo == 'M' ? 'Señor' : 'Señora(ita)'
+
+        def sql = "select * from personas(${condominio?.id}) where prsn__id= ${persona.id}"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+
+        def sql2 = "select prsn__id, oblg, prsn, prsndpto, sldo, mess, ingrintr, sldo + ingrintr total " +
+                "from pendiente('${new Date().format("yyyy-MM-dd")}', ${persona.edificio.id}) where prsn__id = " +
+                "${persona.id} order by ingrfcha"
+        def cn2 = dbConnectionService.getConnection()
+        def data2 = cn2.rows(sql2.toString())
+
+        def sql3 = "select prsnnmbr, prsnapll, prsntelf, prsndpto from prsn, admn where prsn.prsn__id = admn.prsn__id and cndm__id = '${condominio?.id}' and admnfcfn is null"
+        def cn3 = dbConnectionService.getConnection()
+        def data3 = cn3.rows(sql3.toString())
+
+        def totalIntereses = 0
+        def totalFinal = 0
+        def suma = 0
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        def texto1 = formatearTexto(texto?.parrafoUno ?: '')
+        def texto2 = formatearTexto(texto?.parrafoDos ?: '')
+//        def nota = formatearTexto(texto?.nota ?: '')
+        def nombreAPoner = "${persona.nombrePropietario} ${persona.apellidoPropietario}"
+
+//        if(persona?.nombre != persona?.nombrePropietario) {
+//            nombreAPoner =  (persona?.nombre ?: '') + ' ' + (persona?.apellido ?: '') + ' / ' + (persona?.nombrePropietario ?: '') + ' ' + (persona?.apellidoPropietario ?: '')
+//        } else {
+//            nombreAPoner = (persona?.nombre ?: '') + ' ' + (persona?.apellido ?: '')
+//        }
+
+        def content = "<!DOCTYPE HTML>\n<html>\n"
+        content += "<head>\n"
+        content += "<style language='text/css'>\n"
+        content += "" +
+                " div.header {\n" +
+                "   display    : block;\n" +
+                "   text-align : center;\n" +
+                "   position   : running(header);\n" +
+                "}\n" +
+                "div.footer {\n" +
+                "   display    : block;\n" +
+                "   text-align : center;\n" +
+                "   font-size  : 9pt;\n" +
+                "   position   : running(footer);\n" +
+                "} " +
+                " @page {\n" +
+                "   size   : 21cm 29.7cm;  /*width height */\n" +
+                "   margin : 2.0cm 1.5cm 1.5cm 2.0cm;\n" +
+                "}\n" +
+                "@page {\n" +
+                "   @top-center {\n" +
+                "       content : element(header)\n" +
+                "   }\n" +
+                "}" +
+                "@page {\n" +
+                "   @bottom-center {\n" +
+                "       content : element(footer)\n" +
+                "   }\n" +
+                "}" +
+                ".hoja {\n" +
+                "   width       : 16.5cm; /*21-2.5-3*/\n" +
+                "   font-family : arial;\n" +
+                "   font-size   : 12pt;\n" +
+                "}\n" +
+                "table {\n" +
+                "   border-collapse: collapse;\n" +
+                "}\n"
+        "table, th, td {\n" +
+                "   border: 1px solid black;\n" +
+                "}\n"
+        content += "</style>\n"
+        content += "</head>\n"
+        content += "<body>\n"
+        content += "<div class='footer'>" +
+                (condominio?.nombre ?: '') + "  •  " + (condominio?.direccion ?: '') + "  •  " + (condominio?.telefono ?: '') +
+                "</div>"
+
+        content += "<div class='hoja'>\n"
+        content += "<p style='font-size:16pt; font-weight : bold; text-align: center'>" + (condominio?.nombre?.toUpperCase() ?: '') + "</p>\n"
+        content += "<p style='font-size:12pt; text-align: right'>" + "Quito, " + util.fechaConFormato(fecha: new Date(), formato: 'dd MMMM yyyy') + "</p>\n"
+
+        content += "<p style='font-size:12pt; text-align: left'>" + para + "</p>\n"
+        content += "<p style='font-size:12pt; text-align: left; margin-top: -13px'>" + nombreAPoner + "</p>\n"
+        content += "<p style='font-size:12pt; text-align: left; margin-top: -13px'>" +  (persona?.edificio?.descripcion ?: '') + ', Departamento: ' + (persona?.departamento ?: '')+ "</p>\n"
+        content += "<p style='font-size:12pt; text-align: left; margin-top: -13px'>" + "Presente," + "</p>\n"
+        content += texto1
+        content += "<div style='text-align:center'>"
+        content += "<table border='1' style='width: 90%;'>"
+        content += "<thead>"
+        content += "<tr>"
+        content += "<th width='30%' style='text-align:center'>"
+        content += "Concepto"
+        content += "</th>"
+        content += "<th width='15%' style='text-align:center'>"
+        content += "Valor"
+        content += "</th>"
+        content += "<th width='15%' style='text-align:center'>"
+        content += "Meses"
+        content += "</th>"
+        content += "<th width='15%' style='text-align:center'>"
+        content += "Intereses"
+        content += "</th>"
+        content += "<th width='15%' style='text-align:center'>"
+        content += "Total"
+        content += "</th>"
+        content += "</tr>"
+        content += "</thead>"
+        content += "<tbody>"
+        data2.each {pendiente->
+            if (pendiente.sldo > 0) {
+                content += "<tr>"
+                content += "<td>"
+                content += pendiente.oblg
+                content += "</td>"
+                content += "<td style='text-align: right'>"
+                content += pendiente.sldo
+                content += "</td>"
+                content += "<td style='text-align: right'>"
+                content += pendiente.mess
+                content += "</td>"
+                content += "<td style='text-align: right'>"
+                content += pendiente.ingrintr
+                content += "</td>"
+                content += "<td style='text-align: right'>"
+                content += pendiente.total
+                content += "</td>"
+                content += "</tr>"
+                suma += pendiente.total
+            }
+        }
+
+        def ttal1 = Math.round(0.1 * suma * 100)/100
+        def ttal2 = ttal1 + suma + 25
+
+        content += "<tr style='font-weight : bold'>"
+        content += "<td colspan='4' style='text-align: left'>"
+        content += "Total"
+        content += "</td>"
+        content += "<td style='text-align: right'>"
+        content += (suma ?:0)
+        content += "</td>"
+        content += "</tr>"
+        content += "<tr>"
+        content += "<td colspan='4' style='text-align: left'>"
+        content += "Abogado - Gestión de cobro"
+        content += "</td>"
+        content += "<td style='text-align: right'>"
+        content += "25.00"
+        content += "</td>"
+        content += "</tr>"
+        content += "<tr>"
+        content += "<td colspan='4' style='text-align: left'>"
+        content += "Abogado - 10% de comisión por el cobro realizado"
+        content += "</td>"
+        content += "<td style='text-align: right'>"
+        content += (ttal1 ?: 0)
+        content += "</td>"
+        content += "</tr>"
+        content += "<tr style='font-weight : bold'>"
+        content += "<td colspan='4' style='text-align: left'>"
+        content += "<strong>Gran Total</strong>"
+        content += "</td>"
+        content += "<td style='text-align: right'>"
+        content += (ttal2 ?: 0)
+        content += "</td>"
+        content += "</tr>"
+        content += "</tbody>"
+        content += "</table>"
+        content += "</div>"
+        content += texto2
+        content += "<p style='margin-bottom: 60px'>Atentamente,</p>"
+        content += data3[0].prsnnmbr + " " + data3[0].prsnapll + "<br/>"
+        content += "ADMINISTRADOR <br/>"
+        content += "Cel: " + (data3[0].prsntelf ?: '') + ", dpto.: " + (data3[0].prsndpto ?: '') + "<br/>"
+//        content += nota
+        content += "</div>\n"
+        content += "</body>\n"
+        content += "</html>"
+
+        ITextRenderer renderer = new ITextRenderer();
+        renderer.setDocumentFromString(content);
+        renderer.layout();
+        renderer.createPDF(baos);
+        byte[] b = baos.toByteArray();
+
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=solicituMonitorio_${persona?.nombre + "_" + persona?.apellido + "_" +new Date().format("dd-MM-yyyy")}")
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
     }
 }

@@ -258,6 +258,14 @@
                         location.href="${createLink(controller: 'reportes', action: 'solicitudPago')}?id=" + id
                     }
                 },
+                monitorio   : {
+                    label  : "Solicitud de Monitorio",
+                    icon   : "fa fa-clipboard",
+                    action : function ($element) {
+                        var id = $element.data("id");
+                        location.href="${createLink(controller: 'reportes', action: 'solicitudMonitorio')}?id=" + id
+                    }
+                },
                 eliminar : {
                     label            : "Eliminar",
                     icon             : "fa fa-trash-o",
