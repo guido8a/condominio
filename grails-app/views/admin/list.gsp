@@ -80,25 +80,25 @@
         var $form = $("#frmAdmin");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
-        $btn.replaceWith(spinner);
+            $btn.replaceWith(spinner);
             openLoader("Guardando Administrador");
-                    $.ajax({
+            $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
                 success : function (msg) {
-                var parts = msg.split("*");
-                log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                setTimeout(function() {
-                    if (parts[0] == "SUCCESS") {
-                        location.reload(true);
-                    } else {
-                        spinner.replaceWith($btn);
-                        return false;
-                    }
-                }, 1000);
-            }
-        });
+                    var parts = msg.split("*");
+                    log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
+                    setTimeout(function() {
+                        if (parts[0] == "SUCCESS") {
+                            location.reload(true);
+                        } else {
+                            spinner.replaceWith($btn);
+                            return false;
+                        }
+                    }, 1000);
+                }
+            });
         } else {
             return false;
         } //else
@@ -121,7 +121,7 @@
                     className : "btn-danger",
                     callback  : function () {
                         openLoader("Eliminando Admin");
-                                $.ajax({
+                        $.ajax({
                             type    : "POST",
                             url     : '${createLink(controller:'admin', action:'delete_ajax')}',
                             data    : {
@@ -147,7 +147,7 @@
     function createEditRow(id) {
         var title = id ? "Editar el Administrador" : "Crear un Administrador";
         var data = id ? { id: id } : {};
-                $.ajax({
+        $.ajax({
             type    : "POST",
             url     : "${createLink(controller:'admin', action:'form_ajax')}",
             data    : data,
@@ -155,7 +155,7 @@
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
                     title   : title,
-                    
+
                     message : msg,
                     buttons : {
                         cancelar : {
@@ -188,7 +188,7 @@
             return false;
         });
 
-                $("tbody>tr").contextMenu({
+        $("tbody>tr").contextMenu({
             items  : {
                 header   : {
                     label  : "Acciones",
@@ -198,56 +198,100 @@
                     label  : "Ver",
                     icon   : "fa fa-search",
                     action : function ($element) {
-            var id = $element.data("id");
-                                $.ajax({
-                type    : "POST",
-                url     : "${createLink(controller:'admin', action:'show_ajax')}",
-                data    : {
-                    id : id
+                        var id = $element.data("id");
+                        $.ajax({
+                            type    : "POST",
+                            url     : "${createLink(controller:'admin', action:'show_ajax')}",
+                            data    : {
+                                id : id
+                            },
+                            success : function (msg) {
+                                bootbox.dialog({
+                                    title   : "Ver Admin",
+                                    message : msg,
+                                    buttons : {
+                                        ok : {
+                                            label     : "Aceptar",
+                                            className : "btn-primary",
+                                            callback  : function () {
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
                 },
-                success : function (msg) {
-                    bootbox.dialog({
-                        title   : "Ver Admin",
-                        message : msg,
-                        buttons : {
-                            ok : {
-                                label     : "Aceptar",
-                                className : "btn-primary",
-                                callback  : function () {
-                                }
+//        editar   : {
+//            label  : "Editar",
+//                icon   : "fa fa-pencil",
+//                action : function ($element) {
+//                var id = $element.data("id");
+//                createEditRow(id);
+//            }
+//        },
+                cerrar   : {
+                    label  : "Cerrar administración",
+                    icon   : "fa fa-times-circle",
+                    separator_before : true,
+                    action : function ($element) {
+                        var id = $element.data("id");
+                        cerrarAdministracion(id);
+                    }
+                }
+//                ,
+//                eliminar : {
+//                    label            : "Eliminar",
+//                    icon             : "fa fa-trash-o",
+//                    separator_before : true,
+//                    action           : function ($element) {
+//                        var id = $element.data("id");
+//                        deleteRow(id);
+//                    }
+//                }
+            },
+            onShow : function ($element) {
+                $element.addClass("success");
+            },
+            onHide : function ($element) {
+                $(".success").removeClass("success");
+            }
+        });
+    });
+
+
+    function cerrarAdministracion(id) {
+        $.ajax({
+           type: 'POST',
+            url:'${createLink(controller: 'admin', action: 'cerrar_ajax')}',
+            data:{
+                id:id
+            },
+            success: function (msg){
+                bootbox.dialog({
+                    title   : "Cierre de período de administración",
+                    message : msg,
+                    class   : "modal-lg",
+                    buttons : {
+                        cancelar      : {
+                            label     : "Salir",
+                            className : "btn-default",
+                            callback  : function () {
+                            }
+                        },
+                        guardar      : {
+                            label     : "Guardar",
+                            className : "btn-success",
+                            callback  : function () {
                             }
                         }
-                    });
-                }
-            });
-        }
-    },
-        editar   : {
-            label  : "Editar",
-                icon   : "fa fa-pencil",
-                action : function ($element) {
-                var id = $element.data("id");
-                createEditRow(id);
+                    }
+                });
             }
-        },
-        eliminar : {
-            label            : "Eliminar",
-                icon             : "fa fa-trash-o",
-                separator_before : true,
-                action           : function ($element) {
-                var id = $element.data("id");
-                deleteRow(id);
-            }
-        }
-    },
-        onShow : function ($element) {
-        $element.addClass("success");
-        },
-        onHide : function ($element) {
-        $(".success").removeClass("success");
-        }
-    });
-    });
+        });
+    }
+
+
 </script>
 
 </body>

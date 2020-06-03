@@ -248,4 +248,17 @@ class AdminController extends Shield {
         return [ingreso: ingreso, dpto: params.departamento, desc: params.descripcion, valor: params.valor, actual: params.estadoActual, comentario: ingreso?.revision, proveedor: params.proveedor]
     }
 
+    def cerrar_ajax(){
+
+        def administración = Admin.get(params.id)
+        def condominio = Condominio.get(session.condominio.id)
+//        def sql3 = "select prsnnmbr, prsnapll, prsntelf, prsndpto from prsn, admn where prsn.prsn__id = admn.prsn__id and cndm__id = '${condominio?.id}' and admnfcfn is null"
+//        println("sql " + sql3)
+//        def cn3 = dbConnectionService.getConnection()
+//        def data3 = cn3.rows(sql3.toString())
+
+        return[adminInstance: administración]
+
+    }
+
 }

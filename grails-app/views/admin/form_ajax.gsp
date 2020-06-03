@@ -64,7 +64,7 @@
                         Saldo Inicial
                     </label>
                     <div class="col-md-4">
-                        <g:field name="saldoInicial" value="${fieldValue(bean: adminInstance, field: 'saldoInicial')}"
+                        <g:textField name="saldoInicial" value="${fieldValue(bean: adminInstance, field: 'saldoInicial')}"
                                  class="number form-control  required" required=""/>
                     </div>
                 </span>
@@ -74,7 +74,7 @@
                         Saldo Final
                     </label>
                     <div class="col-md-4">
-                        <g:field name="saldoFinal" value="${fieldValue(bean: adminInstance, field: 'saldoFinal')}"
+                        <g:textField name="saldoFinal" value="${fieldValue(bean: adminInstance, field: 'saldoFinal')}"
                                  class="number form-control" />
                     </div>
                 </span>
@@ -90,8 +90,6 @@
                     </div>
                 </span>
             </div>
-            
-
         </g:form>
     </div>
 

@@ -764,7 +764,7 @@
                         class   : "modal-lg",
                         buttons : {
                               cancelar      : {
-                                label     : "Cancelar",
+                                label     : "Salir",
                                 className : "btn-default",
                                 callback  : function () {
                                 }
@@ -794,7 +794,7 @@
                         class   : "modal-lg",
                         buttons : {
                             cancelar      : {
-                                label     : "Cancelar",
+                                label     : "Salir",
                                 className : "btn-default",
                                 callback  : function () {
                                 }
