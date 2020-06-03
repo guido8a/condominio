@@ -1,6 +1,7 @@
 package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
+import seguridad.Persona
 import seguridad.Shield
 
 
@@ -258,6 +259,38 @@ class AdminController extends Shield {
 //        def data3 = cn3.rows(sql3.toString())
 
         return[adminInstance: administración]
+    }
+
+    def guardarAdministracion_ajax() {
+        println("params " + params)
+        def errores = 0
+        def anterior = Admin.get(params.id)
+        anterior.fechaFin = new Date().parse("dd-MM-yyyy",params."nuevaFechaInicio_input") - 1
+
+        if(!anterior.save(flush: true)){
+            errores = 1
+        }
+
+        if(errores == 0){
+            def administrador = Persona.get(params."administrador_name")
+            def revisor = Persona.get(params."revisor_name")
+            def fecha = new Date().parse("dd-MM-yyyy",params."nuevaFechaInicio_input")
+            def nuevo = new Admin()
+            nuevo.administrador = administrador
+            nuevo.revisor = revisor
+            nuevo.fechaInicio = fecha
+            nuevo.saldoInicial = 1000
+            nuevo.observaciones = params.nuevasObservaciones
+
+            if(!nuevo.save(flush: true)){
+                println("error al guardar el nuevo administrado")
+                render "no"
+            }else{
+                render "ok"
+            }
+        }else{
+            render "no"
+        }
 
     }
 

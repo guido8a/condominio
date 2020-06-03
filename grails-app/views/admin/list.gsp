@@ -13,7 +13,7 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <a href="#" class="btn btn-default btnCrear">
+        <a href="#" class="btn btn-primary btnCrear">
             <i class="fa fa-file-o"></i> Nueva Administración
         </a>
     </div>
@@ -262,27 +262,32 @@
 
     function cerrarAdministracion(id) {
         $.ajax({
-           type: 'POST',
+            type: 'POST',
             url:'${createLink(controller: 'admin', action: 'cerrar_ajax')}',
             data:{
-                id:id
+                id:id,
+                administrador: $("#nuevoAdministrador").val(),
+                revisor: $("#nuevoRevisor").val(),
+                fecha: $(".fechaIni").val(),
+                observaciones: $("#nuevasObservaciones").val()
             },
             success: function (msg){
                 bootbox.dialog({
                     title   : "Cierre de período de administración",
                     message : msg,
-                    class   : "modal-lg",
+//                    class   : "modal-lg",
                     buttons : {
                         cancelar      : {
-                            label     : "Salir",
-                            className : "btn-default",
+                            label     : "<i class='fa fa-close'></i> Cancelar",
+                            className : "btn-primary",
                             callback  : function () {
                             }
                         },
                         guardar      : {
-                            label     : "Guardar",
+                            label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
+                                submitFormNuevoAdministrador();
                             }
                         }
                     }
@@ -291,6 +296,30 @@
         });
     }
 
+    function submitFormNuevoAdministrador() {
+        var $form = $("#nuevoAdmin");
+        if ($form.valid()) {
+            openLoader("Guardando...");
+            $.ajax({
+                type    : "POST",
+                url     : $form.attr("action"),
+                data    : $form.serialize(),
+                success : function (msg) {
+                    closeLoader();
+                    if(msg == 'ok'){
+                        log("Administrador guardado correctamente","success");
+                        setTimeout(function() {
+                            location.reload(true);
+                        }, 1000);
+                    }else{
+                        log("Error al guardar el administrador","error")
+                    }
+                }
+            });
+        } else {
+            return false;
+        } //else
+    }
 
 </script>
 
