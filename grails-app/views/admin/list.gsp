@@ -311,13 +311,19 @@
                 data    : $form.serialize(),
                 success : function (msg) {
                     closeLoader();
-                    if(msg == 'ok'){
+                    var parts = msg.split("_");
+                    if(parts[0] == 'ok'){
                         log("Administrador guardado correctamente","success");
                         setTimeout(function() {
                             location.reload(true);
                         }, 1000);
                     }else{
-                        log("Error al guardar el administrador","error")
+                        if(parts[0] == 'no'){
+                            log("Error al guardar el administrador","error")
+                        }else{
+                            bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" + "<strong style='font-size: 12px'>" + parts[1] + '</strong>');
+                            return false
+                        }
                     }
                 }
             });

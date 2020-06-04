@@ -273,7 +273,7 @@ class AdminController extends Shield {
         println("fac " + fechaActual.class)
 
         if(fechaAnterior >= fechaActual){
-            render "no"
+            render "er_Error: La fecha ingresada es menor a la fecha de inicio del período anterior."
         }else{
 
             //saldos
