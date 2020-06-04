@@ -39,7 +39,7 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: adminInstance, field: 'fechaInicio', 'error')} required">
                 <span class="grupo">
-                    <label for="fechaInicio" class="col-md-2 control-label">
+                    <label for="fechaInicio" class="col-md-3 control-label">
                         Fecha de Inicio
                     </label>
                     <div class="col-md-4">
@@ -47,20 +47,20 @@
                     </div>
                 </span>
 
-                <span class="grupo">
-                    <label for="fechaFin" class="col-md-2 control-label">
-                        Hasta
-                    </label>
-                    <div class="col-md-4">
-                        <elm:datepicker name="fechaFin"  class="datepicker form-control" value="${adminInstance?.fechaFin}" default="none" noSelection="['': '']" />
-                    </div>
-                    
-                </span>
+                %{--<span class="grupo">--}%
+                    %{--<label for="fechaFin" class="col-md-2 control-label">--}%
+                        %{--Hasta--}%
+                    %{--</label>--}%
+                    %{--<div class="col-md-4">--}%
+                        %{--<elm:datepicker name="fechaFin"  class="datepicker form-control" value="${adminInstance?.fechaFin}" default="none" noSelection="['': '']" />--}%
+                    %{--</div>--}%
+                    %{----}%
+                %{--</span>--}%
             </div>
 
             <div class="form-group keeptogether ${hasErrors(bean: adminInstance, field: 'saldoInicial', 'error')} required">
                 <span class="grupo">
-                    <label for="saldoInicial" class="col-md-2 control-label">
+                    <label for="saldoInicial" class="col-md-3 control-label">
                         Saldo Inicial
                     </label>
                     <div class="col-md-4">
@@ -69,23 +69,23 @@
                     </div>
                 </span>
 
-                <span class="grupo">
-                    <label for="saldoFinal" class="col-md-2 control-label">
-                        Saldo Final
-                    </label>
-                    <div class="col-md-4">
-                        <g:textField name="saldoFinal" value="${fieldValue(bean: adminInstance, field: 'saldoFinal')}"
-                                 class="number form-control" />
-                    </div>
-                </span>
+                %{--<span class="grupo">--}%
+                    %{--<label for="saldoFinal" class="col-md-2 control-label">--}%
+                        %{--Saldo Final--}%
+                    %{--</label>--}%
+                    %{--<div class="col-md-4">--}%
+                        %{--<g:textField name="saldoFinal" value="${fieldValue(bean: adminInstance, field: 'saldoFinal')}"--}%
+                                 %{--class="number form-control" />--}%
+                    %{--</div>--}%
+                %{--</span>--}%
             </div>
             
             <div class="form-group keeptogether ${hasErrors(bean: adminInstance, field: 'observaciones', 'error')} ">
                 <span class="grupo">
-                    <label for="observaciones" class="col-md-2 control-label">
+                    <label for="observaciones" class="col-md-3 control-label">
                         Observaciones
                     </label>
-                    <div class="col-md-10">
+                    <div class="col-md-9">
                         <g:textField name="observaciones" class="allCaps form-control" value="${adminInstance?.observaciones}"/>
                     </div>
                 </span>

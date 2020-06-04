@@ -41,7 +41,7 @@
                     Saldo Inicial:
                 </label>
                 <div class="col-md-1">
-                    ${0.00}
+                    ${adminInstance?.saldoInicial ?: 0.00}
                 </div>
             </span>
             <span class="grupo">
@@ -49,7 +49,7 @@
                     Saldo Final:
                 </label>
                 <div class="col-md-1">
-                    ${0.00}
+                    ${adminInstance?.saldoFinal ?: 0.00}
                 </div>
             </span>
         </div>
@@ -101,7 +101,7 @@
                     Fecha de Inicio
                 </label>
                 <div class="col-md-4">
-                    <elm:datepicker name="nuevaFechaInicio" class="datepicker form-control required" value="${adminInstance?.fechaInicio}"  />
+                    <elm:datepicker name="nuevaFechaInicio" class="datepicker form-control required" value="${new Date()}"  />
                 </div>
             </span>
         </div>

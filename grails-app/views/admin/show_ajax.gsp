@@ -6,97 +6,75 @@
 </g:if>
 <g:else>
     <div class="modal-contenido">
-        
-        <g:if test="${adminInstance?.fechaFin}">
-            <div class="row">
-                <div class="col-md-3 show-label">
-                    Fecha Fin
-                </div>
-                
-                <div class="col-md-4">
-                    <g:formatDate date="${adminInstance?.fechaFin}" format="dd-MM-yyyy" />
-                </div>
-                
+        <g:hiddenField name="id" value="${adminInstance?.id}" />
+        <g:form class="form-horizontal panel alert alert-success" name="anti" role="form" action="" method="POST">
+            <div class="form-group">
+                <span class="grupo">
+                    <label class="col-md-3">
+                        Administrador:
+                    </label>
+                    <div class="col-md-3">
+                        ${adminInstance?.administrador?.nombre + " " + adminInstance?.administrador?.apellido}
+                    </div>
+                </span>
+                <span class="grupo">
+                    <label class="col-md-3">
+                        Revisor:
+                    </label>
+                    <div class="col-md-3">
+                        ${adminInstance?.revisor?.nombre + " " + adminInstance?.revisor?.apellido}
+                    </div>
+                </span>
             </div>
-        </g:if>
-        
-        <g:if test="${adminInstance?.saldoFinal}">
-            <div class="row">
-                <div class="col-md-3 show-label">
-                    Saldo Final
-                </div>
-                
-                <div class="col-md-4">
-                    <g:fieldValue bean="${adminInstance}" field="saldoFinal"/>
-                </div>
-                
+            <div class="form-group">
+                <span class="grupo">
+                    <label class="col-md-3">
+                        Fecha de Inicio:
+                    </label>
+                    <div class="col-md-3">
+                        ${adminInstance?.fechaInicio?.format("dd-MM-yyyy")}
+                    </div>
+                </span>
+                <g:if test="${adminInstance?.fechaFin}">
+                    <span class="grupo">
+                        <label class="col-md-3">
+                            Fecha fin:
+                        </label>
+                        <div class="col-md-3">
+                            ${adminInstance?.fechaFin?.format("dd-MM-yyyy")}
+                        </div>
+                    </span>
+                </g:if>
             </div>
-        </g:if>
-        
-        <g:if test="${adminInstance?.observaciones}">
-            <div class="row">
-                <div class="col-md-3 show-label">
-                    Observaciones
-                </div>
-                
-                <div class="col-md-4">
-                    <g:fieldValue bean="${adminInstance}" field="observaciones"/>
-                </div>
-                
+            <div class="form-group">
+                <span class="grupo">
+                    <label class="col-md-3">
+                        Saldo Inicial:
+                    </label>
+                    <div class="col-md-3">
+                        ${adminInstance?.saldoInicial ?: 0.00}
+                    </div>
+                </span>
+                <span class="grupo">
+                    <label class="col-md-3">
+                        Saldo Final:
+                    </label>
+                    <div class="col-md-3">
+                        ${adminInstance?.saldoFinal ?: 0.00}
+                    </div>
+                </span>
             </div>
-        </g:if>
-        
-        <g:if test="${adminInstance?.administrador}">
-            <div class="row">
-                <div class="col-md-3 show-label">
-                    Administrador
-                </div>
-                
-                <div class="col-md-4">
-                    ${adminInstance?.administrador?.encodeAsHTML()}
-                </div>
-                
+
+            <div class="form-group">
+                <span class="grupo">
+                    <label class="col-md-3">
+                        Observaciones:
+                    </label>
+                    <div class="col-md-9">
+                        ${adminInstance?.observaciones}
+                    </div>
+                </span>
             </div>
-        </g:if>
-        
-        <g:if test="${adminInstance?.fechaInicio}">
-            <div class="row">
-                <div class="col-md-3 show-label">
-                    Fecha Inicio
-                </div>
-                
-                <div class="col-md-4">
-                    <g:formatDate date="${adminInstance?.fechaInicio}" format="dd-MM-yyyy" />
-                </div>
-                
-            </div>
-        </g:if>
-        
-        <g:if test="${adminInstance?.revisor}">
-            <div class="row">
-                <div class="col-md-3 show-label">
-                    Revisor
-                </div>
-                
-                <div class="col-md-4">
-                    ${adminInstance?.revisor?.encodeAsHTML()}
-                </div>
-                
-            </div>
-        </g:if>
-        
-        <g:if test="${adminInstance?.saldoInicial}">
-            <div class="row">
-                <div class="col-md-3 show-label">
-                    Saldo Inicial
-                </div>
-                
-                <div class="col-md-4">
-                    <g:fieldValue bean="${adminInstance}" field="saldoInicial"/>
-                </div>
-                
-            </div>
-        </g:if>
-        
+        </g:form>
     </div>
 </g:else>
