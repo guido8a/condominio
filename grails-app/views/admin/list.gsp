@@ -40,10 +40,10 @@
     <tr>
         <th>Administrador</th>
         <th>Revisor</th>
-        <g:sortableColumn property="fechaInicio" title="Fecha Inicio" />
         <g:sortableColumn property="saldoInicio" title="Saldo Incial" />
+        <th>Saldo Final</th>
+        <g:sortableColumn property="fechaInicio" title="Fecha Inicio" />
         <g:sortableColumn property="fechaFin" title="Fecha Fin" />
-        %{--<g:sortableColumn property="observaciones" title="Observaciones" />--}%
         <th>Estado</th>
     </tr>
     </thead>
@@ -53,10 +53,10 @@
             <tr data-id="${adminInstance.id}" class="${adminInstance?.fechaFin ? 'cerrado' : ''}">
                 <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${adminInstance}" field="administrador"/></elm:textoBusqueda></td>
                 <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${adminInstance}" field="revisor"/></elm:textoBusqueda></td>
-                <td><g:formatDate date="${adminInstance.fechaInicio}" format="dd-MM-yyyy" /></td>
                 <td><g:fieldValue bean="${adminInstance}" field="saldoInicial"/></td>
+                <td><g:fieldValue bean="${adminInstance}" field="saldoFinal"/></td>
+                <td><g:formatDate date="${adminInstance.fechaInicio}" format="dd-MM-yyyy" /></td>
                 <td><g:formatDate date="${adminInstance.fechaFin}" format="dd-MM-yyyy" /></td>
-                %{--<td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${adminInstance}" field="observaciones"/></elm:textoBusqueda></td>--}%
                 <td style="color:#f8fffd; background-color: ${adminInstance?.fechaFin ? '#af1627' : '#47954b'}">${adminInstance?.fechaFin ? 'Cerrado' : 'Activo'}</td>
             </tr>
         </g:each>
@@ -243,7 +243,10 @@
                 }
             };
 
-            items.ver = ver;
+            if(id){
+                items.ver = ver;
+            }
+
             if(!cerrado && id){
                 items.cerrar = cerrar;
             }
