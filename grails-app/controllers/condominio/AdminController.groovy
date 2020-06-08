@@ -273,9 +273,17 @@ class AdminController extends Shield {
         println("fac " + fechaActual.class)
 
         if(fechaAnterior >= fechaActual){
-            render "no"
+            render "er_Error: La fecha ingresada es menor a la fecha de inicio del período anterior."
         }else{
+
+            //saldos
+            def sql = "select * from saldos(${session.condominio.id}, '${fechaAnterior.format("dd-MM-yyyy")}','${fechaActual.format("dd-MM-yyyy")}')"
+            def cn = dbConnectionService.getConnection()
+            def data = cn.rows(sql.toString())
+
             anterior.fechaFin = new Date().parse("dd-MM-yyyy",params."nuevaFechaInicio_input") - 1
+            anterior.saldoFinal = (data[0].sldofnal ?: 0)
+
             if(!anterior.save(flush: true)){
                 errores = 1
             }
@@ -288,7 +296,7 @@ class AdminController extends Shield {
                 nuevo.administrador = administrador
                 nuevo.revisor = revisor
                 nuevo.fechaInicio = fecha
-                nuevo.saldoInicial = 1000
+                nuevo.saldoInicial = (data[0].sldofnal ?: 0)
                 nuevo.observaciones = params.nuevasObservaciones
 
                 if(!nuevo.save(flush: true)){
