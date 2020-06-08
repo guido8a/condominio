@@ -217,7 +217,7 @@ class AdminController extends Shield {
     }
 
     def guardarRevision_ajax () {
-        println("params " + params)
+//        println("params " + params)
 
         def item
 

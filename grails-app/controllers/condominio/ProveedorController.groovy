@@ -9,6 +9,8 @@ import seguridad.Shield
  */
 class ProveedorController extends Shield {
 
+    def dbConnectionService
+
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
     /**
@@ -38,15 +40,15 @@ class ProveedorController extends Shield {
             list = c.list(params) {
                 or {
                     /* TODO: cambiar aqui segun sea necesario */
-                    
-                            ilike("activo", "%" + params.search + "%")  
-                            ilike("apellido", "%" + params.search + "%")  
-                            ilike("direccion", "%" + params.search + "%")  
-                            ilike("mail", "%" + params.search + "%")  
-                            ilike("nombre", "%" + params.search + "%")  
-                            ilike("observaciones", "%" + params.search + "%")  
-                            ilike("ruc", "%" + params.search + "%")  
-                            ilike("telefono", "%" + params.search + "%")  
+
+                    ilike("activo", "%" + params.search + "%")
+                    ilike("apellido", "%" + params.search + "%")
+                    ilike("direccion", "%" + params.search + "%")
+                    ilike("mail", "%" + params.search + "%")
+                    ilike("nombre", "%" + params.search + "%")
+                    ilike("observaciones", "%" + params.search + "%")
+                    ilike("ruc", "%" + params.search + "%")
+                    ilike("telefono", "%" + params.search + "%")
                 }
             }
         } else {
@@ -65,10 +67,48 @@ class ProveedorController extends Shield {
      */
     def list() {
 //        def proveedorInstanceList = getList(params, false)
-        def proveedorInstanceList = Proveedor.findAllByCondominio(session.condominio, [params: params])
-        def proveedorInstanceCount = proveedorInstanceList.size()
+//        def proveedorInstanceList = Proveedor.findAllByCondominio(session.condominio)
+//        def proveedorInstanceCount = proveedorInstanceList.size()
 //        def proveedorInstanceCount = getList(params, true).size()
-        return [proveedorInstanceList: proveedorInstanceList, proveedorInstanceCount: proveedorInstanceCount]
+//        return [proveedorInstanceList: proveedorInstanceList, proveedorInstanceCount: proveedorInstanceCount]
+    }
+
+    def tablaProveedores_ajax(){
+
+//        println("params tp " + params)
+
+        def tipo = params.campo
+        def sql
+        def parametro = ''
+
+        switch(tipo){
+            case "1":
+                parametro = 'prve_ruc'
+                break;
+            case "2":
+                parametro = 'prvenmbr'
+                break;
+            case "3":
+                parametro = 'prveapll'
+                break;
+            case "4":
+                parametro = 'prvedire'
+                break;
+            case "5":
+                parametro = 'prvetelf'
+                break;
+        }
+
+        if(!params.busqueda){
+            sql ="select * from prve order by prvenmbr, prve_ruc"
+        }else{
+            sql = "select * from prve where ${parametro} ilike '%${params.busqueda}%' order by prvenmbr, prve_ruc"
+        }
+
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+
+        return[proveedores: data]
     }
 
     /**
@@ -157,26 +197,26 @@ class ProveedorController extends Shield {
             return
         }
     } //delete para eliminar via ajax
-    
-            /**
-             * Acción llamada con ajax que valida que no se duplique la propiedad mail
-             * @render boolean que indica si se puede o no utilizar el valor recibido
-             */
-            def validar_unique_mail_ajax() {
-                params.mail = params.mail.toString().trim()
-                if (params.id) {
-                    def obj = Proveedor.get(params.id)
-                    if (obj.mail.toLowerCase() == params.mail.toLowerCase()) {
-                        render true
-                        return
-                    } else {
-                        render Proveedor.countByMailIlike(params.mail) == 0
-                        return
-                    }
-                } else {
-                    render Proveedor.countByMailIlike(params.mail) == 0
-                    return
-                }
+
+    /**
+     * Acción llamada con ajax que valida que no se duplique la propiedad mail
+     * @render boolean que indica si se puede o no utilizar el valor recibido
+     */
+    def validar_unique_mail_ajax() {
+        params.mail = params.mail.toString().trim()
+        if (params.id) {
+            def obj = Proveedor.get(params.id)
+            if (obj.mail.toLowerCase() == params.mail.toLowerCase()) {
+                render true
+                return
+            } else {
+                render Proveedor.countByMailIlike(params.mail) == 0
+                return
             }
-            
+        } else {
+            render Proveedor.countByMailIlike(params.mail) == 0
+            return
+        }
+    }
+
 }

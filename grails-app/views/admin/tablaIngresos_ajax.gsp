@@ -278,19 +278,4 @@ label {
         });
     }
 
-    function cargarEgresos (desde, hasta){
-        $.ajax({
-            type: 'POST',
-            url: '${createLink(controller: 'egreso', action: 'tablaEgresos_ajax')}',
-            async: true,
-            data:{
-                desde: desde,
-                hasta: hasta
-            },
-            success: function (msg){
-                $("#tablaEgresos").html(msg)
-            }
-        })
-    }
-
 </script>

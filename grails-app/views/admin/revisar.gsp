@@ -30,18 +30,19 @@
         <elm:datepicker name="fechaH_name" id="fechaHasta" class="datepicker form-control" value="${new Date()}"/>
     </div>
 
-    <div class="col-xs-1" style="width: 105px">
+    <div class="col-xs-1">
         <a href="#" class="btn btn-verde btnBuscar" ><i class="fa fa-search"></i> Ingresos</a>
     </div>
     <div class="col-xs-1">
         <a href="#" class="btn btn-info btnEgresos" ><i class="fa fa-search"></i> Egresos</a>
     </div>
-    %{--<div class="col-xs-1">--}%
-        %{--<a href="#" class="btn btn-warning btnGuardar" ><i class="fa fa-save"></i> Guardar</a>--}%
-    %{--</div>--}%
 </div>
 
 <div class="row" id="divSaldos">
+
+</div>
+
+<div class="row" id="divSaldos2">
 
 </div>
 
@@ -57,12 +58,14 @@
                 hasta: hasta
             },
             success: function (msg) {
-                $("#divSaldos").html(msg)
+                closeLoader();
+                $("#divSaldos").html(msg);
             }
         });
     }
 
     $(".btnBuscar").click(function () {
+        openLoader("Cargando...");
         var desde = $("#fechaDesde").val();
         var hasta = $("#fechaHasta").val();
         cargarIngresos(desde, hasta);
@@ -77,12 +80,14 @@
                 hasta: hasta
             },
             success: function (msg) {
-                $("#divSaldos").html(msg)
+                closeLoader();
+                $("#divSaldos").html(msg);
             }
         });
     }
 
     $(".btnEgresos").click(function () {
+        openLoader("Cargando...");
         var desde = $("#fechaDesde").val();
         var hasta = $("#fechaHasta").val();
         cargarEgresos(desde, hasta)
