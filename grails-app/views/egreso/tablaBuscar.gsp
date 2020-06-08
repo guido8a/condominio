@@ -38,21 +38,21 @@ th, td {
     <table class="table-bordered table-condensed table-hover" width="100%">
         <g:each in="${data}" var="dato" status="z">
             <tr id="${dato.egrs__id}" data-id="${dato.egrs__id}" data-tam="${condominio.PagoEgreso.findAllByEgreso(condominio.Egreso.get(dato.egrs__id)).size()}" class="${dato.egrssldo > 0 ? clase : ''} trEgreso ${z == 0 ? 'seleccionado' : ''} ${PagoEgreso.findByEgreso(Egreso.get(dato.egrs__id)).estado == 'R' ? 'revisado' : ''} ${dato.egrssldo > 0 ? 'saldo' : ''}">
-                <td width="32%">
+                <td width="30%">
                     ${dato?.egrsdscr}
                 </td>
 
-                <td width="30%" class="text-info">
+                <td width="28%" class="text-info">
                     ${dato?.prvenmbr}
                 </td>
 
                 <td width="12%" style="color:#186063">
                     ${dato?.egrsfcha}
                 </td>
-                <td width="8%">
+                <td width="10%" style="text-align: right">
                     ${dato.egrsvlor}
                 </td>
-                <td width="8%" class="text-info">
+                <td width="10%" class="text-info" style="text-align: right">
                     ${dato?.egrssldo}
                 </td>
             </tr>

@@ -39,7 +39,8 @@ th, td {
     <table class="table-bordered table-condensed table-hover" width="1060px">
         <g:each in="${data}" var="dato" status="z">
 
-            <tr id="${dato.prsn__id}" data-id="${dato.prsn__id}" data-deuda="${dato.prsnsldo}" data-p="${dato.tpoccdgo}"
+            <tr id="${dato.prsn__id}" data-id="${dato.prsn__id}" data-deuda="${dato.prsnsldo}" data-ingr="${dato.ingrcnta}"
+                data-p="${dato.tpoccdgo}"
                 class="${dato.prsnactv == 0 ? clase : dato.prsnsldo < dato.alctvlor ? clase2 : ''}">
                 <td width="6%">
                     ${dato?.edifdscr}

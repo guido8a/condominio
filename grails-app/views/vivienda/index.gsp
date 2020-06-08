@@ -275,6 +275,7 @@ como máximo 30
 
         var id = $tr.data("id");
         var deuda = $tr.data("deuda");
+        var ingr = $tr.data("ingr");
         var codigo = $tr.data("p");
 
         var perfil = {
@@ -370,7 +371,7 @@ como máximo 30
             }
         };
 
-        if(deuda>0){
+        if(ingr>0){
             items.pagar = ingresos;
         }
 //        items.editar = editar;

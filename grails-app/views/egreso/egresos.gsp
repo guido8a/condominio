@@ -107,11 +107,11 @@
     <table class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
-            <th class="alinear" style="width: 32%">Concepto</th>
-            <th class="alinear" style="width: 29%">Proveedor</th>
+            <th class="alinear" style="width: 30%">Concepto</th>
+            <th class="alinear" style="width: 28%">Proveedor</th>
             <th class="alinear" style="width: 12%">Fecha</th>
-            <th class="alinear" style="width: 8%">Valor</th>
-            <th class="alinear" style="width: 9%">Saldo</th>
+            <th class="alinear" style="width: 10%">Valor</th>
+            <th class="alinear" style="width: 10%">Saldo</th>
         </tr>
         </thead>
     </table>
@@ -241,6 +241,8 @@
         };
 
         if(!revisado){
+            items.editar = editar;
+        } else {
             if(saldo){
                 items.editar = editar;
             }
