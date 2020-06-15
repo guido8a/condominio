@@ -1,3 +1,4 @@
+<%@ page import="condominio.Ingreso; condominio.Pago" %>
 
 
 <html>
@@ -58,22 +59,30 @@
                 <td align="left" width="10%">
                     ${prsn?.tpocdscr}
                 </td>
-                <td class="editable alineacion ${prsn?.ingrvlor? '':'gris'}" id="${prsn?.prsn__id}"
+                <td class="${!Pago.findAllByIngreso(condominio.Ingreso.get(prsn?.ingr__id))?.estadoAdministrador?.contains("S") ? 'editable' : ''} alineacion ${prsn?.ingrvlor? '':'gris'}" id="${prsn?.prsn__id}"
                     data-original="${prsn?.ingrvlor}" data-valor="${prsn?.ingrvlor?:oblg.valor}"  data-ingr="${prsn?.ingr__id}"
                     data-obsrog="${prsn?.ingrobsr}"
                     style="width:12%" title="Ingrese el valor y presione Enter para aceptarlo">
                     <g:formatNumber number="${prsn?.ingrvlor?:oblg.valor}" minFractionDigits="2" maxFractionDigits="2" format="##,##0" locale="ec"/>
                 </td>
                 <td style="text-align: center;" class="chk">
-                    %{--<input type="checkbox" class="seleccion"/>--}%
-                    <g:checkBox name="ckl" class="seleccion"/>
+                    <g:if test="${!Pago.findAllByIngreso(condominio.Ingreso.get(prsn?.ingr__id))?.estadoAdministrador?.contains("S")}">
+                        <g:checkBox name="ckl" class="seleccion"/>
+                    </g:if>
                 </td>
                 <td class="observaciones">
-                    <g:textField name="obsr" class="ingrobsr form-control-sm" value="${prsn?.ingrobsr}" style="width: 100%"/>
+                    <g:if test="${!Pago.findAllByIngreso(condominio.Ingreso.get(prsn?.ingr__id))?.estadoAdministrador?.contains("S")}">
+                        <g:textField name="obsr" class="ingrobsr form-control-sm" value="${prsn?.ingrobsr}" style="width: 100%"/>
+                    </g:if>
+                    <g:else>
+                        <g:textField name="obsr" class="ingrobsr form-control-sm" value="${prsn?.ingrobsr}" style="width: 100%" readonly=""/>
+                    </g:else>
                 </td>
                 <td style="text-align: center">
                     <g:if test="${prsn?.ingrvlor}">
-                        <a href="#" class="btn btn-danger btn-sm btnBorrarRegistro" data-id="${prsn?.prsn__id}" data-obl="${oblg.id}" title="Eliminar registro"><i class="fa fa-trash"></i> </a>
+                        <g:if test="${!Pago.findAllByIngreso(condominio.Ingreso.get(prsn?.ingr__id))?.estadoAdministrador?.contains("S")}">
+                            <a href="#" class="btn btn-danger btn-sm btnBorrarRegistro" data-id="${prsn?.prsn__id}" data-obl="${oblg.id}" title="Eliminar registro"><i class="fa fa-trash"></i> </a>
+                        </g:if>
                     </g:if>
                 </td>
             </tr>
