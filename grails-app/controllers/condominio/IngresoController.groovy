@@ -311,4 +311,16 @@ class IngresoController extends Shield {
         return[ingreso: ingreso, pagos: pagos, saldo: saldo]
     }
 
+    def ingresos () {
+
+    }
+
+    def tablaIngresos_ajax() {
+
+        def ingresos = Ingreso.list()
+//        def
+
+        return [ingresos: ingresos]
+    }
+
 }
