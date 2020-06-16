@@ -247,6 +247,14 @@ class BuscadorService {
         ]
     }
 
+    def parmIngr () {
+        [[campo: 'ingrdscr', nombre: 'Concepto',      operador: "contiene:contiene,inicia:inicia con"],
+         [campo: 'ingrprsn', nombre: 'Persona',       operador: "contiene:contiene,inicia:inicia con"],
+         [campo: 'ingrvlor', nombre: 'Valor',         operador: "gteq:mayor a,lteq:menor a"],
+         [campo: 'ingrsldo', nombre: 'Saldo',         operador: "gteq:mayor a,lteq:menor a"]
+        ]
+    }
+
     def operadores() {   //operadores usados en la opción operador
         [[valor: 'contiene', operador: 'ilike', strInicio: "'%", strFin: "%'"],
          [valor: 'inicia', operador: 'ilike', strInicio: "'", strFin: "%'"],

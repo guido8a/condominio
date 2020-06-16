@@ -2187,8 +2187,13 @@ class ReportesController extends Shield{
             tablaHeaderDetalles.setWidthPercentage(100);
             tablaHeaderDetalles.setWidths(arregloEnteros([8,2]))
 
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Concepto", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Saldo inicial - Administración anterior", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph(g.formatNumber(number: saldo, format: '##,##0',
+                    minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+//            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
+
+//            addCellTabla(tablaHeaderDetalles, new Paragraph("Concepto", fontTh), frmtHd)
+//            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
             addCellTabla(tblaIngr, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
         }
 
@@ -2221,7 +2226,7 @@ class ReportesController extends Shield{
         tablaTotal.setWidthPercentage(100);
         tablaTotal.setWidths(arregloEnteros([8, 2]))
 
-        addCellTabla(tablaTotal, new Paragraph("Saldo al ${fechaHasta} (Ingresos - Egresos): ", fontTh), frmtNmro)
+        addCellTabla(tablaTotal, new Paragraph("Saldo al ${fechaHasta} (SaldoInicial + Ingresos - Egresos): ", fontTh), frmtNmro)
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number: totalIngresos - totalEgresos + saldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
         addCellTabla(tblaIngr, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
 

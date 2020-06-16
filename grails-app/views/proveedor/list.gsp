@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <g:select from="${[1:'RUC', 2: 'NOMBRE', 3: 'APELLIDO', 4: 'DIRECCIÓN', 5: "TELÉFONO"]}" optionValue="value" optionKey="key" class="form-control" name="campos" id="idCampos"/>
+        <g:select from="${[2: 'NOMBRE', 3: 'APELLIDO', 4: 'DIRECCIÓN', 5: "TELÉFONO", 1:'RUC']}" optionValue="value" optionKey="key" class="form-control" name="campos" id="idCampos"/>
     </div>
     <div class="col-md-3">
         <g:textField name="busqueda" id="idBuscar" class="form-control"/>

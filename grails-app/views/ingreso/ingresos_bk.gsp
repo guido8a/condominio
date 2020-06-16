@@ -1,4 +1,10 @@
-<%@ page import="condominio.Egreso; condominio.PagoEgreso" contentType="text/html;charset=UTF-8" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: fabricio
+  Date: 16/06/20
+  Time: 9:43
+--%>
+<%@ page import="condominio.Ingreso" contentType="text/html;charset=UTF-8" %>
 
 <%
     def buscadorServ = grailsApplication.classLoader.loadClass('utilitarios.BuscadorService').newInstance()
@@ -10,12 +16,12 @@
     <title>Ingresos</title>
 
     <style type="text/css">
-        .alinear {
-            text-align: center !important;
-        }
-        .selecionado {
-            background-color: #ffffdf;
-        }
+    .alinear {
+        text-align: center !important;
+    }
+    .selecionado {
+        background-color: #ffffdf;
+    }
     </style>
 
 </head>
@@ -29,64 +35,48 @@
 
 <div class="row">
     <div class="row-fluid">
-
-        <div class="col-sm-2" style="margin-left: -30px">
-            Tipo de Aporte
-            <g:select from="${condominio.TipoAporte.list()}" optionValue="descripcion" optionKey="id"
-                      name="tp" id="tipoAporte" class="form-control" style="width: 180px;"/>
-        </div>
-
         <div style="margin-left: -20px;">
             <div class="col-xs-6">
-                <div class="col-xs-3">
+                <div class="col-xs-4">
                     <b>Buscar por: </b>
-                    <elm:select name="buscador" from = "${buscadorServ.parmIngr()}" value="${params.buscador}"
-                                optionKey="campo" optionValue="nombre" optionClass="operador" id="buscador_con"
-                                style="width: 120px" class="form-control"/>
+                    %{--<elm:select name="buscador" from = "${buscadorServ.parmEgrs()}" value="${params.buscador}"--}%
+                                %{--optionKey="campo" optionValue="nombre" optionClass="operador" id="buscador_con"--}%
+                                %{--style="width: 120px" class="form-control"/>--}%
+                    <g:select name="ing_name" from="${[0: 'Tipo de ingreso', 1: 'Concepto', 2: 'Persona']}" id="ingresoBuscar" optionKey="key" optionValue="value" class="form-control"/>
                 </div>
-                <div class="col-xs-3">
-                    <strong style="margin-left: 20px;">Operación:</strong>
-                    <span id="selOpt"></span>
-                </div>
-                <div class="col-xs-3">
+                <div class="col-xs-7">
                     <b style="margin-left: 20px">Criterio: </b>
                     <g:textField name="criterio" style="margin-right: 10px; width: 100%" value="${params.criterio}"
                                  id="criterio_con" class="form-control"/>
 
                 </div>
-                <div class="col-xs-3" style="margin-left: -10px;">
-                    <b>Ordenado por:</b>
-                    <elm:select name="buscador" from="${buscadorServ.parmIngr()}" value="${params.ordenar}"
-                                optionKey="campo" optionValue="nombre" optionClass="operador" id="ordenar_por"
-                                style="margin-left:-10px; width: 100%" class="form-control"/>
-                </div>
             </div>
 
             <div class="col-xs-4" style="margin-left: -40px">
-            <div class="col-xs-6" style="margin-left: -20px; width: 50%">
-                Desde:
-                <elm:datepicker name="fechaDesde" title="Fecha desde" id="fd" class="datepicker form-control fechaD"
-                                maxDate="new Date()" value="${fcds?: new Date() - 30}"/>
+                <div class="col-xs-6" style="margin-left: -20px; width: 50%">
+                    Desde:
+                    <elm:datepicker name="fechaDesde" title="Fecha desde" id="fd" class="datepicker form-control fechaD"
+                                    maxDate="new Date()" value="${fcds?: new Date() - 30}"/>
+                </div>
+
+                <div class="col-xs-6" style="margin-left: -20px;">
+                    Hasta:
+                    <elm:datepicker name="fechaHasta" title="Fecha hasta" class="datepicker form-control fechaH"
+                                    value="${new Date()}"/>
+                </div>
             </div>
 
-            <div class="col-xs-6" style="margin-left: -20px;">
-                Hasta:
-                <elm:datepicker name="fechaHasta" title="Fecha hasta" class="datepicker form-control fechaH"
-                                 value="${new Date()}"/>
+            <div class="btn-group col-xs-3" style="margin-left: -60px; margin-top: 20px;">
+                %{--<a href="#" name="busqueda" class="btn btn-info" id="btnBusqueda" title="Buscar" style="height: 34px; padding: 9px; width: 36px">--}%
+                <a href="#" name="busqueda" class="btn btn-info" id="btnBusqueda" title="Buscar">
+                    <i class="fa fa-search"></i>Buscar
+                </a>
+
+                %{--<a href="#" name="limpiarBus" class="btn btn-warning" id="btnLimpiarBusqueda" title="Borrar criterios" style="height: 34px; padding: 9px; width: 34px">--}%
+                <a href="#" name="limpiarBus" class="btn btn-warning" id="btnLimpiarBusqueda" title="Borrar criterios">
+                    <i class="fa fa-eraser"></i> Limpiar
+                </a>
             </div>
-            </div>
-
-            <div class="btn-group col-xs-1" style="margin-left: -80px; margin-top: 20px; width: 100px">
-
-                <a href="#" name="busqueda" class="btn btn-info" id="btnBusqueda" title="Buscar"
-                   style="height: 34px; padding: 9px; width: 36px">
-                    <i class="fa fa-search"></i></a>
-
-                <a href="#" name="limpiarBus" class="btn btn-warning" id="btnLimpiarBusqueda"
-                   title="Borrar criterios" style="height: 34px; padding: 9px; width: 34px">
-                    <i class="fa fa-eraser"></i></a>
-            </div>
-
         </div>
     </div>
 </div>
@@ -94,55 +84,29 @@
 <div style="margin-top: 10px; border-bottom: solid; border-style: solid; border-width: 1px; border-color: #C0C0C0"></div>
 
 <div style="margin-top: 20px; min-height: 650px; width: 55%; float: left">
-    %{--<div class="linea"></div>--}%
     <table class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
             <th class="alinear" style="width: 30%">Concepto</th>
             <th class="alinear" style="width: 28%">Persona</th>
-            <th class="alinear" style="width: 12%">Fecha</th>
             <th class="alinear" style="width: 10%">Valor</th>
-            <th class="alinear" style="width: 10%">Saldo</th>
+            <th class="alinear" style="width: 10%">Observaciones</th>
         </tr>
         </thead>
     </table>
 
-    <div class="alert alert-danger hidden" id="mensaje" style="text-align: center">
-    </div>
+    %{--<div class="alert alert-danger hidden" id="mensaje" style="text-align: center">--}%
+    %{--</div>--}%
 
-    <div id="tabla">
-    </div>
+    %{--<div id="tabla">--}%
+    %{--</div>--}%
 </div>
 
 <div style="margin-top: 20px; min-height: 650px; width: 43%; float: right ">
-    %{--<div class="linea"></div>--}%
     <div id="tdPagosEgresos" style="width: 100%">
 
     </div>
-%{--
-    <table class="table table-bordered table-hover table-condensed">
-        <thead>
-        <tr>
-            <th class="alinear" style="width: 25%">Fecha</th>
-            <th class="alinear" style="width: 25%">Doc. de Pago</th>
-            <th class="alinear" style="width: 20%">Valor</th>
-            <th class="alinear" style="width: 30%">Obs.</th>
-        </tr>
-        </thead>
-    <tbody>
-
-    <tr style="width: 100%">
-        <td id="tdPagosEgresos" style="width: 50%" colspan="4">
-
-        </td>
-    </tr>
-
-    </tbody>
-    </table>
---}%
-
-
-    <div class="alert alert-danger hidden" id="mensaje" style="text-align: center">
+     <div class="alert alert-danger hidden" id="mensaje" style="text-align: center">
     </div>
 
     <div id="tabla">
@@ -154,38 +118,31 @@
 <script type="text/javascript">
 
 
-    $(function () {
-        $("#limpiaBuscar").click(function () {
-            $("#buscar").val('');
-        });
-    });
-
     cargarBusqueda();
 
-
     function cargarBusqueda() {
-            $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
-            var desde = $(".fechaD").val();
-            var hasta = $(".fechaH").val();
-            $.ajax({
-                type: "POST",
-                url: "${g.createLink(action: 'tablaBuscar')}",
-                data: {
-                    buscador: $("#buscador_con").val(),
-                    ordenar: $("#ordenar_por").val(),
-                    criterio: $("#criterio_con").val(),
-                    operador: $("#oprd").val(),
-                    desde: desde,
-                    hasta: hasta,
-                    saldo: $('#saldo').is(":checked")
-                },
-                success: function (msg) {
-                    $("#tabla").html(msg);
-                },
-                error: function (msg) {
-                    $("#tabla").html("Ha ocurrido un error");
-                }
-            });
+        $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
+        var desde = $(".fechaD").val();
+        var hasta = $(".fechaH").val();
+        $.ajax({
+            type: "POST",
+            url: "${g.createLink(controller: 'ingreso', action: 'tablaIngresos_ajax')}",
+            data: {
+                buscador: $("#buscador_con").val(),
+                ordenar: $("#ordenar_por").val(),
+                criterio: $("#criterio_con").val(),
+                operador: $("#oprd").val(),
+                desde: desde,
+                hasta: hasta,
+                saldo: $('#saldo').is(":checked")
+            },
+            success: function (msg) {
+                $("#tabla").html(msg);
+            },
+            error: function (msg) {
+                $("#tabla").html("Ha ocurrido un error");
+            }
+        });
     }
 
     $("#btnBusqueda").click(function () {
@@ -253,7 +210,8 @@
 
 
     $("#btnLimpiarBusqueda").click(function () {
-        $(".fechaD, .fechaH, #criterio_con").val('');
+        $("#criterio_con").val('');
+//        $(".fechaD, .fechaH").val(new Date());
     });
 
     $("#nuevo").click(function () {
@@ -424,7 +382,6 @@
     }
 
 
-
     function eliminar (id){
         bootbox.dialog({
             title   : "Alerta",
@@ -464,11 +421,6 @@
             }
         });
     }
-
-    /******/
-
-
-
 
 </script>
 

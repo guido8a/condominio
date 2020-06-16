@@ -11,6 +11,7 @@ import seguridad.Shield
 class IngresoController extends Shield {
 
     def dbConnectionService
+    def buscadorService
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
@@ -322,5 +323,74 @@ class IngresoController extends Shield {
 
         return [ingresos: ingresos]
     }
+
+    def tablaBuscar() {
+        println "buscar .... $params"
+        def cn = dbConnectionService.getConnection()
+        params.old = params.criterio
+        params.criterio = buscadorService.limpiaCriterio(params.criterio)
+        params.ordenar  = buscadorService.limpiaCriterio(params.ordenar)
+
+        def sql = armaSql(params)
+        params.criterio = params.old
+        println "sql: $sql"
+        def data = cn.rows(sql.toString())
+
+        def msg = ""
+        if(data?.size() > 50){
+            data.pop()   //descarta el último puesto que son 21
+            msg = "<div class='alert-danger' style='margin-top:-20px; diplay:block; height:25px;margin-bottom: 20px;'>" +
+                    " <i class='fa fa-warning fa-2x pull-left'></i> Su búsqueda ha generado más de 30 resultados. " +
+                    "Use más letras para especificar mejor la búsqueda.</div>"
+        }
+        cn.close()
+
+        return [data: data, msg: msg, fcds: params.desde]
+    }
+
+    def armaSql(params){
+//        println "armaSql: $params"
+        def campos = buscadorService.parmIngr()
+        def operador = buscadorService.operadores()
+        //condicion fija
+        def wh = " ingr__id is not null "
+        def fcds = "null"
+        def fchs = "null"
+        if(params.desde) fcds = "'" + new Date().parse("dd-MM-yyyy",params.desde).format('yyyy-MM-dd') + "'"
+        if(params.hasta) fchs = "'" + new Date().parse("dd-MM-yyyy",params.hasta).format('yyyy-MM-dd') + "'"
+
+//        def sqlSelect = "select * from ls_egrs(${session.empresa.id}, ${cont}, ${fcds}, ${fchs}) "
+        def sqlSelect = "select * from ls_ingr(${session.condominio.id}, ${fcds}, ${fchs}) "
+        def sqlWhere = "where (${wh})"
+        def sqlOrder = "order by ingrfcha, ${params.ordenar} limit 51"
+//        println "sql: $sqlSelect $sqlWhere $sqlOrder"
+
+//        println "operador: $operador"
+        if(params.operador && params.criterio) {
+            if(campos.find {it.campo == params.buscador}?.size() > 0) {
+                def op = operador.find {it.valor == params.operador}
+                sqlWhere += " and ${params.buscador} ${op.operador} ${op.strInicio}${params.criterio}${op.strFin}";
+            }
+        }
+        if(params.saldo == 'true') {
+            sqlWhere += " and ingrsldo > 0 "
+        }
+
+//        println "-->sql: $sqlSelect $sqlWhere $sqlOrder"
+        "$sqlSelect $sqlWhere $sqlOrder".toString()
+    }
+
+    def pagoIngreso_ajax  () {
+        def ingreso = Ingreso.get(params.egreso)
+        def pagos = Pago.findAllByIngreso(ingreso).sort{it.fechaPago}
+
+//        def saldo = Math.round(egreso?.valor?:0*100)/100 - Math.round((pagos?.valor?.sum() ?: 0) * 100)/100
+        def saldo = (ingreso?.valor ?: 0) - (pagos?.valor?.sum() ?: 0)
+
+        return[egreso: ingreso, pagos: pagos, saldo: saldo]
+    }
+
+
+
 
 }
