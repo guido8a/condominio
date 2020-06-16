@@ -17,19 +17,6 @@
 
 </style>
 
-<div class="alert alert-warning col-md-12">
-    <div class="col-md-5">
-        <label style="color: #1b8e36">Valor: $
-            ${valor}
-        </label>
-    </div>
-    <div class="col-md-5">
-        <label style="color: #701b19">Saldo: $
-            ${saldo}
-        </label>
-    </div>
-</div>
-
 <g:if test="${pagos.size() > 0}">
     <div style="text-align: center"><h3>Detalle de pagos</h3></div>
     <table class="table table-bordered table-hover table-condensed">
@@ -58,6 +45,21 @@
         No existen pagos
     </div>
 </g:else>
+
+<div class="alert alert-warning col-md-12">
+    <div class="col-md-5">
+        <label style="color: #1b8e36">Valor: $
+            ${valor}
+        </label>
+    </div>
+    <div class="col-md-5">
+        <label style="color: #701b19">Saldo: $
+            ${saldo}
+        </label>
+    </div>
+</div>
+
+
 
 %{--<script type="text/javascript">--}%
 
