@@ -37,7 +37,10 @@ th, td {
 <div class="" style="width: 100%;height: ${msg == '' ? 600 : 575}px; overflow-y: auto;float: left; margin-top: -20px">
     <table class="table-bordered table-condensed table-hover" width="100%">
         <g:each in="${data}" var="dato" status="z">
-            <tr id="${dato.ingr__id}" data-id="${dato.ingr__id}">
+            <tr id="${dato.ingr__id}" data-id="${dato.ingr__id}" data-saldo="${dato.ingrsldo}" data-valor="${dato.ingrvlor}" class=" trIngreso ${z == 0 ? 'seleccionado' : ''}">
+            %{--<tr id="${dato.egrs__id}" data-id="${dato.egrs__id}" data-tam="${condominio.PagoEgreso.findAllByEgreso(condominio.Egreso.get(dato.egrs__id)).size()}" --}%
+                %{--class="${dato.egrssldo > 0 ? clase : ''} trEgreso ${z == 0 ? 'seleccionado' : ''} ${PagoEgreso.findByEgreso(Egreso.get(dato.egrs__id)).estado == 'R' ? 'revisado' : ''} ${dato.egrssldo > 0 ? 'saldo' : ''}">--}%
+
                 <td width="30%">
                     ${dato?.ingrdscr}
                 </td>
@@ -62,33 +65,17 @@ th, td {
 
 
 <script type="text/javascript">
-    $(function () {
 
+    cargarPagosE(${data[0]?.ingr__id}, ${data[0]?.ingrsldo}, ${data[0]?.ingrvlor});
 
-
-        $("tr").contextMenu({
-
-            items  : createContextMenu,
-            onShow : function ($element) {
-                $element.addClass("trHighlight");
-            },
-            onHide : function ($element) {
-                $(".trHighlight").removeClass("trHighlight");
-            }
-        });
-
-
-    });
-
-    cargarPagosE(${data[0]?.ingr__id});
-
-    function cargarPagosE (egreso) {
-//        console.log('carga pagos')
+    function cargarPagosE (ingreso, saldo, valor) {
         $.ajax({
             type: 'POST',
-            url:'${createLink(controller: 'egreso', action: 'pagoEgresos_ajax')}',
+            url:'${createLink(controller: 'ingreso', action: 'infoIngreso_ajax')}',
             data:{
-                egreso: egreso
+                ingreso: ingreso,
+                saldo: saldo,
+                valor: valor
             },
             success: function (msg){
                 $("#tdPagosEgresos").html(msg)
@@ -96,10 +83,12 @@ th, td {
         });
     }
 
-    $(".trEgreso").click(function () {
-        var egreso = $(this).attr("id");
-        $(".trEgreso").removeClass("seleccionado")
-        $(this).addClass("seleccionado")
-        cargarPagosE(egreso)
+    $(".trIngreso").click(function () {
+        var ingreso = $(this).attr("id");
+        var valor = $(this).data("valor");
+        var saldo = $(this).data("saldo");
+        $(".trIngreso").removeClass("seleccionado");
+        $(this).addClass("seleccionado");
+        cargarPagosE(ingreso, saldo, valor)
     });
 </script>

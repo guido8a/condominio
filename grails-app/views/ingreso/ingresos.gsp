@@ -10,12 +10,12 @@
     <title>Ingresos</title>
 
     <style type="text/css">
-        .alinear {
-            text-align: center !important;
-        }
-        .selecionado {
-            background-color: #ffffdf;
-        }
+    .alinear {
+        text-align: center !important;
+    }
+    .selecionado {
+        background-color: #ffffdf;
+    }
     </style>
 
 </head>
@@ -63,17 +63,17 @@
             </div>
 
             <div class="col-xs-4" style="margin-left: -40px">
-            <div class="col-xs-6" style="margin-left: -20px; width: 50%">
-                Desde:
-                <elm:datepicker name="fechaDesde" title="Fecha desde" id="fd" class="datepicker form-control fechaD"
-                                maxDate="new Date()" value="${fcds?: new Date() - 30}"/>
-            </div>
+                <div class="col-xs-6" style="margin-left: -20px; width: 50%">
+                    Desde:
+                    <elm:datepicker name="fechaDesde" title="Fecha desde" id="fd" class="datepicker form-control fechaD"
+                                    maxDate="new Date()" value="${fcds?: new Date() - 30}"/>
+                </div>
 
-            <div class="col-xs-6" style="margin-left: -20px;">
-                Hasta:
-                <elm:datepicker name="fechaHasta" title="Fecha hasta" class="datepicker form-control fechaH"
-                                 value="${new Date()}"/>
-            </div>
+                <div class="col-xs-6" style="margin-left: -20px;">
+                    Hasta:
+                    <elm:datepicker name="fechaHasta" title="Fecha hasta" class="datepicker form-control fechaH"
+                                    value="${new Date()}"/>
+                </div>
             </div>
 
             <div class="btn-group col-xs-1" style="margin-left: -80px; margin-top: 20px; width: 100px">
@@ -119,28 +119,6 @@
     <div id="tdPagosEgresos" style="width: 100%">
 
     </div>
-%{--
-    <table class="table table-bordered table-hover table-condensed">
-        <thead>
-        <tr>
-            <th class="alinear" style="width: 25%">Fecha</th>
-            <th class="alinear" style="width: 25%">Doc. de Pago</th>
-            <th class="alinear" style="width: 20%">Valor</th>
-            <th class="alinear" style="width: 30%">Obs.</th>
-        </tr>
-        </thead>
-    <tbody>
-
-    <tr style="width: 100%">
-        <td id="tdPagosEgresos" style="width: 50%" colspan="4">
-
-        </td>
-    </tr>
-
-    </tbody>
-    </table>
---}%
-
 
     <div class="alert alert-danger hidden" id="mensaje" style="text-align: center">
     </div>
@@ -148,8 +126,6 @@
     <div id="tabla">
     </div>
 </div>
-
-
 
 <script type="text/javascript">
 
@@ -162,30 +138,29 @@
 
     cargarBusqueda();
 
-
     function cargarBusqueda() {
-            $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
-            var desde = $(".fechaD").val();
-            var hasta = $(".fechaH").val();
-            $.ajax({
-                type: "POST",
-                url: "${g.createLink(action: 'tablaBuscar')}",
-                data: {
-                    buscador: $("#buscador_con").val(),
-                    ordenar: $("#ordenar_por").val(),
-                    criterio: $("#criterio_con").val(),
-                    operador: $("#oprd").val(),
-                    desde: desde,
-                    hasta: hasta,
-                    saldo: $('#saldo').is(":checked")
-                },
-                success: function (msg) {
-                    $("#tabla").html(msg);
-                },
-                error: function (msg) {
-                    $("#tabla").html("Ha ocurrido un error");
-                }
-            });
+        $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
+        var desde = $(".fechaD").val();
+        var hasta = $(".fechaH").val();
+        $.ajax({
+            type: "POST",
+            url: "${g.createLink(action: 'tablaBuscar')}",
+            data: {
+                buscador: $("#buscador_con").val(),
+                ordenar: $("#ordenar_por").val(),
+                criterio: $("#criterio_con").val(),
+                operador: $("#oprd").val(),
+                desde: desde,
+                hasta: hasta,
+                saldo: $('#saldo').is(":checked")
+            },
+            success: function (msg) {
+                $("#tabla").html(msg);
+            },
+            error: function (msg) {
+                $("#tabla").html("Ha ocurrido un error");
+            }
+        });
     }
 
     $("#btnBusqueda").click(function () {
@@ -198,62 +173,9 @@
         }
     });
 
-    function createContextMenu(node) {
-        var $tr = $(node);
-        var revisado = $tr.hasClass("revisado");
-        var saldo = $tr.hasClass("saldo");
-        var items = {
-            header: {
-                label: "Acciones",
-                header: true
-            }
-        };
-
-        var id = $tr.data("id");
-        var sz = $tr.data("tam");
-
-        var editar = {
-            label: " Editar",
-            icon: "fa fa-id-card-o",
-            action: function ($element) {
-                var id = $element.data("id");
-                createEditRow(id);
-            }
-        };
-
-
-        var borrar = {
-            label: " Eliminar",
-            icon: "fa fa-trash-o",
-            action: function ($element) {
-                var id = $element.data("id");
-                eliminar(id);
-            }
-        };
-
-        if(!revisado){
-            items.editar = editar;
-        } else {
-            if(saldo){
-                items.editar = editar;
-            }
-        }
-
-
-//        if(!revisado){
-//            items.editar = editar;
-//        }
-
-        if(sz == 0){
-            items.borrar = borrar;
-        }
-
-        return items
-    }
-
-
     $("#btnLimpiarBusqueda").click(function () {
-        $(".fechaD, .fechaH, #criterio_con").val('');
+        $("#criterio_con").val('');
+        $(".fechaD, .fechaH").val('${new Date().format("dd-MM-yyyy")}');
     });
 
     $("#nuevo").click(function () {
@@ -279,198 +201,186 @@
         }
         $("#selOpt").html($sel);
     }
-    ;
 
     /* inicializa el select de oprd con la primea opción de busacdor */
     $(document).ready(function () {
         $("#buscador_con").change();
     });
 
-    function createEditRow(id) {
-        var title = id ? "Editar" : "Nueva";
-        var data = id ? {id: id} : {};
-        $.ajax({
-            type: "POST",
-            url: "${createLink(controller:'egreso', action:'form_ajax')}",
-            data: data,
-            success: function (msg) {
-                var b = bootbox.dialog({
-                    id: "dlgCreateEdit",
-                    title: title + " Egreso",
-//                    class   : "long",
-                    size: 'large',
-                    message: msg,
-                    buttons: {
-                        cancelar: {
-                            label: "Cancelar",
-                            className: "btn-primary",
-                            callback: function () {
-                            }
-                        },
-                        guardar: {
-                            id: "btnSave",
-                            label: "<i class='fa fa-save'></i> Guardar",
-                            className: "btn-success",
-                            callback: function () {
-                                return submitFormPersona();
-                            } //callback
-                        } //guardar
-                    } //buttons
-                }); //dialog
-                setTimeout(function () {
-                    b.find(".form-control").first().focus()
-                }, 500);
-            } //success
-        }); //ajax
-    } //createEdit
+    %{--function createEditRow(id) {--}%
+        %{--var title = id ? "Editar" : "Nueva";--}%
+        %{--var data = id ? {id: id} : {};--}%
+        %{--$.ajax({--}%
+            %{--type: "POST",--}%
+            %{--url: "${createLink(controller:'egreso', action:'form_ajax')}",--}%
+            %{--data: data,--}%
+            %{--success: function (msg) {--}%
+                %{--var b = bootbox.dialog({--}%
+                    %{--id: "dlgCreateEdit",--}%
+                    %{--title: title + " Egreso",--}%
+                    %{--size: 'large',--}%
+                    %{--message: msg,--}%
+                    %{--buttons: {--}%
+                        %{--cancelar: {--}%
+                            %{--label: "Cancelar",--}%
+                            %{--className: "btn-primary",--}%
+                            %{--callback: function () {--}%
+                            %{--}--}%
+                        %{--},--}%
+                        %{--guardar: {--}%
+                            %{--id: "btnSave",--}%
+                            %{--label: "<i class='fa fa-save'></i> Guardar",--}%
+                            %{--className: "btn-success",--}%
+                            %{--callback: function () {--}%
+                                %{--return submitFormPersona();--}%
+                            %{--} //callback--}%
+                        %{--} //guardar--}%
+                    %{--} //buttons--}%
+                %{--}); //dialog--}%
+                %{--setTimeout(function () {--}%
+                    %{--b.find(".form-control").first().focus()--}%
+                %{--}, 500);--}%
+            %{--} //success--}%
+        %{--}); //ajax--}%
+    %{--} //createEdit--}%
 
-    function submitFormPersona() {
-        var $form = $("#frmPersona");
-        var $btn = $("#dlgCreateEdit").find("#btnSave");
-        if ($form.valid()) {
-            $btn.replaceWith(spinner);
-            openLoader("Guardando Persona");
-            $.ajax({
-                type: "POST",
-                url: $form.attr("action"),
-                data: $form.serialize(),
-                success: function (msg) {
-                    if (msg == 'ok') {
-                        log("Persona guardada correctamente", "success");
-                        setTimeout(function () {
-                            spinner.replaceWith($btn);
-                            closeLoader();
-//                            cargarBusqueda();
-                        }, 100);
-                    } else {
-                        log("Error al guardar la información de persona", "error")
-                        closeLoader();
-                    }
-                }
-            });
-        } else {
-            return false;
-        } //else
-    }
+//    function submitFormPersona() {
+//        var $form = $("#frmPersona");
+//        var $btn = $("#dlgCreateEdit").find("#btnSave");
+//        if ($form.valid()) {
+//            $btn.replaceWith(spinner);
+//            openLoader("Guardando Persona");
+//            $.ajax({
+//                type: "POST",
+//                url: $form.attr("action"),
+//                data: $form.serialize(),
+//                success: function (msg) {
+//                    if (msg == 'ok') {
+//                        log("Persona guardada correctamente", "success");
+//                        setTimeout(function () {
+//                            spinner.replaceWith($btn);
+//                            closeLoader();
+////                            cargarBusqueda();
+//                        }, 100);
+//                    } else {
+//                        log("Error al guardar la información de persona", "error")
+//                        closeLoader();
+//                    }
+//                }
+//            });
+//        } else {
+//            return false;
+//        } //else
+//    }
 
-    function alicuotaEdit(id) {
-        $.ajax({
-            type: "POST",
-            url: "${createLink(controller:'alicuota', action:'form_ajax')}",
-            data: {
-                id: id
-            },
-            success: function (msg) {
-                var b = bootbox.dialog({
-                    id: "dlgAsignarPerfilxx",
-                    title: "Alícuota",
-//                    class   : "modal-lg",
-                    message: msg,
-                    buttons: {
-                        cancelar: {
-                            label: "<i class='fa fa-times'></i> Cerrar",
-                            className: "btn-primary",
-                            callback: function () {
-                            }
-                        },
-                        guardar: {
-                            id: "btnSave",
-                            label: "<i class='fa fa-save'></i> Guardar",
-                            className: "btn-success",
-                            callback: function () {
-                                return submitFormAlicuota();
-                            } //callback
-                        }
-                    } //buttons
-                }); //dialog
-                setTimeout(function () {
-                    b.find(".form-control").first().focus()
-                }, 100);
-            } //success
-        }); //ajax
-    }
+    %{--function alicuotaEdit(id) {--}%
+        %{--$.ajax({--}%
+            %{--type: "POST",--}%
+            %{--url: "${createLink(controller:'alicuota', action:'form_ajax')}",--}%
+            %{--data: {--}%
+                %{--id: id--}%
+            %{--},--}%
+            %{--success: function (msg) {--}%
+                %{--var b = bootbox.dialog({--}%
+                    %{--id: "dlgAsignarPerfilxx",--}%
+                    %{--title: "Alícuota",--}%
+%{--//                    class   : "modal-lg",--}%
+                    %{--message: msg,--}%
+                    %{--buttons: {--}%
+                        %{--cancelar: {--}%
+                            %{--label: "<i class='fa fa-times'></i> Cerrar",--}%
+                            %{--className: "btn-primary",--}%
+                            %{--callback: function () {--}%
+                            %{--}--}%
+                        %{--},--}%
+                        %{--guardar: {--}%
+                            %{--id: "btnSave",--}%
+                            %{--label: "<i class='fa fa-save'></i> Guardar",--}%
+                            %{--className: "btn-success",--}%
+                            %{--callback: function () {--}%
+                                %{--return submitFormAlicuota();--}%
+                            %{--} //callback--}%
+                        %{--}--}%
+                    %{--} //buttons--}%
+                %{--}); //dialog--}%
+                %{--setTimeout(function () {--}%
+                    %{--b.find(".form-control").first().focus()--}%
+                %{--}, 100);--}%
+            %{--} //success--}%
+        %{--}); //ajax--}%
+    %{--}--}%
 
-    function submitFormAlicuota() {
-        var $form = $("#frmAlicuota");
-        var $btn = $("#dlgCreateEdit").find("#btnSave");
-        if ($form.valid()) {
-            $btn.replaceWith(spinner);
-            openLoader("Guardando Alicuota");
-            $.ajax({
-                type: "POST",
-                url: $form.attr("action"),
-                data: $form.serialize(),
-                success: function (msg) {
-                    var parts = msg.split("*");
-                    log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                    setTimeout(function () {
-                        if (parts[0] == "SUCCESS") {
-                            spinner.replaceWith($btn);
-                            closeLoader();
-                            cargarBusqueda();
-                            return false;
+    %{--function submitFormAlicuota() {--}%
+        %{--var $form = $("#frmAlicuota");--}%
+        %{--var $btn = $("#dlgCreateEdit").find("#btnSave");--}%
+        %{--if ($form.valid()) {--}%
+            %{--$btn.replaceWith(spinner);--}%
+            %{--openLoader("Guardando Alicuota");--}%
+            %{--$.ajax({--}%
+                %{--type: "POST",--}%
+                %{--url: $form.attr("action"),--}%
+                %{--data: $form.serialize(),--}%
+                %{--success: function (msg) {--}%
+                    %{--var parts = msg.split("*");--}%
+                    %{--log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)--}%
+                    %{--setTimeout(function () {--}%
+                        %{--if (parts[0] == "SUCCESS") {--}%
+                            %{--spinner.replaceWith($btn);--}%
+                            %{--closeLoader();--}%
+                            %{--cargarBusqueda();--}%
+                            %{--return false;--}%
+                        %{--} else {--}%
+                            %{--spinner.replaceWith($btn);--}%
+                            %{--return false;--}%
+                        %{--}--}%
+                    %{--}, 100);--}%
+                %{--}--}%
+            %{--});--}%
+        %{--} else {--}%
+            %{--return false;--}%
+        %{--} //else--}%
+    %{--}--}%
 
-//                            location.reload(true);
-                        } else {
-                            spinner.replaceWith($btn);
-                            return false;
-                        }
-                    }, 100);
-                }
-            });
-        } else {
-            return false;
-        } //else
-    }
-
-
-
-    function eliminar (id){
-        bootbox.dialog({
-            title   : "Alerta",
-            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-            "¿Está seguro que desea eliminar el Egreso seleccionado? Esta acción no se puede deshacer.</p>",
-            buttons : {
-                cancelar : {
-                    label     : "Cancelar",
-                    className : "btn-primary",
-                    callback  : function () {
-                    }
-                },
-                eliminar : {
-                    label     : "<i class='fa fa-trash-o'></i> Eliminar",
-                    className : "btn-danger",
-                    callback  : function () {
-                        openLoader("Eliminando Egreso");
-                        $.ajax({
-                            type    : "POST",
-                            url     : '${createLink(controller:'egreso', action:'delete_ajax')}',
-                            data    : {
-                                id : id
-                            },
-                            success : function (msg) {
-                                var parts = msg.split("*");
-                                log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                                if (parts[0] == "SUCCESS") {
-                                    closeLoader();
-                                    cargarBusqueda();
-                                } else {
-                                    closeLoader();
-                                }
-                            }
-                        });
-                    }
-                }
-            }
-        });
-    }
-
-    /******/
-
-
-
+    %{--function eliminar (id){--}%
+        %{--bootbox.dialog({--}%
+            %{--title   : "Alerta",--}%
+            %{--message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +--}%
+            %{--"¿Está seguro que desea eliminar el Egreso seleccionado? Esta acción no se puede deshacer.</p>",--}%
+            %{--buttons : {--}%
+                %{--cancelar : {--}%
+                    %{--label     : "Cancelar",--}%
+                    %{--className : "btn-primary",--}%
+                    %{--callback  : function () {--}%
+                    %{--}--}%
+                %{--},--}%
+                %{--eliminar : {--}%
+                    %{--label     : "<i class='fa fa-trash-o'></i> Eliminar",--}%
+                    %{--className : "btn-danger",--}%
+                    %{--callback  : function () {--}%
+                        %{--openLoader("Eliminando Egreso");--}%
+                        %{--$.ajax({--}%
+                            %{--type    : "POST",--}%
+                            %{--url     : '${createLink(controller:'egreso', action:'delete_ajax')}',--}%
+                            %{--data    : {--}%
+                                %{--id : id--}%
+                            %{--},--}%
+                            %{--success : function (msg) {--}%
+                                %{--var parts = msg.split("*");--}%
+                                %{--log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)--}%
+                                %{--if (parts[0] == "SUCCESS") {--}%
+                                    %{--closeLoader();--}%
+                                    %{--cargarBusqueda();--}%
+                                %{--} else {--}%
+                                    %{--closeLoader();--}%
+                                %{--}--}%
+                            %{--}--}%
+                        %{--});--}%
+                    %{--}--}%
+                %{--}--}%
+            %{--}--}%
+        %{--});--}%
+    %{--}--}%
 
 </script>
-
 </body>
 </html>

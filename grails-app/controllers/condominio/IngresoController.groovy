@@ -316,13 +316,6 @@ class IngresoController extends Shield {
 
     }
 
-    def tablaIngresos_ajax() {
-
-        def ingresos = Ingreso.list()
-//        def
-
-        return [ingresos: ingresos]
-    }
 
     def tablaBuscar() {
         println "buscar .... $params"
@@ -390,7 +383,12 @@ class IngresoController extends Shield {
         return[egreso: ingreso, pagos: pagos, saldo: saldo]
     }
 
+    def infoIngreso_ajax() {
 
+//        println("params ii " + params)
 
+        def ingreso = Ingreso.get(params.ingreso)
+        return[ingreso: ingreso, saldo: params.saldo, valor: params.valor]
+    }
 
 }
