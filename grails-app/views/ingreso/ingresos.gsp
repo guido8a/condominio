@@ -24,7 +24,7 @@
 
 <elm:message tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:message>
 <div style="text-align: center; margin-top: -30px;">
-    <h3>Ingresos</h3>
+    <h3>Consulta de Ingresos</h3>
 </div>
 
 <div class="row">
@@ -33,7 +33,8 @@
         <div class="col-sm-2" style="margin-left: -30px">
             Tipo de Aporte
             <g:select from="${condominio.TipoAporte.list()}" optionValue="descripcion" optionKey="id"
-                      name="tp" id="tipoAporte" class="form-control" style="width: 180px;"/>
+                      name="tp" id="tipoAporte" noSelection="['0':'--- Todos los tipos ---']" class="form-control"
+                      style="width: 180px;"/>
         </div>
 
         <div style="margin-left: -20px;">
@@ -98,9 +99,9 @@
     <table class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
-            <th class="alinear" style="width: 15%">Tipo</th>
-            <th class="alinear" style="width: 15%">Concepto</th>
-            <th class="alinear" style="width: 28%">Persona</th>
+            <th class="alinear" style="width: 16%">Tipo</th>
+            <th class="alinear" style="width: 24%">Concepto</th>
+            <th class="alinear" style="width: 18%">Persona</th>
             <th class="alinear" style="width: 12%">Fecha</th>
             <th class="alinear" style="width: 10%">Valor</th>
             <th class="alinear" style="width: 10%">Saldo</th>
@@ -143,6 +144,7 @@
         $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
         var desde = $(".fechaD").val();
         var hasta = $(".fechaH").val();
+        var tpap = $("#tipoAporte").val();
         $.ajax({
             type: "POST",
             url: "${g.createLink(action: 'tablaBuscar')}",
@@ -153,7 +155,7 @@
                 operador: $("#oprd").val(),
                 desde: desde,
                 hasta: hasta,
-                saldo: $('#saldo').is(":checked")
+                tpap: tpap
             },
             success: function (msg) {
                 $("#tabla").html(msg);

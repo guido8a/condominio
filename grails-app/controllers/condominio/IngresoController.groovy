@@ -365,8 +365,8 @@ class IngresoController extends Shield {
                 sqlWhere += " and ${params.buscador} ${op.operador} ${op.strInicio}${params.criterio}${op.strFin}";
             }
         }
-        if(params.saldo == 'true') {
-            sqlWhere += " and ingrsldo > 0 "
+        if(params.tpap.toInteger() > 0) {
+            sqlWhere += " and tpap__id = ${params.tpap} "
         }
 
 //        println "-->sql: $sqlSelect $sqlWhere $sqlOrder"

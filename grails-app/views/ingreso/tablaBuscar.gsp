@@ -38,13 +38,13 @@ th, td {
     <table class="table-bordered table-condensed table-hover" width="100%">
         <g:each in="${data}" var="dato" status="z">
             <tr id="${dato.ingr__id}" data-id="${dato.ingr__id}" data-saldo="${dato.ingrsldo}" data-valor="${dato.ingrvlor}" class=" trIngreso ${z == 0 ? 'seleccionado' : ''}">
-                <td width="15%">
-                    ${dato?.tpapdscr}
+                <td width="16%">
+                    ${dato?.tpapdscr.size()>12? dato?.tpapdscr[0..12] + '..' : dato?.tpapdscr}
                 </td>
-                <td width="15%">
+                <td width="24%">
                     ${dato?.ingrdscr}
                 </td>
-                <td width="28%" class="text-info">
+                <td width="18%" class="text-info">
                     ${dato?.ingrprsn}
                 </td>
 

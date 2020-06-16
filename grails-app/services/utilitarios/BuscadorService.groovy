@@ -251,7 +251,7 @@ class BuscadorService {
         [[campo: 'ingrdscr', nombre: 'Concepto',      operador: "contiene:contiene,inicia:inicia con"],
          [campo: 'ingrprsn', nombre: 'Persona',       operador: "contiene:contiene,inicia:inicia con"],
          [campo: 'ingrvlor', nombre: 'Valor',         operador: "gteq:mayor a,lteq:menor a"],
-         [campo: 'ingrsldo', nombre: 'Saldo',         operador: "gteq:mayor a,lteq:menor a"]
+         [campo: 'ingrsldo', nombre: 'Saldo',         operador: "gteq:mayor a,lteq:menor a,eq:igual a"]
         ]
     }
 
