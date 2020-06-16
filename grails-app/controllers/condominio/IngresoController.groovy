@@ -388,7 +388,8 @@ class IngresoController extends Shield {
 //        println("params ii " + params)
 
         def ingreso = Ingreso.get(params.ingreso)
-        return[ingreso: ingreso, saldo: params.saldo, valor: params.valor]
+        def pagos = Pago.findAllByIngreso(ingreso)
+        return[ingreso: ingreso, saldo: params.saldo, valor: params.valor, pagos: pagos]
     }
 
 }

@@ -38,13 +38,12 @@ th, td {
     <table class="table-bordered table-condensed table-hover" width="100%">
         <g:each in="${data}" var="dato" status="z">
             <tr id="${dato.ingr__id}" data-id="${dato.ingr__id}" data-saldo="${dato.ingrsldo}" data-valor="${dato.ingrvlor}" class=" trIngreso ${z == 0 ? 'seleccionado' : ''}">
-            %{--<tr id="${dato.egrs__id}" data-id="${dato.egrs__id}" data-tam="${condominio.PagoEgreso.findAllByEgreso(condominio.Egreso.get(dato.egrs__id)).size()}" --}%
-                %{--class="${dato.egrssldo > 0 ? clase : ''} trEgreso ${z == 0 ? 'seleccionado' : ''} ${PagoEgreso.findByEgreso(Egreso.get(dato.egrs__id)).estado == 'R' ? 'revisado' : ''} ${dato.egrssldo > 0 ? 'saldo' : ''}">--}%
-
-                <td width="30%">
+                <td width="15%">
+                    ${dato?.tpapdscr}
+                </td>
+                <td width="15%">
                     ${dato?.ingrdscr}
                 </td>
-
                 <td width="28%" class="text-info">
                     ${dato?.ingrprsn}
                 </td>
@@ -62,7 +61,6 @@ th, td {
         </g:each>
     </table>
 </div>
-
 
 <script type="text/javascript">
 
