@@ -34,7 +34,7 @@
             <th>Apellidos</th>
             <th>Propietario</th>
             <th>Valor</th>
-            %{--<th>Aplicar <input style="margin-left: 10px" type="checkbox" id="todosCk"/></th>--}%
+            <th>Estado</th>
             <th>Aplicar <g:checkBox name="ck_name" style="margin-left: 10px" class="todosCk" /></th>
             <th>Observaciones</th>
             <th>Borrar</th>
@@ -44,16 +44,16 @@
 
         <g:each in="${personas}" var="prsn" status="i">
             <tr align="right">
-                <td align="center" width="10%">
+                <td align="center" width="9%">
                     ${prsn?.edifdscr}
                 </td>
-                <td align="center" width="6%">
+                <td align="center" width="5%">
                     ${prsn?.prsndpto}
                 </td>
-                <td align="left" width="12%">
+                <td align="left" width="11%">
                     ${prsn?.prsnnmbr}
                 </td>
-                <td align="left" width="12%">
+                <td align="left" width="11%">
                     ${prsn?.prsnapll}
                 </td>
                 <td align="left" width="10%">
@@ -64,6 +64,9 @@
                     data-obsrog="${prsn?.ingrobsr}"
                     style="width:12%" title="Ingrese el valor y presione Enter para aceptarlo">
                     <g:formatNumber number="${prsn?.ingrvlor?:oblg.valor}" minFractionDigits="2" maxFractionDigits="2" format="##,##0" locale="ec"/>
+                </td>
+                <td style="width: 4%">
+
                 </td>
                 <td style="text-align: center;" class="chk">
                     <g:if test="${!Pago.findAllByIngreso(condominio.Ingreso.get(prsn?.ingr__id))?.estadoAdministrador?.contains("S")}">
@@ -82,6 +85,7 @@
                     <g:if test="${prsn?.ingrvlor}">
                         <g:if test="${!Pago.findAllByIngreso(condominio.Ingreso.get(prsn?.ingr__id))?.estadoAdministrador?.contains("S")}">
                             <a href="#" class="btn btn-danger btn-sm btnBorrarRegistro" data-id="${prsn?.prsn__id}" data-obl="${oblg.id}" title="Eliminar registro"><i class="fa fa-trash"></i> </a>
+                            <a href="#" class="btn btn-success btn-sm btnCambiarEstado" data-id="${prsn?.prsn__id}" data-obl="${oblg.id}" title="Cambiar estado"><i class="fa fa-check"></i> </a>
                         </g:if>
                     </g:if>
                 </td>

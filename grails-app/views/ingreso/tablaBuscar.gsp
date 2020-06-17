@@ -70,7 +70,8 @@ th, td {
         <table class="table table-bordered table-hover table-condensed">
             <thead>
             <tr>
-                <th style="width: 76%; text-align: right !important;">Total  </th>
+                <th style="width: 44%; text-align: left !important;">* Número de registros: ${data.size()}</th>
+                <th style="width: 32%; text-align: right !important;">Totales  </th>
                 <th class="alinear" style="width: 11%">${totalValor}</th>
                 <th class="alinear" style="width: 11%">${totalSaldo}</th>
                 <th class="alinear" style="width: 2%"></th>
