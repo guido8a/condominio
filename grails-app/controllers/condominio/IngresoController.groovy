@@ -330,12 +330,14 @@ class IngresoController extends Shield {
         def data = cn.rows(sql.toString())
 
         def msg = ""
+/*
         if(data?.size() > 50){
             data.pop()   //descarta el último puesto que son 21
             msg = "<div class='alert-danger' style='margin-top:-20px; diplay:block; height:25px;margin-bottom: 20px;'>" +
                     " <i class='fa fa-warning fa-2x pull-left'></i> Su búsqueda ha generado más de 30 resultados. " +
                     "Use más letras para especificar mejor la búsqueda.</div>"
         }
+*/
         cn.close()
 
         return [data: data, msg: msg, fcds: params.desde]
@@ -355,7 +357,7 @@ class IngresoController extends Shield {
 //        def sqlSelect = "select * from ls_egrs(${session.empresa.id}, ${cont}, ${fcds}, ${fchs}) "
         def sqlSelect = "select * from ls_ingr(${session.condominio.id}, ${fcds}, ${fchs}) "
         def sqlWhere = "where (${wh})"
-        def sqlOrder = "order by ingrfcha, ${params.ordenar} limit 51"
+        def sqlOrder = "order by ingrfcha, ${params.ordenar}"
 //        println "sql: $sqlSelect $sqlWhere $sqlOrder"
 
 //        println "operador: $operador"

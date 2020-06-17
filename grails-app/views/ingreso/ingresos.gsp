@@ -178,7 +178,8 @@
 
     $("#btnLimpiarBusqueda").click(function () {
         $("#criterio_con").val('');
-        $(".fechaD, .fechaH").val('${new Date().format("dd-MM-yyyy")}');
+        $(".fechaD").val('${(new Date() - 30).format("dd-MM-yyyy")}');
+        $(".fechaH").val('${new Date().format("dd-MM-yyyy")}');
     });
 
     $("#nuevo").click(function () {
