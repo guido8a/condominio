@@ -105,6 +105,7 @@
             <th class="alinear" style="width: 12%">Fecha</th>
             <th class="alinear" style="width: 10%">Valor</th>
             <th class="alinear" style="width: 10%">Saldo</th>
+            <th class="alinear" style="width: 2%"></th>
         </tr>
         </thead>
     </table>
