@@ -70,7 +70,9 @@
                 </td>
                 <td style="text-align: center;" class="chk">
                     <g:if test="${!Pago.findAllByIngreso(condominio.Ingreso.get(prsn?.ingr__id))?.estadoAdministrador?.contains("S")}">
-                        <g:checkBox name="ckl" class="seleccion"/>
+                        <g:if test="${!Pago.findAllByIngreso(Ingreso.get(prsn.ingr__id))}">
+                            <g:checkBox name="ckl" class="seleccion"/>
+                        </g:if>
                     </g:if>
                 </td>
                 <td class="observaciones">
@@ -84,7 +86,9 @@
                 <td style="text-align: center">
                     <g:if test="${prsn?.ingrvlor}">
                         <g:if test="${!Pago.findAllByIngreso(condominio.Ingreso.get(prsn?.ingr__id))?.estadoAdministrador?.contains("S")}">
-                            <a href="#" class="btn btn-danger btn-xs btnBorrarRegistro" data-id="${prsn?.prsn__id}" data-obl="${oblg.id}" title="Eliminar registro"><i class="fa fa-trash"></i> </a>
+                            <g:if test="${!Pago.findAllByIngreso(Ingreso.get(prsn.ingr__id))}">
+                                <a href="#" class="btn btn-danger btn-xs btnBorrarRegistro" data-id="${prsn?.prsn__id}" data-obl="${oblg.id}" title="Eliminar registro"><i class="fa fa-trash"></i> </a>
+                            </g:if>
                             <g:if test="${prsn.ingretdo != 'B'}">
                                 <a href="#" class="btn btn-success btn-xs btnCambiarEstado" data-id="${prsn?.ingr__id}" title="Cambiar estado"><i class="fa fa-check"></i> </a>
                             </g:if>
@@ -107,7 +111,6 @@
             bootbox.confirm("<i class='fa fa-warning fa-3x pull-left text-warning'></i>" + "<strong>" +  "Está seguro que desea cambiar el estado?" + "</strong>", function (res) {
                 if (res) {
                     openLoader("Guardando...");
-
                     $.ajax({
                         type: 'POST',
                         url: '${createLink(controller: 'vivienda', action: 'cambiarEstado_ajax')}',
