@@ -278,15 +278,6 @@ class ViviendaController extends Shield {
 
         def ingreso = Ingreso.findByObligacionAndPersona(obligacion, persona)
 
-//        try{
-//            ingreso.delete(flush: true)
-//            render "ok"
-//        }catch (e){
-//            println("error al borrar el ingreso " + e + " " + ingreso?.errors)
-//            render "no"
-//        }
-
-
         ingreso.valor = 0
 
         try{
@@ -296,10 +287,44 @@ class ViviendaController extends Shield {
             println("error al modificar el ingreso " + e + " " + ingreso?.errors)
             render "no"
         }
-
-
     }
 
+    def cambiarEstado_ajax(){
 
+//        println("params ce " + params)
+
+        def ingreso = Ingreso.get(params.id)
+        ingreso.estado = 'B'
+        ingreso.observaciones = ingreso.observaciones + ", Pagado a la administración anterior"
+
+        if(!ingreso.save()){
+            render "no"
+        }else{
+
+            def pago = Pago.findByIngreso(ingreso)
+
+            if(!pago){
+                pago = new Pago()
+                pago.ingreso = ingreso
+            }
+
+            pago.valor = ingreso.valor
+            pago.fechaPago = new Date()
+            pago.documento = 'NA'
+            pago.observaciones = ingreso.observaciones + ", Pagado a la administración anterior"
+            pago.mora = 0
+            pago.tasa = 0
+            pago.mess = 0
+
+            if(!pago.save(flush: true)){
+                println("error al guardar el pago generado por cambio de estado B")
+                ingreso.estado = null
+                ingreso.save(flush: true)
+                render "no"
+            }else{
+                render "ok"
+            }
+        }
+    }
 
 }

@@ -43,7 +43,7 @@
         <tbody>
 
         <g:each in="${personas}" var="prsn" status="i">
-            <tr align="right">
+            <tr align="right" style="${prsn.ingretdo == 'B' ? 'background-color: #bcbec7;' : ''}">
                 <td align="center" width="9%">
                     ${prsn?.edifdscr}
                 </td>
@@ -85,7 +85,9 @@
                     <g:if test="${prsn?.ingrvlor}">
                         <g:if test="${!Pago.findAllByIngreso(condominio.Ingreso.get(prsn?.ingr__id))?.estadoAdministrador?.contains("S")}">
                             <a href="#" class="btn btn-danger btn-xs btnBorrarRegistro" data-id="${prsn?.prsn__id}" data-obl="${oblg.id}" title="Eliminar registro"><i class="fa fa-trash"></i> </a>
-                            <a href="#" class="btn btn-success btn-xs btnCambiarEstado" data-id="${prsn?.prsn__id}" data-obl="${oblg.id}" title="Cambiar estado"><i class="fa fa-check"></i> </a>
+                            <g:if test="${prsn.ingretdo != 'B'}">
+                                <a href="#" class="btn btn-success btn-xs btnCambiarEstado" data-id="${prsn?.ingr__id}" title="Cambiar estado"><i class="fa fa-check"></i> </a>
+                            </g:if>
                         </g:if>
                     </g:if>
                 </td>
@@ -100,6 +102,33 @@
 
     <script type="text/javascript">
 
+        $(".btnCambiarEstado").click(function () {
+
+            bootbox.confirm("<i class='fa fa-warning fa-3x pull-left text-warning'></i>" + "<strong>" +  "Está seguro que desea cambiar el estado?" + "</strong>", function (res) {
+                if (res) {
+                    openLoader("Guardando...");
+                    var id = $(this).data("id");
+                    $.ajax({
+                        type: 'POST',
+                        url: '${createLink(controller: 'vivienda', action: 'cambiarEstado_ajax')}',
+                        data:{
+                            id: id
+                        },
+                        success: function (msg){
+                            closeLoader();
+                            if(msg == 'ok'){
+                                log("Estado cambiado correctamente","success");
+                                setTimeout(function() {
+                                    location.reload(true);
+                                }, 1000);
+                            }else{
+                                log("Error al cambiar el estado","error");
+                            }
+                        }
+                    });
+                }
+            });
+        });
 
         $(".btnBorrarRegistro").click(function () {
             var persona = $(this).data("id");
