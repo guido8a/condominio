@@ -3,6 +3,8 @@ package condominio
 import org.h2.api.DatabaseEventListener
 import org.springframework.dao.DataIntegrityViolationException
 import seguridad.Persona
+import seguridad.Prfl
+import seguridad.Sesn
 import seguridad.Shield
 
 
@@ -259,13 +261,30 @@ class AdminController extends Shield {
 //        def cn3 = dbConnectionService.getConnection()
 //        def data3 = cn3.rows(sql3.toString())
 
+
+
+
         return[adminInstance: administración]
     }
 
     def guardarAdministracion_ajax() {
-//        println("params " + params)
+        println("params " + params)
         def errores = 0
         def anterior = Admin.get(params.id)
+        def administrador = Persona.get(params."administrador_name")
+        def revisor = Persona.get(params."revisor_name")
+
+        def perfilAdmin = Prfl.findByCodigo('ADC')
+        def perfilRev = Prfl.findByCodigo('RVS')
+        def perfilUsu = Prfl.findByCodigo('USU')
+
+        def sesionAnteriorAdmin = Sesn.findByUsuarioAndPerfil(anterior.administrador,perfilAdmin)
+        def sesionAnteriorRev = Sesn.findByUsuarioAndPerfil(anterior.revisor,perfilRev)
+
+        def anteriorUsuAdmin = Sesn.findAllByUsuarioAndPerfil(anterior.administrador,perfilUsu)
+        def anteriorUsuRev = Sesn.findAllByUsuarioAndPerfil(anterior.revisor,perfilUsu)
+
+
         def fechaActual = new Date().parse("dd-MM-yyyy",params."nuevaFechaInicio_input")
         def fechaAnterior = anterior.fechaInicio
 
@@ -275,6 +294,69 @@ class AdminController extends Shield {
         if(fechaAnterior >= fechaActual){
             render "er_Error: La fecha ingresada es menor a la fecha de inicio del período anterior."
         }else{
+
+
+            //perfiles para usuarios admin-rev anteriores
+            if(!anteriorUsuAdmin){
+                def sesUsuario = new Sesn()
+                sesUsuario.fechaInicio = new Date()
+                sesUsuario.perfil = perfilUsu
+                sesUsuario.usuario = anterior.administrador
+
+                if(!sesUsuario.save(flush:true)){
+                    println("error al guardar nueva sesion de admin anterior")
+                    errores = 1
+                }else{
+
+                }
+            }
+
+            sesionAnteriorAdmin.delete(flush: true)
+
+            if(!anteriorUsuRev){
+                def sesUsuarioRev = new Sesn()
+                sesUsuarioRev.fechaInicio = new Date()
+                sesUsuarioRev.perfil = perfilUsu
+                sesUsuarioRev.usuario = anterior.revisor
+
+                if(!sesUsuarioRev.save(flush:true)){
+                    println("error al guardar nueva sesion de revisor anterior")
+                    errores = 1
+                }else{
+
+                }
+            }
+
+            sesionAnteriorRev.delete(flush: true)
+
+            //perfiles nuevos
+
+            def actualUsuAdmin = Sesn.findByUsuarioAndPerfil(administrador,perfilAdmin)
+            def actualUsuRev = Sesn.findByUsuarioAndPerfil(revisor,perfilRev)
+
+            if(!actualUsuAdmin){
+                def sesAdminNuevo = new Sesn()
+                sesAdminNuevo.fechaInicio = new Date()
+                sesAdminNuevo.perfil = perfilAdmin
+                sesAdminNuevo.usuario = administrador
+
+                if(!sesAdminNuevo.save(flush:true)){
+                    println("error al guardar nueva sesion de admin nuevo")
+                    errores = 1
+                }
+            }
+
+            if(!actualUsuRev){
+                def sesRevNuevo = new Sesn()
+                sesRevNuevo.fechaInicio = new Date()
+                sesRevNuevo.perfil = perfilRev
+                sesRevNuevo.usuario = revisor
+
+                if(!sesRevNuevo.save(flush:true)){
+                    println("error al guardar nueva sesion de revisor nuevo")
+                    errores = 1
+                }
+            }
 
             //saldos
             def sql = "select * from saldos(${session.condominio.id}, '${fechaAnterior.format("dd-MM-yyyy")}','${fechaActual.format("dd-MM-yyyy")}')"
@@ -289,8 +371,6 @@ class AdminController extends Shield {
             }
 
             if(errores == 0){
-                def administrador = Persona.get(params."administrador_name")
-                def revisor = Persona.get(params."revisor_name")
                 def fecha = fechaActual
                 def nuevo = new Admin()
                 nuevo.administrador = administrador
@@ -300,7 +380,7 @@ class AdminController extends Shield {
                 nuevo.observaciones = params.nuevasObservaciones
 
                 if(!nuevo.save(flush: true)){
-                    println("error al guardar el nuevo administrado")
+                    println("error al guardar el nuevo administrador")
                     render "no"
                 }else{
                     render "ok"
