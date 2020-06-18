@@ -291,7 +291,7 @@ class ViviendaController extends Shield {
 
     def cambiarEstado_ajax(){
 
-//        println("params ce " + params)
+        println("params ce " + params)
 
         def ingreso = Ingreso.get(params.id)
         ingreso.estado = 'B'

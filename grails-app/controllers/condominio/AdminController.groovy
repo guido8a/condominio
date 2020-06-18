@@ -60,7 +60,7 @@ class AdminController extends Shield {
      * @return adminInstanceList: la lista de elementos filtrados, adminInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def list() {
-        def adminInstanceList = getList(params, false)
+        def adminInstanceList = getList(params, false).sort{it.fechaInicio}
         def adminInstanceCount = getList(params, true).size()
         return [adminInstanceList: adminInstanceList, adminInstanceCount: adminInstanceCount]
     }
