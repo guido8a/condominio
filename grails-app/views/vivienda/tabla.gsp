@@ -90,7 +90,9 @@
                                 <a href="#" class="btn btn-danger btn-xs btnBorrarRegistro" data-id="${prsn?.prsn__id}" data-obl="${oblg.id}" title="Eliminar registro"><i class="fa fa-trash"></i> </a>
                             </g:if>
                             <g:if test="${prsn.ingretdo != 'B'}">
-                                <a href="#" class="btn btn-success btn-xs btnCambiarEstado" data-id="${prsn?.ingr__id}" title="Cambiar estado"><i class="fa fa-check"></i> </a>
+                                <g:if test="${band}">
+                                    <a href="#" class="btn btn-success btn-xs btnCambiarEstado" data-id="${prsn?.ingr__id}" title="Cambiar estado"><i class="fa fa-check"></i> </a>
+                                </g:if>
                             </g:if>
                         </g:if>
                     </g:if>

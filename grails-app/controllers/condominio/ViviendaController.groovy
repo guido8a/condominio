@@ -91,7 +91,12 @@ class ViviendaController extends Shield {
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 
-        [personas: data, params: params, oblg: oblg]
+        def administracion = Admin.findByFechaFinIsNull()
+        def fecha = administracion.fechaInicio + 90
+
+        def band = new Date().before(fecha)
+
+        [personas: data, params: params, oblg: oblg, band: band]
     }
 
     def actualizar() {
