@@ -395,4 +395,26 @@ class AdminController extends Shield {
         }
     }
 
+    def comboAdmin_ajax(){
+        def administración = Admin.get(params.id)
+        def adminActual = [administración?.administrador?.id]
+        def condominio = Condominio.get(session.condominio.id)
+        def listaAdmin = Persona.findAllByCondominioAndIdNotInList(condominio, adminActual).sort{it.nombre}
+
+        return[adminInstance: administración,listaAdmin: listaAdmin]
+    }
+
+    def comboRev_ajax(){
+
+//        println("params rev " + params)
+
+        def administración = Admin.get(params.id)
+        def adminSeleccionado = Persona.get(params.admin)
+        def revisorActual = [administración?.revisor?.id, adminSeleccionado?.id]
+        def condominio = Condominio.get(session.condominio.id)
+        def listarevisor = Persona.findAllByCondominioAndIdNotInList(condominio, revisorActual).sort{it.nombre}
+
+        return[adminInstance: administración,listaRevisor: listarevisor]
+    }
+
 }

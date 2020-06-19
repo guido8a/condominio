@@ -73,32 +73,29 @@
 
         <div class="form-group keeptogether ${hasErrors(bean: adminInstance, field: 'administrador', 'error')} required">
             <span class="grupo">
-                <label for="nuevoAdministrador" class="col-md-4 control-label">
+                %{--<label for="nuevoAdministrador" class="col-md-4 control-label">--}%
+                <label class="col-md-4 control-label">
                    Nuevo administrador
                 </label>
-                <div class="col-md-8">
-                    %{--<g:select id="nuevoAdministrador" name="administrador_name" from="${seguridad.Persona.list([sort: 'nombre'])}"--}%
-                              %{--optionKey="id" required="" value="${adminInstance?.administrador?.id}"--}%
+                <div class="col-md-8" id="divAdmin">
+                    %{--<g:select id="nuevoAdministrador" name="administrador_name" from="${listaAdmin}"--}%
+                              %{--optionKey="id" optionValue="${{it.nombre + " " + it.apellido + " - Departamento: " + "(" + it.departamento + ")"}}" required="" value="${adminInstance?.administrador?.id}"--}%
                               %{--class="many-to-one form-control"/>--}%
-                    <g:select id="nuevoAdministrador" name="administrador_name" from="${listaAdmin}"
-                              optionKey="id" optionValue="${{it.nombre + " " + it.apellido + " - Departamento: " + "(" + it.departamento + ")"}}" required="" value="${adminInstance?.administrador?.id}"
-                              class="many-to-one form-control"/>
                 </div>
             </span>
         </div>
 
         <div class="form-group keeptogether ${hasErrors(bean: adminInstance, field: 'revisor', 'error')} required">
             <span class="grupo">
-                <label for="nuevoRevisor" class="col-md-4 control-label">
+                %{--<label for="nuevoRevisor" class="col-md-4 control-label">--}%
+                <label class="col-md-4 control-label">
                     Nuevo revisor
                 </label>
-                <div class="col-md-8">
-                    %{--<g:select id="nuevoRevisor" name="revisor_name" from="${seguridad.Persona.list([sort: 'nombre'])}"--}%
-                              %{--optionKey="id" required="" value="${adminInstance?.revisor?.id}" class="many-to-one form-control"/>--}%
-                    <g:select id="nuevoRevisor" name="revisor_name" from="${listaRevisor}"
-                              optionKey="id" optionValue="${{it.nombre + " " + it.apellido + " - Departamento: " + "(" + it.departamento + ")"}}" required=""
-                              value="${adminInstance?.revisor?.id}"
-                              class="many-to-one form-control"/>
+                <div class="col-md-8" id="divRevisor">
+                    %{--<g:select id="nuevoRevisor" name="revisor_name" from="${listaRevisor}"--}%
+                              %{--optionKey="id" optionValue="${{it.nombre + " " + it.apellido + " - Departamento: " + "(" + it.departamento + ")"}}" required=""--}%
+                              %{--value="${adminInstance?.revisor?.id}"--}%
+                              %{--class="many-to-one form-control"/>--}%
                 </div>
             </span>
         </div>
@@ -124,3 +121,41 @@
         </div>
     </g:form>
 </div>
+
+<script type="text/javascript">
+
+    cargarComboAdmin(null);
+    cargarComboRevisor();
+
+    function cargarComboAdmin(rev) {
+        $.ajax({
+           type: 'POST',
+            url:'${createLink(controller: 'admin', action: 'comboAdmin_ajax')}',
+            data:{
+                id: '${adminInstance?.id}',
+                revisor:rev
+            },
+            success: function (msg) {
+                $("#divAdmin").html(msg)
+            }
+        });
+
+    }
+
+    function cargarComboRevisor(admin) {
+        $.ajax({
+            type: 'POST',
+            url:'${createLink(controller: 'admin', action: 'comboRev_ajax')}',
+            data:{
+                id: '${adminInstance?.id}',
+                admin: admin
+            },
+            success: function (msg) {
+                $("#divRevisor").html(msg)
+            }
+        });
+
+    }
+
+
+</script>
