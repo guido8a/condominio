@@ -255,20 +255,23 @@ class AdminController extends Shield {
     def cerrar_ajax(){
 
         def administración = Admin.get(params.id)
+        def adminActual = [administración?.administrador?.id]
+        def revisorActual = [administración?.revisor?.id]
         def condominio = Condominio.get(session.condominio.id)
 //        def sql3 = "select prsnnmbr, prsnapll, prsntelf, prsndpto from prsn, admn where prsn.prsn__id = admn.prsn__id and cndm__id = '${condominio?.id}' and admnfcfn is null"
 //        println("sql " + sql3)
 //        def cn3 = dbConnectionService.getConnection()
 //        def data3 = cn3.rows(sql3.toString())
 
+        def listaAdmin = Persona.findAllByCondominioAndIdNotInList(condominio, adminActual).sort{it.nombre}
+        def listarevisor = Persona.findAllByCondominioAndIdNotInList(condominio, revisorActual).sort{it.nombre}
 
 
-
-        return[adminInstance: administración]
+        return[adminInstance: administración, listaAdmin: listaAdmin, listaRevisor: listarevisor]
     }
 
     def guardarAdministracion_ajax() {
-        println("params " + params)
+//        println("params " + params)
         def errores = 0
         def anterior = Admin.get(params.id)
         def administrador = Persona.get(params."administrador_name")
@@ -295,7 +298,6 @@ class AdminController extends Shield {
             render "er_Error: La fecha ingresada es menor a la fecha de inicio del período anterior."
         }else{
 
-
             //perfiles para usuarios admin-rev anteriores
             if(!anteriorUsuAdmin){
                 def sesUsuario = new Sesn()
@@ -312,6 +314,7 @@ class AdminController extends Shield {
             }
 
             sesionAnteriorAdmin?.fechaFin =  new Date()
+            sesionAnteriorAdmin.save(flush: true)
 
             if(!anteriorUsuRev){
                 def sesUsuarioRev = new Sesn()
@@ -328,6 +331,7 @@ class AdminController extends Shield {
             }
 
             sesionAnteriorRev?.fechaFin = new Date()
+            sesionAnteriorRev.save(flush:true)
 
             //perfiles nuevos
 

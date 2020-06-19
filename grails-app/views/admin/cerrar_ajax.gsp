@@ -77,8 +77,11 @@
                    Nuevo administrador
                 </label>
                 <div class="col-md-8">
-                    <g:select id="nuevoAdministrador" name="administrador_name" from="${seguridad.Persona.list([sort: 'nombre'])}"
-                              optionKey="id" required="" value="${adminInstance?.administrador?.id}"
+                    %{--<g:select id="nuevoAdministrador" name="administrador_name" from="${seguridad.Persona.list([sort: 'nombre'])}"--}%
+                              %{--optionKey="id" required="" value="${adminInstance?.administrador?.id}"--}%
+                              %{--class="many-to-one form-control"/>--}%
+                    <g:select id="nuevoAdministrador" name="administrador_name" from="${listaAdmin}"
+                              optionKey="id" optionValue="${{it.nombre + " " + it.apellido + " - Departamento: " + "(" + it.departamento + ")"}}" required="" value="${adminInstance?.administrador?.id}"
                               class="many-to-one form-control"/>
                 </div>
             </span>
@@ -90,8 +93,12 @@
                     Nuevo revisor
                 </label>
                 <div class="col-md-8">
-                    <g:select id="nuevoRevisor" name="revisor_name" from="${seguridad.Persona.list([sort: 'nombre'])}"
-                              optionKey="id" required="" value="${adminInstance?.revisor?.id}" class="many-to-one form-control"/>
+                    %{--<g:select id="nuevoRevisor" name="revisor_name" from="${seguridad.Persona.list([sort: 'nombre'])}"--}%
+                              %{--optionKey="id" required="" value="${adminInstance?.revisor?.id}" class="many-to-one form-control"/>--}%
+                    <g:select id="nuevoRevisor" name="revisor_name" from="${listaRevisor}"
+                              optionKey="id" optionValue="${{it.nombre + " " + it.apellido + " - Departamento: " + "(" + it.departamento + ")"}}" required=""
+                              value="${adminInstance?.revisor?.id}"
+                              class="many-to-one form-control"/>
                 </div>
             </span>
         </div>
