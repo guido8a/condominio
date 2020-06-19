@@ -278,11 +278,11 @@ class AdminController extends Shield {
         def perfilRev = Prfl.findByCodigo('RVS')
         def perfilUsu = Prfl.findByCodigo('USU')
 
-        def sesionAnteriorAdmin = Sesn.findByUsuarioAndPerfil(anterior.administrador,perfilAdmin)
-        def sesionAnteriorRev = Sesn.findByUsuarioAndPerfil(anterior.revisor,perfilRev)
+        def sesionAnteriorAdmin = Sesn.findByUsuarioAndPerfilAndFechaFinIsNull(anterior.administrador,perfilAdmin)
+        def sesionAnteriorRev = Sesn.findByUsuarioAndPerfilAndFechaFinIsNull(anterior.revisor,perfilRev)
 
-        def anteriorUsuAdmin = Sesn.findAllByUsuarioAndPerfil(anterior.administrador,perfilUsu)
-        def anteriorUsuRev = Sesn.findAllByUsuarioAndPerfil(anterior.revisor,perfilUsu)
+        def anteriorUsuAdmin = Sesn.findAllByUsuarioAndPerfilAndFechaFinIsNull(anterior.administrador,perfilUsu)
+        def anteriorUsuRev = Sesn.findAllByUsuarioAndPerfilAndFechaFinIsNull(anterior.revisor,perfilUsu)
 
 
         def fechaActual = new Date().parse("dd-MM-yyyy",params."nuevaFechaInicio_input")
@@ -311,7 +311,7 @@ class AdminController extends Shield {
                 }
             }
 
-            sesionAnteriorAdmin.delete(flush: true)
+            sesionAnteriorAdmin?.fechaFin =  new Date()
 
             if(!anteriorUsuRev){
                 def sesUsuarioRev = new Sesn()
@@ -327,12 +327,12 @@ class AdminController extends Shield {
                 }
             }
 
-            sesionAnteriorRev.delete(flush: true)
+            sesionAnteriorRev?.fechaFin = new Date()
 
             //perfiles nuevos
 
-            def actualUsuAdmin = Sesn.findByUsuarioAndPerfil(administrador,perfilAdmin)
-            def actualUsuRev = Sesn.findByUsuarioAndPerfil(revisor,perfilRev)
+            def actualUsuAdmin = Sesn.findByUsuarioAndPerfilAndFechaFinIsNull(administrador,perfilAdmin)
+            def actualUsuRev = Sesn.findByUsuarioAndPerfilAndFechaFinIsNull(revisor,perfilRev)
 
             if(!actualUsuAdmin){
                 def sesAdminNuevo = new Sesn()

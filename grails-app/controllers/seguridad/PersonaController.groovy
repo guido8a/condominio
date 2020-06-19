@@ -276,12 +276,20 @@ class PersonaController extends Shield {
 
     def tablaPerfiles_ajax() {
 
-        def perfiles = []
+//        def perfiles = []
         def usuario = Persona.get(params.id)
-        perfiles = Sesn.withCriteria {
-            eq("usuario", usuario)
-            perfil {
-                order("nombre", "asc")
+//        perfiles = Sesn.withCriteria {
+//            eq("usuario", usuario)
+//            perfil {
+//                order("nombre", "asc")
+//            }
+//        }
+
+        def perfilesUsr = Sesn.findAllByUsuario(usuario, [sort: 'perfil'])
+        def perfiles = []
+        perfilesUsr.each { p ->
+            if (p.estaActivo) {
+                perfiles.add(p)
             }
         }
 
@@ -293,14 +301,24 @@ class PersonaController extends Shield {
         def usuario = Persona.get(params.id)
         def perfilSeleccionado = Prfl.get(params.perfil)
 
-        def perfiles = Sesn.withCriteria {
-            eq("usuario", usuario)
-            perfil {
-                order("nombre", "asc")
+//        def perfiles = Sesn.withCriteria {
+//            eq("usuario", usuario)
+//            perfil {
+//                order("nombre", "asc")
+//            }
+//        }
+
+
+        def perfilesUsr = Sesn.findAllByUsuario(usuario, [sort: 'perfil'])
+        def perfiles = []
+        perfilesUsr.each { p ->
+            if (p.estaActivo) {
+                perfiles.add(p)
             }
         }
 
-        if (perfiles.perfil.id.contains(perfilSeleccionado.id)) {
+
+        if (perfiles.contains(perfilSeleccionado)) {
             render "no_Este perfil ya se encuentra asignado al usuario"
         } else {
             def sesion = new Sesn()
@@ -321,9 +339,10 @@ class PersonaController extends Shield {
     def borrarPerfil_ajax() {
 //        println("params " + params)
         def sesion = Sesn.get(params.id)
+        sesion.fechaFin = new Date();
 
         try {
-            sesion.delete(flush: true)
+            sesion.save(flush: true)
             render "ok"
         } catch (e) {
             println("error al borrar el perfil " + e)
