@@ -41,13 +41,13 @@
 
         <div class="archivo">
             Para mayor información puede consultar el
-            <a href="${createLink(uri: '/descriptivo.pdf')}"><img
+            <a href="${createLink(uri: '/descriptivo condominios.pdf')}" target="_blank"><img
                     src="${resource(dir: 'images', file: 'pdf_pq.png')}"/>descriptivo del sistema</a>
         </div>
 
 
         <p class="text-info pull-right" style="font-size: 10px; margin-top: 20px">
-            Desarrollado por: TEDEIN S.A. Versión ${message(code: 'version', default: '1.1.0x')}
+        &copy; Desarrollado por: TEDEIN S.A. Versión ${message(code: 'version', default: '1.1.0x')} - (2018 - 2020)
         </p>
     </div>
 </div>

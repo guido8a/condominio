@@ -1,14 +1,15 @@
 <style type="text/css">
-.flotarderecha{
-    float: right;
+    .deuda {
+        /*background-color: #efefef;*/
+        color: #d44;
+    }
 
-}
-
-.derecha{
-    text-align: right;
-}
+    .derecha{
+        text-align: right;
+    }
 </style>
 
+<g:set var="clase" value="${'deuda'}"/>
 
 <div class="row">
     <div class="col-xs-12 alert alert-warning">
@@ -84,7 +85,7 @@
                 <div class="" style="width: 100%;height: 260px; overflow-y: auto;float: right;" >
                     <table class="table-bordered table-condensed table-hover" width="98%">
                         <g:each in="${ingresos}" var="ingreso">
-                            <tr style="width: 100%">
+                            <tr style="width: 100%" class="${ingreso.pagovlor == 0 ? clase : ''}">
                                 <td style="width: 10%">${ingreso.prsndpto}</td>
                                 <td style="width: 20%">${ingreso.prsn}</td>
                                 <td style="width: 12%">${ingreso.tpocdscr}</td>

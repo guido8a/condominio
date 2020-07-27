@@ -26,7 +26,8 @@
                     %{--<tr class="trIngreso  ${i== 0 ? 'seleccionado' : ''}" ing="${ingr?.id}">--}%
                     <tr class="trIngreso  ${i== 0 ? 'seleccionado' : ''}" ing="${ingr?.ingr__id}">
                         %{--<td>${ingr.obligacion.descripcion} ${ingr.observaciones? ': ' + ingr.observaciones :''}</td>--}%
-                        <td>${condominio.Ingreso.get(ingr?.ingr__id)?.obligacion?.descripcion} ${ingr.ingrobsr ? ': ' + ingr.ingrobsr :''}</td>
+                        %{--<td>${condominio.Ingreso.get(ingr?.ingr__id)?.obligacion?.descripcion} ${ingr.ingrobsr ? ': ' + ingr.ingrobsr :''}</td>--}%
+                        <td>${condominio.Ingreso.get(ingr?.ingr__id)?.obligacion?.descripcion}</td>
                         %{--<td class="derecha"><g:formatNumber number="${ingr?.valor}" format="##,##0" locale="en_US" minFractionDigits="2" maxFractionDigits="2"/></td>--}%
                         <td class="derecha"><g:formatNumber number="${ingr?.ingrvlor}" format="##,##0" locale="en_US" minFractionDigits="2" maxFractionDigits="2"/></td>
                         <td class="derecha ${saldo > 0 ? 'azul' : 'verde'}"><g:formatNumber number="${saldo}" format="##,##0" locale="en_US" minFractionDigits="2" maxFractionDigits="2"/></td>
