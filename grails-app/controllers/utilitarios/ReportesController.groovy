@@ -2657,7 +2657,7 @@ class ReportesController extends Shield{
 
         PdfPTable table = new PdfPTable(7);
         table.setWidthPercentage(100);
-        table.setWidths(arregloEnteros([5, 8, 38, 27, 10, 8, 10]))
+        table.setWidths(arregloEnteros([5, 8, 45, 20, 10, 8, 10]))
         addCellTabla(table, new Paragraph("Dp.", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Cuota", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)

@@ -256,6 +256,8 @@ class IngresoController extends Shield {
         pago.documento = params.documento
         pago.observaciones = params.observaciones
         mess = params.mess.toInteger()
+        pago.transferencia = params.transferencia == 'SI' ? 'S' :'N'
+
         if(mess > 2) {
             pago.mora = params.mora.toDouble()
             pago.tasa = 8.0  //todo -> obtener ta de parámetros geenrales del sistema

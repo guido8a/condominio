@@ -14,6 +14,7 @@ class Pago {
     String estado
     String revision
     String estadoAdministrador
+    String transferencia = 'N'
 
     static mapping = {
         table 'pago'
@@ -33,6 +34,7 @@ class Pago {
             estado column: 'pagoetdo'
             revision column: 'pagorevs'
             estadoAdministrador column: 'pagoedad'
+            transferencia column: 'pagotrnf'
         }
     }
 
@@ -42,5 +44,6 @@ class Pago {
         estado(blank: true, nullable: true)
         revision(blank: true, nullable: true)
         estadoAdministrador(blank: true, nullable: true)
+        transferencia(inList: ["S", "N"], size: 1..1, blank: false, attributes: ['mensaje': 'Transferencia'])
     }
 }
