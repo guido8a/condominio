@@ -97,6 +97,10 @@ class ViviendaController extends Shield {
         def band = new Date().before(fecha)
 
         println "fecha: $fecha"
+        println "data: $data"
+        println "params: $params"
+        println "band: $band"
+        println "oblg: $oblg"
         [personas: data, params: params, oblg: oblg, band: band]
     }
 
