@@ -2111,18 +2111,21 @@ class ReportesController extends Shield{
 
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
+        def fechaAntes = new Date().parse("dd-MM-yyyy", params.desde) - 1
 
-        println "balance fechas: '${fechaDesde}','${fechaHasta}'"
+        println "balance fechas: '${fechaDesde}','${fechaHasta}' antes: ${fechaAntes.format('yyyy-MM-dd')}"
 
-        def sql2 = "select sum(pagovlor) vlor, substr(pagofcha::varchar, 1,7) fcha " +
-                "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') group by  2 order by 2"
+        def sql2 = "select sum(pagovlor) vlor, substr(pagofcha::varchar, 1,7) fcha, tpapdscr " +
+                "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') group by 2,3 order by 2"
+        println "$sql2"
 
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
         def totalIngresos = (ingresos.vlor.sum() ?: 0)
 
-        sql2 = "select sum(egrsvlor) vlor, substr(egrsfcha::varchar, 1,7) fcha " +
-                "from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') group by  2 order by 2"
+        sql2 = "select sum(egrsvlor) vlor, substr(egrsfcha::varchar, 1,7) fcha, tpgsdscr " +
+                "from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') group by 2,3 order by 2"
+        println "egrs: $sql2"
         def egresos = cn2.rows(sql2.toString())
 
         def totalEgresos = (egresos.vlor.sum() ?: 0)
@@ -2187,7 +2190,7 @@ class ReportesController extends Shield{
             tablaHeaderDetalles.setWidthPercentage(100);
             tablaHeaderDetalles.setWidths(arregloEnteros([8,2]))
 
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Saldo inicial - Administración anterior", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Saldo inicial - Periodo anterior (hasta: ${fechaAntes.format('yyyy-MM-dd')})", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph(g.formatNumber(number: saldo, format: '##,##0',
                     minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
 //            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
@@ -2210,7 +2213,7 @@ class ReportesController extends Shield{
         addCellTabla(tblaIngr, new Paragraph(g.formatNumber(number:totalIngresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
 
         ingresos.each {ingreso ->
-            addCellTabla(tblaIngr, new Paragraph(ingreso.fcha, fontTd10), frmtDato)
+            addCellTabla(tblaIngr, new Paragraph("${ingreso.fcha}  Concepto: ${ingreso.tpapdscr}", fontTd10), frmtDato)
             addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNm)
         }
 
@@ -2218,7 +2221,7 @@ class ReportesController extends Shield{
         addCellTabla(tblaIngr, new Paragraph(g.formatNumber(number:totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
 
         egresos.each {ingreso ->
-            addCellTabla(tblaIngr, new Paragraph(ingreso.fcha, fontTd10), frmtDato)
+            addCellTabla(tblaIngr, new Paragraph("${ingreso.fcha}  Concepto: ${ingreso.tpgsdscr}", fontTd10), frmtDato)
             addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNm)
         }
 
