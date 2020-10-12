@@ -2180,6 +2180,7 @@ class ReportesController extends Shield{
 
         def fondo = new Color(240, 248, 250);
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtHdR = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_RIGHT]
         def frmtHdb = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
         def frmtNm = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
@@ -2244,14 +2245,17 @@ class ReportesController extends Shield{
         def pp = cn3.rows(sql2.toString())[0].egrssldo
         def rf = cn3.rows(sql2.toString())[0].ingrsldo + cn3.rows(sql2.toString())[0].sldofnal - cn3.rows(sql2.toString())[0].egrssldo
 
-        addCellTabla(tablaSaldos, new Paragraph("Valores por cobrar", fontTh), frmtHd)
-        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:vc, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+        addCellTabla(tablaSaldos, new Paragraph("Valores pendientes al ${fechaHasta}", fontTh), frmtHd)
+        addCellTabla(tablaSaldos, new Paragraph('', fontTh), frmtHdR)
 
-        addCellTabla(tablaSaldos, new Paragraph("Pagos pendientes", fontTh), frmtHd)
-        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:pp, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+        addCellTabla(tablaSaldos, new Paragraph("Valores por cobrar", fontTh), frmtHdR)
+        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:vc, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
-        addCellTabla(tablaSaldos, new Paragraph("Resultado Final", fontTh), frmtHd)
-        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:rf, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+        addCellTabla(tablaSaldos, new Paragraph("Pagos pendientes", fontTh), frmtHdR)
+        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:pp, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+
+        addCellTabla(tablaSaldos, new Paragraph("Resultado Final", fontTh), frmtHdR)
+        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:rf, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
         document.add(tblaIngr)
         document.add(tablaSaldos)
