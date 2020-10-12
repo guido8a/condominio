@@ -2229,11 +2229,32 @@ class ReportesController extends Shield{
         tablaTotal.setWidthPercentage(100);
         tablaTotal.setWidths(arregloEnteros([8, 2]))
 
+
         addCellTabla(tablaTotal, new Paragraph("Saldo al ${fechaHasta} (SaldoInicial + Ingresos - Egresos): ", fontTh), frmtNmro)
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number: totalIngresos - totalEgresos + saldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
         addCellTabla(tblaIngr, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
 
+        def tablaSaldos = new PdfPTable(2);
+        tablaSaldos.setWidthPercentage(100);
+        tablaSaldos.setWidths(arregloEnteros([8,2]))
+        tablaSaldos.setSpacingBefore(25f);
+
+        def cn3 = dbConnectionService.getConnection()
+        def vc = cn3.rows(sql2.toString())[0].ingrsldo
+        def pp = cn3.rows(sql2.toString())[0].egrssldo
+        def rf = cn3.rows(sql2.toString())[0].ingrsldo + cn3.rows(sql2.toString())[0].sldofnal - cn3.rows(sql2.toString())[0].egrssldo
+
+        addCellTabla(tablaSaldos, new Paragraph("Valores por cobrar", fontTh), frmtHd)
+        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:vc, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+
+        addCellTabla(tablaSaldos, new Paragraph("Pagos pendientes", fontTh), frmtHd)
+        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:pp, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+
+        addCellTabla(tablaSaldos, new Paragraph("Resultado Final", fontTh), frmtHd)
+        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:rf, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+
         document.add(tblaIngr)
+        document.add(tablaSaldos)
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
