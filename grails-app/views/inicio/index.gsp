@@ -110,7 +110,7 @@
                 </div>
 
                 <div class="texto">
-                    <span class="text-success"><strong>Egresos y Gastos</strong></span></div>
+                    <span class="text-success"><strong>Ingresos y Gastos</strong></span></div>
             </div>
         </div>
         </a>
@@ -124,7 +124,7 @@
                     </div>
 
                     <div style="margin-top: 50px; margin-left: 80px;">
-                        <span class="text-success" style="font-size: large"><strong>Sugerencias y Obras por hacer</strong></span>
+                        <span class="text-success" style="font-size: large"><strong>Gestión de Obras del Condominio</strong></span>
                         <span class="text-success" style="margin-top: 20px; margin-left: 30px; width: 400px; display: block">
                             <strong>Daños y reparaciones o mejoras pendientes en el Condominio</strong></span></div>
                 </div>

@@ -278,7 +278,7 @@ class EgresoController extends Shield {
         }
     }
 
-    def saldos_ajax() {
+    def saldos() {
 
     }
 
