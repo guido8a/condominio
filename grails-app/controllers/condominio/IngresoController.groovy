@@ -199,6 +199,7 @@ class IngresoController extends Shield {
         def ingreso = Ingreso.get(params.id)
         tx = "select ingrintr, mess from pendiente(now()::date, ${ingreso.persona.edificio.id}) " +
                 "where ingr__id = ${params.id}"
+        println "sql: $tx"
         cn.eachRow(tx.toString()) { d ->
             mora = d.ingrintr
             mess = d.mess
@@ -219,21 +220,24 @@ class IngresoController extends Shield {
 
 
     def guardarPago_ajax (){
-        println("params " + params)
+        println("guardarPago_ajax: " + params)
         def ingreso = Ingreso.get(params.ingreso)
         def pagos = Pago.findAllByIngreso(ingreso)
-        def saldo = (ingreso.valor - (pagos?.valor?.sum() ?: 0))
+        def saldo = ingreso.valor - (pagos?.valor?.sum() ?: 0)
         def saldo2
         def pago, mess
 
+        saldo = Math.round(saldo*100)/100
         if(params.id){
             pago = Pago.get(params.id)
             saldo2 = saldo + (pago.valor ? pago.valor.toDouble() : 0)
+            println "saldo2: $saldo2, pago: ${params.abono.toDouble()}"
             if(params.abono.toDouble() > saldo2){
                 render "di"
                 return
             }
         }else{
+            println "saldo: $saldo, pago: ${params.abono.toDouble()}"
             if(params.abono.toDouble() > saldo){
                 render "di"
                 return

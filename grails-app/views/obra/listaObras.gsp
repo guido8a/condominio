@@ -324,9 +324,13 @@
             }
         };
 
-        items.ver = ver;
-        items.editar = editar;
-        items.eliminar = eliminar;
+        if('${session.perfil.codigo}' == 'ADC'){
+            items.ver = ver;
+            items.editar = editar;
+            items.eliminar = eliminar;
+        } else {
+            items.ver = ver;
+        }
 
         return items
     }

@@ -371,15 +371,12 @@ como máximo 30
             }
         };
 
-        if(ingr>0){
-            items.pagar = ingresos;
-        }
 //        items.editar = editar;
 //        items.perfil = perfil;
 //        items.alicuota = alicuota;
 //        items.propiedad = propiedades;
 
-        items.administrar = {
+        var administrar = {
             label: "Administrar",
             icon: "fa fa-pencil",
             separator_before : true,
@@ -401,11 +398,20 @@ como máximo 30
 //            }
 //        };
 
-        if(deuda <= 0 && codigo == 'P'){
-            items.certificado = certificado;
-        }
-        items.detalle = detalle;
+        console.log('perfil', '${session.perfil.codigo}');
 
+        if('${session.perfil.codigo}' == 'ADC'){
+            if(ingr>0){
+                items.pagar = ingresos;
+            }
+            items.administrar = administrar;
+            items.detalle = detalle;
+            if(deuda <= 0 && codigo == 'P'){
+                items.certificado = certificado;
+            }
+        } else {
+            items.detalle = detalle;
+        }
 
         return items
     }
