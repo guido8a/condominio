@@ -138,6 +138,10 @@
                 <i class="fa fa-book fa-5x"></i><br/>
                 Balance
             </a>
+            <a href="#" class="link btn btn-warning btn-ajax" id="btnAceptarGestor">
+                <i class="fa fa-line-chart fa-5x"></i><br/>
+                Aportes y Gastos
+            </a>
         </p>
     </div>
 </div>
@@ -145,14 +149,15 @@
 <div class="row">
     <div class="col-md-12 col-xs-5">
         <p>
-            <a href="#" class="link btn btn-primary btn-ajax" id="btnAceptarGestor">
-                <i class="fa fa-line-chart fa-5x"></i><br/>
-                Aportes y Gastos
-            </a>
             <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#modalDeudas"
                title="Estado de cuenta de los condóminos">
                 <i class="fa fa-file-text-o fa-5x"></i><br/>
                 Deudas Pendientes
+            </a>
+            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#modalDeudasTotales"
+               title="Estado de cuenta de los condóminos con totales">
+                <i class="fa fa-file-text-o fa-5x"></i><br/>
+                Deudas Totales
             </a>
             <a href="#" class="link btn btn-danger btn-ajax" data-toggle="modal" data-target="#solicitud">
                 <i class="fa fa-money fa-5x"></i><br/>
@@ -167,7 +172,7 @@
                 Egresos Proveedores
             </a>
             <a href="#" class="link btn btn-danger btn-ajax" data-toggle="modal" data-target="#monitorio">
-                <i class="fa fa-money fa-5x"></i><br/>
+                <i class="fa fa-gavel fa-5x"></i><br/>
                 Monitorio
             </a>
 
@@ -385,6 +390,54 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
                 </button>
                 <button type="button" class="btn btnDeudas btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+%{--dialog Deudas con totales--}%
+<div class="modal fade col-md-12 col-xs-12" id="modalDeudasTotales" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Valores por cobrar</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-6 col-xs-4">
+                        <label>Fecha de corte de los valores adeudados:</label>
+                    </div>
+                    <div class="col-md-4 col-xs-6">
+                        <elm:datepicker name="fechaGeneraTot_name" id="fechaImprimeTot" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-6 col-xs-4">
+                        <label>Torre:</label>
+                    </div>
+                    <div class="col-md-4 col-xs-6">
+                        <g:select name="torre_name" id="torre" from="${edificios}" optionKey="id" optionValue="descripcion" class="form-control"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnDeudasTotales btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
                 </button>
             </div>
         </div>
@@ -743,6 +796,12 @@
             var fechaI = $("#fechaImprime").val();
             var torre = $("#torre").val();
             location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes4')}?fecha=" + fechaI + "&torre=" + torre
+        });
+
+        $(".btnDeudasTotales").click(function () {
+            var fechaI = $("#fechaImprimeTot").val();
+            var torre = $("#torre").val();
+            location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientesTotales')}?fecha=" + fechaI + "&torre=" + torre
         });
 
         $(".btnSolicitud").click(function () {
