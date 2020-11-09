@@ -15,8 +15,8 @@
     <div class="linea"></div>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%; background-color: #a39e9e">
         <thead>
-        <tr>
-            <th class="alinear" style="width: 53%;">
+        <tr style="width:100%">
+            <th class="alinear" style="width: 40%;">
                 Nombre
             </th>
             <th class="alinear" style="width: 20%;">
@@ -25,7 +25,10 @@
             <th class="alinear" style="width: 15%">
                 Departamento
             </th>
-            <th class="alinear" style="width: 11%">
+            <th class="alinear" style="width: 14%">
+                Total
+            </th>
+            <th class="alinear" style="width: 10%">
                 Imprimir
             </th>
             <th style="width: 1%">
@@ -35,12 +38,13 @@
     </table>
     <div class="" style="width: 99.7%;height: 350px; overflow-y: auto;float: right; margin-top: -20px">
         <table class="table-bordered table-condensed table-striped table-hover" style="width: 100%">
-              <g:each in="${personas}" var="persona">
+              <g:each in="${personas}" var="persona" status="i">
                   <tr>
-                      <td style="width: 53%">${persona.prsnnmbr + " " + persona.prsnapll}</td>
+                      <td style="width: 40%">${persona.prsnnmbr + " " + persona.prsnapll}</td>
                       <td style="width: 20%">${persona.edifdscr}</td>
                       <td style="width: 15%">${persona.prsndpto}</td>
-                      <td class="alinear" style="width: 11%">
+                      <td style="width: 14%">${deudas[i]}</td>
+                      <td class="alinear" style="width: 10%">
                           <a href="#" class="btn btn-info btnImprimirSolicitud" title="Imprimir solicitud de pago" data-id="${persona?.prsn__id}"><i class="fa fa-print"></i> </a>
                       </td>
                   </tr>

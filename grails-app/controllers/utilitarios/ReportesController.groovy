@@ -15,6 +15,7 @@ import condominio.Ingreso
 import condominio.Obra
 import condominio.Pago
 import condominio.Texto
+import condominio.TipoAporte
 import groovy.json.JsonBuilder
 import org.apache.poi.hwpf.usermodel.OfficeDrawing
 import org.apache.poi.xwpf.usermodel.TextAlignment
@@ -3698,7 +3699,31 @@ class ReportesController extends Shield{
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 
-        return [condominio: condominio, alicuota:valor, personas: data, tipo: params.tipo]
+        def deudas = []
+
+        data.each { persona->
+
+            def suma = 0
+
+            def sql2 = "select prsn__id, sldo, sldo + ingrintr total " +
+                    "from pendiente('${new Date().format("yyyy-MM-dd")}', ${Persona.get(persona.prsn__id).edificio.id}) where prsn__id = " +
+                    "${persona.prsn__id} order by ingrfcha"
+            def cn2 = dbConnectionService.getConnection()
+            def data2 = cn2.rows(sql2.toString())
+
+            data2.each {pendiente->
+                if (pendiente.sldo > 0) {
+                    suma += pendiente.total
+                }
+            }
+
+            deudas.add(suma)
+//            println("suma " + suma)
+        }
+
+//        println("deudas " + deudas)
+
+        return [condominio: condominio, alicuota:valor, personas: data, tipo: params.tipo, deudas:deudas]
     }
 
     def solicitudMonitorio(){
@@ -3734,7 +3759,7 @@ class ReportesController extends Shield{
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 
-        def sql2 = "select prsn__id, oblg, prsn, prsndpto, sldo, mess, ingrintr, sldo + ingrintr total " +
+        def sql2 = "select prsn__id, oblg, prsn, prsndpto, tipo, sldo, mess, ingrintr, sldo + ingrintr total " +
                 "from pendiente('${new Date().format("yyyy-MM-dd")}', ${persona.edificio.id}) where prsn__id = " +
                 "${persona.id} order by ingrfcha"
         def cn2 = dbConnectionService.getConnection()
@@ -3843,7 +3868,7 @@ class ReportesController extends Shield{
             if (pendiente.sldo > 0) {
                 content += "<tr>"
                 content += "<td>"
-                content += pendiente.oblg
+                content += (pendiente.oblg == '' ? TipoAporte.get(pendiente.tipo).descripcion : pendiente.oblg)
                 content += "</td>"
                 content += "<td style='text-align: right'>"
                 content += pendiente.sldo
@@ -3917,7 +3942,7 @@ class ReportesController extends Shield{
         byte[] b = baos.toByteArray();
 
         response.setContentType("application/pdf")
-        response.setHeader("Content-disposition", "attachment; filename=solicituMonitorio_${persona?.nombre + "_" + persona?.apellido + "_" +new Date().format("dd-MM-yyyy")}")
+        response.setHeader("Content-disposition", "attachment; filename=solicitudMonitorio_${persona?.nombre + "_" + persona?.apellido + "_" +new Date().format("dd-MM-yyyy")}")
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
     }

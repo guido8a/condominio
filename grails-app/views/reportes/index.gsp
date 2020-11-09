@@ -835,9 +835,8 @@
         });
 
         $(".btnMonitorio").click(function () {
+            openLoader("Cargando...");
             var vlor = $("#valorHastaMn").val();
-            %{--location.href = "${g.createLink(controller: 'reportes', action: 'imprimirMonitorio')}?vlor=" + vlor;--}%
-//
             $.ajax({
                 type: 'POST',
                 url: '${createLink(controller: 'reportes', action: 'tablaSolicitudPago_ajax')}',
@@ -847,6 +846,7 @@
                     tipo: 2
                 },
                 success: function(msg){
+                    closeLoader();
                     bootbox.dialog({
                         title   : "Personas con solicitud de monitorio",
                         message : msg,
