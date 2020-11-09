@@ -3888,7 +3888,7 @@ class ReportesController extends Shield{
         }
 
         def ttal1 = Math.round(0.1 * suma * 100)/100
-        def ttal2 = ttal1 + suma + 25
+        def ttal2 = ttal1 + suma + condominio?.monitorio
 
         content += "<tr style='font-weight : bold'>"
         content += "<td colspan='4' style='text-align: left'>"
