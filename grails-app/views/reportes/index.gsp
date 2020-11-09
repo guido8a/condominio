@@ -427,7 +427,7 @@
                         <label>Torre:</label>
                     </div>
                     <div class="col-md-4 col-xs-6">
-                        <g:select name="torre_name" id="torre" from="${edificios}" optionKey="id" optionValue="descripcion" class="form-control"/>
+                        <g:select name="torre2_name" id="torre2" from="${edificios}" optionKey="id" optionValue="descripcion" class="form-control"/>
                     </div>
                     <div class="col-md-1 col-xs-1">
                     </div>
@@ -800,7 +800,7 @@
 
         $(".btnDeudasTotales").click(function () {
             var fechaI = $("#fechaImprimeTot").val();
-            var torre = $("#torre").val();
+            var torre = $("#torre2").val();
             location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientesTotales')}?fecha=" + fechaI + "&torre=" + torre
         });
 

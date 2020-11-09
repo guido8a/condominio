@@ -2837,6 +2837,8 @@ class ReportesController extends Shield{
 
     def pagosPendientesTotales() {
 
+        println("params " + params)
+
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
 
         def cn = dbConnectionService.getConnection()
