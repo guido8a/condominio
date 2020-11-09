@@ -752,7 +752,7 @@ class ReportesController extends Shield{
         addCellTabla(tabla, new Paragraph((fila.sldo + fila.ingrintr).toString(), fontTd10), frmtNmro)
     }
 
-    def poneDatos2(tabla, fila) {
+    def poneDatos2(tabla, fila, total, total2) {
         Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
@@ -768,9 +768,12 @@ class ReportesController extends Shield{
         } else {
             addCellTabla(tabla, new Paragraph(fila.prsn, fontTd10), frmtDato)
         }
-        addCellTabla(tabla, new Paragraph("", fontTd10), frmtDato)
-        addCellTabla(tabla, new Paragraph("", fontTd10), frmtDato)
-        addCellTabla(tabla, new Paragraph("", fontTd10), frmtDato)
+//        addCellTabla(tabla, new Paragraph("", fontTd10), frmtDato)
+//        addCellTabla(tabla, new Paragraph("", fontTd10), frmtDato)
+//        addCellTabla(tabla, new Paragraph("", fontTd10), frmtDato)
+        addCellTabla(tabla, new Paragraph(total.toString(), fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph(total2.toString(), fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph((total + total2).toString(), fontTd10), frmtNmro)
 //        addCellTabla(tabla, new Paragraph(fila.oblg, fontTd10), frmtDato)
 //        addCellTabla(tabla, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
 //        addCellTabla(tabla, new Paragraph(fila.ingrintr.toString(), fontTd10), frmtNmro)
@@ -820,6 +823,8 @@ class ReportesController extends Shield{
         addCellTabla(tabla, new Paragraph(total2.toString(), fontTd10), frmtNmro)
         addCellTabla(tabla, new Paragraph((total + total2).toString(), fontTd10), frmtNmro)
     }
+
+
 
     def fecha_ajax() {
 
@@ -2892,7 +2897,7 @@ class ReportesController extends Shield{
         def currentPag = 1
         def totalPags = Math.ceil(tamano / max)
         def pagActual = 1
-        def anterior
+        def anterior = ''
         def nuevo
         def total = 0
         def total2 = 0
@@ -2923,7 +2928,7 @@ class ReportesController extends Shield{
 
 
         if(res){
-            res.each { fila ->
+            res.eachWithIndex { fila, i ->
 
                 if ((actual.toInteger() + adicionales.toInteger()) >= max) {
                     max = 43
@@ -2934,48 +2939,22 @@ class ReportesController extends Shield{
                 nuevo = fila.prsndpto
                 contador++
 
-                if (anterior == nuevo) {
-                    if (nuevo == ultimo && (tamano.toInteger()) == contador) {
-//                        poneDatos2(table, fila)
-                        total += fila.sldo
-                        total2 += fila.ingrintr
-                        anterior = fila.prsndpto
-                        totalesDeudas2(table, total, total2, fontTd11, frmtDato, frmtNmro)
-                        adicionales++
-                    } else {
-//                        poneDatos2(table, fila)
-                        total += fila.sldo
-                        total2 += fila.ingrintr
-                        anterior = fila.prsndpto
-                    }
-                } else {
-                    if (contador == 1) {
-                        poneDatos2(table, fila)
-                        total += fila.sldo
-                        total2 += fila.ingrintr
-                        anterior = fila.prsndpto
-                    } else {
-                        if (tamano.toInteger() == contador) {
-                            totalesDeudas2(table, total, total2, fontTd11, frmtDato, frmtNmro)
-//                            poneDatos2(table, fila)
-                            total = fila.sldo
-                            total2 = fila.ingrintr
-                            anterior = fila.prsndpto
-                            totalesDeudas2(table, fila.sldo, total2, fontTd11, frmtDato, frmtNmro)
-                            adicionales++
-                        } else {
-                            totalesDeudas2(table, total, total2, fontTd11, frmtDato, frmtNmro)
-                            poneDatos2(table, fila)
-                            total = fila.sldo
-                            total2 = fila.ingrintr
-                            anterior = fila.prsndpto
-                            adicionales++
-                        }
-                    }
+
+
+                if(nuevo == anterior){
+                    total += fila.sldo
+                    println("total 1" + total)
+                }else{
+                    poneDatos2(table, fila, total,0)
+                    total = fila.sldo
                 }
 
-                actual++
-                u = (actual.toInteger() + adicionales.toInteger())
+                anterior = nuevo
+
+                println("anterior " + anterior)
+
+
+
 
                 if (actual <= max) {
                     pagActual = 1
