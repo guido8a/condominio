@@ -201,6 +201,24 @@
         }); //ajax
     } //createEdit
 
+    function guardarValor(id, valor){
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'condominio', action:'guardarValor_ajax')}",
+            data    : {
+                id : id,
+                valor: valor
+            },
+            success : function (msg) {
+                if(msg == 'ok'){
+                    log("Valor guardado correctamente","success")
+                }else{
+                    log("Error al guardar el valor", "error")
+                }
+            }
+        });
+    }
+
     $(function () {
 
         $(".btnCrear").click(function() {
@@ -264,6 +282,44 @@
                     action : function ($element) {
                         var id = $element.data("id");
                         location.href="${createLink(controller: 'reportes', action: 'solicitudMonitorio')}?id=" + id
+                    }
+                },
+                cobro   : {
+                    label  : "Gestión de cobro",
+                    icon   : "fa fa-gavel",
+                    action : function ($element) {
+                        var id = $element.data("id");
+
+                        $.ajax({
+                            type    : "POST",
+                            url     : "${createLink(controller:'condominio', action:'cobro_ajax')}",
+                            data    : {
+                                id : id
+                            },
+                            success : function (msg) {
+                                bootbox.dialog({
+                                    title   : "Gestión de cobro",
+                                    message : msg,
+                                    buttons : {
+                                        cancelar : {
+                                            label     : "Cancelar",
+                                            className : "btn-primary",
+                                            callback  : function () {
+                                            }
+                                        },
+                                        aceptar : {
+                                            label     : "Guardar",
+                                            className : "btn-success",
+                                            callback  : function () {
+                                                var v = $("#gestion").val();
+                                                guardarValor(id, v);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
+
                     }
                 },
                 eliminar : {

@@ -182,4 +182,21 @@ class CondominioController extends Shield {
         }
     }
 
+    def cobro_ajax(){
+        def condominio = Condominio.get(params.id)
+        return[condominio:condominio]
+    }
+
+    def guardarValor_ajax(){
+        def condominio = Condominio.get(params.id)
+        condominio.monitorio = params.valor.toDouble()
+
+        if(!condominio.save(flush:true)){
+            println("error al guardar el valor del monitorio " + condominio.errors)
+            render "no"
+        }else{
+            render "ok"
+        }
+    }
+
 }

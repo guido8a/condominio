@@ -12,6 +12,7 @@ class Condominio {
     String email
     String sigla
     int numeroViviendas = 0
+    double monitorio
 
     static mapping = {
         table 'cndm'
@@ -32,6 +33,7 @@ class Condominio {
             email column: 'cndmmail'
             sigla column: 'cndmsgla'
             numeroViviendas column: 'cndmnmvv'
+            monitorio column : 'cndmmntr'
         }
     }
     static constraints = {
@@ -46,6 +48,7 @@ class Condominio {
         email(size: 1..63, blank: true, nullable: true, email: true, attributes: [title: 'E-mail'])
         sigla(blank: true, nullable: true, attributes: [title: 'Sigla'])
         numeroViviendas(blank: false, nullable: false, attributes: [title: 'Número de viviendas'])
+        monitorio(blank: true, nullable: true)
     }
 
     String toString() {
