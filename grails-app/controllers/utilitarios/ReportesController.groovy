@@ -760,7 +760,7 @@ class ReportesController extends Shield{
         addCellTabla(tabla, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
 
         addCellTabla(tabla, new Paragraph(fila.prsn, fontTd10), frmtDato)
-        addCellTabla(tabla, new Paragraph(fila.tpapdscr, fontTd10), frmtNmro)
+        addCellTabla(tabla, new Paragraph(fila.tpapdscr, fontTd10), frmtDato)
         addCellTabla(tabla, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
         addCellTabla(tabla, new Paragraph(fila.intr.toString(), fontTd10), frmtNmro)
         addCellTabla(tabla, new Paragraph(fila.total.toString(), fontTd10), frmtNmro)
