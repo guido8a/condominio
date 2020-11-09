@@ -3903,7 +3903,7 @@ class ReportesController extends Shield{
         content += "Abogado - Gestión de cobro"
         content += "</td>"
         content += "<td style='text-align: right'>"
-        content += "25.00"
+        content += condominio?.monitorio
         content += "</td>"
         content += "</tr>"
         content += "<tr>"
