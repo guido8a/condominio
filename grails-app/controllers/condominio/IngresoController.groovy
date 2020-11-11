@@ -212,7 +212,6 @@ class IngresoController extends Shield {
 
         def pagos = Pago.findAllByIngreso(ingreso)
         def saldo = (ingreso.valor - (pagos?.valor?.sum() ?: 0))
-//        def dscr  = "${ingreso.obligacion.descripcion} ${ingreso.observaciones?:''}"
         def dscr  = "${ingreso.observaciones?:''}"
 
         return[ingreso: ingreso, pagos: pagos, saldo: saldo, pago: pago, dscr: dscr, mora: mora, mess: mess]
@@ -221,11 +220,13 @@ class IngresoController extends Shield {
 
     def guardarPago_ajax (){
         println("guardarPago_ajax: " + params)
+        def condominio = Condominio.get(session.condominio.id)
         def ingreso = Ingreso.get(params.ingreso)
         def pagos = Pago.findAllByIngreso(ingreso)
         def saldo = ingreso.valor - (pagos?.valor?.sum() ?: 0)
         def saldo2
         def pago, mess
+        def band = 0
 
         saldo = Math.round(saldo*100)/100
         if(params.id){
@@ -233,18 +234,16 @@ class IngresoController extends Shield {
             saldo2 = saldo + (pago.valor ? pago.valor.toDouble() : 0)
             println "saldo2: $saldo2, pago: ${params.abono.toDouble()}"
             if(params.abono.toDouble() > saldo2){
-                render "di"
+                render "er_El abono ingresado supera el valor del saldo"
                 return
             }
         }else{
             println "saldo: $saldo, pago: ${params.abono.toDouble()}"
             if(params.abono.toDouble() > saldo){
-                render "di"
+                render "er_El abono ingresado supera el valor del saldo"
                 return
             }
         }
-
-
 
         if(params.id){
             pago = Pago.get(params.id)
@@ -270,10 +269,54 @@ class IngresoController extends Shield {
 
         if(!pago.save(flush: true)){
             println("error al guardar el pago " + pago.errors)
-            render "no"
+            band = 0
         }else{
-            render "ok"
+            band = 1
         }
+
+        if(condominio?.comprobante == 'S'){
+            if(band == 1){
+                if(params.id){
+                    render "er_Ya existe un pago, no es posible generar un comprobante"
+                }else{
+
+                    def existen = Comprobante.findAllByCondominio(condominio)
+                    def numero
+
+                    if(existen){
+                        numero = existen.numero.max() + 1
+                    }else{
+                        numero = (condominio.numero == 0 ? 1 : condominio.numero)
+                    }
+
+                    def comprobante = new Comprobante()
+                    comprobante.condominio = condominio
+                    comprobante.pago = pago
+                    comprobante.texto = Texto.findByCodigo('CMPR').parrafoUno ?: ''
+                    comprobante.fecha = new Date()
+                    comprobante.estado = 'V'
+                    comprobante.numero = numero
+
+                    if(!comprobante.save(flush:true)){
+                        println("error al guardar el comprobante " + comprobante.errors)
+                        render "er_Error al guardar el comprobante"
+                    }else{
+                        render "ok"
+                    }
+
+                }
+            }else{
+                render "no"
+            }
+        }else{
+            if(band == 1){
+                render "ok"
+            }else{
+                render "no"
+            }
+        }
+
+
 
     }
 
@@ -398,6 +441,12 @@ class IngresoController extends Shield {
         def ingreso = Ingreso.get(params.ingreso)
         def pagos = Pago.findAllByIngreso(ingreso)
         return[ingreso: ingreso, saldo: params.saldo, valor: params.valor, pagos: pagos]
+    }
+
+    def comprobantes_ajax(){
+    def pago = Pago.get(params.id)
+//        def comprobante
+
     }
 
 }

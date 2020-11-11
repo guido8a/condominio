@@ -1,4 +1,4 @@
-<%@ page import="condominio.Pago" %>
+<%@ page import="condominio.Comprobante; condominio.Pago" %>
 <%--
   Created by IntelliJ IDEA.
   User: gato
@@ -20,30 +20,30 @@
 <div class="alert alert-warning col-md-12">
 
     %{--<div class="col-md-1">--}%
-        %{--<label>Valor: </label>--}%
+    %{--<label>Valor: </label>--}%
     %{--</div>--}%
 
     <div class="col-md-3">
         %{--<g:textField name="saldo_name" class="form-control derecha" readonly=""--}%
-                     %{--value="${g.formatNumber(number: ingreso?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
+        %{--value="${g.formatNumber(number: ingreso?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
         <label>Valor: $</label>
         ${g.formatNumber(number: ingreso?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
     </div>
     %{--<div class="col-md-1">--}%
-        %{--<label style="color: #1b8e36">Pagado:</label>--}%
+    %{--<label style="color: #1b8e36">Pagado:</label>--}%
     %{--</div>--}%
     <div class="col-md-3">
         %{--<g:textField name="saldo_name" class="form-control derecha" readonly=""--}%
-                     %{--value="${g.formatNumber(number: condominio.Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
+        %{--value="${g.formatNumber(number: condominio.Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
         <label style="color: #1b8e36">Pagado: $</label>
         ${g.formatNumber(number: condominio.Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
     </div>
     %{--<div class="col-md-1">--}%
-        %{--<label style="color: #701b19">Saldo:</label>--}%
+    %{--<label style="color: #701b19">Saldo:</label>--}%
     %{--</div>--}%
     <div class="col-md-3">
         %{--<g:textField name="saldo_name" class="form-control derecha" readonly=""--}%
-                     %{--value="${g.formatNumber(number: saldo ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
+        %{--value="${g.formatNumber(number: saldo ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
         <label style="color: #701b19">Saldo:</label>
         ${g.formatNumber(number: saldo ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
     </div>
@@ -62,34 +62,48 @@
     <table class="table table-condensed table-bordered table-striped table-hover">
         <thead>
         <tr style="width: 100%">
-            <th style="width: 37%">Pago realizado por:</th>
+            <th style="width: 35%">Pago realizado por:</th>
             <th style="width: 20%">Documento</th>
-            <th style="width: 15%">Fecha Pago</th>
+            <th style="width: 13%">Fecha Pago</th>
             <th style="width: 13%">Pago</th>
-            <th class="centro" style="width: 15%"><i class="fa fa-pencil"></i></th>
+            <th class="centro" style="width: 19%"><i class="fa fa-pencil"></i></th>
         </tr>
         </thead>
         <tbody>
         <g:each in="${pagos}" var="pagoUsuario">
             <tr data-id="${pagoUsuario.id}" style="background-color: #efffef !important; width: 100%">
-                <td style="width: 37%">${pagoUsuario?.observaciones}</td>
+                <td style="width: 35%">${pagoUsuario?.observaciones}</td>
                 <td style="width: 20%">${pagoUsuario?.documento}</td>
-                <td style="width: 15%"><g:formatDate date="${pagoUsuario?.fechaPago}" format="dd-MM-yyyy"/></td>
+                <td style="width: 13%"><g:formatDate date="${pagoUsuario?.fechaPago}" format="dd-MM-yyyy"/></td>
                 <td class="derecha" style="width: 13%"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
-                <td class="centro" style="width: 15%">
+                <td class="centro" style="width: 19%">
                     <g:if test="${pagoUsuario?.estado != 'R'}">
-                        <a href="#" class="btn btn-info btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${ingreso?.id}" title="Editar Pago">
-                            <i class="fa fa-pencil"></i>
-                        </a>
+                        <g:if test="${!condominio.Comprobante.findByPago(pagoUsuario)}">
+                            <a href="#" class="btn btn-success btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${ingreso?.id}" title="Editar Pago">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        </g:if>
                         <a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" title="Borrar Pago">
                             <i class="fa fa-trash-o"></i>
                         </a>
+                        <g:if test="${condominio.Comprobante.findByPago(pagoUsuario)}">
+                            <a href="#" class="btn btn-info btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}" title="Imprimir comprobante">
+                                <i class="fa fa-print"></i>
+                            </a>
+                        </g:if>
+                    %{--<a href="#" class="btn btn-info btn-sm btnComprobante" data-id="${pagoUsuario?.id}" title="Generar comprobante">--}%
+                    %{--<i class="fa fa-cog"></i>--}%
+                    %{--</a>--}%
                     </g:if>
                 </td>
             </tr>
         </g:each>
         </tbody>
     </table>
+
+    <div id="divComprobantes">
+
+    </div>
 
 </g:if>
 <g:else>
@@ -100,8 +114,25 @@
 
 
 
-
 <script type="text/javascript">
+
+    %{--$(".btnComprobante").click(function () {--}%
+    %{--$.ajax({--}%
+    %{--type: 'POST',--}%
+    %{--url:'${createLink(controller: 'ingreso', action: 'pagos_ajax')}',--}%
+    %{--data:{--}%
+    %{--ingreso: ingreso--}%
+    %{--},--}%
+    %{--success: function (msg){--}%
+    %{--$("#tdPagos").html(msg)--}%
+    %{--}--}%
+    %{--});--}%
+    %{--});--}%
+
+    %{--function cargarComprobantes(id){--}%
+
+    %{--}--}%
+
 
     $(".btnAdd").click(function () {
         var idIngreso = $(this).data("ing");
@@ -155,16 +186,17 @@
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
                 success : function (msg) {
-                    if(msg == 'ok'){
+                    var parts = msg.split("_");
+                    if(parts[0] == 'ok'){
                         log("Pago guardado correctamente!" , "success");
                         closeLoader();
                         setTimeout(function() {
                             location.reload(true);
                         }, 1000);
                     }else{
-                        if(msg == 'di'){
+                        if(parts[0] == 'er'){
                             closeLoader();
-                            bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i> El abono ingresado supera el valor del saldo")
+                            bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" + parts[1])
                         }
                         else{
                             log("Error al guardar el pago","error");
