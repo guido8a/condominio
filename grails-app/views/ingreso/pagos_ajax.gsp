@@ -78,7 +78,7 @@
                 <td class="derecha" style="width: 13%"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
                 <td class="centro" style="width: 19%">
                     <g:if test="${pagoUsuario?.estado != 'R'}">
-                        <g:if test="${!condominio.Comprobante.findByPago(pagoUsuario)}">
+                        <g:if test="${!condominio.Comprobante.findByPago(pagoUsuario) || condominio.Comprobante.findByPago(pagoUsuario).estado == 'V'}">
                             <a href="#" class="btn btn-success btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${ingreso?.id}" title="Editar Pago">
                                 <i class="fa fa-pencil"></i>
                             </a>
@@ -87,7 +87,7 @@
                             <i class="fa fa-trash-o"></i>
                         </a>
                         <g:if test="${condominio.Comprobante.findByPago(pagoUsuario)}">
-                            <a href="#" class="btn btn-info btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}" title="Imprimir comprobante">
+                            <a href="#" class="btn btn-info btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}" data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Imprimir comprobante">
                                 <i class="fa fa-print"></i>
                             </a>
                         </g:if>
@@ -115,6 +115,28 @@
 
 
 <script type="text/javascript">
+
+    $(".btnImprimirComprobante").click(function () {
+        var comprobante = $(this).data("com");
+          $.ajax({
+              type: 'POST',
+              url: '${createLink(controller: 'comprobante', action: 'verificarImpresion_ajax')}',
+              data:{
+                    id: comprobante
+              },
+              success:function(msg){
+                  if(msg == 'ok'){
+                      location.href = "${g.createLink(controller: 'reportes', action: 'comprobante')}?comp=" + comprobante;
+//                      setTimeout(function() {
+//                          location.reload(true);
+//                      }, 1000);
+                  }else{
+                    log("Error al imprimir el comprobante","error")
+                  }
+              }
+          })
+    });
+
 
     %{--$(".btnComprobante").click(function () {--}%
     %{--$.ajax({--}%

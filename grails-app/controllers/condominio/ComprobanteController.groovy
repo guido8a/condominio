@@ -31,4 +31,26 @@ class ComprobanteController {
             render "ok"
         }
     }
+
+    def verificarImpresion_ajax(){
+        def comprobante = Comprobante.get(params.id)
+
+        if(comprobante.estado == 'I'){
+            render "ok"
+        }else{
+            if(comprobante.estado == 'V'){
+
+                comprobante.estado = 'I'
+
+                if(!comprobante.save(flush:true)){
+                    println("error al cambiar de estado al comprobante " + comprobante.errors)
+                    render "no"
+                }else{
+                    render "ok"
+                }
+            }else{
+                render "ok"
+            }
+        }
+    }
 }
