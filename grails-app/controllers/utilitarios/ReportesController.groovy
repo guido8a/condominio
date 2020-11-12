@@ -4037,23 +4037,15 @@ class ReportesController extends Shield{
         addEmptyLine(preface2, 2);
         document.add(preface2);
 
-//        def tablaValores = new PdfPTable(3);
-//        tablaDatos.setWidthPercentage(100);
-//        tablaDatos.setWidths(arregloEnteros([60,10,30]))
-//
-//        addCellTabla(tablaDatos, new Paragraph("Por concepto de : ", fontTd), frmtHd)
-//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.nombre + " " + comprobante?.pago?.ingreso?.persona?.apellido , fontTd), frmtHd)
-//        addCellTabla(tablaDatos, new Paragraph("", fontTh), frmtHd)
-//        addCellTabla(tablaDatos, new Paragraph("RUC/CI : " , fontTd), frmtHd)
-//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.ruc, fontTd), frmtHd)
-//
-//        addCellTabla(tablaDatos, new Paragraph("Departamento : ", fontTd), frmtHd)
-//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.departamento , fontTd), frmtHd)
-//        addCellTabla(tablaDatos, new Paragraph("", fontTh), frmtHd)
-//        addCellTabla(tablaDatos, new Paragraph("Teléfono : " , fontTd), frmtHd)
-//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.telefono, fontTd), frmtHd)
-//
-//        document.add(tablaDatos)
+        def tablaValores = new PdfPTable(3);
+        tablaValores.setWidthPercentage(100);
+        tablaValores.setWidths(arregloEnteros([60,10,30]))
+
+        addCellTabla(tablaValores, new Paragraph("Por concepto de : " + comprobante?.pago?.observaciones, fontTd), frmtHd)
+        addCellTabla(tablaValores, new Paragraph("", fontTh), frmtHd)
+        addCellTabla(tablaValores, new Paragraph(comprobante?.pago?.valor.toString(), fontTh), frmtHd)
+
+        document.add(tablaValores)
 
 
 //        Paragraph preface = new Paragraph();
