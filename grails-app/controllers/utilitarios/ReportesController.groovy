@@ -3961,12 +3961,13 @@ class ReportesController extends Shield{
         Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
         Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
         Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
-        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
         Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
-        Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
+        Font fontTdTiny = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL, Color.RED);
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtDato = [border: Color.WHITE, bwb: 0.1, bcb: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_LEFT]
         def frmtHdr = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
-        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+//        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtDatoDere = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
         def fondoTotal = new Color(240, 240, 240);
@@ -3991,66 +3992,135 @@ class ReportesController extends Shield{
         document.addAuthor("Condominio");
         document.addCreator("Tedein SA");
 
+
+        def tablaCabecera = new PdfPTable(3);
+        tablaCabecera.setWidthPercentage(100);
+        tablaCabecera.setWidths(arregloEnteros([65,5,30]))
+
+        addCellTabla(tablaCabecera, new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTh), frmtHd)
+        addCellTabla(tablaCabecera, new Paragraph("", fontTh), frmtHd)
+        addCellTabla(tablaCabecera, new Paragraph("COMPROBANTE DE PAGO", fontTd10), frmtHd)
+
+        addCellTabla(tablaCabecera, new Paragraph("Calle: " + condominio?.direccion, fontTd), frmtHd)
+        addCellTabla(tablaCabecera, new Paragraph("", fontTh), frmtHd)
+        addCellTabla(tablaCabecera, new Paragraph(comprobante?.numero?.toString(), fontTdTiny), frmtHd)
+
+        addCellTabla(tablaCabecera, new Paragraph("Teléfono: " + condominio?.telefono?.toString(), fontTd), frmtHd)
+        addCellTabla(tablaCabecera, new Paragraph("", fontTh), frmtHd)
+        addCellTabla(tablaCabecera, new Paragraph("R.U.C. " + condominio?.ruc?.toString(), fontTd), frmtHd)
+
+        document.add(tablaCabecera)
+
         Paragraph preface = new Paragraph();
-        addEmptyLine(preface, 1);
-        preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTitle));
         addEmptyLine(preface, 2);
         document.add(preface);
 
+        def tablaDatos = new PdfPTable(5);
+        tablaDatos.setWidthPercentage(100);
+        tablaDatos.setWidths(arregloEnteros([15,45,5, 15, 20]))
 
-        def para = comprobante?.pago?.ingreso?.persona.sexo == 'M' ? 'Señor' : 'Señora(ita)'
+        addCellTabla(tablaDatos, new Paragraph("Recibí de : ", fontTd), frmtHd)
+        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.nombre + " " + comprobante?.pago?.ingreso?.persona?.apellido , fontTd), frmtHd)
+        addCellTabla(tablaDatos, new Paragraph("", fontTh), frmtHd)
+        addCellTabla(tablaDatos, new Paragraph("RUC/CI : " , fontTd), frmtHd)
+        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.ruc, fontTd), frmtHd)
 
-        def tabla = new PdfPTable(4);
-        tabla.setWidthPercentage(90);
-        tabla.setWidths(arregloEnteros([45, 25, 15, 15]))
+        addCellTabla(tablaDatos, new Paragraph("Departamento : ", fontTd), frmtHd)
+        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.departamento , fontTd), frmtHd)
+        addCellTabla(tablaDatos, new Paragraph("", fontTh), frmtHd)
+        addCellTabla(tablaDatos, new Paragraph("Teléfono : " , fontTd), frmtHd)
+        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.telefono, fontTd), frmtHd)
 
-        PdfPTable table = new PdfPTable(1);
-        table.setWidthPercentage(100);
-        table.addCell(getCell12("Quito, ${util.fechaConFormato(fecha: new Date(), formato: 'dd MMMM yyyy')} ", PdfPCell.ALIGN_RIGHT));
-        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
-        table.addCell(getCell12(para, PdfPCell.ALIGN_LEFT));
-        document.add(table);
+        document.add(tablaDatos)
 
-        Paragraph c = new Paragraph();
+        Paragraph preface2 = new Paragraph();
+        addEmptyLine(preface2, 2);
+        document.add(preface2);
+
+//        def tablaValores = new PdfPTable(3);
+//        tablaDatos.setWidthPercentage(100);
+//        tablaDatos.setWidths(arregloEnteros([60,10,30]))
+//
+//        addCellTabla(tablaDatos, new Paragraph("Por concepto de : ", fontTd), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.nombre + " " + comprobante?.pago?.ingreso?.persona?.apellido , fontTd), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph("", fontTh), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph("RUC/CI : " , fontTd), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.ruc, fontTd), frmtHd)
+//
+//        addCellTabla(tablaDatos, new Paragraph("Departamento : ", fontTd), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.departamento , fontTd), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph("", fontTh), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph("Teléfono : " , fontTd), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.telefono, fontTd), frmtHd)
+//
+//        document.add(tablaDatos)
+
+
+//        Paragraph preface = new Paragraph();
+//        addEmptyLine(preface, 1);
+//        preface.setAlignment(Element.ALIGN_CENTER);
+//        preface.add(new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTitle));
+//        document.add(preface);
+//
+//        Paragraph preface2 = new Paragraph();
+//        addEmptyLine(preface2, 1);
+//        preface2.setAlignment(Element.ALIGN_CENTER);
+//        preface2.add(new Paragraph(condominio?.direccion, fontTitle));
+//        addEmptyLine(preface2, 2);
+//        document.add(preface2);
+
+//        def para = comprobante?.pago?.ingreso?.persona.sexo == 'M' ? 'Señor' : 'Señora(ita)'
+//
+//        def tabla = new PdfPTable(4);
+//        tabla.setWidthPercentage(90);
+//        tabla.setWidths(arregloEnteros([45, 25, 15, 15]))
+//
+//        PdfPTable table = new PdfPTable(1);
+//        table.setWidthPercentage(100);
+//        table.addCell(getCell12("Quito, ${util.fechaConFormato(fecha: new Date(), formato: 'dd MMMM yyyy')} ", PdfPCell.ALIGN_RIGHT));
+//        table.addCell(getCell12(" ", PdfPCell.ALIGN_LEFT));
+//        table.addCell(getCell12(para, PdfPCell.ALIGN_LEFT));
+//        document.add(table);
+
+//        Paragraph c = new Paragraph();
 //        if(persona?.nombre != persona?.nombrePropietario) {
 //            c.add(new Paragraph((persona?.nombre ?: '') + ' ' + (persona?.apellido ?: '') + ' / ' +
 //                    (persona?.nombrePropietario ?: '') + ' ' + (persona?.apellidoPropietario ?: ''), info))
 //        } else {
-            c.add(new Paragraph((comprobante?.pago?.ingreso?.persona?.nombre ?: '') + ' ' + (comprobante?.pago?.ingreso?.persona?.apellido ?: ''), info))
+//            c.add(new Paragraph((comprobante?.pago?.ingreso?.persona?.nombre ?: '') + ' ' + (comprobante?.pago?.ingreso?.persona?.apellido ?: ''), info))
 //        }
-        document.add(c)
-        Paragraph d = new Paragraph();
-        d.add(new Paragraph((comprobante?.pago?.ingreso?.persona?.edificio?.descripcion ?: '') + ', Departamento: ' + (comprobante?.pago?.ingreso?.persona?.departamento ?: ''), info))
-        document.add(d)
-        Paragraph p = new Paragraph();
-        p.add(new Paragraph("Presente,", info))
-        addEmptyLine(p, 1);
-        document.add(p)
-
-        def totalF = 0
-
-        def textoComprobante = (comprobante?.texto != null && comprobante.texto != '') ? comprobante?.texto : 'Texto no ingresado...'
-        Paragraph t1 = new Paragraph();
-        t1.setAlignment("Justify");
-        t1.add(new Paragraph(cambiarHtml(textoComprobante), info))
-        addEmptyLine(t1, 1);
-        document.add(t1)
-
-        def totalIntereses = 0
-        def totalFinal = 0
-
-        addCellTabla(tabla, new Paragraph("Pago realizado por", fontTh), frmtHd)
-        addCellTabla(tabla, new Paragraph("Documento", fontTh), frmtHd)
-        addCellTabla(tabla, new Paragraph("Fecha", fontTh), frmtHd)
-        addCellTabla(tabla, new Paragraph("Valor", fontTh), frmtHd)
-
-        addCellTabla(tabla, new Paragraph(comprobante?.pago?.observaciones, fontTd10), frmtDato)
-        addCellTabla(tabla, new Paragraph(comprobante?.pago?.documento, fontTd10), frmtDatoDere)
-        addCellTabla(tabla, new Paragraph(comprobante?.pago?.fechaPago?.format("dd-MM-yyyy"), fontTd10), frmtDatoDere)
-        addCellTabla(tabla, new Paragraph(comprobante?.pago?.valor.toString(), fontTd10), frmtDatoDere)
-
-        document.add(tabla)
+//        document.add(c)
+//        Paragraph d = new Paragraph();
+//        d.add(new Paragraph((comprobante?.pago?.ingreso?.persona?.edificio?.descripcion ?: '') + ', Departamento: ' + (comprobante?.pago?.ingreso?.persona?.departamento ?: ''), info))
+//        document.add(d)
+//        Paragraph p = new Paragraph();
+//        p.add(new Paragraph("Presente,", info))
+//        addEmptyLine(p, 1);
+//        document.add(p)
+//
+//        def totalF = 0
+//
+//        def textoComprobante = (comprobante?.texto != null && comprobante.texto != '') ? comprobante?.texto : 'Texto no ingresado...'
+//        Paragraph t1 = new Paragraph();
+//        t1.setAlignment("Justify");
+//        t1.add(new Paragraph(cambiarHtml(textoComprobante), info))
+//        addEmptyLine(t1, 1);
+//        document.add(t1)
+//
+//        def totalIntereses = 0
+//        def totalFinal = 0
+//
+//        addCellTabla(tabla, new Paragraph("Pago realizado por", fontTh), frmtHd)
+//        addCellTabla(tabla, new Paragraph("Documento", fontTh), frmtHd)
+//        addCellTabla(tabla, new Paragraph("Fecha", fontTh), frmtHd)
+//        addCellTabla(tabla, new Paragraph("Valor", fontTh), frmtHd)
+//
+//        addCellTabla(tabla, new Paragraph(comprobante?.pago?.observaciones, fontTd10), frmtDato)
+//        addCellTabla(tabla, new Paragraph(comprobante?.pago?.documento, fontTd10), frmtDatoDere)
+//        addCellTabla(tabla, new Paragraph(comprobante?.pago?.fechaPago?.format("dd-MM-yyyy"), fontTd10), frmtDatoDere)
+//        addCellTabla(tabla, new Paragraph(comprobante?.pago?.valor.toString(), fontTd10), frmtDatoDere)
+//
+//        document.add(tabla)
 
         Paragraph e = new Paragraph();
         e.add(new Paragraph("", info))
@@ -4062,13 +4132,13 @@ class ReportesController extends Shield{
 //        addEmptyLine(t2, 1);
 //        document.add(t2)
 
-        Paragraph t3 = new Paragraph();
-        t3.setAlignment("Justify");
-        t3.add(new Paragraph("Agradezco su oportuna atención a la presente, lo que nos ayudará " +
-                "a cubrir los gastos de servicios básicos, mantenimiento, conserje, vigilancia " +
-                "y mejora de los bienes comunales. ", info))
-        addEmptyLine(t3, 1);
-        document.add(t3)
+//        Paragraph t3 = new Paragraph();
+//        t3.setAlignment("Justify");
+//        t3.add(new Paragraph("Agradezco su oportuna atención a la presente, lo que nos ayudará " +
+//                "a cubrir los gastos de servicios básicos, mantenimiento, conserje, vigilancia " +
+//                "y mejora de los bienes comunales. ", info))
+//        addEmptyLine(t3, 1);
+//        document.add(t3)
         Paragraph a = new Paragraph();
         a.add(new Paragraph("Atentamente,", info))
         addEmptyLine(a, 3);
@@ -4079,10 +4149,10 @@ class ReportesController extends Shield{
         f.add(new Paragraph("Cel: 0984916620, dpto. 214", info))
         document.add(f)
 
-        Paragraph t4 = new Paragraph();
-        t4.setAlignment("Justify");
-        t4.add(new Paragraph("Nota: No se cobrarán los intereses si el pago se realiza hasta el 1° de Octubre de 2019", nota))
-        document.add(t4)
+//        Paragraph t4 = new Paragraph();
+//        t4.setAlignment("Justify");
+//        t4.add(new Paragraph("Nota: No se cobrarán los intereses si el pago se realiza hasta el 1° de Octubre de 2019", nota))
+//        document.add(t4)
 
 
         document.close();
