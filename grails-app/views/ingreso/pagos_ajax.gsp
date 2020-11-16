@@ -127,33 +127,15 @@
               success:function(msg){
                   if(msg == 'ok'){
                       location.href = "${g.createLink(controller: 'reportes', action: 'comprobante')}?comp=" + comprobante;
-//                      setTimeout(function() {
-//                          location.reload(true);
-//                      }, 1000);
+                      setTimeout(function() {
+                          location.reload(true);
+                      }, 3000);
                   }else{
                     log("Error al imprimir el comprobante","error")
                   }
               }
           })
     });
-
-
-    %{--$(".btnComprobante").click(function () {--}%
-    %{--$.ajax({--}%
-    %{--type: 'POST',--}%
-    %{--url:'${createLink(controller: 'ingreso', action: 'pagos_ajax')}',--}%
-    %{--data:{--}%
-    %{--ingreso: ingreso--}%
-    %{--},--}%
-    %{--success: function (msg){--}%
-    %{--$("#tdPagos").html(msg)--}%
-    %{--}--}%
-    %{--});--}%
-    %{--});--}%
-
-    %{--function cargarComprobantes(id){--}%
-
-    %{--}--}%
 
 
     $(".btnAdd").click(function () {
