@@ -14,7 +14,6 @@ class Condominio {
     int numeroViviendas = 0
     double monitorio
     String comprobante
-    int numero
 
     static mapping = {
         table 'cndm'
@@ -37,7 +36,6 @@ class Condominio {
             numeroViviendas column: 'cndmnmvv'
             monitorio column : 'cndmmntr'
             comprobante column: 'cndmcmpr'
-            numero column: 'cndmnmro'
         }
     }
     static constraints = {
@@ -54,7 +52,6 @@ class Condominio {
         numeroViviendas(blank: false, nullable: false, attributes: [title: 'Número de viviendas'])
         monitorio(blank: true, nullable: true)
         comprobante(blank: true, nullable: true)
-        numero(blank: true, nullable: true)
     }
 
     String toString() {

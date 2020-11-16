@@ -322,14 +322,14 @@
 
                     }
                 },
-                %{--comprobante   : {--}%
-                    %{--label  : "Comprobante",--}%
-                    %{--icon   : "fa fa-paste",--}%
-                    %{--action : function ($element) {--}%
-                        %{--var id = $element.data("id");--}%
-                        %{--location.href="${createLink(controller: 'comprobante', action: 'comprobante')}?id=" + id--}%
-                    %{--}--}%
-                %{--},--}%
+                talonario   : {
+                    label  : "Comprobantes digitales",
+                    icon   : "fa fa-paste",
+                    action : function ($element) {
+                        var id = $element.data("id");
+                        location.href="${createLink(controller: 'talonario', action: 'talonario')}?id=" + id
+                    }
+                },
                 eliminar : {
                     label            : "Eliminar",
                     icon             : "fa fa-trash-o",
