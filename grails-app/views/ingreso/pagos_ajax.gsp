@@ -83,17 +83,16 @@
                                 <i class="fa fa-pencil"></i>
                             </a>
                         </g:if>
-                        <a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" title="Borrar Pago">
-                            <i class="fa fa-trash-o"></i>
-                        </a>
+                        <g:if test="${pagoUsuario?.valor != 0}">
+                            <a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" title="Borrar Pago">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </g:if>
                         <g:if test="${condominio.Comprobante.findByPago(pagoUsuario)}">
                             <a href="#" class="btn btn-info btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}" data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Imprimir comprobante">
                                 <i class="fa fa-print"></i>
                             </a>
                         </g:if>
-                    %{--<a href="#" class="btn btn-info btn-sm btnComprobante" data-id="${pagoUsuario?.id}" title="Generar comprobante">--}%
-                    %{--<i class="fa fa-cog"></i>--}%
-                    %{--</a>--}%
                     </g:if>
                 </td>
             </tr>

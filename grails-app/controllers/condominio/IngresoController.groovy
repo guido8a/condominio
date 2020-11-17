@@ -330,22 +330,38 @@ class IngresoController extends Shield {
                 render "no"
             }
         }
-
-
-
     }
 
     def borrarPago_ajax () {
         def pago = Pago.get(params.id)
 
-        try{
-            pago.delete(flush: true)
-            render "ok"
-        }catch (e){
-            println("error al borrar el pago " + e)
+        if(borrarComprobante(pago)){
+                pago.valor = 0
+            if(!pago.save(flush: true)){
+                render "no"
+            }else{
+                render "ok"
+            }
+        }else{
             render "no"
         }
     }
+
+
+    def borrarComprobante(pago){
+        def comprobante = Comprobante.findByPago(pago)
+
+        comprobante.estado = 'A'
+
+        if(!comprobante.save(flush: true)){
+            println("error al anular el comprobante " + comprobante.errors)
+            return false
+        }else{
+            return true
+        }
+
+    }
+
 
     def obligaciones_ajax () {
         println("params " + params)

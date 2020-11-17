@@ -3956,13 +3956,13 @@ class ReportesController extends Shield{
         def comprobante = Comprobante.get(params.comp)
 
         def titulo = new Color(40, 140, 180)
-        Font info = new Font(Font.TIMES_ROMAN, 11, Font.NORMAL)
+        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
         Font nota = new Font(Font.TIMES_ROMAN, 8, Font.ITALIC)
         Font notaTitulo = new Font(Font.TIMES_ROMAN, 11, Font.BOLD)
         Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
         Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
         Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
-        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 8, Font.BOLD);
         Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL, Color.RED);
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
@@ -3978,7 +3978,7 @@ class ReportesController extends Shield{
         def prmsNmBorder = [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
         Document document
-        document = new Document(PageSize.A4);
+        document = new Document(PageSize.A5);
         document.setMargins(74, 60, 30, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos);
         document.resetHeader()
@@ -4017,7 +4017,7 @@ class ReportesController extends Shield{
 
         def tablaDatos = new PdfPTable(4);
         tablaDatos.setWidthPercentage(100);
-        tablaDatos.setWidths(arregloEnteros([17,45,20, 18]))
+        tablaDatos.setWidths(arregloEnteros([22,40,20, 18]))
 
         addCellTabla(tablaDatos, new Paragraph("Recibí de : ", fontTd10), frmtHd)
         addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.nombre + " " + comprobante?.pago?.ingreso?.persona?.apellido , fontTd), frmtHd)
@@ -4037,17 +4037,17 @@ class ReportesController extends Shield{
 
         def tablaValores = new PdfPTable(4);
         tablaValores.setWidthPercentage(100);
-        tablaValores.setWidths(arregloEnteros([20,45,15,20]))
+        tablaValores.setWidths(arregloEnteros([23,43,14,20]))
 
         addCellTabla(tablaValores, new Paragraph("Por concepto de : ", fontTd10), frmtHd)
         addCellTabla(tablaValores, new Paragraph(comprobante?.pago?.observaciones ?: '', fontTd), frmtHd)
         addCellTabla(tablaValores, new Paragraph("", fontTh), frmtHd)
-        addCellTabla(tablaValores, new Paragraph(g.formatNumber(number:comprobante?.pago?.valor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+        addCellTabla(tablaValores, new Paragraph(g.formatNumber(number:comprobante?.pago?.valor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtHd)
 
         addCellTabla(tablaValores, new Paragraph("", fontTd), prmsTdNoBorder)
         addCellTabla(tablaValores, new Paragraph("", fontTd), prmsTdNoBorder)
-        addCellTabla(tablaValores, new Paragraph("Total \$ ", fontTh), frmtHd)
-        addCellTabla(tablaValores, new Paragraph(g.formatNumber(number:comprobante?.pago?.valor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+        addCellTabla(tablaValores, new Paragraph("Total \$ ", fontTd10), frmtHd)
+        addCellTabla(tablaValores, new Paragraph(g.formatNumber(number:comprobante?.pago?.valor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtHd)
 
         document.add(tablaValores)
 
@@ -4070,7 +4070,6 @@ class ReportesController extends Shield{
         t4.setAlignment("Justify");
         t4.add(new Paragraph("Nota: Sr. Copropietario y/o arrendatario pague su cuota condominal los 5 primeros días de cada mes, caso contrario se cobrará % intereses por mora, aprobado en la asamblea de Copropietarios.", nota))
         document.add(t4)
-
 
         document.close();
         pdfw.close()
