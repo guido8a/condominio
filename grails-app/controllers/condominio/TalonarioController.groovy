@@ -45,7 +45,23 @@ class TalonarioController {
         }
 
         talonario.fechaInicio = fechaIni
-        talonario.numeroInicio = params.numeroInicio.toInteger()
+
+
+        def existeTalonarios = Talonario.findAllByCondominio(condominio)
+        def numeroMax = 0
+
+        if(existeTalonarios){
+            numeroMax = existeTalonarios?.numeroFin?.max()
+            println("max " + numeroMax)
+            if(params.numeroInicio.toInteger() <= numeroMax){
+                render "er_El número ingresado es menor o igual al último número del talonario anterior."
+                return
+            }else{
+                talonario.numeroInicio = params.numeroInicio.toInteger()
+            }
+        }else{
+            talonario.numeroInicio = params.numeroInicio.toInteger()
+        }
 
         if(!talonario.save(flush:true)){
             println("error al guardar el talonario " + talonario.errors)
@@ -82,6 +98,10 @@ class TalonarioController {
 
         talonario.estado = 'I'
         talonario.fechaFin = new Date()
+
+        if(talonario.numeroFin == 0){
+            talonario.numeroFin = talonario.numeroInicio
+        }
 
         if(!talonario.save(flush:true)){
             println("error al borrar el talonario " + talonario.errors)

@@ -145,11 +145,17 @@
                 data    : $form.serialize(),
                 success : function (msg) {
                     closeLoader();
-                        if(msg == 'ok'){
+                    var parts = msg.split("_");
+                        if(parts[0] == 'ok'){
                             log("Talonario guardado correctamente","success");
                             cargarTablaTalonarios();
                         }else{
-                            log("Error al guardar el talonario","error")
+                            if(parts[0] == 'er'){
+                                bootbox.alert('<i class="fa fa-exclamation-triangle text-danger fa-3x"></i> ' + '<strong style="font-size: 14px">' + parts[1] + '</strong>');
+                                return false;
+                            }else{
+                                log("Error al guardar el talonario","error")
+                            }
                         }
                 }
             });
@@ -158,46 +164,46 @@
         } //else
     }
 
-    function deleteRow(itemId) {
-        bootbox.dialog({
-            title   : "Alerta",
-            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-            "¿Está seguro que desea eliminar la Obra seleccionada? Esta acción no se puede deshacer.</p>",
-            buttons : {
-                cancelar : {
-                    label     : "Cancelar",
-                    className : "btn-primary",
-                    callback  : function () {
-                    }
-                },
-                eliminar : {
-                    label     : "<i class='fa fa-trash-o'></i> Eliminar",
-                    className : "btn-danger",
-                    callback  : function () {
-                        openLoader("Eliminando Obra");
-                        $.ajax({
-                            type    : "POST",
-                            url     : '${createLink(controller:'obra', action:'delete_ajax')}',
-                            data    : {
-                                id : itemId
-                            },
-                            success : function (msg) {
-                                var parts = msg.split("*");
-                                log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                                if (parts[0] == "SUCCESS") {
-                                    setTimeout(function() {
-                                        location.reload(true);
-                                    }, 1000);
-                                } else {
-                                    closeLoader();
-                                }
-                            }
-                        });
-                    }
-                }
-            }
-        });
-    }
+    %{--function deleteRow(itemId) {--}%
+        %{--bootbox.dialog({--}%
+            %{--title   : "Alerta",--}%
+            %{--message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +--}%
+            %{--"¿Está seguro que desea eliminar la Obra seleccionada? Esta acción no se puede deshacer.</p>",--}%
+            %{--buttons : {--}%
+                %{--cancelar : {--}%
+                    %{--label     : "Cancelar",--}%
+                    %{--className : "btn-primary",--}%
+                    %{--callback  : function () {--}%
+                    %{--}--}%
+                %{--},--}%
+                %{--eliminar : {--}%
+                    %{--label     : "<i class='fa fa-trash-o'></i> Eliminar",--}%
+                    %{--className : "btn-danger",--}%
+                    %{--callback  : function () {--}%
+                        %{--openLoader("Eliminando Obra");--}%
+                        %{--$.ajax({--}%
+                            %{--type    : "POST",--}%
+                            %{--url     : '${createLink(controller:'obra', action:'delete_ajax')}',--}%
+                            %{--data    : {--}%
+                                %{--id : itemId--}%
+                            %{--},--}%
+                            %{--success : function (msg) {--}%
+                                %{--var parts = msg.split("*");--}%
+                                %{--log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)--}%
+                                %{--if (parts[0] == "SUCCESS") {--}%
+                                    %{--setTimeout(function() {--}%
+                                        %{--location.reload(true);--}%
+                                    %{--}, 1000);--}%
+                                %{--} else {--}%
+                                    %{--closeLoader();--}%
+                                %{--}--}%
+                            %{--}--}%
+                        %{--});--}%
+                    %{--}--}%
+                %{--}--}%
+            %{--}--}%
+        %{--});--}%
+    %{--}--}%
 
 
 

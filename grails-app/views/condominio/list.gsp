@@ -59,7 +59,7 @@
     <tbody>
     <g:if test="${condominioInstanceCount > 0}">
         <g:each in="${condominioInstanceList}" status="i" var="condominioInstance">
-            <tr data-id="${condominioInstance.id}">
+            <tr data-id="${condominioInstance.id}" data-tal="${condominioInstance?.comprobante}">
 
                 <td>${condominioInstance.tipoCondominio.descripcion}</td>
 
@@ -226,128 +226,310 @@
             return false;
         });
 
-        $("tbody>tr").contextMenu({
-            items  : {
-                header   : {
-                    label  : "Acciones",
-                    header : true
-                },
-                ver      : {
-                    label  : "Ver",
-                    icon   : "fa fa-search",
-                    action : function ($element) {
-                        var id = $element.data("id");
-                        $.ajax({
-                            type    : "POST",
-                            url     : "${createLink(controller:'condominio', action:'show_ajax')}",
-                            data    : {
-                                id : id
-                            },
-                            success : function (msg) {
-                                bootbox.dialog({
-                                    title   : "Ver Condominio",
-                                    message : msg,
-                                    buttons : {
-                                        ok : {
-                                            label     : "Aceptar",
-                                            className : "btn-primary",
-                                            callback  : function () {
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    }
-                },
-                editar   : {
-                    label  : "Editar",
-                    icon   : "fa fa-pencil",
-                    action : function ($element) {
-                        var id = $element.data("id");
-                        createEditRow(id);
-                    }
-                },
-                pago   : {
-                    label  : "Solicitud de Pago",
-                    icon   : "fa fa-dollar",
-                    action : function ($element) {
-                        var id = $element.data("id");
-                        location.href="${createLink(controller: 'reportes', action: 'solicitudPago')}?id=" + id
-                    }
-                },
-                monitorio   : {
-                    label  : "Solicitud de Monitorio",
-                    icon   : "fa fa-clipboard",
-                    action : function ($element) {
-                        var id = $element.data("id");
-                        location.href="${createLink(controller: 'reportes', action: 'solicitudMonitorio')}?id=" + id
-                    }
-                },
-                cobro   : {
-                    label  : "Gestión de cobro",
-                    icon   : "fa fa-gavel",
-                    action : function ($element) {
-                        var id = $element.data("id");
+        %{--$("tbody>tr").contextMenu({--}%
+        %{--items  : {--}%
+        %{--header   : {--}%
+        %{--label  : "Acciones",--}%
+        %{--header : true--}%
+        %{--},--}%
+        %{--ver      : {--}%
+        %{--label  : "Ver",--}%
+        %{--icon   : "fa fa-search",--}%
+        %{--action : function ($element) {--}%
+        %{--var id = $element.data("id");--}%
+        %{--$.ajax({--}%
+        %{--type    : "POST",--}%
+        %{--url     : "${createLink(controller:'condominio', action:'show_ajax')}",--}%
+        %{--data    : {--}%
+        %{--id : id--}%
+        %{--},--}%
+        %{--success : function (msg) {--}%
+        %{--bootbox.dialog({--}%
+        %{--title   : "Ver Condominio",--}%
+        %{--message : msg,--}%
+        %{--buttons : {--}%
+        %{--ok : {--}%
+        %{--label     : "Aceptar",--}%
+        %{--className : "btn-primary",--}%
+        %{--callback  : function () {--}%
+        %{--}--}%
+        %{--}--}%
+        %{--}--}%
+        %{--});--}%
+        %{--}--}%
+        %{--});--}%
+        %{--}--}%
+        %{--},--}%
+        %{--editar   : {--}%
+        %{--label  : "Editar",--}%
+        %{--icon   : "fa fa-pencil",--}%
+        %{--action : function ($element) {--}%
+        %{--var id = $element.data("id");--}%
+        %{--createEditRow(id);--}%
+        %{--}--}%
+        %{--},--}%
+        %{--pago   : {--}%
+        %{--label  : "Solicitud de Pago",--}%
+        %{--icon   : "fa fa-dollar",--}%
+        %{--action : function ($element) {--}%
+        %{--var id = $element.data("id");--}%
+        %{--location.href="${createLink(controller: 'reportes', action: 'solicitudPago')}?id=" + id--}%
+        %{--}--}%
+        %{--},--}%
+        %{--monitorio   : {--}%
+        %{--label  : "Solicitud de Monitorio",--}%
+        %{--icon   : "fa fa-clipboard",--}%
+        %{--action : function ($element) {--}%
+        %{--var id = $element.data("id");--}%
+        %{--location.href="${createLink(controller: 'reportes', action: 'solicitudMonitorio')}?id=" + id--}%
+        %{--}--}%
+        %{--},--}%
+        %{--cobro   : {--}%
+        %{--label  : "Gestión de cobro",--}%
+        %{--icon   : "fa fa-gavel",--}%
+        %{--action : function ($element) {--}%
+        %{--var id = $element.data("id");--}%
 
-                        $.ajax({
-                            type    : "POST",
-                            url     : "${createLink(controller:'condominio', action:'cobro_ajax')}",
-                            data    : {
-                                id : id
-                            },
-                            success : function (msg) {
-                                bootbox.dialog({
-                                    title   : "Gestión de cobro",
-                                    message : msg,
-                                    buttons : {
-                                        cancelar : {
-                                            label     : "Cancelar",
-                                            className : "btn-primary",
-                                            callback  : function () {
-                                            }
-                                        },
-                                        aceptar : {
-                                            label     : "Guardar",
-                                            className : "btn-success",
-                                            callback  : function () {
-                                                var v = $("#gestion").val();
-                                                guardarValor(id, v);
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-                        });
+        %{--$.ajax({--}%
+        %{--type    : "POST",--}%
+        %{--url     : "${createLink(controller:'condominio', action:'cobro_ajax')}",--}%
+        %{--data    : {--}%
+        %{--id : id--}%
+        %{--},--}%
+        %{--success : function (msg) {--}%
+        %{--bootbox.dialog({--}%
+        %{--title   : "Gestión de cobro",--}%
+        %{--message : msg,--}%
+        %{--buttons : {--}%
+        %{--cancelar : {--}%
+        %{--label     : "Cancelar",--}%
+        %{--className : "btn-primary",--}%
+        %{--callback  : function () {--}%
+        %{--}--}%
+        %{--},--}%
+        %{--aceptar : {--}%
+        %{--label     : "Guardar",--}%
+        %{--className : "btn-success",--}%
+        %{--callback  : function () {--}%
+        %{--var v = $("#gestion").val();--}%
+        %{--guardarValor(id, v);--}%
+        %{--}--}%
+        %{--}--}%
+        %{--}--}%
+        %{--});--}%
+        %{--}--}%
+        %{--});--}%
 
-                    }
-                },
-                talonario   : {
-                    label  : "Comprobantes digitales",
-                    icon   : "fa fa-paste",
-                    action : function ($element) {
-                        var id = $element.data("id");
-                        location.href="${createLink(controller: 'talonario', action: 'talonario')}?id=" + id
-                    }
-                },
-                eliminar : {
-                    label            : "Eliminar",
-                    icon             : "fa fa-trash-o",
-                    separator_before : true,
-                    action           : function ($element) {
-                        var id = $element.data("id");
-                        deleteRow(id);
-                    }
-                }
-            },
+        %{--}--}%
+        %{--},--}%
+        %{--talonario   : {--}%
+        %{--label  : "Comprobantes digitales",--}%
+        %{--icon   : "fa fa-paste",--}%
+        %{--action : function ($element) {--}%
+        %{--var id = $element.data("id");--}%
+        %{--location.href="${createLink(controller: 'talonario', action: 'talonario')}?id=" + id--}%
+        %{--}--}%
+        %{--},--}%
+        %{--eliminar : {--}%
+        %{--label            : "Eliminar",--}%
+        %{--icon             : "fa fa-trash-o",--}%
+        %{--separator_before : true,--}%
+        %{--action           : function ($element) {--}%
+        %{--var id = $element.data("id");--}%
+        %{--deleteRow(id);--}%
+        %{--}--}%
+        %{--}--}%
+        %{--},--}%
+        %{--onShow : function ($element) {--}%
+        %{--$element.addClass("success");--}%
+        %{--},--}%
+        %{--onHide : function ($element) {--}%
+        %{--$(".success").removeClass("success");--}%
+        %{--}--}%
+        %{--});--}%
+    });
+
+    $(function () {
+        $("tr").contextMenu({
+            items  : createContextMenu,
             onShow : function ($element) {
-                $element.addClass("success");
+                $element.addClass("trHighlight");
             },
             onHide : function ($element) {
-                $(".success").removeClass("success");
+                $(".trHighlight").removeClass("trHighlight");
             }
         });
     });
+
+
+    function createContextMenu(node) {
+        var $tr = $(node);
+        var items = {
+            header: {
+                label: "Acciones",
+                header: true
+            }
+        };
+
+        var id = $tr.data("id");
+        var com = $tr.data("tal");
+
+        var editar = {
+
+            label  : "Editar",
+            icon   : "fa fa-pencil",
+            action : function ($element) {
+                var id = $element.data("id");
+                createEditRow(id);
+            }
+        };
+
+        var ver = {
+
+            label  : "Ver",
+            icon   : "fa fa-search",
+            action : function ($element) {
+                var id = $element.data("id");
+                $.ajax({
+                    type    : "POST",
+                    url     : "${createLink(controller:'condominio', action:'show_ajax')}",
+                    data    : {
+                        id : id
+                    },
+                    success : function (msg) {
+                        bootbox.dialog({
+                            title   : "Ver Condominio",
+                            message : msg,
+                            buttons : {
+                                ok : {
+                                    label     : "Aceptar",
+                                    className : "btn-primary",
+                                    callback  : function () {
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        };
+
+        var pago = {
+            label  : "Solicitud de Pago",
+            icon   : "fa fa-dollar",
+            action : function ($element) {
+                var id = $element.data("id");
+                location.href="${createLink(controller: 'reportes', action: 'solicitudPago')}?id=" + id
+            }
+        };
+
+        var monitorio = {
+            label  : "Solicitud de Monitorio",
+            icon   : "fa fa-clipboard",
+            action : function ($element) {
+                var id = $element.data("id");
+                location.href="${createLink(controller: 'reportes', action: 'solicitudMonitorio')}?id=" + id
+            }
+        };
+
+        var cobro = {
+            label  : "Gestión de cobro",
+            icon   : "fa fa-gavel",
+            action : function ($element) {
+                var id = $element.data("id");
+
+                $.ajax({
+                    type    : "POST",
+                    url     : "${createLink(controller:'condominio', action:'cobro_ajax')}",
+                    data    : {
+                        id : id
+                    },
+                    success : function (msg) {
+                        bootbox.dialog({
+                            title   : "Gestión de cobro",
+                            message : msg,
+                            buttons : {
+                                cancelar : {
+                                    label     : "Cancelar",
+                                    className : "btn-primary",
+                                    callback  : function () {
+                                    }
+                                },
+                                aceptar : {
+                                    label     : "Guardar",
+                                    className : "btn-success",
+                                    callback  : function () {
+                                        var v = $("#gestion").val();
+                                        guardarValor(id, v);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+
+            }
+        };
+
+        var talonario = {
+            label  : "Comprobantes digitales",
+            icon   : "fa fa-clipboard",
+            action : function ($element) {
+                var id = $element.data("id");
+                location.href="${createLink(controller: 'talonario', action: 'talonario')}?id=" + id
+            }
+        };
+
+        var eliminar = {
+            label            : "Eliminar",
+            icon             : "fa fa-trash-o",
+            separator_before : true,
+            action           : function ($element) {
+                var id = $element.data("id");
+                deleteRow(id);
+            }
+        };
+
+
+
+
+        %{--if('${session.perfil.codigo}' == 'ADC'){--}%
+        %{--items.ver = ver;--}%
+        %{--items.editar = editar;--}%
+        %{--items.eliminar = eliminar;--}%
+        %{--} else {--}%
+        %{--items.ver = ver;--}%
+        %{--}--}%
+
+
+        items.ver = ver;
+        items.editar = editar;
+        items.pago = pago;
+        items.monitorio = monitorio;
+        items.cobro = cobro;
+//        if(verificarTalonario(id)){
+//            items.talonario = talonario;
+//        }
+        if(com == 'S'){
+            items.talonario = talonario;
+        }
+        items.eliminar = eliminar;
+
+
+        return items
+    }
+
+    %{--function verificarTalonario(id){--}%
+        %{--$.ajax({--}%
+            %{--type: 'POST'--}%
+            %{--url:'${}'--}%
+        %{--})--}%
+
+    %{--}--}%
+
+
+
+
 </script>
 
 </body>

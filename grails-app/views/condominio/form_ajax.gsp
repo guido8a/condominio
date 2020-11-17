@@ -141,14 +141,14 @@
             </div>
 
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'comprobante', 'error')} required">
-                %{--<span class="grupo">--}%
-                    %{--<label for="numeroViviendas" class="col-md-2 control-label">--}%
-                        %{--Comprobantes del sistema--}%
-                    %{--</label>--}%
-                    %{--<div class="col-md-4">--}%
-                        %{--<g:select name="comprobante" from="${['S': 'SI', 'N': 'NO']}" optionValue="value" optionKey="key" value="${condominioInstance?.comprobante}" class="form-control"/>--}%
-                    %{--</div>--}%
-                %{--</span>--}%
+                <span class="grupo">
+                    <label for="numeroViviendas" class="col-md-2 control-label">
+                        Comprobantes del sistema
+                    </label>
+                    <div class="col-md-4">
+                        <g:select name="comprobante" from="${['S': 'SI', 'N': 'NO']}" optionValue="value" optionKey="key" value="${condominioInstance?.comprobante}" class="form-control"/>
+                    </div>
+                </span>
 
                 <span class="grupo">
                     %{--<label for="sigla" class="col-md-2 control-label">--}%
