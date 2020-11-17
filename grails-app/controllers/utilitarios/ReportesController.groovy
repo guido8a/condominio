@@ -3978,7 +3978,7 @@ class ReportesController extends Shield{
         def prmsNmBorder = [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
         Document document
-        document = new Document(PageSize.A5);
+        document = new Document(PageSize.A5.rotate());
         document.setMargins(74, 60, 30, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos);
         document.resetHeader()
