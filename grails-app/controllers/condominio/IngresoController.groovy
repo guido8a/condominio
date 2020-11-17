@@ -212,7 +212,7 @@ class IngresoController extends Shield {
 
         def pagos = Pago.findAllByIngreso(ingreso)
         def saldo = (ingreso.valor - (pagos?.valor?.sum() ?: 0))
-        def dscr  = "${ingreso.observaciones?:''}"
+        def dscr  = "${ingreso.observaciones?: ingreso?.obligacion?.descripcion}"
 
         return[ingreso: ingreso, pagos: pagos, saldo: saldo, pago: pago, dscr: dscr, mora: mora, mess: mess]
     }
@@ -227,6 +227,7 @@ class IngresoController extends Shield {
         def saldo2
         def pago, mess
         def band = 0
+        def band2 = 0
 
         saldo = Math.round(saldo*100)/100
         if(params.id){
@@ -280,30 +281,44 @@ class IngresoController extends Shield {
                     render "er_Ya existe un pago, no es posible generar un comprobante"
                 }else{
 
-                    def existen = Comprobante.findAllByCondominio(condominio)
-                    def numero
+                    def talonarioActual = Talonario.findByCondominioAndEstado(condominio,'V')
 
-                    if(existen){
-                        numero = existen.numero.max() + 1
+                    if(talonarioActual){
+
+//                        def existen = Comprobante.findAllByCondominio(condominio)
+                        def numero
+
+//                        if(existen){
+//                            numero = existen.numero.max() + 1
+//                        }else{
+//
+//                            numero = (condominio.numero == 0 ? 1 : condominio.numero)
+//                        }
+
+                        numero = talonarioActual.numeroFin == 0 ?  talonarioActual.numeroInicio : (talonarioActual.numeroFin +1)
+
+
+                        def comprobante = new Comprobante()
+                        comprobante.condominio = condominio
+                        comprobante.pago = pago
+                        comprobante.texto = Texto.findByCodigo('CMPR').parrafoUno ?: ''
+                        comprobante.fecha = new Date()
+                        comprobante.estado = 'V'
+                        comprobante.numero = numero
+
+                        if(!comprobante.save(flush:true)){
+                            println("error al guardar el comprobante " + comprobante.errors)
+                            render "er_Error al guardar el comprobante"
+                        }else{
+                            talonarioActual.numeroFin = numero
+                            talonarioActual.save(flush:true)
+                            render "ok"
+                        }
+
                     }else{
-                        numero = (condominio.numero == 0 ? 1 : condominio.numero)
+                        render "er_No existe un talonario digital creado, no es posible generar un comprobante"
+                        return
                     }
-
-                    def comprobante = new Comprobante()
-                    comprobante.condominio = condominio
-                    comprobante.pago = pago
-                    comprobante.texto = Texto.findByCodigo('CMPR').parrafoUno ?: ''
-                    comprobante.fecha = new Date()
-                    comprobante.estado = 'V'
-                    comprobante.numero = numero
-
-                    if(!comprobante.save(flush:true)){
-                        println("error al guardar el comprobante " + comprobante.errors)
-                        render "er_Error al guardar el comprobante"
-                    }else{
-                        render "ok"
-                    }
-
                 }
             }else{
                 render "no"

@@ -15,6 +15,7 @@ import condominio.Edificio
 import condominio.Ingreso
 import condominio.Obra
 import condominio.Pago
+import condominio.Talonario
 import condominio.Texto
 import condominio.TipoAporte
 import groovy.json.JsonBuilder

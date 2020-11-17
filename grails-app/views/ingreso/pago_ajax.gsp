@@ -82,8 +82,7 @@
                     Pago realizado por:
                 </label>
                 <div class="col-md-9">
-                    <g:textField name="observaciones" class="form-control"
-                                 value="${pago?.observaciones?:dscr}"/>
+                    <g:textField name="observaciones" class="form-control"   value="${pago?.observaciones?:dscr}"/>
                 </div>
             </span>
         </div>

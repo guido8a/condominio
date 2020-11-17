@@ -44,15 +44,16 @@ class TalonarioController {
             talonario.estado = 'V'
         }
 
-        talonario.fechaInicio = fechaIni
+//        talonario.fechaInicio = fechaIni
 
 
         def existeTalonarios = Talonario.findAllByCondominio(condominio)
         def numeroMax = 0
+        def fechaFinMax
 
         if(existeTalonarios){
             numeroMax = existeTalonarios?.numeroFin?.max()
-            println("max " + numeroMax)
+//            println("max " + numeroMax)
             if(params.numeroInicio.toInteger() <= numeroMax){
                 render "er_El número ingresado es menor o igual al último número del talonario anterior."
                 return
@@ -61,6 +62,21 @@ class TalonarioController {
             }
         }else{
             talonario.numeroInicio = params.numeroInicio.toInteger()
+        }
+
+        if(existeTalonarios){
+
+            fechaFinMax = existeTalonarios?.fechaFin?.max()
+            println("---- f " + fechaFinMax)
+            if(fechaIni <= fechaFinMax){
+                render "er_La fecha ingresada es menor o igual a la fecha final del talonario anterior."
+                return
+            }else{
+                talonario.fechaInicio = fechaIni
+            }
+
+        }else{
+            talonario.fechaInicio = fechaIni
         }
 
         if(!talonario.save(flush:true)){
@@ -83,7 +99,7 @@ class TalonarioController {
     }
 
     def comprobarEdicion_ajax(){
-        println("params " + params)
+//        println("params " + params)
         def talonario = Talonario.get(params.id)
 
         if(talonario.numeroFin != 0){
