@@ -4065,11 +4065,7 @@ class ReportesController extends Shield{
         }
 
         Paragraph a = new Paragraph();
-        if(comprobante.estado == 'A'){
-            addEmptyLine(a, 2);
-        }else{
-            addEmptyLine(a, 4);
-        }
+        addEmptyLine(a, comprobante?.estado == 'A' ? 2 : 4);
 
         document.add(a)
         Paragraph f = new Paragraph();
