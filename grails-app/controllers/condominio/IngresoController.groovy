@@ -398,7 +398,7 @@ class IngresoController extends Shield {
 
 
     def tablaBuscar() {
-        println "buscar .... $params"
+//        println "buscar .... $params"
         def cn = dbConnectionService.getConnection()
         params.old = params.criterio
         params.criterio = buscadorService.limpiaCriterio(params.criterio)
@@ -406,7 +406,7 @@ class IngresoController extends Shield {
 
         def sql = armaSql(params)
         params.criterio = params.old
-        println "sql: $sql"
+//        println "sql: $sql"
         def data = cn.rows(sql.toString())
 
         def msg = ""

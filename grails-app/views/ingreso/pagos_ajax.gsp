@@ -83,7 +83,8 @@
                                 <i class="fa fa-pencil"></i>
                             </a>
                         </g:if>
-                        <g:if test="${pagoUsuario?.valor != 0}">
+                        %{--<g:if test="${pagoUsuario?.valor != 0}">--}%
+                        <g:if test="${ condominio.Comprobante.findByPago(pagoUsuario)?.estado != 'A'}">
                             <a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" title="Borrar Pago">
                                 <i class="fa fa-trash-o"></i>
                             </a>

@@ -3965,6 +3965,7 @@ class ReportesController extends Shield{
         Font fontTd10 = new Font(Font.TIMES_ROMAN, 8, Font.BOLD);
         Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL, Color.RED);
+        Font fontTdRojo = new Font(Font.TIMES_ROMAN, 14, Font.BOLD, Color.RED);
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
         def frmtHd2 = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE, colspan: 2]
         def frmtDato = [border: Color.WHITE, bwb: 0.1, bcb: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_LEFT]
@@ -4051,10 +4052,26 @@ class ReportesController extends Shield{
 
         document.add(tablaValores)
 
-        Paragraph a = new Paragraph();
-        addEmptyLine(a, 4);
-        document.add(a)
 
+        if(comprobante.estado == 'A'){
+            Paragraph h1 = new Paragraph();
+            addEmptyLine(h1, 1);
+            document.add(h1)
+
+            Paragraph h = new Paragraph();
+            h.setAlignment(Element.ALIGN_CENTER);
+            h.add(new Paragraph("ANULADO", fontTdRojo))
+            document.add(h)
+        }
+
+        Paragraph a = new Paragraph();
+        if(comprobante.estado == 'A'){
+            addEmptyLine(a, 2);
+        }else{
+            addEmptyLine(a, 4);
+        }
+
+        document.add(a)
         Paragraph f = new Paragraph();
         f.setAlignment(Element.ALIGN_CENTER);
         f.add(new Paragraph("Ing. Guido Ochoa Moreno", info))
