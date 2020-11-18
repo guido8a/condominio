@@ -230,63 +230,67 @@ class IngresoController extends Shield {
         def band2 = 0
 
         saldo = Math.round(saldo*100)/100
-        if(params.id){
-            pago = Pago.get(params.id)
-            saldo2 = saldo + (pago.valor ? pago.valor.toDouble() : 0)
-            println "saldo2: $saldo2, pago: ${params.abono.toDouble()}"
-            if(params.abono.toDouble() > saldo2){
-                render "er_El abono ingresado supera el valor del saldo"
-                return
-            }
-        }else{
-            println "saldo: $saldo, pago: ${params.abono.toDouble()}"
-            if(params.abono.toDouble() > saldo){
-                render "er_El abono ingresado supera el valor del saldo"
-                return
-            }
-        }
 
-        if(params.id){
-            pago = Pago.get(params.id)
-        }else{
-            pago = new Pago()
-        }
+       if(params.abono.toDouble() == 0){
+            render "er_No se puede crear un pago con monto igual a 0"
+       }else{
+           if(params.id){
+               pago = Pago.get(params.id)
+               saldo2 = saldo + (pago.valor ? pago.valor.toDouble() : 0)
+               println "saldo2: $saldo2, pago: ${params.abono.toDouble()}"
+               if(params.abono.toDouble() > saldo2){
+                   render "er_El abono ingresado supera el valor del saldo"
+                   return
+               }
+           }else{
+               println "saldo: $saldo, pago: ${params.abono.toDouble()}"
+               if(params.abono.toDouble() > saldo){
+                   render "er_El abono ingresado supera el valor del saldo"
+                   return
+               }
+           }
 
-        params.fecha = new Date().parse("dd-MM-yyyy", params.fechaPago_input)
+           if(params.id){
+               pago = Pago.get(params.id)
+           }else{
+               pago = new Pago()
+           }
 
-        pago.ingreso = ingreso
-        pago.valor = params.abono.toDouble()
-        pago.fechaPago = params.fecha
-        pago.documento = params.documento
-        pago.observaciones = params.observaciones
-        mess = params.mess.toInteger()
-        pago.transferencia = params.transferencia == 'SI' ? 'S' :'N'
+           params.fecha = new Date().parse("dd-MM-yyyy", params.fechaPago_input)
 
-        if(mess > 2) {
-            pago.mora = params.mora.toDouble()
-            pago.tasa = 8.0  //todo -> obtener ta de parámetros geenrales del sistema
-            pago.mess = mess
-        }
+           pago.ingreso = ingreso
+           pago.valor = params.abono.toDouble()
+           pago.fechaPago = params.fecha
+           pago.documento = params.documento
+           pago.observaciones = params.observaciones
+           mess = params.mess.toInteger()
+           pago.transferencia = params.transferencia == 'SI' ? 'S' :'N'
 
-        if(!pago.save(flush: true)){
-            println("error al guardar el pago " + pago.errors)
-            band = 0
-        }else{
-            band = 1
-        }
+           if(mess > 2) {
+               pago.mora = params.mora.toDouble()
+               pago.tasa = 8.0  //todo -> obtener ta de parámetros geenrales del sistema
+               pago.mess = mess
+           }
 
-        if(condominio?.comprobante == 'S'){
-            if(band == 1){
-                if(params.id){
-                    render "er_Ya existe un pago, no es posible generar un comprobante"
-                }else{
+           if(!pago.save(flush: true)){
+               println("error al guardar el pago " + pago.errors)
+               band = 0
+           }else{
+               band = 1
+           }
 
-                    def talonarioActual = Talonario.findByCondominioAndEstado(condominio,'V')
+           if(condominio?.comprobante == 'S'){
+               if(band == 1){
+                   if(params.id){
+                       render "er_Ya existe un pago, no es posible generar un comprobante"
+                   }else{
 
-                    if(talonarioActual){
+                       def talonarioActual = Talonario.findByCondominioAndEstado(condominio,'V')
+
+                       if(talonarioActual){
 
 //                        def existen = Comprobante.findAllByCondominio(condominio)
-                        def numero
+                           def numero
 
 //                        if(existen){
 //                            numero = existen.numero.max() + 1
@@ -295,41 +299,45 @@ class IngresoController extends Shield {
 //                            numero = (condominio.numero == 0 ? 1 : condominio.numero)
 //                        }
 
-                        numero = talonarioActual.numeroFin == 0 ?  talonarioActual.numeroInicio : (talonarioActual.numeroFin +1)
+                           numero = talonarioActual.numeroFin == 0 ?  talonarioActual.numeroInicio : (talonarioActual.numeroFin +1)
 
 
-                        def comprobante = new Comprobante()
-                        comprobante.condominio = condominio
-                        comprobante.pago = pago
-                        comprobante.texto = Texto.findByCodigo('CMPR').parrafoUno ?: ''
-                        comprobante.fecha = new Date()
-                        comprobante.estado = 'V'
-                        comprobante.numero = numero
+                           def comprobante = new Comprobante()
+                           comprobante.condominio = condominio
+                           comprobante.pago = pago
+                           comprobante.texto = Texto.findByCodigo('CMPR').parrafoUno ?: ''
+                           comprobante.fecha = new Date()
+                           comprobante.estado = 'V'
+                           comprobante.numero = numero
 
-                        if(!comprobante.save(flush:true)){
-                            println("error al guardar el comprobante " + comprobante.errors)
-                            render "er_Error al guardar el comprobante"
-                        }else{
-                            talonarioActual.numeroFin = numero
-                            talonarioActual.save(flush:true)
-                            render "ok"
-                        }
+                           if(!comprobante.save(flush:true)){
+                               println("error al guardar el comprobante " + comprobante.errors)
+                               render "er_Error al guardar el comprobante"
+                           }else{
+                               talonarioActual.numeroFin = numero
+                               talonarioActual.save(flush:true)
+                               render "ok"
+                           }
 
-                    }else{
-                        render "er_No existe un talonario digital creado, no es posible generar un comprobante"
-                        return
-                    }
-                }
-            }else{
-                render "no"
-            }
-        }else{
-            if(band == 1){
-                render "ok"
-            }else{
-                render "no"
-            }
-        }
+                       }else{
+                           render "er_No existe un talonario digital creado, no es posible generar un comprobante"
+                           return
+                       }
+                   }
+               }else{
+                   render "no"
+               }
+           }else{
+               if(band == 1){
+                   render "ok"
+               }else{
+                   render "no"
+               }
+           }
+       }
+
+
+
     }
 
     def borrarPago_ajax () {

@@ -8,6 +8,7 @@ import com.lowagie.text.Rectangle
 import com.lowagie.text.html.simpleparser.HTMLWorker
 import com.lowagie.text.pdf.BaseFont
 import com.lowagie.text.pdf.DefaultFontMapper
+import com.lowagie.text.pdf.PdfGState
 import com.lowagie.text.pdf.PdfTemplate
 import condominio.Comprobante
 import condominio.Condominio
@@ -4051,7 +4052,6 @@ class ReportesController extends Shield{
         addCellTabla(tablaValores, new Paragraph(g.formatNumber(number:comprobante?.pago?.valor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtHd)
 
         document.add(tablaValores)
-
 
         if(comprobante.estado == 'A'){
             Paragraph h1 = new Paragraph();

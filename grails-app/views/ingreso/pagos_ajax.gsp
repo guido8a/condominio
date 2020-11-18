@@ -83,16 +83,22 @@
                                 <i class="fa fa-pencil"></i>
                             </a>
                         </g:if>
-                        %{--<g:if test="${pagoUsuario?.valor != 0}">--}%
-                        <g:if test="${ condominio.Comprobante.findByPago(pagoUsuario)?.estado != 'A'}">
+                        <g:if test="${pagoUsuario?.valor != 0}">
                             <a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" title="Borrar Pago">
                                 <i class="fa fa-trash-o"></i>
                             </a>
                         </g:if>
                         <g:if test="${condominio.Comprobante.findByPago(pagoUsuario)}">
-                            <a href="#" class="btn btn-info btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}" data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Imprimir comprobante">
-                                <i class="fa fa-print"></i>
-                            </a>
+                            <g:if test="${condominio.Comprobante.findByPago(pagoUsuario).estado == 'A'}">
+                                <a href="#" class="btn btn-warning btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}" data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Imprimir comprobante anulado">
+                                    <i class="fa fa-print"></i>
+                                </a>
+                            </g:if>
+                            <g:else>
+                                <a href="#" class="btn btn-info btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}" data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Imprimir comprobante">
+                                    <i class="fa fa-print"></i>
+                                </a>
+                            </g:else>
                         </g:if>
                     </g:if>
                 </td>
@@ -118,23 +124,23 @@
 
     $(".btnImprimirComprobante").click(function () {
         var comprobante = $(this).data("com");
-          $.ajax({
-              type: 'POST',
-              url: '${createLink(controller: 'comprobante', action: 'verificarImpresion_ajax')}',
-              data:{
-                    id: comprobante
-              },
-              success:function(msg){
-                  if(msg == 'ok'){
-                      location.href = "${g.createLink(controller: 'reportes', action: 'comprobante')}?comp=" + comprobante;
-                      setTimeout(function() {
-                          location.reload(true);
-                      }, 3000);
-                  }else{
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'comprobante', action: 'verificarImpresion_ajax')}',
+            data:{
+                id: comprobante
+            },
+            success:function(msg){
+                if(msg == 'ok'){
+                    location.href = "${g.createLink(controller: 'reportes', action: 'comprobante')}?comp=" + comprobante;
+                    setTimeout(function() {
+                        location.reload(true);
+                    }, 3000);
+                }else{
                     log("Error al imprimir el comprobante","error")
-                  }
-              }
-          })
+                }
+            }
+        })
     });
 
 
@@ -184,27 +190,27 @@
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
             $btn.replaceWith(spinner);
-            openLoader("Guardando Pago");
+            openLoader("Guardando pago");
             $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
                 success : function (msg) {
+                    closeLoader();
                     var parts = msg.split("_");
                     if(parts[0] == 'ok'){
                         log("Pago guardado correctamente!" , "success");
-                        closeLoader();
                         setTimeout(function() {
                             location.reload(true);
                         }, 1000);
                     }else{
                         if(parts[0] == 'er'){
-                            closeLoader();
+
                             bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" + parts[1])
+                            return
                         }
                         else{
                             log("Error al guardar el pago","error");
-                            closeLoader();
                         }
                     }
                 }
