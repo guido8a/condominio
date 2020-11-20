@@ -78,16 +78,19 @@
                 <td class="derecha" style="width: 13%"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
                 <td class="centro" style="width: 19%">
                     <g:if test="${pagoUsuario?.estado != 'R'}">
-                        <g:if test="${!condominio.Comprobante.findByPago(pagoUsuario) || condominio.Comprobante.findByPago(pagoUsuario).estado == 'V'}">
-                            <a href="#" class="btn btn-success btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${ingreso?.id}" title="Editar Pago">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                        </g:if>
                         <g:if test="${pagoUsuario?.valor != 0}">
-                            <a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" title="Borrar Pago">
-                                <i class="fa fa-trash-o"></i>
-                            </a>
+                            <g:if test="${!condominio.Comprobante.findByPago(pagoUsuario) || condominio.Comprobante.findByPago(pagoUsuario).estado == 'V'}">
+                                <a href="#" class="btn btn-success btn-sm btnEditar" data-id="${pagoUsuario?.id}" data-ing="${ingreso?.id}" title="Editar Pago">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </g:if>
+                            <g:if test="${pagoUsuario?.valor != 0}">
+                                <a href="#" class="btn btn-danger btn-sm btnEliminar" data-id="${pagoUsuario?.id}" title="Borrar Pago">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </g:if>
                         </g:if>
+
                         <g:if test="${condominio.Comprobante.findByPago(pagoUsuario)}">
                             <g:if test="${condominio.Comprobante.findByPago(pagoUsuario).estado == 'A'}">
                                 <a href="#" class="btn btn-warning btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}" data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Imprimir comprobante anulado">
@@ -146,7 +149,17 @@
 
     $(".btnAdd").click(function () {
         var idIngreso = $(this).data("ing");
-        createEditRow(idIngreso,null)
+        <g:if test="${condominio?.comprobante == 'S'}">
+        <g:if test="${talonario}">
+        createEditRow(idIngreso,null);
+        </g:if>
+        <g:else>
+        bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" + "Para crear un pago, primero debe generar un talonario digital")
+        </g:else>
+        </g:if>
+        <g:else>
+        createEditRow(idIngreso,null);
+        </g:else>
     });
 
     $(".btnEditar").click(function () {
@@ -205,9 +218,10 @@
                         }, 1000);
                     }else{
                         if(parts[0] == 'er'){
-
                             bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" + parts[1])
-                            return
+                            setTimeout(function() {
+                                location.reload(true);
+                            }, 1000);
                         }
                         else{
                             log("Error al guardar el pago","error");

@@ -282,25 +282,19 @@ class IngresoController extends Shield {
            if(condominio?.comprobante == 'S'){
                if(band == 1){
                    if(params.id){
-                       render "er_Ya existe un pago, no es posible generar un comprobante"
+                       if(Comprobante.findByPago(pago)){
+                           render "ok"
+                           return
+                       }else{
+                           render "er_Ya existe un pago, no es posible generar un comprobante"
+                       }
                    }else{
 
                        def talonarioActual = Talonario.findByCondominioAndEstado(condominio,'V')
 
                        if(talonarioActual){
 
-//                        def existen = Comprobante.findAllByCondominio(condominio)
-                           def numero
-
-//                        if(existen){
-//                            numero = existen.numero.max() + 1
-//                        }else{
-//
-//                            numero = (condominio.numero == 0 ? 1 : condominio.numero)
-//                        }
-
-                           numero = talonarioActual.numeroFin == 0 ?  talonarioActual.numeroInicio : (talonarioActual.numeroFin +1)
-
+                           def numero = talonarioActual.numeroFin == 0 ?  talonarioActual.numeroInicio : (talonarioActual.numeroFin +1)
 
                            def comprobante = new Comprobante()
                            comprobante.condominio = condominio
@@ -342,19 +336,28 @@ class IngresoController extends Shield {
 
     def borrarPago_ajax () {
         def pago = Pago.get(params.id)
+        def comprobante =  Comprobante.findByPagoAndEstadoNotEqual(pago,'A')
 
-        if(borrarComprobante(pago)){
+        if(comprobante){
+            if(borrarComprobante(pago)){
                 pago.valor = 0
+                if(!pago.save(flush: true)){
+                    render "no"
+                }else{
+                    render "ok"
+                }
+            }else{
+                render "no"
+            }
+        }else{
+            pago.valor = 0
             if(!pago.save(flush: true)){
                 render "no"
             }else{
                 render "ok"
             }
-        }else{
-            render "no"
         }
     }
-
 
     def borrarComprobante(pago){
         def comprobante = Comprobante.findByPago(pago)
@@ -394,10 +397,12 @@ class IngresoController extends Shield {
     def pagos_ajax () {
         def ingreso = Ingreso.get(params.ingreso)
         def pagos = Pago.findAllByIngreso(ingreso)
+        def condominio = Condominio.get(ingreso.obligacion.condominio.id)
+        def talonario = Talonario.findByCondominioAndEstado(condominio,'V')
 
         def saldo = Math.round(ingreso?.valor*100)/100 - Math.round((pagos.valor?.sum() ?: 0) * 100)/100
 
-        return[ingreso: ingreso, pagos: pagos, saldo: saldo]
+        return[ingreso: ingreso, pagos: pagos, saldo: saldo, condominio: condominio, talonario: talonario]
     }
 
     def ingresos () {
