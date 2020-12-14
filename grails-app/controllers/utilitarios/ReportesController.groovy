@@ -3350,6 +3350,8 @@ class ReportesController extends Shield{
 
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
+        def suma = 0
+        def cuenta = 0
 
         println "fechas: '${fechaDesde}','${fechaHasta}'"
 
@@ -3413,7 +3415,7 @@ class ReportesController extends Shield{
 
         tablaDetalles = new PdfPTable(2);
         tablaDetalles.setWidthPercentage(100);
-        tablaDetalles.setWidths(arregloEnteros([75,25]))
+        tablaDetalles.setWidths(arregloEnteros([80,20]))
         tablaDetalles.setSpacingAfter(1f);
 
 
@@ -3423,8 +3425,20 @@ class ReportesController extends Shield{
         printHeaderDetalle()
 
         egresos.each {egreso ->
-            addCellTabla(tablaDetalles, new Paragraph(egreso.prve, fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new Paragraph(egreso.sum.toString(), fontTd10), frmtNmro)
+            if(egreso.sum > params.valor.toInteger()) {
+                addCellTabla(tablaDetalles, new Paragraph(egreso.prve, fontTd10), frmtDato)
+                addCellTabla(tablaDetalles, new Paragraph(egreso.sum.toString(), fontTd10), frmtNmro)
+            } else {
+                cuenta++
+                suma += egreso.sum
+            }
+        }
+
+        if(suma > 0) {
+            addCellTabla(tablaDetalles, new Paragraph("Otros: ${cuenta} proveedores menores cuyo valor no supera los " +
+                    "\$${params.valor.toInteger()}, con promedio individual: " +
+                    "\$${Math.round(suma/cuenta *100)/100}", fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(suma.toString(), fontTd10), frmtNmro)
         }
 
         def tablaTotal = new PdfPTable(2);

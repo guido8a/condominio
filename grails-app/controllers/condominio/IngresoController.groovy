@@ -231,8 +231,8 @@ class IngresoController extends Shield {
 
         saldo = Math.round(saldo*100)/100
 
-       if(params.abono.toDouble() == 0){
-            render "er_No se puede crear un pago con monto igual a 0"
+       if(params.abono.toDouble() < 0){
+            render "er_No se puede crear un pago en negativo"
        }else{
            if(params.id){
                pago = Pago.get(params.id)

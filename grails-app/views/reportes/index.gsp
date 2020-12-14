@@ -613,7 +613,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabelEP">Egresos Proveedor</h4>
+                <h4 class="modal-title" id="myModalLabelEP">Egresos por Proveedor</h4>
             </div>
 
             <div class="modal-body">
@@ -639,6 +639,18 @@
                     </div>
                     <div class="col-md-4 col-xs-7">
                         <elm:datepicker name="fechaHastaProveedor_name" id="fechaHastaProveedor" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Valor mínimo</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <g:select from="${[0, 10, 20, 30, 40, 50, 100]}" name="valor" id="valor" class="form-control"/>
                     </div>
                     <div class="col-md-1 col-xs-1">
                     </div>
@@ -1023,7 +1035,9 @@
     $(".btnImprimirEgProveedores").click(function () {
         var fechaDesde = $("#fechaDesdeProveedor").val();
         var fechaHasta = $("#fechaHastaProveedor").val();
-        location.href = "${g.createLink(controller:'reportes' , action: 'reporteEgresosProveedor')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+        var valor = $("#valor").val();
+        location.href = "${g.createLink(controller:'reportes' , action: 'reporteEgresosProveedor')}?desde=" +
+            fechaDesde + "&hasta=" + fechaHasta + "&valor=" + valor;
     });
 
 
