@@ -3518,9 +3518,11 @@ class ReportesController extends Shield{
 
     def reporteSolicitudPago () {
 
+        println("params p")
+
         def persona = Persona.get(params.id)
         def condominio = Condominio.get(session.condominio.id)
-        def texto = Texto.findByCondominio(condominio)
+        def texto = Texto.findByCondominioAndCodigo(condominio, 'SLCT')
         def para = persona.sexo == 'M' ? 'Señor' : 'Señora(ita)'
 
         def sql = "select * from personas(${condominio?.id}) where prsn__id= ${persona.id}"
@@ -3709,6 +3711,9 @@ class ReportesController extends Shield{
     }
 
     def tablaSolicitudPago_ajax() {
+
+        println("params tsp " + params)
+
         def condominio = Condominio.get(params.id)
         def valor = params.valor
 
@@ -3735,10 +3740,7 @@ class ReportesController extends Shield{
             }
 
             deudas.add(suma)
-//            println("suma " + suma)
         }
-
-//        println("deudas " + deudas)
 
         return [condominio: condominio, alicuota:valor, personas: data, tipo: params.tipo, deudas:deudas]
     }
@@ -3767,9 +3769,12 @@ class ReportesController extends Shield{
     }
 
     def reporteSolicitudMonitorio() {
+
+        println("params m " + params)
+
         def persona = Persona.get(params.id)
         def condominio = Condominio.get(session.condominio.id)
-        def texto = Texto.findByCondominio(condominio)
+        def texto = Texto.findByCondominioAndCodigo(condominio,'MNTR')
         def para = persona.sexo == 'M' ? 'Señor' : 'Señora(ita)'
 
         def sql = "select * from personas(${condominio?.id}) where prsn__id= ${persona.id}"
@@ -4105,6 +4110,41 @@ class ReportesController extends Shield{
         response.setHeader("Content-disposition", "attachment; filename=comprobantePago_${comprobante?.pago?.ingreso?.persona?.nombre + " " + comprobante?.pago?.ingreso?.persona?.apellido}_${new Date().format("dd-MM-yyyy")}")
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
+    }
+
+    def tablaSolicitudMonitorio_ajax(){
+
+        println("params tsm " + params)
+
+        def condominio = Condominio.get(params.id)
+        def valor = params.valor
+
+        def sql = "select * from personas(${condominio?.id}) where prsnsldo > alctvlor * ${valor} order by edifdscr, prsndpto"
+        def cn = dbConnectionService.getConnection()
+        def data = cn.rows(sql.toString())
+
+        def deudas = []
+
+        data.each { persona->
+
+            def suma = 0
+
+            def sql2 = "select prsn__id, sldo, sldo + ingrintr total " +
+                    "from pendiente('${new Date().format("yyyy-MM-dd")}', ${Persona.get(persona.prsn__id).edificio.id}) where prsn__id = " +
+                    "${persona.prsn__id} order by ingrfcha"
+            def cn2 = dbConnectionService.getConnection()
+            def data2 = cn2.rows(sql2.toString())
+
+            data2.each {pendiente->
+                if (pendiente.sldo > 0) {
+                    suma += pendiente.total
+                }
+            }
+
+            deudas.add(suma)
+        }
+
+        return [condominio: condominio, alicuota:valor, personas: data, deudas:deudas]
     }
 
 }

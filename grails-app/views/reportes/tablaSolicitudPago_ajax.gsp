@@ -6,9 +6,9 @@
 --%>
 
 <style>
-    .alinear{
-        text-align: center;
-    }
+.alinear{
+    text-align: center;
+}
 </style>
 
 <div style="margin-top: 15px; min-height: 400px" class="vertical-container">
@@ -38,31 +38,46 @@
     </table>
     <div class="" style="width: 99.7%;height: 350px; overflow-y: auto;float: right; margin-top: -20px">
         <table class="table-bordered table-condensed table-striped table-hover" style="width: 100%">
-              <g:each in="${personas}" var="persona" status="i">
-                  <tr>
-                      <td style="width: 40%">${persona.prsnnmbr + " " + persona.prsnapll}</td>
-                      <td style="width: 20%">${persona.edifdscr}</td>
-                      <td style="width: 15%">${persona.prsndpto}</td>
-                      <td style="width: 14%">${deudas[i]}</td>
-                      <td class="alinear" style="width: 10%">
-                          <a href="#" class="btn btn-info btnImprimirSolicitud" title="Imprimir solicitud de pago" data-id="${persona?.prsn__id}"><i class="fa fa-print"></i> </a>
-                      </td>
-                  </tr>
-              </g:each>
+            <tbody>
+            <g:each in="${personas}" var="persona" status="i">
+                <tr>
+                    <td style="width: 40%">${persona.prsnnmbr + " " + persona.prsnapll}</td>
+                    <td style="width: 20%">${persona.edifdscr}</td>
+                    <td style="width: 15%">${persona.prsndpto}</td>
+                    <td style="width: 14%">${deudas[i]}</td>
+                    <td class="alinear" style="width: 10%">
+                        <a href="#" class="btn btn-info btnImprimirSolicitudPago" title="Imprimir solicitud de pago" data-id="${persona?.prsn__id}"><i class="fa fa-print"></i> </a>
+                    </td>
+                </tr>
+            </g:each>
+            </tbody>
         </table>
     </div>
 </div>
 
 <script type="text/javascript">
-    $(".btnImprimirSolicitud").click(function () {
+
+
+    $(".btnImprimirSolicitudPago").click(function () {
         openLoader("Cargando...");
         var vlor = '${alicuota}';
         var id = $(this).data("id");
-        if(${tipo == '1'}){
-            location.href = "${g.createLink(controller: 'reportes', action: 'reporteSolicitudPago')}?vlor=" + vlor + "&id=" + id;
-        }else{
-            location.href = "${g.createLink(controller: 'reportes', action: 'reporteSolicitudMonitorio')}?vlor=" + vlor + "&id=" + id;
-        }
+        location.href = "${g.createLink(controller: 'reportes', action: 'reporteSolicitudPago')}?vlor=" + vlor + "&id=" + id;
         closeLoader();
     });
+
+    %{--$("#btnImprimirSolicitud").click(function () {--}%
+    %{--console.log("-------------------------------------------------------------------------");--}%
+    %{--console.log("tipo " + ${tipo});--}%
+    %{--openLoader("Cargando...");--}%
+    %{--var vlor = '${alicuota}';--}%
+    %{--var id = $(this).data("id");--}%
+    %{--<g:if test="${tipo == 1}">--}%
+    %{--location.href = "${g.createLink(controller: 'reportes', action: 'reporteSolicitudPago')}?vlor=" + vlor + "&id=" + id;--}%
+    %{--</g:if>--}%
+    %{--<g:else>--}%
+    %{--location.href = "${g.createLink(controller: 'reportes', action: 'reporteSolicitudMonitorio')}?vlor=" + vlor + "&id=" + id;--}%
+    %{--</g:else>--}%
+    %{--closeLoader();--}%
+    %{--});--}%
 </script>

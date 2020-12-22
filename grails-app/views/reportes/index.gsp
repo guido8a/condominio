@@ -851,11 +851,10 @@
             var vlor = $("#valorHastaMn").val();
             $.ajax({
                 type: 'POST',
-                url: '${createLink(controller: 'reportes', action: 'tablaSolicitudPago_ajax')}',
+                url: '${createLink(controller: 'reportes', action: 'tablaSolicitudMonitorio_ajax')}',
                 data:{
                     id: '${condominio?.id}',
-                    valor: vlor,
-                    tipo: 2
+                    valor: vlor
                 },
                 success: function(msg){
                     closeLoader();
