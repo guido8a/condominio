@@ -180,6 +180,18 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12 col-xs-5">
+        <p>
+            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#informe"
+               title="Infortme de Resultados del Período">
+                <i class="fa fa-tasks fa-5x"></i><br/>
+                Informe de Resultados
+            </a>
+        </p>
+    </div>
+</div>
+
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 %{--//dialog de contabilidad--}%
 <div class="modal fade col-md-12 col-xs-12" id="detalleIngresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -684,7 +696,7 @@
                         <label>Desde</label>
                     </div>
                     <div class="col-md-4 col-xs-7">
-                        <elm:datepicker name="fechaDesdeBalance_name" id="fechaDesdeB" class="datepicker form-control" value="${new Date() - 30}"/>
+                        <elm:datepicker id="fechaDesdeB" class="datepicker form-control" value="${new Date() - 30}"/>
                     </div>
                     <div class="col-md-1 col-xs-1">
                     </div>
@@ -698,7 +710,7 @@
                         <label>Hasta</label>
                     </div>
                     <div class="col-md-4 col-xs-7">
-                        <elm:datepicker name="fechaHastaBalance_name" id="fechaHastaB" class="datepicker form-control" value="${new Date()}"/>
+                        <elm:datepicker id="fechaHastaB" class="datepicker form-control" value="${new Date()}"/>
                     </div>
                     <div class="col-md-1 col-xs-1">
                     </div>
@@ -709,6 +721,44 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
                 </button>
                 <button type="button" class="btn btnImprimirBalance btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade col-md-12 col-xs-12" id="informe" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Informe de Resultados</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-2">
+                        <label>Desde</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker id="fechaDesdeInf" class="datepicker form-control" value="${inicioAnio}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-1 col-xs-2">
+                        <label>Hasta</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker id="fechaHastaInf" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnImprimirInf btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
                 </button>
             </div>
         </div>
@@ -1039,11 +1089,16 @@
             fechaDesde + "&hasta=" + fechaHasta + "&valor=" + valor;
     });
 
-
     $(".btnImprimirBalance").click(function () {
         var fechaDesde = $("#fechaDesdeB").val();
         var fechaHasta = $("#fechaHastaB").val();
-        location.href = "${g.createLink(controller:'reportes' , action: 'balance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+        location.href = "${g.createLink(controller:'reportes' , action: 'rpBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+    });
+
+    $(".btnImprimirInf").click(function () {
+        var fechaDesde = $("#fechaDesdeInf").val();
+        var fechaHasta = $("#fechaHastaInf").val();
+        location.href = "${g.createLink(controller:'reportes' , action: 'rpInforme')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
     });
 
 </script>

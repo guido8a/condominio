@@ -70,15 +70,16 @@ class ReportesController extends Shield{
     def reportesService
 
     def index() {
-
         def cn = dbConnectionService.getConnection()
         def sql = 'select distinct cast (extract(year from pagofcpg) as INT) from pago order by 1;'
         def res = cn.rows(sql.toString())
         def condominio = Condominio.get(session.condominio.id)
         def edificios = Edificio.findAllByCondominio(condominio)
+        def fcha = new Date()
+        def inicioAnio = fcha - fcha[Calendar.DAY_OF_YEAR] + 1
+        inicioAnio.clearTime()
 
-
-        return [anios: res.date_part, edificios: edificios, condominio: condominio]
+        return [anios: res.date_part, edificios: edificios, condominio: condominio, inicioAnio: inicioAnio]
     }
 
     def reportes() {
@@ -2148,6 +2149,78 @@ class ReportesController extends Shield{
         response.getOutputStream().write(b)
     }
 
+    def rpInforme() {
+        println "rpInforme --> params: $params"
+        def desde = new Date().parse("dd-MM-yyyy", params.desde)
+        def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
+
+        def rp = new ByteArrayOutputStream()
+        byte[] b
+        def pdfs = []  /** pdfs a armar en el nuevo documento **/
+        def contador = 0
+        def name = "informe_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+
+        /* 1. Balance */
+        rp = pdfBalance(desde, hasta)
+        if (rp) {
+            pdfs.add(rp.toByteArray())
+            contador++
+        }
+
+//        println "invoca detalle"
+//        rp = detalleTodo(planilla, planilla.tipoContrato)
+//        pdfs.add(rp.toByteArray())
+//        contador++
+
+        if (contador > 1) {
+            def baos = new ByteArrayOutputStream()
+            Document document
+            document = new Document(PageSize.A4);
+
+            def pdfw = PdfWriter.getInstance(document, baos);
+            document.open();
+            PdfContentByte cb = pdfw.getDirectContent();
+
+            pdfs.each { f ->
+                PdfReader reader = new PdfReader(f);
+                for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+                    //nueva página
+                    document.newPage();
+                    //importa la página "i" de la fuente "reader"
+                    PdfImportedPage page = pdfw.getImportedPage(reader, i);
+                    //añade página
+                    cb.addTemplate(page, 0, 0);
+                }
+            }
+            document.close();
+            b = baos.toByteArray();
+        } else {
+            b = rp.toByteArray();
+        }
+
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=${name}")
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+    }
+
+
+    def rpBalance() {
+        println "rpBalance --> params: $params"
+        def desde = new Date().parse("dd-MM-yyyy", params.desde)
+        def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
+        byte[] b
+        def name = "balance_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+
+        b = pdfBalance(desde, hasta).toByteArray()
+
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=${name}")
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+    }
+
+
     def balance() {
 
         println("balance " + params)
@@ -2179,10 +2252,10 @@ class ReportesController extends Shield{
 
 
         def baos = new ByteArrayOutputStream()
-        def name = "balance_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def name = "balance_" + new Date().format("ddMMyyyy_hhmm") + ".pdf"
         def titulo = new Color(40, 140, 180)
-        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
-        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo)
+        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo)
         Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
         Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
         Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
@@ -2319,6 +2392,177 @@ class ReportesController extends Shield{
         response.setHeader("Content-disposition", "attachment; filename=" + name)
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
+    }
+
+    def pdfBalance(desde, hasta) {
+        println "pdfBalance $desde, hasta: $hasta"
+        def fechaDesde = desde.format('yyyy-MM-dd')
+        def fechaHasta = hasta.format('yyyy-MM-dd')
+        def fechaAntes = desde - 1
+
+        println "balance fechas: '${fechaDesde}','${fechaHasta}' antes: ${fechaAntes.format('yyyy-MM-dd')}"
+
+//        def sql2 = "select sum(pagovlor) vlor, substr(pagofcha::varchar, 1,7) fcha, tpapdscr " +
+        def sql2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, " +
+                "substr(pagofcha::varchar, 1, 7), tpapdscr " +
+                "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
+                "group by 2,3,4 order by 3"
+        println "--> $sql2"
+
+        def cn2 = dbConnectionService.getConnection()
+        def ingresos = cn2.rows(sql2.toString())
+        def totalIngresos = (ingresos.vlor.sum() ?: 0)
+
+        sql2 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4) fcha, " +
+                "substr(egrsfcha::varchar, 1, 7), tpgsdscr " +
+                "from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
+                "group by 2,3,4 order by 3"
+        println "egrs: $sql2"
+        def egresos = cn2.rows(sql2.toString())
+
+        def totalEgresos = (egresos.vlor.sum() ?: 0)
+        println "tot egresos: $totalEgresos"
+
+        sql2 = "select * from saldos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}')"
+        def saldo = cn2.rows(sql2.toString())[0].sldoinic
+
+
+        def baos = new ByteArrayOutputStream()
+        def titulo = new Color(40, 140, 180)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
+        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+        Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTd = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
+        Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
+
+        def fondoTotal = new Color(240, 240, 240);
+
+
+        Document document
+        document = new Document(PageSize.A4);
+//        document = new Document(PageSize.A4.rotate());
+        document.setMargins(50, 30, 30, 28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Balance General del ${fechaDesde} al ${fechaHasta}");
+        document.addSubject("Generado por el sistema Condominio");
+//        document.addKeywords("reporte, condominio, pagos");
+//        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+        preface.add(new Paragraph("Balance General del ${fechaDesde} al ${fechaHasta}", fontTitulo));
+        addEmptyLine(preface, 1);
+        document.add(preface);
+
+        PdfPTable tblaIngr = null
+
+        def fondo = new Color(240, 248, 250);
+        def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtHdR = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_RIGHT]
+        def frmtHdb = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtNm = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def printHeaderDetalle = {
+
+
+            def tablaHeaderDetalles = new PdfPTable(2);
+            tablaHeaderDetalles.setWidthPercentage(100);
+            tablaHeaderDetalles.setWidths(arregloEnteros([8,2]))
+
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Saldo inicial - Periodo anterior (hasta: ${fechaAntes.format('yyyy-MM-dd')})", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph(g.formatNumber(number: saldo, format: '##,##0',
+                    minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+//            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
+
+//            addCellTabla(tablaHeaderDetalles, new Paragraph("Concepto", fontTh), frmtHd)
+//            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
+            addCellTabla(tblaIngr, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
+        }
+
+        tblaIngr = new PdfPTable(2);
+        tblaIngr.setWidthPercentage(100);
+        tblaIngr.setWidths(arregloEnteros([8,2]))
+        tblaIngr.setSpacingAfter(1f);
+
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+
+        printHeaderDetalle()
+
+        addCellTabla(tblaIngr, new Paragraph("Ingresos", fontTh), frmtHd)
+        addCellTabla(tblaIngr, new Paragraph(g.formatNumber(number:totalIngresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
+
+        ingresos.each {ingreso ->
+            addCellTabla(tblaIngr, new Paragraph("${ingreso.fcha}: ${ingreso.tpapdscr}", fontTd10), frmtDato)
+            addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNm)
+        }
+
+        addCellTabla(tblaIngr, new Paragraph("Egresos", fontTh), frmtHd)
+        addCellTabla(tblaIngr, new Paragraph(g.formatNumber(number:totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
+
+        egresos.each {ingreso ->
+            addCellTabla(tblaIngr, new Paragraph("${ingreso.fcha}: ${ingreso.tpgsdscr}", fontTd10), frmtDato)
+            addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNm)
+        }
+
+        def tablaTotal = new PdfPTable(2);
+        tablaTotal.setWidthPercentage(100);
+        tablaTotal.setWidths(arregloEnteros([8, 2]))
+
+        addCellTabla(tablaTotal, new Paragraph("Saldo al ${fechaHasta} (Saldo Inicial + Ingresos - Egresos): ", fontTh), frmtNmro)
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number: totalIngresos - totalEgresos + saldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
+        addCellTabla(tblaIngr, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
+
+        Paragraph preface2 = new Paragraph();
+        addEmptyLine(preface2, 1);
+        preface2.setAlignment(Element.ALIGN_CENTER);
+        preface2.add(new Paragraph("Resumen de Valores al ${fechaHasta}", fontTitulo));
+//        addEmptyLine(preface2, 1);
+
+        def tablaSaldos = new PdfPTable(2);
+        tablaSaldos.setWidthPercentage(100);
+        tablaSaldos.setWidths(arregloEnteros([8,2]))
+        tablaSaldos.setSpacingBefore(5f);
+
+        def cn3 = dbConnectionService.getConnection()
+        def vc = cn3.rows(sql2.toString())[0].ingrsldo
+        def pp = cn3.rows(sql2.toString())[0].egrssldo
+        def rf = cn3.rows(sql2.toString())[0].ingrsldo + cn3.rows(sql2.toString())[0].sldofnal - cn3.rows(sql2.toString())[0].egrssldo
+
+//        addCellTabla(tablaSaldos, new Paragraph("Valores pendientes al ${fechaHasta}", fontTh), frmtHd)
+//        addCellTabla(tablaSaldos, new Paragraph('', fontTh), frmtHdR)
+
+        addCellTabla(tablaSaldos, new Paragraph("Saldo al ${fechaHasta}", fontTh), frmtHdR)
+        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: totalIngresos - totalEgresos + saldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+
+        addCellTabla(tablaSaldos, new Paragraph("(+) Valores por cobrar", fontTh), frmtHdR)
+        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:vc, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+
+        addCellTabla(tablaSaldos, new Paragraph("(-) Pagos pendientes", fontTh), frmtHdR)
+        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:pp, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+
+
+        addCellTabla(tablaSaldos, new Paragraph("Resultado Final al ${fechaHasta}", fontTh), frmtHdR)
+        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:rf, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+
+        document.add(tblaIngr)
+        document.add(preface2);
+        document.add(tablaSaldos)
+        document.close();
+        pdfw.close()
+        return baos
     }
 
 
@@ -2853,7 +3097,9 @@ class ReportesController extends Shield{
 //        println "sql: $sql"
         def res = cn.rows(sql.toString())
 
-        def sql2 = "select prsndpto, alct, prsn, tpapdscr, sum(sldo) sldo, sum(ingrintr) intr, sum(sldo) + sum(ingrintr) total from pendiente('${fecha.format('yyy-MM-dd')}', '${params.torre}'), tpap where tpap__id = tipo group by prsndpto, alct, prsn, tpapdscr order by prsndpto, tpapdscr"
+        def sql2 = "select prsndpto, alct, prsn, tpapdscr, sum(sldo) sldo, sum(ingrintr) intr, sum(sldo) + " +
+                "sum(ingrintr) total from pendiente('${fecha.format('yyy-MM-dd')}', '${params.torre}'), tpap " +
+                "where tpap__id = tipo group by prsndpto, alct, prsn, tpapdscr order by prsndpto, tpapdscr"
         def res1 = cn2.rows(sql2.toString())
 //        println "sql: $sql2"
 
