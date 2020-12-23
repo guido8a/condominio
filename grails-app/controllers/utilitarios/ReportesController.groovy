@@ -2871,8 +2871,10 @@ class ReportesController extends Shield{
         Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
         Font fontTh = new Font(Font.TIMES_ROMAN, 11, Font.BOLD);
         Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
-        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
         Font fontTd11 = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         def fondo = new Color(240, 248, 250);
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
 
@@ -2907,8 +2909,8 @@ class ReportesController extends Shield{
         def adicionales = 0
         def u = 0
 
-        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
-        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def pActual
+        def pAnterior
 
         PdfPTable table = new PdfPTable(7);
         table.setWidthPercentage(100);
@@ -2926,9 +2928,14 @@ class ReportesController extends Shield{
         tablaTotal.setWidthPercentage(100);
         tablaTotal.setWidths(arregloEnteros([89, 11]))
 
+        def totales = 0
+        def totalPersona = 0
+        def tam = res1.size() - 1
 
         if(res1){
-            res1.each { fila ->
+            res1.eachWithIndex { fila,k ->
+
+                pActual = fila.prsndpto
 
                 if ((actual.toInteger() + adicionales.toInteger()) >= max) {
                     max = 43
@@ -2936,11 +2943,53 @@ class ReportesController extends Shield{
                     adicionales = 0
                 }
 
-                poneDatos2(table,fila)
+//                poneDatos2(table,fila)
 
-//                nuevo = fila.prsndpto
+//                println("k " + k)
+                if(k == 0){
+                    totalPersona += fila.total
+                }else{
+
+                        if(pActual == pAnterior){
+                            totalPersona += fila.total
+                        }else{
+
+                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                            addCellTabla(table, new Paragraph("Total Personal", fontTh), frmtHd)
+                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                            addCellTabla(table, new Paragraph(totalPersona.toString(), fontTd10), frmtNmro)
+
+                            totalPersona = fila.total
+                        }
+                }
+
+                addCellTabla(table, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
+                addCellTabla(table, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
+                addCellTabla(table, new Paragraph(fila.prsn, fontTd10), frmtDato)
+                addCellTabla(table, new Paragraph(fila.tpapdscr, fontTd10), frmtDato)
+                addCellTabla(table, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
+                addCellTabla(table, new Paragraph(fila.intr.toString(), fontTd10), frmtNmro)
+                addCellTabla(table, new Paragraph(fila.total.toString(), fontTd10), frmtNmro)
+
+                total += (fila.total ? fila.total.toDouble() : 0)
+
+                pAnterior = fila.prsndpto
+
+                if(k == tam.toInteger()){
+                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                    addCellTabla(table, new Paragraph("Total Personal", fontTh), frmtHd)
+                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                    addCellTabla(table, new Paragraph(totalPersona.toString(), fontTd10), frmtNmro)
+                }
+
+
                 contador++
-
 
                 if (actual <= max) {
                     pagActual = 1
@@ -2961,8 +3010,15 @@ class ReportesController extends Shield{
             addCellTabla(table, new Paragraph(" ", fontTd10), frmtNmro)
             addCellTabla(table, new Paragraph(" ", fontTd10), frmtDato)
             addCellTabla(table, new Paragraph(" ", fontTd10), frmtDato)
-//            addCellTabla(table, new Paragraph(" ", fontTd10), frmtNmro)
         }
+
+        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+        addCellTabla(table, new Paragraph("TOTAL", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+        addCellTabla(table, new Paragraph(total.toString(), fontTd10), frmtNmro)
 
 
         document.add(table);

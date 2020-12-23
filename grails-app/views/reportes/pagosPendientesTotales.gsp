@@ -68,7 +68,6 @@
         <tr>
             <th colspan="1" class="centro">Dpto.</th>
             <th colspan="1" class="centro">Nombre</th>
-            %{--<th colspan="1" class="centro">Detalle</th>--}%
             <th colspan="1" class="centro">Por pagar</th>
         </tr>
         </thead>
@@ -85,7 +84,6 @@
                     <tr style="width: 100%">
                         <td class="izquierda" style="width: 8%">${fila.depart}</td>
                         <td class="izquierda" style="width: 17%; font-size: 11px">${fila.nombre}</td>
-                        %{--<td class="izquierda" style="width: 60%; font-size: 11px">${fila.detalle}</td>--}%
                         <td class="derecha" style="width: 15%;">${fila.por_pagar}</td>
                         <g:set var="total" value="${total += fila.por_pagar}"/>
                         <g:set var="anterior" value="${fila.depart}"/>
@@ -96,7 +94,6 @@
                     <tr style="width: 100%">
                         <td class="izquierda" style="width: 8%">${fila.depart}</td>
                         <td class="izquierda" style="width: 17%; font-size: 11px">${fila.nombre}</td>
-                        %{--<td class="izquierda" style="width: 60%; font-size: 11px">${fila.detalle}</td>--}%
                         <td class="derecha" style="width: 15%;">${fila.por_pagar}</td>
                         <g:set var="total" value="${total += fila.por_pagar}"/>
                         <g:set var="anterior" value="${fila.depart}"/>
@@ -108,7 +105,6 @@
                     <tr style="width: 100%">
                         <td class="izquierda" style="width: 8%">${fila.depart}</td>
                         <td class="izquierda" style="width: 17%; font-size: 11px">${fila.nombre}</td>
-                        %{--<td class="izquierda" style="width: 60%; font-size: 11px">${fila.detalle}</td>--}%
                         <td class="derecha" style="width: 15%;">${fila.por_pagar}</td>
                         <g:set var="total" value="${total += fila.por_pagar}"/>
                         <g:set var="anterior" value="${fila.depart}"/>
@@ -119,7 +115,6 @@
                     <tr style="width: 100%">
                         <td class="izquierda" style="width: 8%">${fila.depart}</td>
                         <td class="izquierda" style="width: 17%; font-size: 11px">${fila.nombre}</td>
-                        %{--<td class="izquierda" style="width: 60%; font-size: 11px">${fila.detalle}</td>--}%
                         <td class="derecha" style="width: 15%;">${fila.por_pagar}</td>
                         <g:set var="total" value="${fila.por_pagar}"/>
                         <g:set var="anterior" value="${fila.depart}"/>
