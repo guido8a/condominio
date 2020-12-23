@@ -2877,6 +2877,7 @@ class ReportesController extends Shield{
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         def fondo = new Color(240, 248, 250);
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtHd1 = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
         def fondoTotal = new Color(245, 243, 245);
 
@@ -2931,6 +2932,10 @@ class ReportesController extends Shield{
         def totales = 0
         def totalPersona = 0
         def tam = res1.size() - 1
+        def totalSaldo = 0
+        def totalInteres = 0
+        def ts = 0
+        def ti = 0
 
         if(res1){
             res1.eachWithIndex { fila,k ->
@@ -2948,21 +2953,26 @@ class ReportesController extends Shield{
 //                println("k " + k)
                 if(k == 0){
                     totalPersona += fila.total
+                    totalSaldo += fila.sldo
+                    totalInteres += fila.intr
                 }else{
-
                         if(pActual == pAnterior){
                             totalPersona += fila.total
+                            totalSaldo += fila.sldo
+                            totalInteres += fila.intr
                         }else{
 
                             addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
                             addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
                             addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
                             addCellTabla(table, new Paragraph("Total Personal", fontTh), frmtHd)
-                            addCellTabla(table, new Paragraph("", fontTh), frmtHd)
-                            addCellTabla(table, new Paragraph("", fontTh), frmtHd)
-                            addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+                            addCellTabla(table, new Paragraph(g.formatNumber(number:totalSaldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+                            addCellTabla(table, new Paragraph(g.formatNumber(number:totalInteres, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+                            addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
 
                             totalPersona = fila.total
+                            totalSaldo = fila.sldo
+                            totalInteres = fila.intr
                         }
                 }
 
@@ -2975,6 +2985,8 @@ class ReportesController extends Shield{
                 addCellTabla(table, new Paragraph(fila.total.toString(), fontTd10), frmtNmro)
 
                 total += (fila.total ? fila.total.toDouble() : 0)
+                ts += (fila.sldo ? fila.sldo.toDouble() : 0)
+                ti += (fila.intr ? fila.intr.toDouble() : 0)
 
                 pAnterior = fila.prsndpto
 
@@ -2983,9 +2995,9 @@ class ReportesController extends Shield{
                     addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
                     addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
                     addCellTabla(table, new Paragraph("Total Personal", fontTh), frmtHd)
-                    addCellTabla(table, new Paragraph("", fontTh), frmtHd)
-                    addCellTabla(table, new Paragraph("", fontTh), frmtHd)
-                    addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
+                    addCellTabla(table, new Paragraph(g.formatNumber(number:totalSaldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+                    addCellTabla(table, new Paragraph(g.formatNumber(number:totalInteres, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+                    addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
                 }
 
                 contador++
@@ -3015,9 +3027,9 @@ class ReportesController extends Shield{
         addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
         addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
         addCellTabla(table, new Paragraph("TOTAL", fontTh), frmtHd)
-        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-        addCellTabla(table, new Paragraph(g.formatNumber(number:total, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+        addCellTabla(table, new Paragraph(g.formatNumber(number:ts, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+        addCellTabla(table, new Paragraph(g.formatNumber(number:ti, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+        addCellTabla(table, new Paragraph(g.formatNumber(number:total, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
 
         document.add(table);
         document.close();
