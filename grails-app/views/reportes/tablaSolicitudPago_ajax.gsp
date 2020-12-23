@@ -66,18 +66,4 @@
         closeLoader();
     });
 
-    %{--$("#btnImprimirSolicitud").click(function () {--}%
-    %{--console.log("-------------------------------------------------------------------------");--}%
-    %{--console.log("tipo " + ${tipo});--}%
-    %{--openLoader("Cargando...");--}%
-    %{--var vlor = '${alicuota}';--}%
-    %{--var id = $(this).data("id");--}%
-    %{--<g:if test="${tipo == 1}">--}%
-    %{--location.href = "${g.createLink(controller: 'reportes', action: 'reporteSolicitudPago')}?vlor=" + vlor + "&id=" + id;--}%
-    %{--</g:if>--}%
-    %{--<g:else>--}%
-    %{--location.href = "${g.createLink(controller: 'reportes', action: 'reporteSolicitudMonitorio')}?vlor=" + vlor + "&id=" + id;--}%
-    %{--</g:else>--}%
-    %{--closeLoader();--}%
-    %{--});--}%
 </script>

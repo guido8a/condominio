@@ -2280,8 +2280,8 @@ class ReportesController extends Shield{
         Paragraph preface2 = new Paragraph();
         addEmptyLine(preface2, 1);
         preface2.setAlignment(Element.ALIGN_CENTER);
-        preface2.add(new Paragraph("Valores pendientes al ${fechaHasta}", fontTitulo));
-        addEmptyLine(preface2, 1);
+        preface2.add(new Paragraph("Resumen de Valores al ${fechaHasta}", fontTitulo));
+//        addEmptyLine(preface2, 1);
 
         def tablaSaldos = new PdfPTable(2);
         tablaSaldos.setWidthPercentage(100);
@@ -2296,13 +2296,17 @@ class ReportesController extends Shield{
 //        addCellTabla(tablaSaldos, new Paragraph("Valores pendientes al ${fechaHasta}", fontTh), frmtHd)
 //        addCellTabla(tablaSaldos, new Paragraph('', fontTh), frmtHdR)
 
-        addCellTabla(tablaSaldos, new Paragraph("Valores por cobrar", fontTh), frmtHdR)
+        addCellTabla(tablaSaldos, new Paragraph("Saldo al ${fechaHasta}", fontTh), frmtHdR)
+        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: totalIngresos - totalEgresos + saldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+
+        addCellTabla(tablaSaldos, new Paragraph("(+) Valores por cobrar", fontTh), frmtHdR)
         addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:vc, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
-        addCellTabla(tablaSaldos, new Paragraph("Pagos pendientes", fontTh), frmtHdR)
+        addCellTabla(tablaSaldos, new Paragraph("(-) Pagos pendientes", fontTh), frmtHdR)
         addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:pp, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
-        addCellTabla(tablaSaldos, new Paragraph("Resultado Final", fontTh), frmtHdR)
+
+        addCellTabla(tablaSaldos, new Paragraph("Resultado Final al ${fechaHasta}", fontTh), frmtHdR)
         addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:rf, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
         document.add(tblaIngr)

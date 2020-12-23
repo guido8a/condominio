@@ -54,7 +54,7 @@ label {
 
 <div class="row">
     <div class="col-xs-12 alert alert-success">
-        <div class="col-xs-12" style="height: 600px">
+        <div class="col-xs-12" style="height: 620px">
             <label>Ingresos</label>
 
             <table class="table-bordered table-condensed" style="width: 100%">
