@@ -2958,9 +2958,9 @@ class ReportesController extends Shield{
                             addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
                             addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
                             addCellTabla(table, new Paragraph("Total Personal", fontTh), frmtHd)
-                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-                            addCellTabla(table, new Paragraph(totalPersona.toString(), fontTd10), frmtNmro)
+                            addCellTabla(table, new Paragraph("", fontTh), frmtHd)
+                            addCellTabla(table, new Paragraph("", fontTh), frmtHd)
+                            addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
 
                             totalPersona = fila.total
                         }
@@ -2983,11 +2983,10 @@ class ReportesController extends Shield{
                     addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
                     addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
                     addCellTabla(table, new Paragraph("Total Personal", fontTh), frmtHd)
-                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-                    addCellTabla(table, new Paragraph(totalPersona.toString(), fontTd10), frmtNmro)
+                    addCellTabla(table, new Paragraph("", fontTh), frmtHd)
+                    addCellTabla(table, new Paragraph("", fontTh), frmtHd)
+                    addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd)
                 }
-
 
                 contador++
 
@@ -3018,14 +3017,12 @@ class ReportesController extends Shield{
         addCellTabla(table, new Paragraph("TOTAL", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
         addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-        addCellTabla(table, new Paragraph(total.toString(), fontTd10), frmtNmro)
-
+        addCellTabla(table, new Paragraph(g.formatNumber(number:total, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
 
         document.add(table);
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
-
 
         encabezadoYnumeracion(b, session.condominio.nombre,
                 "Deudas pendientes totales al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}",
