@@ -3099,9 +3099,9 @@ class ReportesController extends Shield{
 
         def sql2 = "select prsndpto, alct, prsn, tpapdscr, sum(sldo) sldo, sum(ingrintr) intr, sum(sldo) + " +
                 "sum(ingrintr) total from pendiente('${fecha.format('yyy-MM-dd')}', '${params.torre}'), tpap " +
-                "where tpap__id = tipo group by prsndpto, alct, prsn, tpapdscr order by prsndpto, tpapdscr"
+                "where tpap__id = tipo and sldo > 0 group by prsndpto, alct, prsn, tpapdscr order by prsndpto, tpapdscr"
         def res1 = cn2.rows(sql2.toString())
-//        println "sql: $sql2"
+        println "sql: $sql2"
 
         def tamano = res1.size()
         def max = 43
@@ -3123,6 +3123,7 @@ class ReportesController extends Shield{
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         def fondo = new Color(240, 248, 250);
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtHd4c = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE, colspan: 4]
         def frmtHd1 = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
         def fondoTotal = new Color(245, 243, 245);
@@ -3208,10 +3209,10 @@ class ReportesController extends Shield{
                             totalInteres += fila.intr
                         }else{
 
-                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-                            addCellTabla(table, new Paragraph("Total Personal", fontTh), frmtHd)
+//                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+//                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+//                            addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                            addCellTabla(table, new Paragraph("Total", fontTh), frmtHd4c)
                             addCellTabla(table, new Paragraph(g.formatNumber(number:totalSaldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
                             addCellTabla(table, new Paragraph(g.formatNumber(number:totalInteres, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
                             addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
@@ -3237,10 +3238,10 @@ class ReportesController extends Shield{
                 pAnterior = fila.prsndpto
 
                 if(k == tam.toInteger()){
-                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-                    addCellTabla(table, new Paragraph("Total Personal", fontTh), frmtHd)
+//                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+//                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+//                    addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+                    addCellTabla(table, new Paragraph("Total", fontTh), frmtHd4c)
                     addCellTabla(table, new Paragraph(g.formatNumber(number:totalSaldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
                     addCellTabla(table, new Paragraph(g.formatNumber(number:totalInteres, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
                     addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
@@ -3269,10 +3270,10 @@ class ReportesController extends Shield{
             addCellTabla(table, new Paragraph(" ", fontTd10), frmtDato)
         }
 
-        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
-        addCellTabla(table, new Paragraph("TOTAL", fontTh), frmtHd)
+//        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+//        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+//        addCellTabla(table, new Paragraph("", fontTd10), frmtDato)
+        addCellTabla(table, new Paragraph("GRAN TOTAL", fontTh), frmtHd4c)
         addCellTabla(table, new Paragraph(g.formatNumber(number:ts, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
         addCellTabla(table, new Paragraph(g.formatNumber(number:ti, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
         addCellTabla(table, new Paragraph(g.formatNumber(number:total, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
