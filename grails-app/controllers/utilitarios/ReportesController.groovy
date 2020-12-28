@@ -2299,17 +2299,12 @@ class ReportesController extends Shield{
 
         /*egresos*/
 
-        eg = pdfEgresos(desde,hasta)
+        eg = pdfEgresosProveedor(desde,hasta)
         if(eg){
             pdfs.add(eg.toByteArray())
             contador++
         }
 
-
-//        println "invoca detalle"
-//        rp = detalleTodo(planilla, planilla.tipoContrato)
-//        pdfs.add(rp.toByteArray())
-//        contador++
 
         if (contador > 1) {
             def baos = new ByteArrayOutputStream()
@@ -4201,6 +4196,120 @@ class ReportesController extends Shield{
         response.setHeader("Content-disposition", "attachment; filename=" + name)
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
+    }
+
+    def pdfEgresosProveedor (desde,hasta) {
+
+        println("params egp " + params)
+
+        def f = desde.format("dd-MM-yyyy")
+        def  h = hasta.format("dd-MM-yyyy")
+
+        def fechaDesde = new Date().parse("dd-MM-yyyy", f)
+        def fechaHasta = new Date().parse("dd-MM-yyyy", h)
+
+        def suma = 0
+        def cuenta = 0
+
+        println "fechas: '${fechaDesde}','${fechaHasta}'"
+
+        def sql3 = "select prve, sum(egrsvlor) from egresos(${session.condominio.id}, '${fechaDesde.format('yyyy-MM-dd')}', '${fechaHasta.format('yyyy-MM-dd')}'::date) group by prve order by 2 desc;"
+        def cn3 = dbConnectionService.getConnection()
+        def egresos = cn3.rows(sql3.toString())
+
+        def totalEgresos = (egresos.sum.sum() ?: 0)
+
+        def baos = new ByteArrayOutputStream()
+        def name = "listaEgresosProveedor_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def titulo = new Color(40, 140, 180)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
+        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+        Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+
+        def fondoTotal = new Color(240, 240, 240);
+
+        Document document
+        document = new Document(PageSize.A4);
+        document.setMargins(50, 30, 30, 28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Detalle de Egresos por Proveedor del ${fechaDesde.format('dd-MM-yyyy')} al ${fechaDesde.format('dd-MM-yyyy')}");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+        preface.add(new Paragraph("Detalle de Egresos por Proveedor del ${fechaDesde.format('dd-MM-yyyy')} al ${fechaDesde.format('dd-MM-yyyy')}", fontTitulo));
+        addEmptyLine(preface, 1);
+        document.add(preface);
+
+        PdfPTable tablaDetalles = null
+
+        def printHeaderDetalle = {
+            def fondo = new Color(240, 248, 250);
+            def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+
+            def tablaHeaderDetalles = new PdfPTable(2);
+            tablaHeaderDetalles.setWidthPercentage(100);
+            tablaHeaderDetalles.setWidths(arregloEnteros([75,25]))
+
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Proveedor", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
+            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 2, pl: 0])
+        }
+
+        tablaDetalles = new PdfPTable(2);
+        tablaDetalles.setWidthPercentage(100);
+        tablaDetalles.setWidths(arregloEnteros([80,20]))
+        tablaDetalles.setSpacingAfter(1f);
+
+
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+        printHeaderDetalle()
+
+        egresos.each {egreso ->
+            if(egreso.sum > 0) {
+                addCellTabla(tablaDetalles, new Paragraph(egreso.prve, fontTd10), frmtDato)
+                addCellTabla(tablaDetalles, new Paragraph(egreso.sum.toString(), fontTd10), frmtNmro)
+            } else {
+                cuenta++
+                suma += egreso.sum
+            }
+        }
+
+        if(suma > 0) {
+            addCellTabla(tablaDetalles, new Paragraph("Otros: ${cuenta} proveedores menores cuyo valor no supera los " +
+                    "\$${params.valor.toInteger()}, con promedio individual: " +
+                    "\$${Math.round(suma/cuenta *100)/100}", fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(suma.toString(), fontTd10), frmtNmro)
+        }
+
+        def tablaTotal = new PdfPTable(2);
+        tablaTotal.setWidthPercentage(100);
+        tablaTotal.setWidths(arregloEnteros([75, 25]))
+
+        addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 2, pl: 0])
+
+        document.add(tablaDetalles)
+        document.close();
+        pdfw.close()
+        return baos;
     }
 
     def solicitudPago () {
