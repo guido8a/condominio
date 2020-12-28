@@ -13,6 +13,12 @@
     .alinear {
         text-align: center !important;
     }
+    .centrado {
+        text-align: center;
+        margin-right: 10px;
+        width: 90%;
+        color: #800000;
+    }
     </style>
 </head>
 
@@ -80,10 +86,10 @@
                         <i class="fa fa-eraser"></i></a>
                 </div>
 
-                <div class="col-xs-4 col-md-4">
+                <div class="col-xs-4 col-md-4 text-warning">
                     <b style="margin-left: 0px">No Aportan</b>
-                    <g:textField name="base" style="margin-right: 10px; width: 90%; background-color: #ffefef; color: #800000"
-                                 value="${no_aportan}" id="valor_base" class="form-control" readonly=""/>
+                    <g:textField name="base" class="form-control centrado" readonly="" style="background-color: #ffefef"
+                                 value="${no_aportan}" id="valor_base" />
                 </div>
 
             </div>
