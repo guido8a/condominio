@@ -4241,7 +4241,7 @@ class ReportesController extends Shield{
 
         document.open();
         PdfContentByte cb = pdfw.getDirectContent();
-        document.addTitle("Detalle de Egresos por Proveedor del ${fechaDesde.format('dd-MM-yyyy')} al ${fechaHsasta.format('dd-MM-yyyy')}");
+        document.addTitle("Detalle de Egresos por Proveedor del ${fechaDesde.format('dd-MM-yyyy')} al ${fechaHasta.format('dd-MM-yyyy')}");
         document.addSubject("Generado por el sistema Condominio");
         document.addKeywords("reporte, condominio, pagos");
         document.addAuthor("Condominio");

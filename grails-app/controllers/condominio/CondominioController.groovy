@@ -2,6 +2,7 @@ package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
 import seguridad.Shield
+import utilitarios.Parametros
 
 
 /**
@@ -9,6 +10,9 @@ import seguridad.Shield
  */
 class CondominioController extends Shield {
 
+    def dbConnectionService
+    def buscadorService
+    
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
     /**
@@ -198,5 +202,72 @@ class CondominioController extends Shield {
             render "ok"
         }
     }
+
+    def alicuotas() {
+        //        println "busqueda "
+        def condominio = Parametros.get(1)
+        params.ordenar = "prsndpto"
+        return[condominio: condominio]
+    }
+
+    def tablaBuscar() {
+//        println "buscar .... $params"
+        def cn = dbConnectionService.getConnection()
+        params.old = params.criterio
+        params.criterio = buscadorService.limpiaCriterio(params.criterio)
+        params.ordenar  = buscadorService.limpiaCriterio(params.ordenar)
+
+        def sql = armaSql(params)
+        params.criterio = params.old
+        println "sql: $sql"
+        def data = cn.rows(sql.toString())
+
+        def msg = ""
+        if(data?.size() > 50){
+            data.pop()   //descarta el último puesto que son 21
+            msg = "<div class='alert-danger' style='margin-top:-20px; diplay:block; height:25px;margin-bottom: 20px;'>" +
+                    " <i class='fa fa-warning fa-2x pull-left'></i> Su búsqueda ha generado más de 30 resultados. " +
+                    "Use más letras para especificar mejor la búsqueda.</div>"
+        }
+        cn.close()
+
+        return [data: data, msg: msg]
+    }
+
+    def armaSql(params){
+        println "armaSql: $params"
+        def campos = buscadorService.parmProcesos()
+        def operador = buscadorService.operadores()
+//        def wh = " edif.edif__id = prsn.edif__id and tpoc.tpoc__id = prsn.tpoc__id and prsnactv = 1 " //condicion fija
+        def condominio
+
+        if (params.condo){
+            condominio = Condominio.get(params.condo)
+        }else{
+            condominio = Condominio.get(session.condominio.id)
+        }
+
+        def sqlSelect = "select * from cuotas(2400, ${condominio?.id}) "
+
+        //condicion fija
+        def wh = " prsnnmbr is not null "
+
+
+        def sqlWhere = "where (${wh})"
+
+        def sqlOrder = "order by ${params.ordenar} limit 51"
+
+//        println "sql: $sqlSelect $sqlWhere $sqlOrder"
+//        if(params.criterio) {
+        if(params.operador && params.criterio) {
+            if(campos.find {it.campo == params.buscador}?.size() > 0) {
+                def op = operador.find {it.valor == params.operador}
+                sqlWhere += " and ${params.buscador} ${op.operador} ${op.strInicio}${params.criterio}${op.strFin}";
+            }
+        }
+//        println "-->sql: $sqlSelect $sqlWhere $sqlOrder"
+        "$sqlSelect $sqlWhere $sqlOrder".toString()
+    }
+
 
 }
