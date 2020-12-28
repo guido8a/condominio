@@ -184,9 +184,14 @@
     <div class="col-md-12 col-xs-5">
         <p>
             <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#informe"
-               title="Infortme de Resultados del Período">
+               title="Informe de Resultados del Período">
                 <i class="fa fa-tasks fa-5x"></i><br/>
                 Informe de Resultados
+            </a>
+            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#nuevaAlicuota"
+               title="Cálculo de la nueva alícuota">
+                <i class="fa fa-cog fa-5x"></i><br/>
+                Cálculo nueva alícuota
             </a>
         </p>
     </div>
@@ -765,11 +770,46 @@
     </div>
 </div>
 
+<div class="modal fade col-md-12 col-xs-12" id="nuevaAlicuota" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Cálculo nuevas alícuotas</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-2">
+                        <label>Valor</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <g:select from="${[2400]}" name="valorAli_name" id="valorAli" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnNuevasAlicuotas btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 
 <script type="text/javascript">
 
+
+    $(".btnNuevasAlicuotas").click(function () {
+        var valor = $("#valorAli").val();
+        location.href="${createLink(controller: 'reportes', action: 'nuevaAlicuotaReporte')}?valor=" + valor
+    });
 
     $(".btnIngresosEgresos").click(function () {
         var anio = $("#anio").val();

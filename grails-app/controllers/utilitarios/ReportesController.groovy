@@ -5000,4 +5000,108 @@ class ReportesController extends Shield{
         return [condominio: condominio, alicuota:valor, personas: data, deudas:deudas]
     }
 
+    def nuevaAlicuotaReporte () {
+
+        def condominio = Condominio.get(session.condominio.id)
+        def cn = dbConnectionService.getConnection()
+        def cn2 = dbConnectionService.getConnection()
+        def sql = "select * from cuotas('${params.valor}', '${condominio?.id}') order by prsndpto"
+//        println "sql: $sql"
+        def res = cn.rows(sql.toString())
+
+        def tamano = res.size()
+        def total = 0
+        def baos = new ByteArrayOutputStream()
+
+        def titulo = new Color(30, 140, 160)
+        def fondoTotal = new Color(245, 243, 245);
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 11, Font.BOLD);
+        Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
+        Font fontTd8 = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def fondo = new Color(240, 248, 250);
+        def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtHd4c = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE, colspan: 4]
+        def frmtHd1 = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+        Document document
+        document = new Document(PageSize.A4);
+        document.setMargins(50, 30, 20, 28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Nuevas alícuotas");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+        preface.add(new Paragraph("Cálculo de alícuota nueva", fontTitulo));
+        addEmptyLine(preface, 1);
+        document.add(preface);
+
+        PdfPTable table = new PdfPTable(8);
+        table.setWidthPercentage(100);
+        table.setWidths(arregloEnteros([6, 15, 15, 38, 9, 9, 9, 7]))
+        addCellTabla(table, new Paragraph("Dp.", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Apellido", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Propiedades y Alícuotas", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Total", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Actual", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Cuota", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Dif.", fontTh), frmtHd)
+        table.setHeaderRows(1);
+
+        if(res){
+            res.eachWithIndex { fila,k ->
+
+                addCellTabla(table, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
+                addCellTabla(table, new Paragraph(fila.prsnnmbr.toString(), fontTd10), frmtDato)
+                addCellTabla(table, new Paragraph(fila.prsnapll, fontTd10), frmtDato)
+                addCellTabla(table, new Paragraph(fila.propdtlle, fontTd8), frmtDato)
+                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.proptotl, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.prsnalct, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.alctvlor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.diff, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+
+                total += (fila.proptotl ? fila.proptotl.toDouble() : 0)
+            }
+        } else {
+            Paragraph preface2 = new Paragraph();
+            addEmptyLine(preface2, 1);
+            preface2.setAlignment(Element.ALIGN_CENTER);
+            preface2.add(new Paragraph("-- sin datos --", fontTitulo16));
+            addEmptyLine(preface2, 1);
+            document.add(preface2);
+        }
+
+        addCellTabla(table, new Paragraph("TOTAL", fontTh), frmtHd4c)
+        addCellTabla(table, new Paragraph(g.formatNumber(number:total, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+        addCellTabla(table, new Paragraph("", fontTh), frmtHd1)
+        addCellTabla(table, new Paragraph("", fontTh), frmtHd1)
+        addCellTabla(table, new Paragraph("", fontTh), frmtHd1)
+
+        document.add(table);
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=nuevaAlicuota_${condominio.nombre}_${new Date().format("dd-MM-yyyy")}")
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+    }
+
 }
