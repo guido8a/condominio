@@ -13,38 +13,45 @@
 
 <div class="row">
     <div class="col-xs-12 alert alert-warning">
-        <div class="col-xs-1" style="padding: 5px; width: 140px">
+        <div class="col-xs-1" style="padding: 5px; width: 120px">
             <label>Saldo Inicial:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: data[0].sldoinic ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-        <div class="col-xs-1" style="padding: 5px; width: 140px">
+        <div class="col-xs-1" style="padding: 5px; width: 120px">
             <label style="color: #42a151">Total Ingresos:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: totalIngresos, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-        <div class="col-xs-1" style="padding: 5px; width: 140px">
+        <div class="col-xs-1" style="padding: 5px; width: 120px">
             <label style="color: #a34a23">Total Egresos</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: totalEgresos, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-        <div class="col-xs-1" style="padding: 5px; width: 140px">
+        <div class="col-xs-1" style="padding: 5px; width: 120px">
             <label>Saldo a la fecha:</label>
             <strong><g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: data[0].sldofnal, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
             </strong>
         </div>
 
-
         <div class="col-xs-1">
         </div>
+
+
+        <div class="col-xs-1" style="padding: 5px; width: 140px;">
+            <label>Pagos adelantados:</label>
+            <g:textField name="saldo_name" class="form-control derecha" readonly="" style="color: #408040"
+                         value="${g.formatNumber(number: data[0].sldopgad, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
+        </div>
+
         <div class="col-xs-2" style="padding: 5px; width: 140px;">
             <label>Valores por cobrar:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly="" style="color: #804040"
-                         value="${g.formatNumber(number: data[0].ingrsldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
+                         value="${g.formatNumber(number: data[0].ingrsldo + data[0].sldopgad, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
         <div class="col-xs-2" style="padding: 5px; width: 140px">
