@@ -12,23 +12,9 @@ th, td {
 }
 
 .noActivo {
-    background-color: #efefef;
+    background-color: #ffefef;
     color: #444;
-}
-.noDeuda {
-    background-color: #dedede;
-    color: #444;
-}
-.externo {
-    background-color: #ffdede;
-    color: #444;
-}
-.reg {
-    color: #286e9f;
-}
-.noReg {
     font-weight: bold;
-    color: #aa6;
 }
 </style>
 
@@ -39,7 +25,7 @@ th, td {
     <table class="table-bordered table-condensed table-hover" width="1060px">
         <g:each in="${data}" var="dato" status="z">
 
-            <tr id="${dato.prsn__id}" data-id="${dato.prsn__id}">
+            <tr id="${dato.prsn__id}" data-id="${dato.prsn__id}" class="${dato.prsndpto == null ? clase : ''}">
                 <td width="4%" class="text-info">
                     ${dato?.prsndpto}
                 </td>

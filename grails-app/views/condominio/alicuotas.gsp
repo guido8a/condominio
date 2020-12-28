@@ -61,7 +61,14 @@
                 </g:if>
             </div>
 
-            <div class="col-xs-3 col-md-4">
+            <div class="col-xs-4 col-md-4">
+
+                <div class="col-xs-4 col-md-4">
+                    <b style="margin-left: 0px">Valor Base: </b>
+                    <g:textField name="base" style="margin-right: 10px; width: 90%; border-color: #53a7ff" value="${base}"
+                                 id="valor_base" class="form-control"/>
+                </div>
+
                 <div class="btn-group col-xs-6 col-md-4" style="margin-left: -10px; margin-top: 20px;">
 
                     <a href="#" name="busqueda" class="btn btn-info" id="btnBusqueda" title="Buscar"
@@ -72,18 +79,13 @@
                        title="Borrar criterios" style="height: 34px; padding: 9px; width: 34px">
                         <i class="fa fa-eraser"></i></a>
                 </div>
-                <div class="btn-group col-xs-1" style="margin-left: -10px; margin-top: 20px;">
-                    <a href="#" name="busqueda" class="btn btn-success" id="nuevo" title="Crear Persona"
-                       style="height: 34px; padding: 9px; width: 46px">
-                        <i class="fa fa-user-circle"></i></a>
 
+                <div class="col-xs-4 col-md-4">
+                    <b style="margin-left: 0px">No Aportan</b>
+                    <g:textField name="base" style="margin-right: 10px; width: 90%; background-color: #ffefef; color: #800000"
+                                 value="${no_aportan}" id="valor_base" class="form-control" readonly=""/>
                 </div>
-                <div class="btn-group col-xs-1" style="margin-left: 20px; margin-top: 20px;">
 
-                    <g:link action="creaIngresos" class="btn btn-info" title="Registro de aportes" style="height: 34px; padding: 9px; width: 46px">
-                        <i class="fa fa-money"></i>
-                    </g:link>
-                </div>
             </div>
 
         </div>
@@ -155,6 +157,7 @@
                     buscador: $("#buscador_con").val(),
                     ordenar:  $("#ordenar_por").val(),
                     criterio: $("#criterio_con").val(),
+                    base: $("#valor_base").val(),
                     operador: $("#oprd").val(),
                     condo: condo
                 },

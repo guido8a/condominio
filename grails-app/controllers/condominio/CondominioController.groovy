@@ -205,9 +205,12 @@ class CondominioController extends Shield {
 
     def alicuotas() {
         //        println "busqueda "
+        def cn = dbConnectionService.getConnection()
         def condominio = Parametros.get(1)
         params.ordenar = "prsndpto"
-        return[condominio: condominio]
+        def sql = "select count(*) cnta from cuotas(1000, ${condominio?.id}) where prsndpto is null"
+        def no_aportan = cn.rows(sql.toString())[0].cnta
+        return[condominio: condominio, base: 2000, no_aportan: no_aportan]
     }
 
     def tablaBuscar() {
@@ -216,10 +219,11 @@ class CondominioController extends Shield {
         params.old = params.criterio
         params.criterio = buscadorService.limpiaCriterio(params.criterio)
         params.ordenar  = buscadorService.limpiaCriterio(params.ordenar)
+        params.base  = params.base ?: 2000
 
         def sql = armaSql(params)
         params.criterio = params.old
-        println "sql: $sql"
+//        println "sql: $sql"
         def data = cn.rows(sql.toString())
 
         def msg = ""
@@ -235,7 +239,7 @@ class CondominioController extends Shield {
     }
 
     def armaSql(params){
-        println "armaSql: $params"
+//        println "armaSql: $params"
         def campos = buscadorService.parmProcesos()
         def operador = buscadorService.operadores()
 //        def wh = " edif.edif__id = prsn.edif__id and tpoc.tpoc__id = prsn.tpoc__id and prsnactv = 1 " //condicion fija
@@ -247,7 +251,7 @@ class CondominioController extends Shield {
             condominio = Condominio.get(session.condominio.id)
         }
 
-        def sqlSelect = "select * from cuotas(2400, ${condominio?.id}) "
+        def sqlSelect = "select * from cuotas(${params.base}, ${condominio?.id}) "
 
         //condicion fija
         def wh = " prsnnmbr is not null "
