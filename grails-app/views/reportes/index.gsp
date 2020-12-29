@@ -189,9 +189,9 @@
                 Informe de Resultados
             </a>
             <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#nuevaAlicuota"
-               title="Cálculo de la nueva alícuota">
+               title="Cálculo de la Nueva Alícuota">
                 <i class="fa fa-cog fa-5x"></i><br/>
-                Cálculo nueva alícuota
+                Cálculo Nueva Alícuota
             </a>
         </p>
     </div>
@@ -776,15 +776,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Cálculo nuevas alícuotas</h4>
+                <h4 class="modal-title">Cálculo de la Nueva Alícuota</h4>
             </div>
 
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-1 col-xs-2">
-                        <label>Valor</label>
+                    <div class="col-md-6 col-xs-6">
+                        <label>Valor base para recuadación mensual</label>
                     </div>
-                    <div class="col-md-4 col-xs-7">
+                    <div class="col-md-3 col-xs-3">
                         %{--<g:select from="${[2400]}" name="valorAli_name" id="valorAli" class="form-control"/>--}%
                         <g:textField name="valorAli_name" id="valorAli" class="form-control" maxlength="6"/>
                     </div>

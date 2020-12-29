@@ -5018,11 +5018,11 @@ class ReportesController extends Shield{
 
         def titulo = new Color(30, 140, 160)
         def fondoTotal = new Color(245, 243, 245);
-        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 11, Font.BOLD, titulo);
         Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
-        Font fontTh = new Font(Font.TIMES_ROMAN, 11, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
         Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
-        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
         Font fontTd8 = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
@@ -5051,13 +5051,13 @@ class ReportesController extends Shield{
         addEmptyLine(preface, 1);
         preface.setAlignment(Element.ALIGN_CENTER);
         preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
-        preface.add(new Paragraph("Cálculo de alícuota nueva", fontTitulo));
+        preface.add(new Paragraph("Cálculo de la Alícuota Nueva - Base: ${params.valor}", fontTitulo));
         addEmptyLine(preface, 1);
         document.add(preface);
 
         PdfPTable table = new PdfPTable(8);
         table.setWidthPercentage(100);
-        table.setWidths(arregloEnteros([6, 13, 14, 38, 8, 10, 10, 9]))
+        table.setWidths(arregloEnteros([5, 14, 16, 40, 7, 9, 9, 8]))
         addCellTabla(table, new Paragraph("Dp.", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Apellido", fontTh), frmtHd)
