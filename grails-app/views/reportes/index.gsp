@@ -829,7 +829,7 @@
 
     $("#valorAli").keydown(function (ev) {
         return validarNum(ev)
-    })
+    });
 
     $(".btnNuevasAlicuotas").click(function () {
         var valor = $("#valorAli").val();
@@ -838,7 +838,6 @@
         }else{
             location.href="${createLink(controller: 'reportes', action: 'nuevaAlicuotaReporte')}?valor=" + valor
         }
-
     });
 
     $(".btnIngresosEgresos").click(function () {

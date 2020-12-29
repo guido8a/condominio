@@ -5013,6 +5013,7 @@ class ReportesController extends Shield{
         def total = 0
         def totalAli = 0
         def totalValor = 0
+        def totalDif = 0
         def baos = new ByteArrayOutputStream()
 
         def titulo = new Color(30, 140, 160)
@@ -5082,6 +5083,7 @@ class ReportesController extends Shield{
                 total += (fila.proptotl ? fila.proptotl.toDouble() : 0)
                 totalAli += (fila.prsnalct ? fila.prsnalct.toDouble() : 0)
                 totalValor += (fila.alctvlor ? fila.alctvlor.toDouble() : 0)
+                totalDif += (fila.diff ? fila.diff.toDouble() : 0)
             }
         } else {
             Paragraph preface2 = new Paragraph();
@@ -5096,7 +5098,7 @@ class ReportesController extends Shield{
         addCellTabla(table, new Paragraph(g.formatNumber(number:total, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
         addCellTabla(table, new Paragraph(g.formatNumber(number:totalAli, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
         addCellTabla(table, new Paragraph(g.formatNumber(number:totalValor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
-        addCellTabla(table, new Paragraph("", fontTh), frmtHd1)
+        addCellTabla(table, new Paragraph(g.formatNumber(number:totalDif, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
 
         document.add(table);
         document.close();
@@ -5107,5 +5109,4 @@ class ReportesController extends Shield{
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
     }
-
 }
