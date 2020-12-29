@@ -785,7 +785,8 @@
                         <label>Valor</label>
                     </div>
                     <div class="col-md-4 col-xs-7">
-                        <g:select from="${[2400]}" name="valorAli_name" id="valorAli" class="form-control"/>
+                        %{--<g:select from="${[2400]}" name="valorAli_name" id="valorAli" class="form-control"/>--}%
+                        <g:textField name="valorAli_name" id="valorAli" class="form-control" maxlength="6"/>
                     </div>
                 </div>
             </div>
@@ -805,10 +806,39 @@
 
 <script type="text/javascript">
 
+    function validarNum(ev) {
+        /*
+         48-57      -> numeros
+         96-105     -> teclado numerico
+         188        -> , (coma)
+         190        -> . (punto) teclado
+         110        -> . (punto) teclado numerico
+         8          -> backspace
+         46         -> delete
+         9          -> tab
+         37         -> flecha izq
+         39         -> flecha der
+         */
+        return ((ev.keyCode >= 48 && ev.keyCode <= 57) ||
+        (ev.keyCode >= 96 && ev.keyCode <= 105) ||
+//        ev.keyCode == 190 || ev.keyCode == 110 ||
+        ev.keyCode == 8 || ev.keyCode == 46 || ev.keyCode == 9 ||
+        ev.keyCode == 37 || ev.keyCode == 39 ||
+        ev.keyCode == 173 || ev.keyCode == 109);
+    }
+
+    $("#valorAli").keydown(function (ev) {
+        return validarNum(ev)
+    })
 
     $(".btnNuevasAlicuotas").click(function () {
         var valor = $("#valorAli").val();
-        location.href="${createLink(controller: 'reportes', action: 'nuevaAlicuotaReporte')}?valor=" + valor
+        if(valor == '' || valor == null || valor == 0){
+            bootbox.alert("Ingrese un valor!")
+        }else{
+            location.href="${createLink(controller: 'reportes', action: 'nuevaAlicuotaReporte')}?valor=" + valor
+        }
+
     });
 
     $(".btnIngresosEgresos").click(function () {

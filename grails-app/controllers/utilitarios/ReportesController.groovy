@@ -5011,6 +5011,8 @@ class ReportesController extends Shield{
 
         def tamano = res.size()
         def total = 0
+        def totalAli = 0
+        def totalValor = 0
         def baos = new ByteArrayOutputStream()
 
         def titulo = new Color(30, 140, 160)
@@ -5054,7 +5056,7 @@ class ReportesController extends Shield{
 
         PdfPTable table = new PdfPTable(8);
         table.setWidthPercentage(100);
-        table.setWidths(arregloEnteros([6, 15, 15, 38, 9, 9, 9, 7]))
+        table.setWidths(arregloEnteros([6, 15, 14, 38, 8, 10, 10, 7]))
         addCellTabla(table, new Paragraph("Dp.", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Apellido", fontTh), frmtHd)
@@ -5078,6 +5080,8 @@ class ReportesController extends Shield{
                 addCellTabla(table, new Paragraph(g.formatNumber(number:fila.diff, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
 
                 total += (fila.proptotl ? fila.proptotl.toDouble() : 0)
+                totalAli += (fila.prsnalct ? fila.prsnalct.toDouble() : 0)
+                totalValor += (fila.alctvlor ? fila.alctvlor.toDouble() : 0)
             }
         } else {
             Paragraph preface2 = new Paragraph();
@@ -5090,8 +5094,8 @@ class ReportesController extends Shield{
 
         addCellTabla(table, new Paragraph("TOTAL", fontTh), frmtHd4c)
         addCellTabla(table, new Paragraph(g.formatNumber(number:total, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
-        addCellTabla(table, new Paragraph("", fontTh), frmtHd1)
-        addCellTabla(table, new Paragraph("", fontTh), frmtHd1)
+        addCellTabla(table, new Paragraph(g.formatNumber(number:totalAli, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+        addCellTabla(table, new Paragraph(g.formatNumber(number:totalValor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
         addCellTabla(table, new Paragraph("", fontTh), frmtHd1)
 
         document.add(table);
