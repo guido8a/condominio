@@ -193,6 +193,11 @@
                 <i class="fa fa-cog fa-5x"></i><br/>
                 Cálculo Nueva Alícuota
             </a>
+            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#ingresosEgresos2"
+               title="Ingresos y egresos">
+                <i class="fa fa-line-chart fa-5x"></i><br/>
+                Ingresos y egresos x mes
+            </a>
         </p>
     </div>
 </div>
@@ -802,6 +807,44 @@
 </div>
 
 
+<div class="modal fade col-md-12 col-xs-12" id="ingresosEgresos2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="modalIngresoEgreso2">Ingresos y Egresos x mes</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-2">
+                        <label>Desde</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker id="fechaDesdeIG" class="datepicker form-control" value="${inicioAnio}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-1 col-xs-2">
+                        <label>Hasta</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker id="fechaHastaIG" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnIngresosEgresos2 btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 
 <script type="text/javascript">
@@ -843,6 +886,12 @@
     $(".btnIngresosEgresos").click(function () {
         var anio = $("#anio").val();
         location.href="${createLink(controller: 'reportes', action: 'ingresosImprimir')}?anio=" + anio
+    });
+
+    $(".btnIngresosEgresos2").click(function () {
+        var desde = $("#fechaDesdeIG").val();
+        var hasta = $("#fechaHastaIG").val();
+        location.href="${createLink(controller: 'reportes', action: 'ingresosEgresos')}?desde=" + desde + "&hasta=" + hasta
     });
 
     $("#btnAceptarGestor").click(function () {

@@ -1829,6 +1829,29 @@ class ReportesController extends Shield{
         return [jsonGraph : jsonGraph.toString(), ingresoEgreso: res8, anio: params.anio]
     }
 
+    def ingresosEgresos () {
+        println("params " + params)
+
+        def resGraph = []
+        def condominio = Condominio.get(session.condominio.id)
+
+        def desde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
+        def hasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
+
+        //grafico ingresos y egresos
+
+        def cn8 = dbConnectionService.getConnection()
+//        def valores2 = "select * from ingr_egrs(${params.anio}, ${condominio?.id});"
+        def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, substr(pagofcha::varchar, 6, 2) from aportes(1, '${desde}','${hasta}') group by 2,3 order by 3;"
+        def res8 = cn8.rows(valores2.toString())
+
+        println("sql: " + valores2)
+
+        def jsonGraph = new JsonBuilder(resGraph)
+
+        return [jsonGraph : jsonGraph.toString(), ingresoEgreso: res8, desde: desde, hasta: hasta]
+    }
+
 
     def listaCondominos() {
 
