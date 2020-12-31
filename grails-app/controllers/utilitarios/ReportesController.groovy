@@ -1841,15 +1841,30 @@ class ReportesController extends Shield{
         //grafico ingresos y egresos
 
         def cn8 = dbConnectionService.getConnection()
-//        def valores2 = "select * from ingr_egrs(${params.anio}, ${condominio?.id});"
         def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, substr(pagofcha::varchar, 6, 2) from aportes(1, '${desde}','${hasta}') group by 2,3 order by 3;"
         def res8 = cn8.rows(valores2.toString())
 
+        def cn9 = dbConnectionService.getConnection()
+        def valores3 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4) fcha,\n" +
+                "substr(egrsfcha::varchar, 6, 2)\n" +
+                "from egresos(1, '${desde}','${hasta}')  \n" +
+                "group by 2,3 order by 3;"
+        def res9 = cn9.rows(valores3.toString())
+
         println("sql: " + valores2)
+        println("sql: " + valores3)
+
+        def meses = []
+
+        res8.each{
+            meses.add('"' + it.fcha + '"')
+        }
+
+        println("meses " + meses)
 
         def jsonGraph = new JsonBuilder(resGraph)
 
-        return [jsonGraph : jsonGraph.toString(), ingresoEgreso: res8, desde: desde, hasta: hasta]
+        return [jsonGraph : jsonGraph.toString(), ingresos: res8, egresos:res9, desde: desde, hasta: hasta, meses:meses.decodeHTML()]
     }
 
 

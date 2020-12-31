@@ -55,6 +55,7 @@
 </div>
 
 
+
 <script type="text/javascript">
 
     %{--$(".btnImprimir").click(function () {--}%
@@ -65,19 +66,22 @@
 
     function lineas (tipo) {
         var $chart = $("#chart2_" + tipo);
-        var ticks = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre", "Octubre", "Noviembre", "Diciembre"];
+//        var ticks = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-        %{--var ticks = ${ingresoEgreso.fcha};--}%
+        <g:applyCodec encodeAs="none">
+        var ticks = ${meses};
+        </g:applyCodec>
 
         %{--var data = [${ingresoEgreso[0].ingrvlor},${ingresoEgreso[1].ingrvlor},${ingresoEgreso[2].ingrvlor},${ingresoEgreso[3].ingrvlor},${ingresoEgreso[4].ingrvlor},${ingresoEgreso[5].ingrvlor},${ingresoEgreso[6].ingrvlor},${ingresoEgreso[7].ingrvlor},${ingresoEgreso[8].ingrvlor}, ${ingresoEgreso[9].ingrvlor}, ${ingresoEgreso[10].ingrvlor}, ${ingresoEgreso[11].ingrvlor}];--}%
         %{--var data2 = [${ingresoEgreso[0].egrsvlor},${ingresoEgreso[1].egrsvlor},${ingresoEgreso[2].egrsvlor},${ingresoEgreso[3].egrsvlor},${ingresoEgreso[4].egrsvlor},${ingresoEgreso[5].egrsvlor},${ingresoEgreso[6].egrsvlor},${ingresoEgreso[7].egrsvlor},${ingresoEgreso[8].egrsvlor}, ${ingresoEgreso[9].egrsvlor}, ${ingresoEgreso[10].egrsvlor}, ${ingresoEgreso[11].egrsvlor}];--}%
 
-        var data =${ingresoEgreso.vlor};
+        var data =${ingresos.vlor};
+        var data2 = ${egresos.vlor}
 
         $(".chartContainer").removeClass("hidden");
         $chart.removeClass("hidden");
-//        $.jqplot ('chart2_' + tipo, [data, data2] , {
-        $.jqplot ('chart2_' + tipo, [data] , {
+        $.jqplot ('chart2_' + tipo, [data, data2] , {
+//        $.jqplot ('chart2_' + tipo, [data] , {
             title: 'Ingresos - Egresos',
             axesDefaults: {
                 labelRenderer: $.jqplot.CanvasAxisLabelRenderer
