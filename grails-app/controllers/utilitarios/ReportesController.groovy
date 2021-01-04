@@ -1858,27 +1858,6 @@ class ReportesController extends Shield{
                 "group by 2,3 order by 3;"
         def res9 = cn9.rows(valores3.toString())
 
-
-//        def splitDesde = params.desde.toString().split("-")
-//        def splitHasta = params.hasta.toString().split("-")
-//
-//        def mesDesde = splitDesde[1].toInteger()
-//        def mesHasta = splitHasta[1].toInteger()
-//        def totalMeses = 0
-//        def mesesFinales = []
-//
-//        for(int i = mesDesde; i <= mesHasta; i++){
-//            totalMeses += 1
-//            mesesFinales.add(totalMeses.toInteger())
-//        }
-//
-//        println("meses " + totalMeses)
-//        println("mesesFinales " + mesesFinales)
-
-//        def nuevoDias = "31-" + splitDesde[1] + "-" + splitDesde[2]
-
-//        println("nuevo " + nuevoDias)
-
         res8.each{
 
             def nuevaFecha
