@@ -56,16 +56,20 @@
 
 <div class="col-md-12">
     <div class="col-md-3">
-        <span class="badge bg-primary">Promedio Ingreso: </span> ${g.formatNumber(number: promedioIngreso ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
+        <span class="badge bg-primary">Promedio Ingreso: </span>
+        <strong>${g.formatNumber(number: promedioIngreso ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</strong>
     </div>
     <div class="col-md-3">
-        <span class="badge bg-warning text-dark" style="background-color: #af9030">Promedio Egreso: </span> ${g.formatNumber(number: promedioEgreso?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
+        <span class="badge bg-warning text-dark" style="background-color: #af9030">Promedio Egreso: </span>
+        <strong>${g.formatNumber(number: promedioEgreso?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</strong>
     </div>
     <div class="col-md-3">
-        <span class="badge bg-secondary text-dark" style="background-color: #87816a">Promedio Por Cobrar: </span> ${g.formatNumber(number: promedioPorCobrar?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
+        <span class="badge bg-secondary text-dark" style="background-color: #87816a">Promedio por Cobrar: </span>
+        <strong>${g.formatNumber(number: promedioPorCobrar?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</strong>
     </div>
     <div class="col-md-3">
-        <span class="badge bg-success text-dark" style="background-color: #47954b">Promedio Total: </span> ${g.formatNumber(number: promedioTotal?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
+        <span class="badge bg-success text-dark" style="background-color: #47954b">Promedio Total: </span>
+        <strong>${g.formatNumber(number: promedioTotal?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</strong>
     </div>
 </div>
 

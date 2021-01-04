@@ -1842,20 +1842,24 @@ class ReportesController extends Shield{
         def resGraph = []
         def condominio = Condominio.get(session.condominio.id)
 
-        def desde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
-        def hasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
+        def fcdsde = new Date().parse("dd-MM-yyyy", params.desde)
+        def fchsta = new Date().parse("dd-MM-yyyy", params.hasta)
+        def desde = fcdsde.format('yyyy-MM-dd')
+        def hasta = fchsta.format('yyyy-MM-dd')
 
         //grafico ingresos y egresos
 
         def cn8 = dbConnectionService.getConnection()
-        def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, substr(pagofcha::varchar, 6, 2) mes, substr(pagofcha::varchar, 1, 4) anio from aportes(1, '${desde}','${hasta}') group by 2,3,4 order by 3;"
+        def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, " +
+                "substr(pagofcha::varchar, 6, 2) mes, substr(pagofcha::varchar, 1, 4) anio " +
+                "from aportes(1, '${desde}','${hasta}') group by 2,3,4 order by 3"
         def res8 = cn8.rows(valores2.toString())
 
         def cn9 = dbConnectionService.getConnection()
-        def valores3 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4) fcha,\n" +
-                "substr(egrsfcha::varchar, 6, 2)\n" +
-                "from egresos(1, '${desde}','${hasta}')  \n" +
-                "group by 2,3 order by 3;"
+        def valores3 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4) fcha, " +
+                "substr(egrsfcha::varchar, 6, 2) " +
+                "from egresos(1, '${desde}','${hasta}') " +
+                "group by 2,3 order by 3"
         def res9 = cn9.rows(valores3.toString())
 
         res8.each{
@@ -1889,19 +1893,11 @@ class ReportesController extends Shield{
         def promedioPorCobrar = totalPorCobrar == 0 ? 0 : totalPorCobrar/res8.size()
         def promedioTotal = totalTotal == 0 ? 0 : totalTotal/res8.size()
 
-//        println("pi " + promedioIngreso)
-//        println("pe " + promedioEgreso)
-//        println("pc " + promedioPorCobrar)
-//        println("pt " + promedioTotal)
-
-//        println("v " + valoresCobrar)
-//        println("sql: " + valores2)
-//        println("sql: " + valores3)
-//        println("meses " + meses)
-
         def jsonGraph = new JsonBuilder(resGraph)
 
-        return [jsonGraph : jsonGraph.toString(), ingresos: res8, egresos:res9, desde: desde, hasta: hasta, meses:meses,cobrar: valoresCobrar, promedioIngreso: promedioIngreso, promedioEgreso: promedioEgreso, promedioPorCobrar: promedioPorCobrar, promedioTotal: promedioTotal]
+        return [jsonGraph : jsonGraph.toString(), ingresos: res8, egresos:res9, desde: fcdsde.format('dd-MMM-yyyy'),
+                hasta: fchsta.format('dd-MMM-yyyy'), meses:meses,cobrar: valoresCobrar, promedioIngreso: promedioIngreso,
+                promedioEgreso: promedioEgreso, promedioPorCobrar: promedioPorCobrar, promedioTotal: promedioTotal]
     }
 
     def listaCondominos() {

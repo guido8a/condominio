@@ -196,7 +196,7 @@
             <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#ingresosEgresos2"
                title="Ingresos y egresos">
                 <i class="fa fa-line-chart fa-5x"></i><br/>
-                Ingresos y egresos x mes
+                Ingresos y egresos mesuales
             </a>
         </p>
     </div>
@@ -787,7 +787,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6 col-xs-6">
-                        <label>Valor base para recuadación mensual</label>
+                        <label>Valor base para recaudación mensual</label>
                     </div>
                     <div class="col-md-3 col-xs-3">
                         %{--<g:select from="${[2400]}" name="valorAli_name" id="valorAli" class="form-control"/>--}%
