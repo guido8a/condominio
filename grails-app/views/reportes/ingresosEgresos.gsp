@@ -77,11 +77,12 @@
 
         var data =${ingresos.vlor};
         var data2 = ${egresos.vlor}
+        var data3 = ${cobrar.por_cobrar}
+        var data4 = ${cobrar.total}
 
         $(".chartContainer").removeClass("hidden");
         $chart.removeClass("hidden");
-        $.jqplot ('chart2_' + tipo, [data, data2] , {
-//        $.jqplot ('chart2_' + tipo, [data] , {
+        $.jqplot ('chart2_' + tipo, [data,data2,data3,data4] , {
             title: 'Ingresos - Egresos',
             axesDefaults: {
                 labelRenderer: $.jqplot.CanvasAxisLabelRenderer
@@ -93,7 +94,9 @@
             },
             series:[
                 {label:'Ingresos'},
-                {label:'Egresos'}
+                {label:'Egresos'},
+                {label: 'Por Cobrar'},
+                {label: 'Total'}
             ],
             legend         : {
                 show     : true,

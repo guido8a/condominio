@@ -1841,7 +1841,7 @@ class ReportesController extends Shield{
         //grafico ingresos y egresos
 
         def cn8 = dbConnectionService.getConnection()
-        def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, substr(pagofcha::varchar, 6, 2) from aportes(1, '${desde}','${hasta}') group by 2,3 order by 3;"
+        def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, substr(pagofcha::varchar, 6, 2) mes, substr(pagofcha::varchar, 1, 4) anio from aportes(1, '${desde}','${hasta}') group by 2,3,4 order by 3;"
         def res8 = cn8.rows(valores2.toString())
 
         def cn9 = dbConnectionService.getConnection()
@@ -1851,8 +1851,50 @@ class ReportesController extends Shield{
                 "group by 2,3 order by 3;"
         def res9 = cn9.rows(valores3.toString())
 
-        println("sql: " + valores2)
-        println("sql: " + valores3)
+
+//        def splitDesde = params.desde.toString().split("-")
+//        def splitHasta = params.hasta.toString().split("-")
+//
+//        def mesDesde = splitDesde[1].toInteger()
+//        def mesHasta = splitHasta[1].toInteger()
+//        def totalMeses = 0
+//        def mesesFinales = []
+//
+//        for(int i = mesDesde; i <= mesHasta; i++){
+//            totalMeses += 1
+//            mesesFinales.add(totalMeses.toInteger())
+//        }
+//
+//        println("meses " + totalMeses)
+//        println("mesesFinales " + mesesFinales)
+
+//        def nuevoDias = "31-" + splitDesde[1] + "-" + splitDesde[2]
+
+//        println("nuevo " + nuevoDias)
+
+        def valoresCobrar = []
+
+        res8.each{
+
+            def nuevaFecha
+
+            if(it.mes.toInteger() == 2){
+                nuevaFecha = "28-" + it.mes + "-" + it.anio
+            }else{
+                nuevaFecha = "30-" + it.mes + "-" + it.anio
+            }
+
+            def cn7 = dbConnectionService.getConnection()
+            def valores4 = "select ingrsldo + sldopgad por_cobrar, ingrsldo + sldofnal total\n" +
+                    "from saldos(1, '${nuevaFecha}', '${nuevaFecha}');"
+//            println("sql3 " + valores4)
+            def res7 = cn7.rows(valores4.toString())
+            valoresCobrar.add(res7[0])
+        }
+
+//        println("v " + valoresCobrar)
+//        println("sql: " + valores2)
+//        println("sql: " + valores3)
 
         def meses = []
 
@@ -1860,11 +1902,11 @@ class ReportesController extends Shield{
             meses.add('"' + it.fcha + '"')
         }
 
-        println("meses " + meses)
+//        println("meses " + meses)
 
         def jsonGraph = new JsonBuilder(resGraph)
 
-        return [jsonGraph : jsonGraph.toString(), ingresos: res8, egresos:res9, desde: desde, hasta: hasta, meses:meses.decodeHTML()]
+        return [jsonGraph : jsonGraph.toString(), ingresos: res8, egresos:res9, desde: desde, hasta: hasta, meses:meses,cobrar: valoresCobrar]
     }
 
 
