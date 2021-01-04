@@ -93,7 +93,7 @@
                 }
             },
             series:[
-                {label:'Ingresos'},
+                {label:'Ingresos - ' + 2},
                 {label:'Egresos'},
                 {label: 'Por Cobrar'},
                 {label: 'Total'}
