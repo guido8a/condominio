@@ -54,6 +54,20 @@
     <div id="chart2_lineas" class="divChart2 hidden"></div>
 </div>
 
+<div class="col-md-12">
+    <div class="col-md-3">
+        <span class="badge bg-primary">Promedio Ingreso: </span> ${g.formatNumber(number: promedioIngreso ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
+    </div>
+    <div class="col-md-3">
+        <span class="badge bg-warning text-dark" style="background-color: #af9030">Promedio Egreso: </span> ${g.formatNumber(number: promedioEgreso?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
+    </div>
+    <div class="col-md-3">
+        <span class="badge bg-secondary text-dark" style="background-color: #87816a">Promedio Por Cobrar: </span> ${g.formatNumber(number: promedioPorCobrar?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
+    </div>
+    <div class="col-md-3">
+        <span class="badge bg-success text-dark" style="background-color: #47954b">Promedio Total: </span> ${g.formatNumber(number: promedioTotal?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
+    </div>
+</div>
 
 
 <script type="text/javascript">
@@ -75,10 +89,10 @@
         %{--var data = [${ingresoEgreso[0].ingrvlor},${ingresoEgreso[1].ingrvlor},${ingresoEgreso[2].ingrvlor},${ingresoEgreso[3].ingrvlor},${ingresoEgreso[4].ingrvlor},${ingresoEgreso[5].ingrvlor},${ingresoEgreso[6].ingrvlor},${ingresoEgreso[7].ingrvlor},${ingresoEgreso[8].ingrvlor}, ${ingresoEgreso[9].ingrvlor}, ${ingresoEgreso[10].ingrvlor}, ${ingresoEgreso[11].ingrvlor}];--}%
         %{--var data2 = [${ingresoEgreso[0].egrsvlor},${ingresoEgreso[1].egrsvlor},${ingresoEgreso[2].egrsvlor},${ingresoEgreso[3].egrsvlor},${ingresoEgreso[4].egrsvlor},${ingresoEgreso[5].egrsvlor},${ingresoEgreso[6].egrsvlor},${ingresoEgreso[7].egrsvlor},${ingresoEgreso[8].egrsvlor}, ${ingresoEgreso[9].egrsvlor}, ${ingresoEgreso[10].egrsvlor}, ${ingresoEgreso[11].egrsvlor}];--}%
 
-        var data =${ingresos.vlor};
-        var data2 = ${egresos.vlor}
-        var data3 = ${cobrar.por_cobrar}
-        var data4 = ${cobrar.total}
+        var data =  ${ingresos.vlor};
+        var data2 = ${egresos.vlor};
+        var data3 = ${cobrar.por_cobrar};
+        var data4 = ${cobrar.total};
 
         $(".chartContainer").removeClass("hidden");
         $chart.removeClass("hidden");
@@ -93,7 +107,7 @@
                 }
             },
             series:[
-                {label:'Ingresos - ' + 2},
+                {label:'Ingresos'},
                 {label:'Egresos'},
                 {label: 'Por Cobrar'},
                 {label: 'Total'}

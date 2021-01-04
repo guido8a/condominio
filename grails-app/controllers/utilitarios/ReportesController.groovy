@@ -1832,6 +1832,13 @@ class ReportesController extends Shield{
     def ingresosEgresos () {
         println("params " + params)
 
+        def valoresCobrar = []
+        def totalIngreso = 0
+        def totalEgreso = 0
+        def totalPorCobrar = 0
+        def totalTotal = 0
+        def meses = []
+
         def resGraph = []
         def condominio = Condominio.get(session.condominio.id)
 
@@ -1872,8 +1879,6 @@ class ReportesController extends Shield{
 
 //        println("nuevo " + nuevoDias)
 
-        def valoresCobrar = []
-
         res8.each{
 
             def nuevaFecha
@@ -1887,31 +1892,40 @@ class ReportesController extends Shield{
             def cn7 = dbConnectionService.getConnection()
             def valores4 = "select ingrsldo + sldopgad por_cobrar, ingrsldo + sldofnal total\n" +
                     "from saldos(1, '${nuevaFecha}', '${nuevaFecha}');"
-//            println("sql3 " + valores4)
             def res7 = cn7.rows(valores4.toString())
             valoresCobrar.add(res7[0])
+            totalPorCobrar += res7[0].por_cobrar.toDouble()
+            totalTotal += res7[0].total.toDouble()
+            totalIngreso += it.vlor.toDouble()
+
+            meses.add('"' + it.fcha + '"')
         }
+
+        res9.each{
+            totalEgreso += it.vlor.toDouble()
+        }
+
+        def promedioIngreso = totalIngreso == 0 ? 0 : totalIngreso/res8.size()
+        def promedioEgreso = totalEgreso == 0 ? 0 : totalEgreso/res8.size()
+        def promedioPorCobrar = totalPorCobrar == 0 ? 0 : totalPorCobrar/res8.size()
+        def promedioTotal = totalTotal == 0 ? 0 : totalTotal/res8.size()
+
+//        println("pi " + promedioIngreso)
+//        println("pe " + promedioEgreso)
+//        println("pc " + promedioPorCobrar)
+//        println("pt " + promedioTotal)
 
 //        println("v " + valoresCobrar)
 //        println("sql: " + valores2)
 //        println("sql: " + valores3)
-
-        def meses = []
-
-        res8.each{
-            meses.add('"' + it.fcha + '"')
-        }
-
 //        println("meses " + meses)
 
         def jsonGraph = new JsonBuilder(resGraph)
 
-        return [jsonGraph : jsonGraph.toString(), ingresos: res8, egresos:res9, desde: desde, hasta: hasta, meses:meses,cobrar: valoresCobrar]
+        return [jsonGraph : jsonGraph.toString(), ingresos: res8, egresos:res9, desde: desde, hasta: hasta, meses:meses,cobrar: valoresCobrar, promedioIngreso: promedioIngreso, promedioEgreso: promedioEgreso, promedioPorCobrar: promedioPorCobrar, promedioTotal: promedioTotal]
     }
 
-
     def listaCondominos() {
-
 
         def baos = new ByteArrayOutputStream()
         def name = "listaCondominos_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
