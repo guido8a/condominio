@@ -1964,7 +1964,7 @@ class ReportesController extends Shield{
 //            meses.add('"' + it.fcha + '"')
 
 
-            data.put((r.fcha), (r.vlor ?: 0) + "_" + (res9[k].vlor ?: 0) + "_" + (res7[0].por_cobrar ?: 0) + "_" + (res7[0].total ?: 0))
+            data.put((r.fcha), (r?.vlor ?: 0) + "_" + (res9[k]?.vlor ?: 0) + "_" + (res7[0]?.por_cobrar ?: 0) + "_" + (res7[0]?.total ?: 0))
 
         }
 
