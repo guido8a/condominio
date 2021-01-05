@@ -3,6 +3,7 @@ package utilitarios
 import com.lowagie.text.Chapter
 import com.lowagie.text.ChapterAutoNumber
 import com.lowagie.text.Chunk
+import com.lowagie.text.HeaderFooter
 import com.lowagie.text.Phrase
 import com.lowagie.text.Rectangle
 import com.lowagie.text.html.simpleparser.HTMLWorker
@@ -2056,6 +2057,13 @@ class ReportesController extends Shield{
         def pdfw = PdfWriter.getInstance(document, baos);
         document.resetHeader()
         document.resetFooter()
+
+        HeaderFooter footer1 = new HeaderFooter(
+                new Phrase("Manuel Larrea N. 13-45 y Antonio Ante / Teléfonos troncal: (593-2)252 7077 - 254 9222 - 254 9020 - 254 9163 / www.pichincha.gob.ec", new Font(fontTd)), false);
+        footer1.setBorder(Rectangle.NO_BORDER);
+        footer1.setBorder(Rectangle.TOP);
+        footer1.setAlignment(Element.ALIGN_CENTER);
+        document.setFooter(footer1);
 
         document.open();
         PdfContentByte cb = pdfw.getDirectContent();
