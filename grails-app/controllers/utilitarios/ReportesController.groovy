@@ -1937,7 +1937,8 @@ class ReportesController extends Shield{
                 "group by 2,3 order by 3;"
         def res9 = cn9.rows(valores3.toString())
 
-//        println("sql " + valores2)
+        println("sql " + valores2)
+        println("sql " + valores3)
 //        println("res 8 " + res8)
 
         res8.eachWithIndex{ r, k->
@@ -1954,7 +1955,7 @@ class ReportesController extends Shield{
             def valores4 = "select ingrsldo + sldopgad por_cobrar, ingrsldo + sldofnal total\n" +
                     "from saldos(1, '${nuevaFecha}', '${nuevaFecha}');"
             def res7 = cn7.rows(valores4.toString())
-            println("res7 " + res7)
+//            println("res7 " + res7)
 //            valoresCobrar.add(res7[0])
 //            totalPorCobrar += res7[0].por_cobrar.toDouble()
 //            totalTotal += res7[0].total.toDouble()
@@ -1963,7 +1964,7 @@ class ReportesController extends Shield{
 //            meses.add('"' + it.fcha + '"')
 
 
-            data.put((r.fcha), r.vlor + "_" + res9[k].vlor + "_" + res7[0].por_cobrar + "_" + res7[0].total)
+            data.put((r.fcha), (r.vlor ?: 0) + "_" + (res9[k].vlor ?: 0) + "_" + (res7[0].por_cobrar ?: 0) + "_" + (res7[0].total ?: 0))
 
         }
 
