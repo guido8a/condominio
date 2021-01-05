@@ -1968,14 +1968,14 @@ class ReportesController extends Shield{
 
         }
 
-        res9.each{
-            totalEgreso += it.vlor.toDouble()
-        }
-
-        def promedioIngreso = totalIngreso == 0 ? 0 : totalIngreso/res8.size()
-        def promedioEgreso = totalEgreso == 0 ? 0 : totalEgreso/res8.size()
-        def promedioPorCobrar = totalPorCobrar == 0 ? 0 : totalPorCobrar/res8.size()
-        def promedioTotal = totalTotal == 0 ? 0 : totalTotal/res8.size()
+//        res9.each{
+//            totalEgreso += it.vlor.toDouble()
+//        }
+//
+//        def promedioIngreso = totalIngreso == 0 ? 0 : totalIngreso/res8.size()
+//        def promedioEgreso = totalEgreso == 0 ? 0 : totalEgreso/res8.size()
+//        def promedioPorCobrar = totalPorCobrar == 0 ? 0 : totalPorCobrar/res8.size()
+//        def promedioTotal = totalTotal == 0 ? 0 : totalTotal/res8.size()
 
 //        println("pi " + promedioIngreso)
 //        println("pe " + promedioEgreso)
