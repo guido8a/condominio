@@ -19,6 +19,7 @@ import condominio.Pago
 import condominio.Talonario
 import condominio.Texto
 import condominio.TipoAporte
+import grails.converters.JSON
 import groovy.json.JsonBuilder
 import org.apache.poi.hwpf.usermodel.OfficeDrawing
 import org.apache.poi.xwpf.usermodel.TextAlignment
@@ -1898,6 +1899,104 @@ class ReportesController extends Shield{
         return [jsonGraph : jsonGraph.toString(), ingresos: res8, egresos:res9, desde: fcdsde.format('dd-MMM-yyyy'),
                 hasta: fchsta.format('dd-MMM-yyyy'), meses:meses,cobrar: valoresCobrar, promedioIngreso: promedioIngreso,
                 promedioEgreso: promedioEgreso, promedioPorCobrar: promedioPorCobrar, promedioTotal: promedioTotal]
+    }
+
+    def ingresosEgresosNuevo () {
+        println("params " + params)
+
+        return [desde:params.desde, hasta: params.hasta]
+    }
+
+    def ingresoEgresoData_ajax(){
+        println("params id" + params)
+
+        def valoresCobrar = []
+        def totalIngreso = 0
+        def totalEgreso = 0
+        def totalPorCobrar = 0
+        def totalTotal = 0
+        def meses = []
+        def data = [:]
+
+        def resGraph = []
+        def condominio = Condominio.get(session.condominio.id)
+
+        def desde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
+        def hasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
+
+        //grafico ingresos y egresos
+
+        def cn8 = dbConnectionService.getConnection()
+        def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, substr(pagofcha::varchar, 6, 2) mes, substr(pagofcha::varchar, 1, 4) anio from aportes(1, '${desde}','${hasta}') group by 2,3,4 order by 3;"
+        def res8 = cn8.rows(valores2.toString())
+
+        def cn9 = dbConnectionService.getConnection()
+        def valores3 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4) fcha,\n" +
+                "substr(egrsfcha::varchar, 6, 2)\n" +
+                "from egresos(1, '${desde}','${hasta}')  \n" +
+                "group by 2,3 order by 3;"
+        def res9 = cn9.rows(valores3.toString())
+
+//        println("sql " + valores2)
+//        println("res 8 " + res8)
+
+        res8.eachWithIndex{ r, k->
+
+            def nuevaFecha
+
+            if(r.mes.toInteger() == 2){
+                nuevaFecha = "28-" + r.mes + "-" + r.anio
+            }else{
+                nuevaFecha = "30-" + r.mes + "-" + r.anio
+            }
+
+            def cn7 = dbConnectionService.getConnection()
+            def valores4 = "select ingrsldo + sldopgad por_cobrar, ingrsldo + sldofnal total\n" +
+                    "from saldos(1, '${nuevaFecha}', '${nuevaFecha}');"
+            def res7 = cn7.rows(valores4.toString())
+            println("res7 " + res7)
+//            valoresCobrar.add(res7[0])
+//            totalPorCobrar += res7[0].por_cobrar.toDouble()
+//            totalTotal += res7[0].total.toDouble()
+//            totalIngreso += it.vlor.toDouble()
+//
+//            meses.add('"' + it.fcha + '"')
+
+
+            data.put((r.fcha), r.vlor + "_" + res9[k].vlor + "_" + res7[0].por_cobrar + "_" + res7[0].total)
+
+        }
+
+        res9.each{
+            totalEgreso += it.vlor.toDouble()
+        }
+
+        def promedioIngreso = totalIngreso == 0 ? 0 : totalIngreso/res8.size()
+        def promedioEgreso = totalEgreso == 0 ? 0 : totalEgreso/res8.size()
+        def promedioPorCobrar = totalPorCobrar == 0 ? 0 : totalPorCobrar/res8.size()
+        def promedioTotal = totalTotal == 0 ? 0 : totalTotal/res8.size()
+
+//        println("pi " + promedioIngreso)
+//        println("pe " + promedioEgreso)
+//        println("pc " + promedioPorCobrar)
+//        println("pt " + promedioTotal)
+
+//        println("v " + valoresCobrar)
+//        println("sql: " + valores2)
+//        println("sql: " + valores3)
+//        println("meses " + meses)
+
+//        def jsonGraph = new JsonBuilder(resGraph)
+//
+//        return [jsonGraph : jsonGraph.toString(), ingresos: res8, egresos:res9, desde: desde, hasta: hasta, meses:meses,cobrar: valoresCobrar, promedioIngreso: promedioIngreso, promedioEgreso: promedioEgreso, promedioPorCobrar: promedioPorCobrar, promedioTotal: promedioTotal]
+
+
+
+        println("data " + data)
+
+        def respuesta = "${data as JSON}"
+
+        render respuesta
     }
 
     def listaCondominos() {
