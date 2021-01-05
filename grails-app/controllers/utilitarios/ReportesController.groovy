@@ -1832,7 +1832,7 @@ class ReportesController extends Shield{
     }
 
     def ingresosEgresos () {
-        println("params " + params)
+        println "ingresosEgresos params: $params"
 
         def valoresCobrar = []
         def totalIngreso = 0
@@ -1903,7 +1903,7 @@ class ReportesController extends Shield{
     }
 
     def ingresosEgresosNuevo () {
-//        println("params " + params)
+        println "ingresosEgresosNuevo params: $params"
 
         def valoresCobrar = []
         def totalIngreso = 0
@@ -1918,16 +1918,24 @@ class ReportesController extends Shield{
         def hasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
         def cn8 = dbConnectionService.getConnection()
-        def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, substr(pagofcha::varchar, 6, 2) mes, substr(pagofcha::varchar, 1, 4) anio from aportes(1, '${desde}','${hasta}') group by 2,3,4 order by 3;"
+        def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '||substr(pagofcha::varchar, 1, 4) fcha, " +
+                "substr(pagofcha::varchar, 6, 2) mes, substr(pagofcha::varchar, 1, 4) anio " +
+                "from aportes(1, '${desde}','${hasta}') group by 2,3,4 order by 4,3"
+        println "sql2: $valores2"
         def res8 = cn8.rows(valores2.toString())
 
         def cn9 = dbConnectionService.getConnection()
-        def valores3 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4) fcha,\n" +
-                "substr(egrsfcha::varchar, 6, 2)\n" +
-                "from egresos(1, '${desde}','${hasta}')  \n" +
-                "group by 2,3 order by 3;"
+        def valores3 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '||substr(egrsfcha::varchar, 1, 4) fcha," +
+                "substr(egrsfcha::varchar, 6, 2) from egresos(1, '${desde}','${hasta}') group by 2,3 order by 3"
+        println "sql3: $valores3"
         def res9 = cn9.rows(valores3.toString())
 
+        if(res8.size() > res9.size()) {
+            res8.pop()
+        }
+        println "--> res8: ${res8.size()} > res9: ${res9.size()}"
+        println "res8: ${res8}"
+        println "res9: ${res9}"
 
         res8.eachWithIndex{ r, k->
             def nuevaFecha
@@ -1981,19 +1989,22 @@ class ReportesController extends Shield{
         //grafico ingresos y egresos
 
         def cn8 = dbConnectionService.getConnection()
-        def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, substr(pagofcha::varchar, 6, 2) mes, substr(pagofcha::varchar, 1, 4) anio from aportes(1, '${desde}','${hasta}') group by 2,3,4 order by 3;"
+        def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '||substr(pagofcha::varchar, 1, 4) fcha, " +
+                "substr(pagofcha::varchar, 6, 2) mes, substr(pagofcha::varchar, 1, 4) anio " +
+                "from aportes(1, '${desde}','${hasta}') group by 2,3,4 order by 4, 3"
         def res8 = cn8.rows(valores2.toString())
 
         def cn9 = dbConnectionService.getConnection()
-        def valores3 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4) fcha,\n" +
-                "substr(egrsfcha::varchar, 6, 2)\n" +
-                "from egresos(1, '${desde}','${hasta}')  \n" +
-                "group by 2,3 order by 3;"
+        def valores3 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '||substr(egrsfcha::varchar, 1, 4) fcha, " +
+                "substr(egrsfcha::varchar, 6, 2) from egresos(1, '${desde}','${hasta}') group by 2,3 order by 3"
         def res9 = cn9.rows(valores3.toString())
 
 //        println("sql " + valores2)
 //        println("sql " + valores3)
 //        println("res 8 " + res8)
+        if(res8.size() > res9.size()) {
+            res8.pop()
+        }
 
         res8.eachWithIndex{ r, k->
 
