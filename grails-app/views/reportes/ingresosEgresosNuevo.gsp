@@ -123,28 +123,32 @@
                                     backgroundColor: "rgba(55, 160, 235, 0.7)",
                                     borderWidth: 2,
 //                                    stack: 'Stack 0',
-                                    data: ingresos
+                                    data: ingresos,
+                                    fill: false
                                 },
                                 {
                                     label: ["Egresos"],
                                     backgroundColor: "rgba(120, 200, 215, 0.7)",
                                     borderWidth: 2,
 //                                    stack: 'Stack 0',
-                                    data: egresos
+                                    data: egresos,
+                                    fill: false
                                 },
                                 {
                                     label: ["Por Cobrar"],
                                     backgroundColor: "rgba(225, 58, 55, 0.7)",
                                     borderWidth:  2,
 //                                    stack: 'Stack 0',
-                                    data: cobrar
+                                    data: cobrar,
+                                    fill: false
                                 },
                                 {
                                     label: ["Total"],
                                     backgroundColor: "rgba(225, 150, 10, 0.7)",
                                     borderWidth:  2,
 //                                    stack: 'Stack 0',
-                                    data: totales
+                                    data: totales,
+                                    fill: false
                                 }
                             ]
                         },
