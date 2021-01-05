@@ -124,7 +124,9 @@
                                     borderWidth: 2,
 //                                    stack: 'Stack 0',
                                     data: ingresos,
-                                    fill: false
+                                    fill: false,
+//                                    pointBorderColor: "rgba(55, 160, 235, 0.7)",
+                                    borderColor: "rgba(55, 160, 235, 0.7)"
                                 },
                                 {
                                     label: ["Egresos"],
@@ -132,7 +134,8 @@
                                     borderWidth: 2,
 //                                    stack: 'Stack 0',
                                     data: egresos,
-                                    fill: false
+                                    fill: false,
+                                    borderColor: "rgba(120, 200, 215, 0.7)"
                                 },
                                 {
                                     label: ["Por Cobrar"],
@@ -140,7 +143,8 @@
                                     borderWidth:  2,
 //                                    stack: 'Stack 0',
                                     data: cobrar,
-                                    fill: false
+                                    fill: false,
+                                    borderColor: "rgba(225, 58, 55, 0.7)"
                                 },
                                 {
                                     label: ["Total"],
@@ -148,7 +152,8 @@
                                     borderWidth:  2,
 //                                    stack: 'Stack 0',
                                     data: totales,
-                                    fill: false
+                                    fill: false,
+                                    borderColor: "rgba(225, 150, 10, 0.7)"
                                 }
                             ]
                         },
