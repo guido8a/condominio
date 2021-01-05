@@ -1902,13 +1902,66 @@ class ReportesController extends Shield{
     }
 
     def ingresosEgresosNuevo () {
-        println("params " + params)
+//        println("params " + params)
 
-        return [desde:params.desde, hasta: params.hasta]
+        def valoresCobrar = []
+        def totalIngreso = 0
+        def totalEgreso = 0
+        def totalPorCobrar = 0
+        def totalTotal = 0
+        def meses = []
+
+        def condominio = Condominio.get(session.condominio.id)
+
+        def desde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
+        def hasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
+
+        def cn8 = dbConnectionService.getConnection()
+        def valores2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, substr(pagofcha::varchar, 6, 2) mes, substr(pagofcha::varchar, 1, 4) anio from aportes(1, '${desde}','${hasta}') group by 2,3,4 order by 3;"
+        def res8 = cn8.rows(valores2.toString())
+
+        def cn9 = dbConnectionService.getConnection()
+        def valores3 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4) fcha,\n" +
+                "substr(egrsfcha::varchar, 6, 2)\n" +
+                "from egresos(1, '${desde}','${hasta}')  \n" +
+                "group by 2,3 order by 3;"
+        def res9 = cn9.rows(valores3.toString())
+
+
+        res8.eachWithIndex{ r, k->
+            def nuevaFecha
+
+            if(r.mes.toInteger() == 2){
+                nuevaFecha = "28-" + r.mes + "-" + r.anio
+            }else{
+                nuevaFecha = "30-" + r.mes + "-" + r.anio
+            }
+
+            def cn7 = dbConnectionService.getConnection()
+            def valores4 = "select ingrsldo + sldopgad por_cobrar, ingrsldo + sldofnal total\n" +
+                    "from saldos(1, '${nuevaFecha}', '${nuevaFecha}');"
+            def res7 = cn7.rows(valores4.toString())
+
+            totalPorCobrar += (res7[0]?.por_cobrar?.toDouble() ?: 0)
+            totalTotal += (res7[0]?.total?.toDouble() ?: 0)
+            totalIngreso += (r?.vlor?.toDouble() ?: 0)
+        }
+
+        res9.each{
+            totalEgreso += (it?.vlor?.toDouble() ?: 0)
+        }
+
+        def promedioIngreso = totalIngreso == 0 ? 0 : totalIngreso/res8.size()
+        def promedioEgreso = totalEgreso == 0 ? 0 : totalEgreso/res8.size()
+        def promedioPorCobrar = totalPorCobrar == 0 ? 0 : totalPorCobrar/res8.size()
+        def promedioTotal = totalTotal == 0 ? 0 : totalTotal/res8.size()
+
+
+        return [desde:params.desde, hasta: params.hasta, promedioIngreso: promedioIngreso, promedioEgreso: promedioEgreso, promedioPorCobrar: promedioPorCobrar, promedioTotal: promedioTotal]
     }
 
     def ingresoEgresoData_ajax(){
-        println("params id" + params)
+//        println("params id" + params)
 
         def valoresCobrar = []
         def totalIngreso = 0
@@ -1937,8 +1990,8 @@ class ReportesController extends Shield{
                 "group by 2,3 order by 3;"
         def res9 = cn9.rows(valores3.toString())
 
-        println("sql " + valores2)
-        println("sql " + valores3)
+//        println("sql " + valores2)
+//        println("sql " + valores3)
 //        println("res 8 " + res8)
 
         res8.eachWithIndex{ r, k->
@@ -1957,9 +2010,9 @@ class ReportesController extends Shield{
             def res7 = cn7.rows(valores4.toString())
 //            println("res7 " + res7)
 //            valoresCobrar.add(res7[0])
-//            totalPorCobrar += res7[0].por_cobrar.toDouble()
-//            totalTotal += res7[0].total.toDouble()
-//            totalIngreso += it.vlor.toDouble()
+            totalPorCobrar += (res7[0]?.por_cobrar?.toDouble() ?: 0)
+            totalTotal += (res7[0]?.total?.toDouble() ?: 0)
+            totalIngreso += (r?.vlor?.toDouble() ?: 0)
 //
 //            meses.add('"' + it.fcha + '"')
 
@@ -1968,32 +2021,7 @@ class ReportesController extends Shield{
 
         }
 
-//        res9.each{
-//            totalEgreso += it.vlor.toDouble()
-//        }
-//
-//        def promedioIngreso = totalIngreso == 0 ? 0 : totalIngreso/res8.size()
-//        def promedioEgreso = totalEgreso == 0 ? 0 : totalEgreso/res8.size()
-//        def promedioPorCobrar = totalPorCobrar == 0 ? 0 : totalPorCobrar/res8.size()
-//        def promedioTotal = totalTotal == 0 ? 0 : totalTotal/res8.size()
-
-//        println("pi " + promedioIngreso)
-//        println("pe " + promedioEgreso)
-//        println("pc " + promedioPorCobrar)
-//        println("pt " + promedioTotal)
-
-//        println("v " + valoresCobrar)
-//        println("sql: " + valores2)
-//        println("sql: " + valores3)
-//        println("meses " + meses)
-
-//        def jsonGraph = new JsonBuilder(resGraph)
-//
-//        return [jsonGraph : jsonGraph.toString(), ingresos: res8, egresos:res9, desde: desde, hasta: hasta, meses:meses,cobrar: valoresCobrar, promedioIngreso: promedioIngreso, promedioEgreso: promedioEgreso, promedioPorCobrar: promedioPorCobrar, promedioTotal: promedioTotal]
-
-
-
-        println("data " + data)
+//        println("data " + data)
 
         def respuesta = "${data as JSON}"
 

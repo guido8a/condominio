@@ -193,15 +193,15 @@
                 <i class="fa fa-cog fa-5x"></i><br/>
                 Cálculo Nueva Alícuota
             </a>
-            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#ingresosEgresos2"
-               title="Ingresos y egresos">
-                <i class="fa fa-line-chart fa-5x"></i><br/>
-                Ingresos y egresos mesuales
-            </a>
+            %{--<a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#ingresosEgresos2"--}%
+               %{--title="Ingresos y egresos">--}%
+                %{--<i class="fa fa-line-chart fa-5x"></i><br/>--}%
+                %{--Ingresos y egresos mesuales--}%
+            %{--</a>--}%
             <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#ingresosEgresos3"
                title="Ingresos y egresos">
                 <i class="fa fa-line-chart fa-5x"></i><br/>
-                Ingresos y egresos x mes 2
+                Ingresos y egresos x mes
             </a>
         </p>
     </div>
