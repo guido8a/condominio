@@ -3958,7 +3958,8 @@ class ReportesController extends Shield{
         def pdfw = PdfWriter.getInstance(document, baos);
 
         HeaderFooter footer1 = new HeaderFooter(
-        new Phrase("Manuel Larrea N. 13-45 y Antonio Ante / Teléfonos troncal: (593-2)252 7077 - 254 9222 - 254 9020 - 254 9163 / www.pichincha.gob.ec", new Font(fontTitulo8)), false);
+        new Phrase("Sistema de Administración de Condominios                                                          " +
+                "           www.tedein.com.ec", new Font(fontTitulo8)), false);
         footer1.setBorder(Rectangle.NO_BORDER);
         footer1.setBorder(Rectangle.TOP);
         footer1.setAlignment(Element.ALIGN_CENTER);
