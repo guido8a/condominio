@@ -1910,9 +1910,9 @@ class ReportesController extends Shield{
         Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
         Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
         Font fontTitle1 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
-        Font fontTh = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
         Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
-        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
         Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
 
@@ -1952,20 +1952,22 @@ class ReportesController extends Shield{
             def fondo = new Color(240, 248, 250);
             def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
 
-            def tablaHeaderDetalles = new PdfPTable(4);
+            def tablaHeaderDetalles = new PdfPTable(5);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([15, 25,25, 35]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([7, 15, 20, 20, 34]))
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Nombre", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Apellido", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Teléfono", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Firma", fontTh), frmtHd)
-            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
+            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT,
+                                                              valign: Element.ALIGN_MIDDLE, colspan: 5, pl: 0])
         }
 
-        tablaDetalles = new PdfPTable(4);
+        tablaDetalles = new PdfPTable(5);
         tablaDetalles.setWidthPercentage(100);
-        tablaDetalles.setWidths(arregloEnteros([15,25,25,35]))
+        tablaDetalles.setWidths(arregloEnteros([7, 15, 20, 20, 34]))
         tablaDetalles.setSpacingAfter(1f);
 
 
@@ -1979,6 +1981,7 @@ class ReportesController extends Shield{
             addCellTabla2(tablaDetalles, new Paragraph(persona.departamento, fontTd10), frmtDato)
             addCellTabla2(tablaDetalles, new Paragraph(persona.nombre, fontTd10), frmtDato)
             addCellTabla2(tablaDetalles, new Paragraph(persona.apellido, fontTd10), frmtDato)
+            addCellTabla2(tablaDetalles, new Paragraph('', fontTd10), frmtDato)
             addCellTabla2(tablaDetalles, new Paragraph('', fontTd10), frmtDato)
         }
 
@@ -4267,7 +4270,7 @@ class ReportesController extends Shield{
         response.getOutputStream().write(b)
     }
 
-    def pdfEgresosProveedor (desde,hasta) {
+    def pdfEgresosProveedor (desde, hasta) {
 
         println("params egp " + params)
 
@@ -4282,7 +4285,8 @@ class ReportesController extends Shield{
 
         println "fechas: '${fechaDesde}','${fechaHasta}'"
 
-        def sql3 = "select prve, sum(egrsvlor) from egresos(${session.condominio.id}, '${fechaDesde.format('yyyy-MM-dd')}', '${fechaHasta.format('yyyy-MM-dd')}'::date) group by prve order by 2 desc;"
+        def sql3 = "select prve, sum(egrsvlor) from egresos(${session.condominio.id}, '${fechaDesde.format('yyyy-MM-dd')}', " +
+                "'${fechaHasta.format('yyyy-MM-dd')}'::date) group by prve order by 2 desc;"
         def cn3 = dbConnectionService.getConnection()
         def egresos = cn3.rows(sql3.toString())
 
@@ -4351,7 +4355,7 @@ class ReportesController extends Shield{
         printHeaderDetalle()
 
         egresos.each {egreso ->
-            if(egreso.sum > 0) {
+            if(egreso.sum > 10) {
                 addCellTabla(tablaDetalles, new Paragraph(egreso.prve, fontTd10), frmtDato)
                 addCellTabla(tablaDetalles, new Paragraph(egreso.sum.toString(), fontTd10), frmtNmro)
             } else {
@@ -4362,7 +4366,7 @@ class ReportesController extends Shield{
 
         if(suma > 0) {
             addCellTabla(tablaDetalles, new Paragraph("Otros: ${cuenta} proveedores menores cuyo valor no supera los " +
-                    "\$${params.valor.toInteger()}, con promedio individual: " +
+                    "\$10.00, con promedio individual: " +
                     "\$${Math.round(suma/cuenta *100)/100}", fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(suma.toString(), fontTd10), frmtNmro)
         }

@@ -118,7 +118,7 @@
 <div class="row">
     <div class="col-md-12 col-xs-5">
         <p>
-            <a href="#" class="link btn btn-success btn-ajax" id="btnCondominos" data-toggle="modal" data-target="#gestorContable">
+            <a href="#" class="link btn btn-success btn-ajax" id="btnCondominos" data-toggle="modal">
                 <i class="fa fa-building-o fa-5x"></i><br/>
                 Listado de Condóminos
             </a>
