@@ -2053,17 +2053,17 @@ class ReportesController extends Shield{
 
         Document document
         document = new Document(PageSize.A4);
-        document.setMargins(50, 30, 30, 28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        document.setMargins(50, 30, 100, 45)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos);
         document.resetHeader()
         document.resetFooter()
 
-        HeaderFooter footer1 = new HeaderFooter(
-                new Phrase("Manuel Larrea N. 13-45 y Antonio Ante / Teléfonos troncal: (593-2)252 7077 - 254 9222 - 254 9020 - 254 9163 / www.pichincha.gob.ec", new Font(fontTd)), false);
-        footer1.setBorder(Rectangle.NO_BORDER);
-        footer1.setBorder(Rectangle.TOP);
-        footer1.setAlignment(Element.ALIGN_CENTER);
-        document.setFooter(footer1);
+//        HeaderFooter footer1 = new HeaderFooter(
+//                new Phrase("Manuel Larrea N. 13-45 y Antonio Ante / Teléfonos troncal: (593-2)252 7077 - 254 9222 - 254 9020 - 254 9163 / www.pichincha.gob.ec", new Font(fontTd)), false);
+//        footer1.setBorder(Rectangle.NO_BORDER);
+//        footer1.setBorder(Rectangle.TOP);
+//        footer1.setAlignment(Element.ALIGN_CENTER);
+//        document.setFooter(footer1);
 
         document.open();
         PdfContentByte cb = pdfw.getDirectContent();
@@ -2073,13 +2073,13 @@ class ReportesController extends Shield{
         document.addAuthor("Condominio");
         document.addCreator("Tedein SA");
 
-        Paragraph preface = new Paragraph();
-        addEmptyLine(preface, 1);
-        preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
-        preface.add(new Paragraph("LISTA DE CONDÓMINOS", fontTitulo));
-        addEmptyLine(preface, 1);
-        document.add(preface);
+//        Paragraph preface = new Paragraph();
+//        addEmptyLine(preface, 1);
+//        preface.setAlignment(Element.ALIGN_CENTER);
+//        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+//        preface.add(new Paragraph("LISTA DE CONDÓMINOS", fontTitulo));
+//        addEmptyLine(preface, 1);
+//        document.add(preface);
 
         PdfPTable tablaDetalles = null
 
@@ -2125,10 +2125,16 @@ class ReportesController extends Shield{
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
-        response.setContentType("application/pdf")
-        response.setHeader("Content-disposition", "attachment; filename=" + name)
-        response.setContentLength(b.length)
-        response.getOutputStream().write(b)
+
+
+        encabezadoYnumeracion(b, session.condominio.nombre,"LISTADO DE CONDÓMINOS",
+                "listadoCondominos_${new Date().format("dd-MM-yyyy")}.pdf")
+
+
+//        response.setContentType("application/pdf")
+//        response.setHeader("Content-disposition", "attachment; filename=" + name)
+//        response.setContentLength(b.length)
+//        response.getOutputStream().write(b)
 
     }
 
@@ -3931,12 +3937,23 @@ class ReportesController extends Shield{
         def titulo = new Color(30, 140, 160)
         Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
         Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
+        Font fontTitulo8 = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL, titulo);
 
         def baos = new ByteArrayOutputStream()
+
         Document document
         document = new Document(PageSize.A4);
 
         def pdfw = PdfWriter.getInstance(document, baos);
+
+        HeaderFooter footer1 = new HeaderFooter(
+        new Phrase("Manuel Larrea N. 13-45 y Antonio Ante / Teléfonos troncal: (593-2)252 7077 - 254 9222 - 254 9020 - 254 9163 / www.pichincha.gob.ec", new Font(fontTitulo8)), false);
+        footer1.setBorder(Rectangle.NO_BORDER);
+        footer1.setBorder(Rectangle.TOP);
+        footer1.setAlignment(Element.ALIGN_CENTER);
+//        footer1.setPageNumber(1)
+        document.setFooter(footer1);
+
         document.open();
 
         PdfContentByte cb = pdfw.getDirectContent();
