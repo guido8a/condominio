@@ -29,6 +29,7 @@ class ReportesService {
     }
 
     def numeracion(x, y) {
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
         PdfPTable table = new PdfPTable(2);
         table.setTotalWidth(327);
         table.setLockedWidth(true);
@@ -36,7 +37,8 @@ class ReportesService {
         table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         table.addCell("");
         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-        table.addCell(String.format("Página %d de %d", x, y));
+//        table.addCell(String.format("Página %d de %d", x, y));
+        table.addCell(new Paragraph(String.format("Página %d de %d", x, y), fontTd10) );
         return table;
     }
 
