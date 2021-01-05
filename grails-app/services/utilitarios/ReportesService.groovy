@@ -29,7 +29,7 @@ class ReportesService {
     }
 
     def numeracion(x, y) {
-        Font fontTd10 = new Font(Font.TIMES_ROMAN, 12, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
         PdfPTable table = new PdfPTable(2);
         table.setTotalWidth(327);
         table.setLockedWidth(true);
