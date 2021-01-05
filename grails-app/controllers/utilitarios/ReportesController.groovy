@@ -3021,6 +3021,12 @@ class ReportesController extends Shield{
 
         def condominio = Condominio.get(session.condominio.id)
         def personas = Persona.findAllByCondominio(condominio)
+//        try {
+//            personas = Persona.findAllByCondominio(condominio)
+//        }
+//        catch(Exception e) {
+//            println "error: ${e}"
+//        }
 
         def obras = Obra.findAllByPersonaInListAndFechaBetween(personas, fechaDesde, fechaHasta, [sort: 'fecha'])
 
