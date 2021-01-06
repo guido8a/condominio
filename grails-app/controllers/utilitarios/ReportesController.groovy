@@ -4139,8 +4139,8 @@ class ReportesController extends Shield{
         def pdfw = PdfWriter.getInstance(document, baos);
 
         HeaderFooter footer1 = new HeaderFooter(
-        new Phrase("Sistema de Administración de Condominios                                                          " +
-                "           www.tedein.com.ec", new Font(fontTitulo8)), false);
+        new Phrase("Sistema de Administración de Condominios " + " " * 144 +
+                "www.tedein.com.ec/vinedos", new Font(fontTitulo8)), false);
         footer1.setBorder(Rectangle.NO_BORDER);
         footer1.setBorder(Rectangle.TOP);
         footer1.setAlignment(Element.ALIGN_CENTER);
@@ -5485,27 +5485,29 @@ class ReportesController extends Shield{
         addCellTabla(table, new Paragraph("Apellido", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Propiedades y Alícuotas", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Total", fontTh), frmtHd)
+        addCellTabla(table, new Paragraph("Nueva", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Actual", fontTh), frmtHd)
-        addCellTabla(table, new Paragraph("Cuota", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Dif.", fontTh), frmtHd)
         table.setHeaderRows(1);
 
         if(res){
-            res.eachWithIndex { fila,k ->
+            res.eachWithIndex { fila, k ->
 
-                addCellTabla(table, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
-                addCellTabla(table, new Paragraph(fila.prsnnmbr.toString(), fontTd10), frmtDato)
-                addCellTabla(table, new Paragraph(fila.prsnapll, fontTd10), frmtDato)
-                addCellTabla(table, new Paragraph(fila.propdtlle, fontTd8), frmtDato)
-                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.proptotl, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
-                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.prsnalct, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
-                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.alctvlor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
-                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.diff, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+//                if(fila.diff != 0) {    /* para que impriman sólo los reg. con diferencias */
+                    addCellTabla(table, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
+                    addCellTabla(table, new Paragraph(fila.prsnnmbr.toString(), fontTd10), frmtDato)
+                    addCellTabla(table, new Paragraph(fila.prsnapll, fontTd10), frmtDato)
+                    addCellTabla(table, new Paragraph(fila.propdtlle, fontTd8), frmtDato)
+                    addCellTabla(table, new Paragraph(g.formatNumber(number:fila.proptotl, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+                    addCellTabla(table, new Paragraph(g.formatNumber(number:fila.prsnalct, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+                    addCellTabla(table, new Paragraph(g.formatNumber(number:fila.alctvlor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+                    addCellTabla(table, new Paragraph(g.formatNumber(number:fila.diff, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
 
-                total += (fila.proptotl ? fila.proptotl.toDouble() : 0)
-                totalAli += (fila.prsnalct ? fila.prsnalct.toDouble() : 0)
-                totalValor += (fila.alctvlor ? fila.alctvlor.toDouble() : 0)
-                totalDif += (fila.diff ? fila.diff.toDouble() : 0)
+                    total += (fila.proptotl ? fila.proptotl.toDouble() : 0)
+                    totalAli += (fila.prsnalct ? fila.prsnalct.toDouble() : 0)
+                    totalValor += (fila.alctvlor ? fila.alctvlor.toDouble() : 0)
+                    totalDif += (fila.diff ? fila.diff.toDouble() : 0)
+//                }
             }
         } else {
             Paragraph preface2 = new Paragraph();
