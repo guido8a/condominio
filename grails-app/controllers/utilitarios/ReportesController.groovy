@@ -2534,8 +2534,10 @@ class ReportesController extends Shield{
         }
 
 
+
         if (contador > 1) {
             def baos = new ByteArrayOutputStream()
+
             Document document
             document = new Document(PageSize.A4);
 
@@ -2552,8 +2554,24 @@ class ReportesController extends Shield{
                     PdfImportedPage page = pdfw.getImportedPage(reader, i);
                     //añade página
                     cb.addTemplate(page, 0, 0);
+                    reportesService.numeracion(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
                 }
             }
+
+
+//            PdfReader reader2 = new PdfReader(baos.toByteArray());
+//            for (int i = 1; i <= reader2.getNumberOfPages(); i++) {
+//                document.newPage();
+//                PdfImportedPage page = pdfw.getImportedPage(reader2, i);
+//                cb.addTemplate(page, 0, 0);
+////                def en = reportesService.encabezado(tituloReporte, subtitulo, fontTitulo16, fontTitulo)
+//                reportesService.numeracion(i,reader2.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+////                document.add(en)
+//            }
+
+
+
+
             document.close();
             b = baos.toByteArray();
         } else {
