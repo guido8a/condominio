@@ -111,25 +111,6 @@
                 }
             }
         });
-
-//        $chart.bind('jqplotDataHighlight', function (ev, seriesIndex, pointIndex, data) {
-//            var $this = $(this);
-//            $this.qtip({
-//                show     : {
-//                    ready : true
-//                },
-//                position : {
-//                    my     : 'bottom center',  // Position my top left...
-//                    at     : 'top center', // at the bottom right of...
-//                    target : "mouse",
-//                    adjust : {
-//                        mouse : false
-//                    }
-//                },
-//                content  : " " + data[1]
-//            });
-//        })
-
     }
 
 </script>

@@ -1393,7 +1393,7 @@ class ReportesController extends Shield{
 
         Document document
         document = new Document(PageSize.A4);
-        document.setMargins(74, 60, 30, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        document.setMargins(74, 60, 100, 55)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos);
         document.resetHeader()
         document.resetFooter()
@@ -1407,12 +1407,12 @@ class ReportesController extends Shield{
         document.addAuthor("Condominio");
         document.addCreator("Tedein SA");
 
-        Paragraph preface = new Paragraph();
-        addEmptyLine(preface, 1);
-        preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTitle));
-        addEmptyLine(preface, 2);
-        document.add(preface);
+//        Paragraph preface = new Paragraph();
+//        addEmptyLine(preface, 1);
+//        preface.setAlignment(Element.ALIGN_CENTER);
+//        preface.add(new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTitle));
+//        addEmptyLine(preface, 2);
+//        document.add(preface);
 
         /***************SQL************************/
         def txfcin = fechaInicio.format('yyyy-MM-dd')
@@ -1554,14 +1554,12 @@ class ReportesController extends Shield{
                     )
             );
 
-
             JFreeChart barChart2 = ChartFactory.createBarChart("", "", "Egresos", dataSetBarras2, PlotOrientation.VERTICAL, true, true, false);
             barChart2.setTitle(
                     new org.jfree.chart.title.TextTitle("Egresos (Anterior/Actual)",
                             new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15)
                     )
             );
-
 
             JFreeChart barChart3 = ChartFactory.createBarChart("","", "", dataSetBarras3 , PlotOrientation.VERTICAL, true, true, false);
             barChart3.setTitle(
@@ -1615,7 +1613,6 @@ class ReportesController extends Shield{
             barChart3.draw(graphics2d3, rectangle2d3);
             chartRetrasados.draw(graphics2dRetrasados, rectangle2dRetrasados);
 
-
             graphics2dSinRecepcion.dispose();
             graphics2d4.dispose();
             graphics2d5.dispose();
@@ -1627,7 +1624,7 @@ class ReportesController extends Shield{
             def posyGraf1 = 350
             def posyGraf55 = 150
 
-            def posyGraf2 = 600
+            def posyGraf2 = 570
             def posyGraf3 = 380
             def posyGraf4 = 150
 
@@ -1651,10 +1648,13 @@ class ReportesController extends Shield{
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
-        response.setContentType("application/pdf")
-        response.setHeader("Content-disposition", "attachment; filename=" + name)
-        response.setContentLength(b.length)
-        response.getOutputStream().write(b)
+
+        encabezadoYnumeracion(b, session.condominio.nombre, "Aportes y Gastos",   "aportesGastos_${new Date().format("dd-MM-yyyy")}.pdf")
+
+//        response.setContentType("application/pdf")
+//        response.setHeader("Content-disposition", "attachment; filename=" + name)
+//        response.setContentLength(b.length)
+//        response.getOutputStream().write(b)
     }
 
     def detalle() {
@@ -2484,9 +2484,12 @@ class ReportesController extends Shield{
     }
 
     def rpInforme() {
-        println "rpInforme --> params: $params"
+//        println "rpInforme --> params: $params"
         def desde = new Date().parse("dd-MM-yyyy", params.desde)
         def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
+
+        def titulo = new Color(30, 140, 160)
+        Font fontTitulo8 = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL, titulo);
 
         def rp = new ByteArrayOutputStream()
         def ob = new ByteArrayOutputStream()
@@ -2533,8 +2536,6 @@ class ReportesController extends Shield{
             contador++
         }
 
-
-
         if (contador > 1) {
             def baos = new ByteArrayOutputStream()
 
@@ -2542,6 +2543,15 @@ class ReportesController extends Shield{
             document = new Document(PageSize.A4);
 
             def pdfw = PdfWriter.getInstance(document, baos);
+
+            HeaderFooter footer1 = new HeaderFooter(
+                    new Phrase("Sistema de Administración de Condominios                                                          " +
+                            "           www.tedein.com.ec", new Font(fontTitulo8)), false);
+            footer1.setBorder(Rectangle.NO_BORDER);
+            footer1.setBorder(Rectangle.TOP);
+            footer1.setAlignment(Element.ALIGN_CENTER);
+            document.setFooter(footer1);
+
             document.open();
             PdfContentByte cb = pdfw.getDirectContent();
 
@@ -2558,20 +2568,6 @@ class ReportesController extends Shield{
                 }
             }
 
-
-//            PdfReader reader2 = new PdfReader(baos.toByteArray());
-//            for (int i = 1; i <= reader2.getNumberOfPages(); i++) {
-//                document.newPage();
-//                PdfImportedPage page = pdfw.getImportedPage(reader2, i);
-//                cb.addTemplate(page, 0, 0);
-////                def en = reportesService.encabezado(tituloReporte, subtitulo, fontTitulo16, fontTitulo)
-//                reportesService.numeracion(i,reader2.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
-////                document.add(en)
-//            }
-
-
-
-
             document.close();
             b = baos.toByteArray();
         } else {
@@ -2584,9 +2580,8 @@ class ReportesController extends Shield{
         response.getOutputStream().write(b)
     }
 
-
     def rpBalance() {
-        println "rpBalance --> params: $params"
+//        println "rpBalance --> params: $params"
         def desde = new Date().parse("dd-MM-yyyy", params.desde)
         def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
         byte[] b
@@ -2603,17 +2598,17 @@ class ReportesController extends Shield{
 
     def balance() {
 
-        println("balance " + params)
+//        println("balance " + params)
 
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
         def fechaAntes = new Date().parse("dd-MM-yyyy", params.desde) - 1
 
-        println "balance fechas: '${fechaDesde}','${fechaHasta}' antes: ${fechaAntes.format('yyyy-MM-dd')}"
+//        println "balance fechas: '${fechaDesde}','${fechaHasta}' antes: ${fechaAntes.format('yyyy-MM-dd')}"
 
         def sql2 = "select sum(pagovlor) vlor, substr(pagofcha::varchar, 1,7) fcha, tpapdscr " +
                 "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') group by 2,3 order by 2"
-        println "$sql2"
+//        println "$sql2"
 
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
@@ -2621,11 +2616,11 @@ class ReportesController extends Shield{
 
         sql2 = "select sum(egrsvlor) vlor, substr(egrsfcha::varchar, 1,7) fcha, tpgsdscr " +
                 "from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') group by 2,3 order by 2"
-        println "egrs: $sql2"
+//        println "egrs: $sql2"
         def egresos = cn2.rows(sql2.toString())
 
         def totalEgresos = (egresos.vlor.sum() ?: 0)
-        println "tot egresos: $totalEgresos"
+//        println "tot egresos: $totalEgresos"
 
         sql2 = "select * from saldos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}')"
         def saldo = cn2.rows(sql2.toString())[0].sldoinic
@@ -2646,7 +2641,6 @@ class ReportesController extends Shield{
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
 
         def fondoTotal = new Color(240, 240, 240);
-
 
         Document document
         document = new Document(PageSize.A4);
@@ -2778,7 +2772,6 @@ class ReportesController extends Shield{
     def pdfBalance() {
 //        println "pdfBalance $desde, hasta: $hasta"
 
-
         def desde = new Date().parse("dd-MM-yyyy", params.desde)
         def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
 
@@ -2787,7 +2780,7 @@ class ReportesController extends Shield{
 
         def fechaAntes = desde - 1
 
-        println "balance fechas: '${fechaDesde}','${fechaHasta}' antes: ${fechaAntes.format('yyyy-MM-dd')}"
+//        println "balance fechas: '${fechaDesde}','${fechaHasta}' antes: ${fechaAntes.format('yyyy-MM-dd')}"
 
 //        def sql2 = "select sum(pagovlor) vlor, substr(pagofcha::varchar, 1,7) fcha, tpapdscr " +
         def sql2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, " +
@@ -3274,7 +3267,7 @@ class ReportesController extends Shield{
 
         Document document
         document = new Document(PageSize.A4.rotate());
-        document.setMargins(74, 60, 30, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        document.setMargins(40, 40, 40, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos);
         document.resetHeader()
         document.resetFooter()
@@ -3304,7 +3297,6 @@ class ReportesController extends Shield{
         Graphics2D graphics2d2 = template2.createGraphics(width2, height, new DefaultFontMapper());
 
         Rectangle2D rectangle2dSinRecepcion = new Rectangle2D.Double(0, 0, width2, height);
-
 
         def cn8 = dbConnectionService.getConnection()
         def valores2 = "select * from ingr_egrs(${params.anio}, ${condominio?.id});"
@@ -3343,7 +3335,7 @@ class ReportesController extends Shield{
         dataset.addSeries(series2);
 
         JFreeChart chartSinRecepcion = ChartFactory.createXYLineChart(
-                "Ingresos y Egresos ${params.anio}",
+                "Ingresos y Egresos",
                 "Meses",
                 "Valores",
                 dataset,
@@ -3362,17 +3354,68 @@ class ReportesController extends Shield{
 
         graphics2d2.dispose();
 
-        def posyGraf3 = 100
-        contentByte.addTemplate(template2, 10, posyGraf3);
+        def posyGraf3 =100
+        contentByte.addTemplate(template2, 0, posyGraf3);
 
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
+
+//        encabezadoYnumeracionRotado(b, session.condominio.nombre, "Ingresos y Egresos", "ingresosEgresos_${new Date().format("dd-MM-yyyy")}.pdf")
         response.setContentType("application/pdf")
         response.setHeader("Content-disposition", "attachment; filename=" + "graficoIngresosEgresos")
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
 
+    }
+
+    def encabezadoYnumeracionRotado (f, tituloReporte, subtitulo, nombreReporte) {
+
+        def titulo = new Color(30, 140, 160)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
+        Font fontTitulo8 = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL, titulo);
+
+        def baos = new ByteArrayOutputStream()
+
+        Document document
+        document = new Document(PageSize.A4.rotate());
+
+        def pdfw = PdfWriter.getInstance(document, baos);
+
+        HeaderFooter footer1 = new HeaderFooter(
+                new Phrase("Sistema de Administración de Condominios                                                          " +
+                        "           www.tedein.com.ec", new Font(fontTitulo8)), false);
+        footer1.setBorder(Rectangle.NO_BORDER);
+        footer1.setBorder(Rectangle.TOP);
+        footer1.setAlignment(Element.ALIGN_CENTER);
+        document.setFooter(footer1);
+
+        document.open();
+
+        PdfContentByte cb = pdfw.getDirectContent();
+
+        PdfReader reader = new PdfReader(f);
+        for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+            document.newPage();
+            PdfImportedPage page = pdfw.getImportedPage(reader, i);
+            cb.addTemplate(page, 0, 0);
+            def en = reportesService.encabezado(tituloReporte, subtitulo, fontTitulo16, fontTitulo)
+//            if(nombreReporte == 'pagosPendientes') {
+//                reportesService.numeracion3(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+//            } else {
+            reportesService.numeracion(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+//            }
+            document.add(en)
+        }
+
+        document.close();
+        byte[] b = baos.toByteArray();
+
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=" + nombreReporte)
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
     }
 
 
@@ -4119,7 +4162,7 @@ class ReportesController extends Shield{
         pdfw.close()
         byte[] b = baos.toByteArray();
 
-        encabezadoYnumeracion(b, session.condominio.nombre, "Deudas pendientes totales al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}",
+                encabezadoYnumeracion(b, session.condominio.nombre, "Deudas pendientes totales al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}",
                 "pagosPendientesTotales_${new Date().format("dd-MM-yyyy")}.pdf")
 
     }
@@ -4144,7 +4187,6 @@ class ReportesController extends Shield{
         footer1.setBorder(Rectangle.NO_BORDER);
         footer1.setBorder(Rectangle.TOP);
         footer1.setAlignment(Element.ALIGN_CENTER);
-//        footer1.setPageNumber(1)
         document.setFooter(footer1);
 
         document.open();
@@ -4155,9 +4197,7 @@ class ReportesController extends Shield{
         for (int i = 1; i <= reader.getNumberOfPages(); i++) {
             document.newPage();
             PdfImportedPage page = pdfw.getImportedPage(reader, i);
-//                page.setMatrix(1f,2f,3f,4f,5f,6f)
             cb.addTemplate(page, 0, 0);
-//                getHeaderTable(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
             def en = reportesService.encabezado(tituloReporte, subtitulo, fontTitulo16, fontTitulo)
 //            if(nombreReporte == 'pagosPendientes') {
 //                reportesService.numeracion3(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)

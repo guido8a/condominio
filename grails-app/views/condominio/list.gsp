@@ -361,7 +361,6 @@
         });
     });
 
-
     function createContextMenu(node) {
         var $tr = $(node);
         var items = {
@@ -480,6 +479,16 @@
             }
         };
 
+        var empleados = {
+            label            : "Empleados",
+            icon             : "fa fa-users",
+            separator_before : true,
+            action           : function ($element) {
+                var id = $element.data("id");
+                location.href="${createLink(controller: 'empleado', action: 'list')}?id=" + id
+            }
+        };
+
         var eliminar = {
             label            : "Eliminar",
             icon             : "fa fa-trash-o",
@@ -490,45 +499,20 @@
             }
         };
 
-
-
-
-        %{--if('${session.perfil.codigo}' == 'ADC'){--}%
-        %{--items.ver = ver;--}%
-        %{--items.editar = editar;--}%
-        %{--items.eliminar = eliminar;--}%
-        %{--} else {--}%
-        %{--items.ver = ver;--}%
-        %{--}--}%
-
-
         items.ver = ver;
         items.editar = editar;
         items.pago = pago;
         items.monitorio = monitorio;
         items.cobro = cobro;
-//        if(verificarTalonario(id)){
-//            items.talonario = talonario;
-//        }
+
         if(com == 'S'){
             items.talonario = talonario;
         }
+        items.empleados = empleados;
         items.eliminar = eliminar;
-
 
         return items
     }
-
-    %{--function verificarTalonario(id){--}%
-        %{--$.ajax({--}%
-            %{--type: 'POST'--}%
-            %{--url:'${}'--}%
-        %{--})--}%
-
-    %{--}--}%
-
-
-
 
 </script>
 

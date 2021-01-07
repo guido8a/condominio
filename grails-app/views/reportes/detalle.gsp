@@ -54,9 +54,7 @@
     $("#btnImprimir").click(function () {
         var mes = $("#mesesHasta").val();
         var anio = $("#anio").val();
-
         location.href='${createLink(controller: 'reportes', action: 'imprimirReporteGeneral')}?mes=' + mes + "&anio=" + anio
-
     });
 
     $(".btnBuscar").click(function () {
