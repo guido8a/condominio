@@ -13,6 +13,11 @@ class RolPagos {
     Date fechaDesde
     Date fechaHasta
     double sueldoAnterior
+    String bono
+    double bonoValor
+    double totalIngresos
+    double totalEgresos
+    double valor
 
 
     static mapping = {
@@ -33,6 +38,11 @@ class RolPagos {
             fechaDesde column: 'rlpgfcds'
             fechaHasta column: 'rlpgfchs'
             sueldoAnterior column: 'rlpgslan'
+            bono column: 'rlpgbono'
+            bonoValor column: 'rlpgbnvl'
+            totalIngresos column: 'rlpgttin'
+            totalEgresos column: 'rlpgtteg'
+            valor column: 'rlpgvlor'
         }
     }
     static constraints = {
@@ -46,5 +56,11 @@ class RolPagos {
         fechaDesde(blank:true, nullable: true)
         fechaHasta(blank:true, nullable: true)
         sueldoAnterior(blank:true, nullable: true)
+        bono(blank:true, nullable: true)
+        bonoValor(blank:true, nullable: true)
+        totalIngresos(blank:true, nullable: true)
+        totalEgresos(blank:true, nullable: true)
+        valor(blank:true, nullable: true)
+
     }
 }

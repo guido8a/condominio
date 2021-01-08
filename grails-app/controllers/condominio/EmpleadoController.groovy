@@ -95,6 +95,10 @@ class EmpleadoController {
      * @render ERROR*[mensaje] cuando no se encontró el elemento
      */
     def form_ajax() {
+
+        println("params "  + params)
+
+        def condominio = Condominio.get(params.condominio)
         def empleadoInstance = new Empleado()
         if(params.id) {
             empleadoInstance = Empleado.get(params.id)
@@ -104,7 +108,7 @@ class EmpleadoController {
             }
         }
         empleadoInstance.properties = params
-        return [empleadoInstance: empleadoInstance]
+        return [empleadoInstance: empleadoInstance, condominio: condominio]
     } //form para cargar con ajax en un dialog
 
     /**
@@ -112,21 +116,25 @@ class EmpleadoController {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-        def empleadoInstance = new Empleado()
-        if(params.id) {
-            empleadoInstance = Empleado.get(params.id)
-            if(!empleadoInstance) {
-                render "ERROR*No se encontró Empleado."
-                return
-            }
+
+        def empleado
+
+        if(params.id){
+            empleado = Empleado.get(params.id)
+        }else{
+            empleado = new Empleado()
+            empleado.fechaRegistro = new Date()
         }
-        empleadoInstance.properties = params
-        if(!empleadoInstance.save(flush: true)) {
-            render "ERROR*Ha ocurrido un error al guardar Empleado: " + renderErrors(bean: empleadoInstance)
-            return
+
+        empleado.properties = params
+
+        if(!empleado.save(flush:true)){
+            println("error al guardar el empleado " + empleado.errors)
+            render "no"
+        }else{
+            render "ok"
         }
-        render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Empleado exitosa."
-        return
+
     } //save para grabar desde ajax
 
     /**
