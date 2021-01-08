@@ -71,6 +71,8 @@ class ReportesController extends Shield{
     def dbConnectionService
     def reportesService
 
+    def tx_footer = "Sistema de Administración de Condominios " + " " * 144 + "www.tedein.com.ec/vinedos"
+
     def index() {
         def cn = dbConnectionService.getConnection()
         def sql = 'select distinct cast (extract(year from pagofcpg) as INT) from pago order by 1;'
@@ -2544,9 +2546,9 @@ class ReportesController extends Shield{
 
             def pdfw = PdfWriter.getInstance(document, baos);
 
-            HeaderFooter footer1 = new HeaderFooter(
-                    new Phrase("Sistema de Administración de Condominios                                                          " +
-                            "           www.tedein.com.ec", new Font(fontTitulo8)), false);
+//            println "footer: $tx_footer"
+            
+            HeaderFooter footer1 = new HeaderFooter( new Phrase(tx_footer, new Font(fontTitulo8)), false);
             footer1.setBorder(Rectangle.NO_BORDER);
             footer1.setBorder(Rectangle.TOP);
             footer1.setAlignment(Element.ALIGN_CENTER);
@@ -4181,9 +4183,12 @@ class ReportesController extends Shield{
 
         def pdfw = PdfWriter.getInstance(document, baos);
 
+        HeaderFooter footer1 = new HeaderFooter( new Phrase(tx_footer, new Font(fontTitulo8)), false);
+/*
         HeaderFooter footer1 = new HeaderFooter(
         new Phrase("Sistema de Administración de Condominios " + " " * 144 +
                 "www.tedein.com.ec/vinedos", new Font(fontTitulo8)), false);
+*/
         footer1.setBorder(Rectangle.NO_BORDER);
         footer1.setBorder(Rectangle.TOP);
         footer1.setAlignment(Element.ALIGN_CENTER);
