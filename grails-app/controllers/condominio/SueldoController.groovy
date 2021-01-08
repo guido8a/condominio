@@ -159,7 +159,7 @@ class SueldoController {
         def s = Sueldo.get(1)
         def p = RolPagos.findAllBySueldo(s)
 
-        println("p " + p)
+        println "--> p $p"
 
 
         if(params.id){

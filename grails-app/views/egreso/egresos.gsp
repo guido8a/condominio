@@ -27,6 +27,10 @@
     <h3>Egresos</h3>
 </div>
 
+<div style="float: right; margin-top: -30px; height: 30px;" class="badge badge-secondary" >
+    <input type="checkbox" value="Saldo > 0" id="saldo"> Mostrar saldos pendientes
+</div>
+
 <div class="row">
     <div class="row-fluid">
         <div style="margin-left: -20px;">
@@ -92,8 +96,10 @@
                     </g:link>
                 </div>
             </div>
-            <div style="float: left; margin-top: 20px; height: 33px;" class="badge badge-secondary" >
-                <input type="checkbox" value="Saldo > 0" id="saldo"> Saldos > 0
+            <div style="float: left; margin-top: 18px; height: 33px;" class="col-md-1" >
+                <g:link controller="proveedor" action="list" class="btn btn-warning" title="Costos bancarios">
+                    <i class="fa fa-building-o"> $</i>
+                </g:link>
             </div>
 
         </div>
