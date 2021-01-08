@@ -156,8 +156,15 @@ class SueldoController {
         def existe = Sueldo.findAllByEmpleadoAndAnio(empleado, anio)
         def sueldo
 
+        def s = Sueldo.get(1)
+        def p = RolPagos.findAllBySueldo(s)
+
+        println("p " + p)
+
+
         if(params.id){
             sueldo = Sueldo.get(params.id)
+            println("id " + sueldo)
             def rol = RolPagos.findAllBySueldo(sueldo)
             println("rol " + rol)
             if(rol){
