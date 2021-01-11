@@ -200,7 +200,7 @@
             label: "Nómina",
             icon: "fa fa-file",
             action : function ($element) {
-                location.href="${createLink(controller: 'empleado', action: 'nomina')}?id=" + id
+                location.href="${createLink(controller: 'empleado', action: 'nomina')}?id=" + id + "&con=" + '${condominio?.id}'
             }
         };
 

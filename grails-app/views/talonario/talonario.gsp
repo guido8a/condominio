@@ -137,7 +137,7 @@
         var $form = $("#frmTalonario");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
-            $btn.replaceWith(spinner);
+//            $btn.replaceWith(spinner);
             openLoader("Guardando...");
             $.ajax({
                 type    : "POST",

@@ -101,8 +101,8 @@
         var $form = $("#frmCondominio");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
-            $btn.replaceWith(spinner);
-            openLoader("Guardando Condominio");
+//            $btn.replaceWith(spinner);
+            openLoader("Guardando...");
             $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
@@ -114,7 +114,7 @@
                         if (parts[0] == "SUCCESS") {
                             location.reload(true);
                         } else {
-                            spinner.replaceWith($btn);
+//                            spinner.replaceWith($btn);
                             return false;
                         }
                     }, 1000);

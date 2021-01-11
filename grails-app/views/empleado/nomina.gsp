@@ -26,13 +26,13 @@
         </a>
     </div>
     <div class="btn-group">
-        <a href="#" class="btn btn-warning btnNuevo"> <i class="fa fa-user "></i> Sueldo anual
+        <a href="#" class="btn btn-warning btnMensual"> <i class="fa fa-user "></i> Sueldo mensual
         </a>
-        <a href="#" class="btn btn-info btnNuevo"> <i class="fa fa-user "></i> Décimo tercero
+        <a href="#" class="btn btn-info btnTercero"> <i class="fa fa-user "></i> Décimo tercero
         </a>
-        <a href="#" class="btn btn-primary btnNuevo"> <i class="fa fa-user "></i> Décimo cuarto
+        <a href="#" class="btn btn-primary btnCuarto"> <i class="fa fa-user "></i> Décimo cuarto
         </a>
-        <a href="#" class="btn btn-success btnNuevo"> <i class="fa fa-user "></i> Vacaciones
+        <a href="#" class="btn btn-success btnVacaciones"> <i class="fa fa-user "></i> Vacaciones
         </a>
     </div>
 </div>
@@ -47,7 +47,7 @@
     <div class="linea"></div>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%">
         <tr>
-            <th class="alinear" style="width: 29%">Tipo</th>
+            <th class="alinear" style="width: 21%">Tipo</th>
             <th class="alinear" style="width: 11%">Sueldo</th>
             <th class="alinear" style="width: 11%">Fondo de reserva</th>
             <th class="alinear" style="width: 11%">Iess</th>
@@ -55,6 +55,7 @@
             <th class="alinear" style="width: 11%">Bono Valor</th>
             <th class="alinear" style="width: 8%">Fecha Inicio</th>
             <th class="alinear" style="width: 8%">Fecha Fin</th>
+            <th class="alinear" style="width: 8%">Total</th>
 
         </tr>
     </table>
@@ -63,7 +64,7 @@
         <table class="table-bordered table-condensed table-hover" width="100%">
             <g:each in="${roles}" var="rol">
                 <tr data-id="${rol?.id}">
-                    <td style="width: 29%">${rol?.salario?.descripcion}</td>
+                    <td style="width: 21%">${rol?.salario?.descripcion}</td>
                     <td class="derecha" style="width: 11%">${g.formatNumber(number: rol?.sueldo?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
                     <td class="derecha" style="width: 11%">${g.formatNumber(number: rol?.fondoReserva ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
                     <td class="derecha" style="width: 11%">${g.formatNumber(number: rol?.iess ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
@@ -71,6 +72,8 @@
                     <td class="derecha" style="width: 11%">${g.formatNumber(number: rol?.bonoValor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
                     <td style="width: 8%">${rol?.fechaDesde?.format("dd-MM-yyyy")}</td>
                     <td style="width: 8%">${rol?.fechaHasta?.format("dd-MM-yyyy")}</td>
+                    <td class="derecha" style="width: 8%">${g.formatNumber(number: rol?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
+
                 </tr>
             </g:each>
         </table>
@@ -206,7 +209,7 @@
         };
 
         items.editar = editar;
-        items.sueldo = sueldo;
+//        items.sueldo = sueldo;
 
         return items
     }
