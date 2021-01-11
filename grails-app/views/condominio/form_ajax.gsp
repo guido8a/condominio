@@ -13,7 +13,7 @@
             
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'tipoCondominio', 'error')} required">
                 <span class="grupo">
-                    <label for="tipoCondominio" class="col-md-2 control-label">
+                    <label for="tipoCondominio" class="col-md-3 control-label">
                         Tipo Condominio
                     </label>
                     <div class="col-md-7">
@@ -25,7 +25,7 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'nombre', 'error')} required">
                 <span class="grupo">
-                    <label for="nombre" class="col-md-2 control-label">
+                    <label for="nombre" class="col-md-3 control-label">
                         Nombre
                     </label>
                     <div class="col-md-7">
@@ -37,7 +37,7 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'ruc', 'error')} ">
                 <span class="grupo">
-                    <label for="ruc" class="col-md-2 control-label">
+                    <label for="ruc" class="col-md-3 control-label">
                         Ruc
                     </label>
                     <div class="col-md-7">
@@ -48,7 +48,7 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'canton', 'error')} required">
                 <span class="grupo">
-                    <label for="canton" class="col-md-2 control-label">
+                    <label for="canton" class="col-md-3 control-label">
                         Cantón
                     </label>
                     <div class="col-md-7">
@@ -60,7 +60,7 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'direccion', 'error')} ">
                 <span class="grupo">
-                    <label for="direccion" class="col-md-2 control-label">
+                    <label for="direccion" class="col-md-3 control-label">
                         Dirección
                     </label>
                     <div class="col-md-7">
@@ -72,10 +72,10 @@
             
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'telefono', 'error')} ">
                 <span class="grupo">
-                    <label for="telefono" class="col-md-2 control-label">
+                    <label for="telefono" class="col-md-3 control-label">
                         Teléfono
                     </label>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <g:textField name="telefono" maxlength="63" class="digits form-control" value="${condominioInstance?.telefono}"/>
                     </div>
                     
@@ -85,7 +85,7 @@
                     <label for="email" class="col-md-2 control-label">
                         Email
                     </label>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="input-group"><span class="input-group-addon"><i class="fa fa-envelope"></i></span><g:field type="email" name="email" maxlength="63" class="allCaps form-control" value="${condominioInstance?.email}"/></div>
                     </div>
 
@@ -102,10 +102,10 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'fechaInicio', 'error')} required">
                 <span class="grupo">
-                    <label for="fechaInicio" class="col-md-2 control-label">
+                    <label for="fechaInicio" class="col-md-3 control-label">
                         Fecha Inicio
                     </label>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <elm:datepicker name="fechaInicio" title="Fecha de inicio"  class="datepicker form-control required" value="${condominioInstance?.fechaInicio}"  />
                     </div>
                 </span>
@@ -113,7 +113,7 @@
                     <label for="fechaFin" class="col-md-2 control-label">
                         Fecha Fin
                     </label>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <elm:datepicker name="fechaFin" title="Fecha de fin"  class="datepicker form-control" value="${condominioInstance?.fechaFin}" default="none" noSelection="['': '']" />
                     </div>
 
@@ -122,19 +122,19 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'numeroViviendas', 'error')} required">
                 <span class="grupo">
-                    <label for="numeroViviendas" class="col-md-2 control-label">
-                        Número Viviendas
+                    <label for="numeroViviendas" class="col-md-3 control-label">
+                        Número de Viviendas
                     </label>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <g:textField name="numeroViviendas" value="${condominioInstance.numeroViviendas}" class="digits form-control required" required=""/>
                     </div>
                 </span>
 
                 <span class="grupo">
-                    <label for="sigla" class="col-md-2 control-label">
+                    <label for="sigla" class="col-md-3 control-label">
                         Sigla
                     </label>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <g:textField name="sigla" maxlength="8" class="allCaps form-control" value="${condominioInstance?.sigla}"/>
                     </div>
                 </span>
@@ -142,10 +142,10 @@
 
             <div class="form-group keeptogether ${hasErrors(bean: condominioInstance, field: 'comprobante', 'error')} required">
                 <span class="grupo">
-                    <label for="numeroViviendas" class="col-md-2 control-label">
-                        Comprobantes del sistema
+                    <label for="numeroViviendas" class="col-md-8 control-label">
+                        Comprobantes de Pago generados por el Sistema
                     </label>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <g:select name="comprobante" from="${['S': 'SI', 'N': 'NO']}" optionValue="value" optionKey="key" value="${condominioInstance?.comprobante}" class="form-control"/>
                     </div>
                 </span>

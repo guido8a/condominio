@@ -93,12 +93,14 @@
 
                         <g:if test="${condominio.Comprobante.findByPago(pagoUsuario)}">
                             <g:if test="${condominio.Comprobante.findByPago(pagoUsuario).estado == 'A'}">
-                                <a href="#" class="btn btn-warning btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}" data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Imprimir comprobante anulado">
+                                <a href="#" class="btn btn-warning btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}"
+                                   data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Imprimir comprobante anulado">
                                     <i class="fa fa-print"></i>
                                 </a>
                             </g:if>
                             <g:else>
-                                <a href="#" class="btn btn-info btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}" data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Imprimir comprobante">
+                                <a href="#" class="btn btn-info btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}"
+                                   data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Imprimir comprobante">
                                     <i class="fa fa-print"></i>
                                 </a>
                             </g:else>
@@ -135,7 +137,7 @@
             },
             success:function(msg){
                 if(msg == 'ok'){
-                    location.href = "${g.createLink(controller: 'reportes', action: 'comprobante')}?comp=" + comprobante;
+                    location.href = "${g.createLink(controller: 'reportes2', action: 'comprobante')}?comp=" + comprobante;
                     setTimeout(function() {
                         location.reload(true);
                     }, 3000);

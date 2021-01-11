@@ -201,7 +201,7 @@
             <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#ingresosEgresos3"
                title="Ingresos y egresos">
                 <i class="fa fa-line-chart fa-5x"></i><br/>
-                Ingresos y egresos x mes
+                Ingresos y egresos mensuales
             </a>
         </p>
     </div>

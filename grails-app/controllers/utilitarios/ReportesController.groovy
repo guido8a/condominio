@@ -5289,148 +5289,148 @@ class ReportesController extends Shield{
         response.getOutputStream().write(b)
     }
 
-    def comprobante() {
-
-        def baos = new ByteArrayOutputStream()
-        def condominio = Condominio.get(session.condominio.id)
-        def comprobante = Comprobante.get(params.comp)
-
-        def titulo = new Color(40, 140, 180)
-        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
-        Font nota = new Font(Font.TIMES_ROMAN, 8, Font.ITALIC)
-        Font notaTitulo = new Font(Font.TIMES_ROMAN, 11, Font.BOLD)
-        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
-        Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
-        Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
-        Font fontTd10 = new Font(Font.TIMES_ROMAN, 8, Font.BOLD);
-        Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
-        Font fontTdTiny = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL, Color.RED);
-        Font fontTdRojo = new Font(Font.TIMES_ROMAN, 14, Font.BOLD, Color.RED);
-        def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
-        def frmtHd2 = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE, colspan: 2]
-        def frmtDato = [border: Color.WHITE, bwb: 0.1, bcb: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_LEFT]
-        def frmtHdr = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
-        def frmtDatoDere = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
-
-        def fondoTotal = new Color(240, 240, 240);
-
-        def prmsTdNoBorder = [border: Color.WHITE, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
-        def prmsTdBorder = [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
-        def prmsNmBorder = [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
-
-        Document document
-        document = new Document(PageSize.A5.rotate());
-        document.setMargins(74, 60, 30, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
-        def pdfw = PdfWriter.getInstance(document, baos);
-        document.resetHeader()
-        document.resetFooter()
-
-        document.open();
-
-        PdfContentByte cb = pdfw.getDirectContent();
-        document.addTitle("Solicitud");
-        document.addSubject("Generado por el sistema Condominio");
-        document.addKeywords("reporte, condominio, pagos");
-        document.addAuthor("Condominio");
-        document.addCreator("Tedein SA");
-
-        def tablaCabecera = new PdfPTable(3);
-        tablaCabecera.setWidthPercentage(100);
-        tablaCabecera.setWidths(arregloEnteros([65,5,30]))
-
-        addCellTabla(tablaCabecera, new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTh), prmsTdNoBorder)
-        addCellTabla(tablaCabecera, new Paragraph("", fontTh), prmsTdNoBorder)
-        addCellTabla(tablaCabecera, new Paragraph("COMPROBANTE DE PAGO", fontTd10), frmtHd)
-
-        addCellTabla(tablaCabecera, new Paragraph("Calle: " + condominio?.direccion, fontTd), prmsTdNoBorder)
-        addCellTabla(tablaCabecera, new Paragraph("", fontTh), prmsTdNoBorder)
-        addCellTabla(tablaCabecera, new Paragraph(comprobante?.numero?.toString(), fontTdTiny), frmtHd)
-
-        addCellTabla(tablaCabecera, new Paragraph("Teléfono: " + condominio?.telefono?.toString(), fontTd), prmsTdNoBorder)
-        addCellTabla(tablaCabecera, new Paragraph("", fontTh), prmsTdNoBorder)
-        addCellTabla(tablaCabecera, new Paragraph("R.U.C. " + condominio?.ruc?.toString(), fontTd), frmtHd)
-
-        document.add(tablaCabecera)
-
-        Paragraph preface = new Paragraph();
-        addEmptyLine(preface, 2);
-        document.add(preface);
-
-        def tablaDatos = new PdfPTable(4);
-        tablaDatos.setWidthPercentage(100);
-        tablaDatos.setWidths(arregloEnteros([22,40,20, 18]))
-
-        addCellTabla(tablaDatos, new Paragraph("Recibí de : ", fontTd10), frmtHd)
-        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.nombre + " " + comprobante?.pago?.ingreso?.persona?.apellido , fontTd), frmtHd)
-        addCellTabla(tablaDatos, new Paragraph("RUC/CI : " , fontTd10), frmtHd)
-        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.ruc?.toString() ?: '', fontTd), frmtHd)
-
-        addCellTabla(tablaDatos, new Paragraph("Departamento : ", fontTd10), frmtHd)
-        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.departamento?.toString() ?: '', fontTd), frmtHd)
-        addCellTabla(tablaDatos, new Paragraph("Teléfono : " , fontTd10), frmtHd)
-        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.telefono?.toString() ?: '', fontTd), frmtHd)
-
-        document.add(tablaDatos)
-
-        Paragraph preface2 = new Paragraph();
-        addEmptyLine(preface2, 2);
-        document.add(preface2);
-
-        def tablaValores = new PdfPTable(4);
-        tablaValores.setWidthPercentage(100);
-        tablaValores.setWidths(arregloEnteros([23,43,14,20]))
-
-        addCellTabla(tablaValores, new Paragraph("Por concepto de : ", fontTd10), frmtHd)
-        addCellTabla(tablaValores, new Paragraph(comprobante?.pago?.observaciones ?: '', fontTd), frmtHd)
-        addCellTabla(tablaValores, new Paragraph("", fontTh), frmtHd)
-        addCellTabla(tablaValores, new Paragraph(g.formatNumber(number:comprobante?.pago?.valor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtHd)
-
-        addCellTabla(tablaValores, new Paragraph("", fontTd), prmsTdNoBorder)
-        addCellTabla(tablaValores, new Paragraph("", fontTd), prmsTdNoBorder)
-        addCellTabla(tablaValores, new Paragraph("Total \$ ", fontTd10), frmtHd)
-        addCellTabla(tablaValores, new Paragraph(g.formatNumber(number:comprobante?.pago?.valor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtHd)
-
-        document.add(tablaValores)
-
-        if(comprobante.estado == 'A'){
-            Paragraph h1 = new Paragraph();
-            addEmptyLine(h1, 1);
-            document.add(h1)
-
-            Paragraph h = new Paragraph();
-            h.setAlignment(Element.ALIGN_CENTER);
-            h.add(new Paragraph("ANULADO", fontTdRojo))
-            document.add(h)
-        }
-
-        Paragraph a = new Paragraph();
-        addEmptyLine(a, comprobante?.estado == 'A' ? 2 : 4);
-
-        document.add(a)
-        Paragraph f = new Paragraph();
-        f.setAlignment(Element.ALIGN_CENTER);
-        f.add(new Paragraph("Ing. Guido Ochoa Moreno", info))
-        f.add(new Paragraph("ADMINISTRADOR", info))
-        f.add(new Paragraph("Cel: 0984916620, dpto. 214", info))
-        document.add(f)
-
-        Paragraph a1 = new Paragraph();
-        addEmptyLine(a1, 2);
-        document.add(a1)
-
-        Paragraph t4 = new Paragraph();
-        t4.setAlignment("Justify");
-        t4.add(new Paragraph("Nota: Sr. Copropietario y/o arrendatario pague su cuota condominal los 5 primeros días de cada mes, caso contrario se cobrará % intereses por mora, aprobado en la asamblea de Copropietarios.", nota))
-        document.add(t4)
-
-        document.close();
-        pdfw.close()
-        byte[] b = baos.toByteArray();
-        response.setContentType("application/pdf")
-        response.setHeader("Content-disposition", "attachment; filename=comprobantePago_${comprobante?.pago?.ingreso?.persona?.nombre + " " + comprobante?.pago?.ingreso?.persona?.apellido}_${new Date().format("dd-MM-yyyy")}")
-        response.setContentLength(b.length)
-        response.getOutputStream().write(b)
-    }
+//    def comprobante() {
+//
+//        def baos = new ByteArrayOutputStream()
+//        def condominio = Condominio.get(session.condominio.id)
+//        def comprobante = Comprobante.get(params.comp)
+//
+//        def titulo = new Color(40, 140, 180)
+//        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
+//        Font nota = new Font(Font.TIMES_ROMAN, 8, Font.ITALIC)
+//        Font notaTitulo = new Font(Font.TIMES_ROMAN, 11, Font.BOLD)
+//        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+//        Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
+//        Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
+//        Font fontTd10 = new Font(Font.TIMES_ROMAN, 8, Font.BOLD);
+//        Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
+//        Font fontTdTiny = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL, Color.RED);
+//        Font fontTdRojo = new Font(Font.TIMES_ROMAN, 14, Font.BOLD, Color.RED);
+//        def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+//        def frmtHd2 = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE, colspan: 2]
+//        def frmtDato = [border: Color.WHITE, bwb: 0.1, bcb: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_LEFT]
+//        def frmtHdr = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+//        def frmtDatoDere = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+//
+//        def fondoTotal = new Color(240, 240, 240);
+//
+//        def prmsTdNoBorder = [border: Color.WHITE, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+//        def prmsTdBorder = [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+//        def prmsNmBorder = [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+//
+//        Document document
+//        document = new Document(PageSize.A5.rotate());
+//        document.setMargins(74, 60, 30, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+//        def pdfw = PdfWriter.getInstance(document, baos);
+//        document.resetHeader()
+//        document.resetFooter()
+//
+//        document.open();
+//
+//        PdfContentByte cb = pdfw.getDirectContent();
+//        document.addTitle("Solicitud");
+//        document.addSubject("Generado por el sistema Condominio");
+//        document.addKeywords("reporte, condominio, pagos");
+//        document.addAuthor("Condominio");
+//        document.addCreator("Tedein SA");
+//
+//        def tablaCabecera = new PdfPTable(3);
+//        tablaCabecera.setWidthPercentage(100);
+//        tablaCabecera.setWidths(arregloEnteros([65,5,30]))
+//
+//        addCellTabla(tablaCabecera, new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTh), prmsTdNoBorder)
+//        addCellTabla(tablaCabecera, new Paragraph("", fontTh), prmsTdNoBorder)
+//        addCellTabla(tablaCabecera, new Paragraph("COMPROBANTE DE PAGO", fontTd10), frmtHd)
+//
+//        addCellTabla(tablaCabecera, new Paragraph("Calle: " + condominio?.direccion, fontTd), prmsTdNoBorder)
+//        addCellTabla(tablaCabecera, new Paragraph("", fontTh), prmsTdNoBorder)
+//        addCellTabla(tablaCabecera, new Paragraph(comprobante?.numero?.toString(), fontTdTiny), frmtHd)
+//
+//        addCellTabla(tablaCabecera, new Paragraph("Teléfono: " + condominio?.telefono?.toString(), fontTd), prmsTdNoBorder)
+//        addCellTabla(tablaCabecera, new Paragraph("", fontTh), prmsTdNoBorder)
+//        addCellTabla(tablaCabecera, new Paragraph("R.U.C. " + condominio?.ruc?.toString(), fontTd), frmtHd)
+//
+//        document.add(tablaCabecera)
+//
+//        Paragraph preface = new Paragraph();
+//        addEmptyLine(preface, 2);
+//        document.add(preface);
+//
+//        def tablaDatos = new PdfPTable(4);
+//        tablaDatos.setWidthPercentage(100);
+//        tablaDatos.setWidths(arregloEnteros([22,40,20, 18]))
+//
+//        addCellTabla(tablaDatos, new Paragraph("Recibí de : ", fontTd10), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.nombre + " " + comprobante?.pago?.ingreso?.persona?.apellido , fontTd), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph("RUC/CI : " , fontTd10), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.ruc?.toString() ?: '', fontTd), frmtHd)
+//
+//        addCellTabla(tablaDatos, new Paragraph("Departamento : ", fontTd10), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.departamento?.toString() ?: '', fontTd), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph("Teléfono : " , fontTd10), frmtHd)
+//        addCellTabla(tablaDatos, new Paragraph(comprobante?.pago?.ingreso?.persona?.telefono?.toString() ?: '', fontTd), frmtHd)
+//
+//        document.add(tablaDatos)
+//
+//        Paragraph preface2 = new Paragraph();
+//        addEmptyLine(preface2, 2);
+//        document.add(preface2);
+//
+//        def tablaValores = new PdfPTable(4);
+//        tablaValores.setWidthPercentage(100);
+//        tablaValores.setWidths(arregloEnteros([23,43,14,20]))
+//
+//        addCellTabla(tablaValores, new Paragraph("Por concepto de : ", fontTd10), frmtHd)
+//        addCellTabla(tablaValores, new Paragraph(comprobante?.pago?.observaciones ?: '', fontTd), frmtHd)
+//        addCellTabla(tablaValores, new Paragraph("", fontTh), frmtHd)
+//        addCellTabla(tablaValores, new Paragraph(g.formatNumber(number:comprobante?.pago?.valor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtHd)
+//
+//        addCellTabla(tablaValores, new Paragraph("", fontTd), prmsTdNoBorder)
+//        addCellTabla(tablaValores, new Paragraph("", fontTd), prmsTdNoBorder)
+//        addCellTabla(tablaValores, new Paragraph("Total \$ ", fontTd10), frmtHd)
+//        addCellTabla(tablaValores, new Paragraph(g.formatNumber(number:comprobante?.pago?.valor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtHd)
+//
+//        document.add(tablaValores)
+//
+//        if(comprobante.estado == 'A'){
+//            Paragraph h1 = new Paragraph();
+//            addEmptyLine(h1, 1);
+//            document.add(h1)
+//
+//            Paragraph h = new Paragraph();
+//            h.setAlignment(Element.ALIGN_CENTER);
+//            h.add(new Paragraph("ANULADO", fontTdRojo))
+//            document.add(h)
+//        }
+//
+//        Paragraph a = new Paragraph();
+//        addEmptyLine(a, comprobante?.estado == 'A' ? 2 : 4);
+//
+//        document.add(a)
+//        Paragraph f = new Paragraph();
+//        f.setAlignment(Element.ALIGN_CENTER);
+//        f.add(new Paragraph("Ing. Guido Ochoa Moreno", info))
+//        f.add(new Paragraph("ADMINISTRADOR", info))
+//        f.add(new Paragraph("Cel: 0984916620, dpto. 214", info))
+//        document.add(f)
+//
+//        Paragraph a1 = new Paragraph();
+//        addEmptyLine(a1, 2);
+//        document.add(a1)
+//
+//        Paragraph t4 = new Paragraph();
+//        t4.setAlignment("Justify");
+//        t4.add(new Paragraph("Nota: Sr. Copropietario y/o arrendatario pague su cuota condominal los 5 primeros días de cada mes, caso contrario se cobrará % intereses por mora, aprobado en la asamblea de Copropietarios.", nota))
+//        document.add(t4)
+//
+//        document.close();
+//        pdfw.close()
+//        byte[] b = baos.toByteArray();
+//        response.setContentType("application/pdf")
+//        response.setHeader("Content-disposition", "attachment; filename=comprobantePago_${comprobante?.pago?.ingreso?.persona?.nombre + " " + comprobante?.pago?.ingreso?.persona?.apellido}_${new Date().format("dd-MM-yyyy")}")
+//        response.setContentLength(b.length)
+//        response.getOutputStream().write(b)
+//    }
 
     def tablaSolicitudMonitorio_ajax(){
 
