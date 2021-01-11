@@ -187,7 +187,7 @@ class EmpleadoController {
 
         def empleado = Empleado.get(params.id)
         def sueldos = Sueldo.findAllByEmpleado(empleado)
-        def roles = RolPagos.findAllBySueldoInList(sueldos)
+        def roles = RolPagos.findAllBySueldoInList(sueldos).sort{it.salario.id}
 
         return[roles: roles, empleado: empleado]
     }
