@@ -33,6 +33,9 @@
         $("#anio").val(anio);
         $("#valor").val(valor);
         $("#id").val(sueldo);
+        $(".btnAgregar").addClass("hidden");
+        $(".btnGuardarS").removeClass("hidden");
+        $(".btnCancelar").removeClass("hidden");
     });
 
 </script>

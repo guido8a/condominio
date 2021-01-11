@@ -1,10 +1,10 @@
 
-<%@ page import="condominio.Sueldo" %>
+<%@ page import="utilitarios.Anio" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Lista de Sueldo</title>
+    <title>Lista de Años</title>
 </head>
 <body>
 
@@ -13,88 +13,70 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <a href="#" class="btn btn-default btnCrear">
-            <i class="fa fa-file-o"></i> Crear
+        <a href="#" class="btn btn-info btnCrear">
+            <i class="fa fa-file-o"></i> Agregar Año
         </a>
-    </div>
-    <div class="btn-group pull-right col-md-3">
-        <div class="input-group">
-            <input type="text" class="form-control input-search" placeholder="Buscar" value="${params.search}">
-            <span class="input-group-btn">
-                <g:link controller="sueldo" action="list" class="btn btn-default btn-search">
-                    <i class="fa fa-search"></i>&nbsp;
-                </g:link>
-            </span>
-        </div><!-- /input-group -->
     </div>
 </div>
 
 <table class="table table-condensed table-bordered table-striped table-hover">
     <thead>
     <tr>
-        
-        <th>Anio</th>
-        
-        <th>Empleado</th>
-        
-        <g:sortableColumn property="valor" title="Valor" />
-        
+        <th style="width: 50%">Año</th>
+        <th style="width: 50%">Sueldo Básico</th>
     </tr>
     </thead>
-    <tbody>
-    <g:if test="${sueldoInstanceCount > 0}">
-        <g:each in="${sueldoInstanceList}" status="i" var="sueldoInstance">
-            <tr data-id="${sueldoInstance.id}">
-                
-                <td>${sueldoInstance.anio}</td>
-                
-                <td><elm:textoBusqueda busca="${params.search}"><g:fieldValue bean="${sueldoInstance}" field="empleado"/></elm:textoBusqueda></td>
-                
-                <td><g:fieldValue bean="${sueldoInstance}" field="valor"/></td>
-                
-            </tr>
-        </g:each>
-    </g:if>
-    <g:else>
-        <tr class="danger">
-            <td class="text-center" colspan="3">
-                <g:if test="${params.search && params.search!= ''}">
-                    No se encontraron resultados para su búsqueda
-                </g:if>
-                <g:else>
-                    No se encontraron registros que mostrar
-                </g:else>
-            </td>
-        </tr>
-    </g:else>
-    </tbody>
 </table>
 
-<elm:pagination total="${sueldoInstanceCount}" params="${params}"/>
+<div class="" style="width: 100%;height: 350px; overflow-y: auto;float: right; margin-top: -15px" >
+    <table class="table-bordered table-condensed table-hover" width="100%">
+        <tbody>
+        <g:if test="${anioInstanceList.size() > 0}">
+            <g:each in="${anioInstanceList}" status="i" var="anioInstance">
+                <tr data-id="${anioInstance.id}">
+                    <td style="width: 50%">${anioInstance.numero}</td>
+                    <td style="width: 50%">${anioInstance?.sueldoBasico}</td>
+                </tr>
+            </g:each>
+        </g:if>
+        <g:else>
+            <tr class="danger">
+                <td class="text-center" colspan="3">
+                        No se encontraron registros que mostrar
+                </td>
+            </tr>
+        </g:else>
+        </tbody>
+    </table>
+</div>
+
 
 <script type="text/javascript">
     var id = null;
-    function submitFormSueldo() {
-        var $form = $("#frmSueldo");
+    function submitFormAnio() {
+        var $form = $("#frmAnio");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
-        $btn.replaceWith(spinner);
-            openLoader("Guardando Sueldo");
+            openLoader("Guardando...");
                     $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
                 success : function (msg) {
-                var parts = msg.split("*");
-                log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                setTimeout(function() {
-                    if (parts[0] == "SUCCESS") {
-                        location.reload(true);
-                    } else {
-                        spinner.replaceWith($btn);
-                        return false;
+                    closeLoader();
+                    var parts = msg.split("_");
+                if(parts[0] == 'ok'){
+                    log("Año guardado correctamente","success");
+                    setTimeout(function() {
+                        location.reload(true)
+                    }, 1000);
+                }else{
+                    if(parts[0] == 'er'){
+                        bootbox.alert("<i class='fa fa-exclamation-triangle fa-3x pull-left text-danger text-shadow'></i>" + parts[1])
+                    }else{
+                        log("Error al guardar el año","error");
                     }
-                }, 1000);
+                }
             }
         });
         } else {
@@ -105,7 +87,7 @@
         bootbox.dialog({
             title   : "Alerta",
             message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-            "¿Está seguro que desea eliminar el Sueldo seleccionado? Esta acción no se puede deshacer.</p>",
+            "¿Está seguro que desea eliminar el año seleccionado? Esta acción no se puede deshacer.</p>",
             buttons : {
                 cancelar : {
                     label     : "Cancelar",
@@ -117,10 +99,10 @@
                     label     : "<i class='fa fa-trash-o'></i> Eliminar",
                     className : "btn-danger",
                     callback  : function () {
-                        openLoader("Eliminando Sueldo");
+                        openLoader("Eliminando...");
                                 $.ajax({
                             type    : "POST",
-                            url     : '${createLink(controller:'sueldo', action:'delete_ajax')}',
+                            url     : '${createLink(controller:'anio', action:'delete_ajax')}',
                             data    : {
                                 id : itemId
                             },
@@ -146,13 +128,13 @@
         var data = id ? { id: id } : {};
                 $.ajax({
             type    : "POST",
-            url     : "${createLink(controller:'sueldo', action:'form_ajax')}",
+            url     : "${createLink(controller:'anio', action:'form_ajax')}",
             data    : data,
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
-                    title   : title + " Sueldo",
-                    
+                    title   : title + " año",
+                    class   : "modal-sm",
                     message : msg,
                     buttons : {
                         cancelar : {
@@ -166,7 +148,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitForm();
+                                return submitFormAnio();
                             } //callback
                         } //guardar
                     } //buttons
@@ -198,13 +180,14 @@
             var id = $element.data("id");
                                 $.ajax({
                 type    : "POST",
-                url     : "${createLink(controller:'sueldo', action:'show_ajax')}",
+                url     : "${createLink(controller:'anio', action:'show_ajax')}",
                 data    : {
                     id : id
                 },
                 success : function (msg) {
                     bootbox.dialog({
-                        title   : "Ver Sueldo",
+                        title   : "Ver",
+                        class   : "modal-sm",
                         message : msg,
                         buttons : {
                             ok : {

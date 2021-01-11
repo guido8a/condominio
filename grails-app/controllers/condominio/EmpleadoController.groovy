@@ -37,16 +37,16 @@ class EmpleadoController {
             list = c.list(params) {
                 or {
                     /* TODO: cambiar aqui segun sea necesario */
-                    
-                            ilike("apellido", "%" + params.search + "%")  
-                            ilike("cargo", "%" + params.search + "%")  
-                            ilike("cedula", "%" + params.search + "%")  
-                            ilike("direccion", "%" + params.search + "%")  
-                            ilike("mail", "%" + params.search + "%")  
-                            ilike("nombre", "%" + params.search + "%")  
-                            ilike("observaciones", "%" + params.search + "%")  
-                            ilike("sexo", "%" + params.search + "%")  
-                            ilike("telefono", "%" + params.search + "%")  
+
+                    ilike("apellido", "%" + params.search + "%")
+                    ilike("cargo", "%" + params.search + "%")
+                    ilike("cedula", "%" + params.search + "%")
+                    ilike("direccion", "%" + params.search + "%")
+                    ilike("mail", "%" + params.search + "%")
+                    ilike("nombre", "%" + params.search + "%")
+                    ilike("observaciones", "%" + params.search + "%")
+                    ilike("sexo", "%" + params.search + "%")
+                    ilike("telefono", "%" + params.search + "%")
                 }
             }
         } else {
@@ -69,7 +69,7 @@ class EmpleadoController {
         def empleados = Empleado.findAllByCondominio(condominio)
 
         return[empleados: empleados, condominio: condominio]
-     }
+    }
 
     /**
      * Acción llamada con ajax que muestra la información de un elemento particular
@@ -161,26 +161,35 @@ class EmpleadoController {
             return
         }
     } //delete para eliminar via ajax
-    
-            /**
-             * Acción llamada con ajax que valida que no se duplique la propiedad mail
-             * @render boolean que indica si se puede o no utilizar el valor recibido
-             */
-            def validar_unique_mail_ajax() {
-                params.mail = params.mail.toString().trim()
-                if (params.id) {
-                    def obj = Empleado.get(params.id)
-                    if (obj.mail.toLowerCase() == params.mail.toLowerCase()) {
-                        render true
-                        return
-                    } else {
-                        render Empleado.countByMailIlike(params.mail) == 0
-                        return
-                    }
-                } else {
-                    render Empleado.countByMailIlike(params.mail) == 0
-                    return
-                }
+
+    /**
+     * Acción llamada con ajax que valida que no se duplique la propiedad mail
+     * @render boolean que indica si se puede o no utilizar el valor recibido
+     */
+    def validar_unique_mail_ajax() {
+        params.mail = params.mail.toString().trim()
+        if (params.id) {
+            def obj = Empleado.get(params.id)
+            if (obj.mail.toLowerCase() == params.mail.toLowerCase()) {
+                render true
+                return
+            } else {
+                render Empleado.countByMailIlike(params.mail) == 0
+                return
             }
-            
+        } else {
+            render Empleado.countByMailIlike(params.mail) == 0
+            return
+        }
+    }
+
+    def nomina(){
+
+        def empleado = Empleado.get(params.id)
+        def sueldos = Sueldo.findAllByEmpleado(empleado)
+        def roles = RolPagos.findAllBySueldoInList(sueldos)
+
+        return[roles: roles, empleado: empleado]
+    }
+
 }

@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Lista de Empleados</title>
+    <title>Nómina</title>
     <style type="text/css">
 
     .alinear {
@@ -17,53 +17,62 @@
 
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <a href="${createLink(controller: "condominio", action: "list")}" class="btn btn-primary">
+        <a href="${createLink(controller: "empleado", action: "list")}" class="btn btn-primary">
             <i class="fa fa-arrow-left"></i> Regresar
         </a>
-        <a href="#" class="btn btn-info btnNuevo"> <i class="fa fa-user "></i> Nuevo empleado
+    </div>
+    <div class="btn-group">
+        <a href="#" class="btn btn-warning btnNuevo"> <i class="fa fa-user "></i> Sueldo anual
+        </a>
+        <a href="#" class="btn btn-info btnNuevo"> <i class="fa fa-user "></i> Décimo tercero
+        </a>
+        <a href="#" class="btn btn-primary btnNuevo"> <i class="fa fa-user "></i> Décimo cuarto
+        </a>
+        <a href="#" class="btn btn-success btnNuevo"> <i class="fa fa-user "></i> Vacaciones
         </a>
     </div>
 </div>
 
-<div style="text-align: center; margin-top: -30px;margin-bottom:20px">
-    <h3>Lista de empleados del condominio: ${condominio?.nombre}</h3>
+<div style="text-align: center; margin-top: 20px;margin-bottom:20px">
+    <h3>Nómina del empleado: ${empleado?.nombre + " " + empleado?.apellido}</h3>
 </div>
 
 <div style="margin-top: 30px; min-height: 350px" class="vertical-container">
-    <p class="css-vertical-text">Empleados</p>
+    <p class="css-vertical-text">Nómina</p>
 
     <div class="linea"></div>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%">
         <tr>
-            <th class="alinear" style="width: 12%">Nombre</th>
-            <th class="alinear" style="width: 12%">Apellido</th>
-            <th class="alinear" style="width: 7%">Cédula</th>
-            <th class="alinear" style="width: 19%">Dirección</th>
-            <th class="alinear" style="width: 7%">Teléfono</th>
-            <th class="alinear" style="width: 6%">Sexo</th>
-            <th class="alinear" style="width: 9%">Cargo</th>
+            <th class="alinear" style="width: 12%">Tipo</th>
+            <th class="alinear" style="width: 12%">Sueldo</th>
+            <th class="alinear" style="width: 7%">Sueldo en el Rol</th>
+            <th class="alinear" style="width: 19%">Fondo de reserva</th>
+            <th class="alinear" style="width: 7%">Iess</th>
+            <th class="alinear" style="width: 6%">Descuento</th>
+            <th class="alinear" style="width: 9%">Valor del descuento</th>
             <th class="alinear" style="width: 8%">Fecha Inicio</th>
             <th class="alinear" style="width: 8%">Fecha Fin</th>
-            <th class="alinear" style="width: 5%">Activo</th>
+            <th class="alinear" style="width: 5%">Bono</th>
+            <th class="alinear" style="width: 5%">Bono Valor</th>
         </tr>
     </table>
 
     <div class="" style="width: 100%;height: 350px; overflow-y: auto;float: right; margin-top: -15px" >
         <table class="table-bordered table-condensed table-hover" width="100%">
-            <g:each in="${empleados}" var="empleado">
-                <tr data-id="${empleado?.id}">
-                    <td style="width: 12%">${empleado?.nombre}</td>
-                    <td style="width: 12%">${empleado?.apellido}</td>
-                    <td style="width: 6%">${empleado?.cedula}</td>
-                    <td style="width: 19%">${empleado?.direccion}</td>
-                    <td style="width: 5%">${empleado?.telefono}</td>
-                    <td style="width: 5%">${empleado?.sexo == 'M' ? 'Masculino' : 'Femenino'}</td>
-                    <td style="width: 9%">${empleado?.cargo}</td>
-                    <td style="width: 8%">${empleado?.fechaInicio?.format("dd-MM-yyyy")}</td>
-                    <td style="width: 8%">${empleado?.fechaFin?.format("dd-MM-yyyy")}</td>
-                    <td style="text-align: center;width: 5%; background-color: ${empleado?.activo == 1 ? '#47954B' : '#891523'}">${empleado?.activo == 1 ? 'SI' : 'NO'}</td>
-                </tr>
-            </g:each>
+            %{--<g:each in="${empleados}" var="empleado">--}%
+                %{--<tr data-id="${empleado?.id}">--}%
+                    %{--<td style="width: 12%">${empleado?.nombre}</td>--}%
+                    %{--<td style="width: 12%">${empleado?.apellido}</td>--}%
+                    %{--<td style="width: 6%">${empleado?.cedula}</td>--}%
+                    %{--<td style="width: 19%">${empleado?.direccion}</td>--}%
+                    %{--<td style="width: 5%">${empleado?.telefono}</td>--}%
+                    %{--<td style="width: 5%">${empleado?.sexo == 'M' ? 'Masculino' : 'Femenino'}</td>--}%
+                    %{--<td style="width: 9%">${empleado?.cargo}</td>--}%
+                    %{--<td style="width: 8%">${empleado?.fechaInicio?.format("dd-MM-yyyy")}</td>--}%
+                    %{--<td style="width: 8%">${empleado?.fechaFin?.format("dd-MM-yyyy")}</td>--}%
+                    %{--<td style="text-align: center;width: 5%; background-color: ${empleado?.activo == 1 ? '#47954B' : '#891523'}">${empleado?.activo == 1 ? 'SI' : 'NO'}</td>--}%
+                %{--</tr>--}%
+            %{--</g:each>--}%
         </table>
     </div>
 </div>
@@ -196,17 +205,8 @@
             }
         };
 
-        var nomina = {
-            label: "Nómina",
-            icon: "fa fa-file",
-            action : function ($element) {
-                location.href="${createLink(controller: 'empleado', action: 'nomina')}?id=" + id
-            }
-        };
-
         items.editar = editar;
         items.sueldo = sueldo;
-        items.nomina = nomina;
 
         return items
     }

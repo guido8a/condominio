@@ -21,7 +21,7 @@
                     </div>
                 </span>
                 <span class="grupo">
-                    <label for="valor" class="col-md-2 control-label">
+                    <label for="valor" class="col-md-1 control-label">
                         Valor
                     </label>
                     <div class="col-md-3">
@@ -30,6 +30,8 @@
                 </span>
                 <span>
                     <a href="#" class="btn btn-success btnAgregar" title="Agregar sueldo"><i class="fa fa-plus"></i> </a>
+                    <a href="#" class="btn btn-success btn-sm btnGuardarS hidden" title="Guardar sueldo"><i class="fa fa-save"></i> </a>
+                    <a href="#" class="btn btn-warning btn-sm btnCancelar hidden" title="Cancelar edición"><i class="fa fa-times"></i> </a>
                 </span>
             </div>
         </g:form>
@@ -41,7 +43,12 @@
 
     <script type="text/javascript">
 
-        $(".btnAgregar").click(function () {
+        $(".btnCancelar").click(function () {
+            limpiar();
+        });
+
+        $(".btnAgregar, .btnGuardarS").click(function () {
+            openLoader("Guardando...");
             var anio = $("#anio").val();
             var valor = $("#valor").val();
             var id = $("#id").val();
@@ -55,6 +62,8 @@
                     id: id
                 },
                 success:function (msg) {
+                    closeLoader();
+                    limpiar();
                     var parts = msg.split("_");
                     if(parts[0] == 'ok'){
                         log("Guardado correctamente","success");
@@ -69,6 +78,18 @@
                 }
             })
         });
+
+//        function guardar() {
+//
+//        }
+
+        function limpiar(){
+            $("#valor").val(0);
+            $("#id").val("");
+            $(".btnAgregar").removeClass("hidden");
+            $(".btnGuardarS").addClass("hidden");
+            $(".btnCancelar").addClass("hidden");
+        }
 
         cargarTablaSueldos();
 
