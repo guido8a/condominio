@@ -12,6 +12,7 @@ class IngresoController extends Shield {
 
     def dbConnectionService
     def buscadorService
+    def firmasService
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
@@ -299,10 +300,13 @@ class IngresoController extends Shield {
                            def comprobante = new Comprobante()
                            comprobante.condominio = condominio
                            comprobante.pago = pago
-                           comprobante.texto = Texto.findByCodigo('CMPR').parrafoUno ?: ''
+//                           comprobante.texto = Texto.findByCodigo('CMPR').parrafoUno ?: ''
                            comprobante.fecha = new Date()
                            comprobante.estado = 'V'
                            comprobante.numero = numero
+                           /* genera el QR de la firma */
+//                         firmasService.poneFirma(session.usuario, pago)
+                           comprobante.ruta = firmasService.poneFirma(session.usuario, pago)
 
                            if(!comprobante.save(flush:true)){
                                println("error al guardar el comprobante " + comprobante.errors)
@@ -310,6 +314,7 @@ class IngresoController extends Shield {
                            }else{
                                talonarioActual.numeroFin = numero
                                talonarioActual.save(flush:true)
+
                                render "ok"
                            }
 
@@ -329,7 +334,6 @@ class IngresoController extends Shield {
                }
            }
        }
-
 
 
     }

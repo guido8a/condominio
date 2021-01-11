@@ -7,6 +7,8 @@ import com.lowagie.text.pdf.PdfPTable
 import com.lowagie.text.pdf.PdfWriter
 import extras.RoundRectangle
 
+import com.lowagie.text.Image
+
 import java.awt.*
 
 class Reportes2Controller {
@@ -109,23 +111,47 @@ class Reportes2Controller {
         celda.setColspan(colspan)
         celda
     }
-    
 
+    def poneCeldaNoBorde(txto, align, font, colspan) {
+        PdfPCell celda;
+        celda = new PdfPCell(new Paragraph(txto, font))
+        celda.setHorizontalAlignment(align);
+        celda.setBorder(Rectangle.NO_BORDER);
+        celda.setPadding(4);
+        celda.setColspan(colspan)
+        celda
+    }
+
+    def poneCeldaImag(imag) {
+        PdfPCell celda = new PdfPCell(imag)
+        celda.setHorizontalAlignment(Element.ALIGN_CENTER)
+        celda.setBorder(Rectangle.NO_BORDER)
+        celda
+    }
+
+
+    public static PdfPCell createImageCell(String path) throws DocumentException, IOException {
+        Image img = Image.getInstance(path);
+        PdfPCell cell = new PdfPCell(img, true);
+        return cell;
+    }
 
     def comprobante() {
 
         def baos = new ByteArrayOutputStream()
         def condominio = Condominio.get(session.condominio.id)
         def comprobante = Comprobante.get(params.comp)
+        def firma_img = Image.getInstance('/var/condominio/firmas/' + comprobante.ruta)
 
         def titulo = new Color(40, 140, 180)
         Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
-        Font nota = new Font(Font.TIMES_ROMAN, 8, Font.ITALIC)
+        Font nota = new Font(Font.TIMES_ROMAN, 9, Font.ITALIC)
+        Font nota7 = new Font(Font.TIMES_ROMAN, 6, Font.ITALIC)
         Font notaTitulo = new Font(Font.TIMES_ROMAN, 11, Font.BOLD)
         Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
         Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
-        Font fontTd = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL);
-        Font fontTd10 = new Font(Font.TIMES_ROMAN, 8, Font.BOLD);
+        Font fontTd = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
         Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL, Color.RED);
         Font fontTdRojo = new Font(Font.TIMES_ROMAN, 14, Font.BOLD, Color.RED);
@@ -143,7 +169,7 @@ class Reportes2Controller {
 
         Document document
         document = new Document(PageSize.A5.rotate());
-        document.setMargins(74, 60, 30, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        document.setMargins(74, 60, 74, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos);
         document.resetHeader()
         document.resetFooter()
@@ -167,7 +193,7 @@ class Reportes2Controller {
 
         addCellTabla(tablaTitl, new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTh), prmsTdNoBorder)
         tablaTitl.addCell(poneCelda("COMPROBANTE DE PAGO\n${comprobante?.numero}", Element.ALIGN_CENTER, fontTh,1));
-        def tx_titl = "Dirección: ${condominio?.direccion} \n Teléfono: ${condominio?.telefono?.toString()}\nQuito-Ecuador"
+        def tx_titl = "Dirección: ${condominio?.direccion} \n Teléfono: ${condominio?.telefono?.toString()}\nQuito - Ecuador"
 
         addCellTabla(tablaTitl, new Paragraph(tx_titl, fontTd), prmsTdNoBorder)
         tablaTitl.addCell(poneCelda("R.U.C. ${condominio?.ruc}\n\nFecha: ${comprobante.pago.fechaPago.format('dd-MMM-yyyy')}",
@@ -176,12 +202,12 @@ class Reportes2Controller {
         /**/
 
         Paragraph preface = new Paragraph();
-        addEmptyLine(preface, 2);
+        addEmptyLine(preface, 1);
         document.add(preface);
 
         def tablaDatos = new PdfPTable(4);
         tablaDatos.setWidthPercentage(100);
-        tablaDatos.setWidths(arregloEnteros([15,50,15, 20]))
+        tablaDatos.setWidths(arregloEnteros([17,50,13, 20]))
 
 //        addCellTabla(tablaDatos, new Paragraph("Recibí de : ", fontTd10), frmtHd)
         tablaDatos.addCell(poneCelda("Recibí de : ", Element.ALIGN_RIGHT, fontTd,1))
@@ -234,23 +260,35 @@ class Reportes2Controller {
 
         Paragraph a = new Paragraph();
         addEmptyLine(a, comprobante?.estado == 'A' ? 1 : 2);
-
         document.add(a)
-        Paragraph f = new Paragraph();
-        f.setAlignment(Element.ALIGN_CENTER);
-        f.add(new Paragraph("Ing. Guido Ochoa Moreno", info))
-        f.add(new Paragraph("ADMINISTRADOR", info))
-        f.add(new Paragraph("Cel: 0984916620, dpto. 214", info))
-        document.add(f)
 
-        Paragraph a1 = new Paragraph();
-        addEmptyLine(a1, 2);
-        document.add(a1)
+        def tbFirma = new PdfPTable(2);
+        tbFirma.setWidthPercentage(60);
+        tbFirma.setWidths(arregloEnteros([70,30]))
+        txto = "Ing. Guido Ochoa Moreno\nADMINISTRADOR\nCel: 098 491 6620, dpto. 214"
+        tbFirma.addCell(poneCeldaNoBorde(txto, Element.ALIGN_CENTER, fontTd,1))
+        firma_img.scaleToFit(60, 60)
+        firma_img.setAlignment(Image.RIGHT | Image.TEXTWRAP)
 
-        Paragraph t4 = new Paragraph();
-        t4.setAlignment("Justify");
-        t4.add(new Paragraph("Nota: Sr. Copropietario y/o arrendatario pague su cuota condominal los 5 primeros días de cada mes, caso contrario se cobrará % intereses por mora, aprobado en la asamblea de Copropietarios.", nota))
-        document.add(t4)
+        tbFirma.addCell(poneCeldaImag(firma_img))
+        document.add(tbFirma);
+
+//        Paragraph a1 = new Paragraph();
+//        addEmptyLine(a1, 2);
+//        document.add(a1)
+
+        def tbNota = new PdfPTable(2);
+        tbNota.setWidthPercentage(100);
+        tbNota.setWidths(arregloEnteros([7,93]))
+        tbNota.addCell(poneCeldaNoBorde("Nota:", Element.ALIGN_LEFT, fontTd10,1))
+        tbNota.addCell(poneCeldaNoBorde("Sr. Copropietario y/o arrendatario pague su cuota condominal los 5 " +
+                "primeros días de cada mes, caso contrario se cobrará el 8% intereses por mora, aprobado en la " +
+                "asamblea de Copropietarios.", Element.ALIGN_JUSTIFIED, nota,1))
+        tbNota.addCell(poneCeldaNoBorde(" ",
+                Element.ALIGN_JUSTIFIED, nota7,1))
+        tbNota.addCell(poneCeldaNoBorde("Sistema de Administración de Condominios.     www.tedein.com.ec",
+                Element.ALIGN_RIGHT, nota7,1))
+        document.add(tbNota)
 
         document.close();
         pdfw.close()
