@@ -32,6 +32,7 @@ import com.lowagie.text.pdf.PdfPTable
 import com.lowagie.text.pdf.PdfWriter
 */
 import extras.RoundRectangle
+import adicional.Redondea
 
 import java.awt.Color
 
@@ -40,6 +41,8 @@ import java.awt.Color
 //import java.awt.*
 
 class Reportes2Controller {
+
+    def RedondearService
 
     private static int[] arregloEnteros(array) {
         int[] ia = new int[array.size()]
@@ -129,7 +132,7 @@ class Reportes2Controller {
     /* caja redondeada */
 
     def poneCelda(txto, align, font, colspan) {
-        RoundRectangle borde = new RoundRectangle();
+        Redondea borde = new Redondea();
         PdfPCell celda;
 //        celda = new PdfPCell(new Paragraph(txto, font))
         celda = new PdfPCell(new Phrase(txto, font))
