@@ -136,7 +136,7 @@ class RolPagosController extends Shield {
                 if(params.descuentoValor == '0'){
                     sql4 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', null, 0, null,0);"
                 }else{
-                    sql4 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', '${"Vacaciones tomadas_" + params.descuentoValor.toInteger() + "_días" }', '${params.descuentoValor.toInteger()}', null,0);"
+                    sql4 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', '${"Vacaciones tomadas..................................._" + params.descuentoValor.toInteger() + "_días" }', '${params.descuentoValor.toInteger()}', null,0);"
                 }
                 def res4 = cn4.rows(sql4.toString())
                 if(res4 != null){
