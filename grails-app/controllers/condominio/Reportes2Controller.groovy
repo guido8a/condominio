@@ -1,15 +1,43 @@
 package condominio
 
+import com.itextpdf.kernel.pdf.PdfDocument
+import com.itextpdf.layout.Document
+import com.itextpdf.layout.element.Paragraph
+
+import com.itextpdf.text.BaseColor
+import com.itextpdf.text.Chunk
+import com.itextpdf.text.DocumentException
+import com.itextpdf.text.Element
+import com.itextpdf.text.Image
+import com.itextpdf.text.Phrase
+import com.itextpdf.text.pdf.PdfContentByte
+import com.itextpdf.text.pdf.PdfPCell
+import com.itextpdf.text.pdf.PdfPTable
+import com.itextpdf.text.pdf.PdfWriter
+import com.itextpdf.text.Rectangle
+import com.itextpdf.text.Document
+import com.itextpdf.text.PageSize
+
+import com.itextpdf.text.Font
+
+//import com.itextpdf.text.Font
+
+//import com.lowagie.text.Font
+
+/*
 import com.lowagie.text.*
 import com.lowagie.text.pdf.PdfContentByte
 import com.lowagie.text.pdf.PdfPCell
 import com.lowagie.text.pdf.PdfPTable
 import com.lowagie.text.pdf.PdfWriter
+*/
 import extras.RoundRectangle
 
-import com.lowagie.text.Image
+import java.awt.Color
 
-import java.awt.*
+//import com.lowagie.text.Image
+
+//import java.awt.*
 
 class Reportes2Controller {
 
@@ -91,9 +119,9 @@ class Reportes2Controller {
         table.addCell(cell);
     }
 
-    private static void addEmptyLine(Paragraph paragraph, int number) {
+    private static void addEmptyLine(Document document, int number) {
         for (int i = 0; i < number; i++) {
-            paragraph.add(new Paragraph(" "));
+            document.add(Chunk.NEWLINE )
         }
     }
 
@@ -103,7 +131,8 @@ class Reportes2Controller {
     def poneCelda(txto, align, font, colspan) {
         RoundRectangle borde = new RoundRectangle();
         PdfPCell celda;
-        celda = new PdfPCell(new Paragraph(txto, font))
+//        celda = new PdfPCell(new Paragraph(txto, font))
+        celda = new PdfPCell(new Phrase(txto, font))
         celda.setHorizontalAlignment(align);
         celda.setBorder(Rectangle.NO_BORDER);
         celda.setPadding(4);
@@ -114,7 +143,8 @@ class Reportes2Controller {
 
     def poneCeldaNoBorde(txto, align, font, colspan) {
         PdfPCell celda;
-        celda = new PdfPCell(new Paragraph(txto, font))
+//        celda = new PdfPCell(new Paragraph(txto, font))
+        celda = new PdfPCell(new Phrase(txto, font))
         celda.setHorizontalAlignment(align);
         celda.setBorder(Rectangle.NO_BORDER);
         celda.setPadding(4);
@@ -144,22 +174,14 @@ class Reportes2Controller {
         def firma_img = Image.getInstance('/var/condominio/firmas/' + comprobante.ruta)
 
         def titulo = new Color(40, 140, 180)
-        Font info = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL)
-        Font nota = new Font(Font.TIMES_ROMAN, 9, Font.ITALIC)
-        Font nota7 = new Font(Font.TIMES_ROMAN, 6, Font.ITALIC)
-        Font notaTitulo = new Font(Font.TIMES_ROMAN, 11, Font.BOLD)
-        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
-        Font fontTh = new Font(Font.TIMES_ROMAN, 12, Font.BOLD);
-        Font fontTd = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
-        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
-        Font fontThTiny = new Font(Font.TIMES_ROMAN, 7, Font.BOLD);
-        Font fontTdTiny = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL, Color.RED);
-        Font fontTdRojo = new Font(Font.TIMES_ROMAN, 14, Font.BOLD, Color.RED);
-        def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
-        def frmtHd2 = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE, colspan: 2]
-        def frmtDato = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_LEFT]
-        def frmtHdr = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
-        def frmtDatoDere = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+//        Font nota = new Font(Font.FontFamily.HELVETICA, 9, Font.ITALIC)
+        Font nota = new Font(Font.FontFamily.TIMES_ROMAN, 9, Font.ITALIC)
+        Font nota7 = new Font(Font.getFamily('TIMES'), 6, Font.ITALIC)
+        Font fontTh = new Font(Font.getFamily('TIMES'), 12, Font.BOLD);
+        Font f2 = new Font(Font.FontFamily.HELVETICA, 10)
+        Font fontTd = new Font(Font.getFamily('TIMES'), 10, Font.NORMAL);
+        Font fontTd10 = new Font(Font.getFamily('TIMES'), 10, Font.BOLD);
+        Font fontTdRojo = new Font(Font.getFamily('TIMES'), 14, Font.BOLD);
 
         def fondoTotal = new Color(240, 240, 240);
 
@@ -168,11 +190,11 @@ class Reportes2Controller {
         def prmsNmBorder = [border: Color.BLACK, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
         Document document
-        document = new Document(PageSize.A5.rotate());
+        document = new Document(PageSize.A5.rotate())
         document.setMargins(74, 60, 74, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
-        def pdfw = PdfWriter.getInstance(document, baos);
-        document.resetHeader()
-        document.resetFooter()
+        def pdfw = PdfWriter.getInstance(document, baos)
+//        document.resetHeader()
+//        document.resetFooter()
 
         document.open();
 
@@ -183,33 +205,27 @@ class Reportes2Controller {
         document.addAuthor("Condominio");
         document.addCreator("Tedein SA");
 
-        /**/
         def tablaTitl = new PdfPTable(2);
         tablaTitl.setWidthPercentage(100);
         tablaTitl.setWidths(arregloEnteros([64,36]))
 
-        tablaTitl.defaultCell.border  = PdfPCell.NO_BORDER;
-        tablaTitl.defaultCell.cellEvent = new RoundRectangle();
-
-        addCellTabla(tablaTitl, new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTh), prmsTdNoBorder)
+//        addCellTabla(tablaTitl, new Paragraph("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", fontTh), prmsTdNoBorder)
+        tablaTitl.addCell(poneCeldaNoBorde("CONJUNTO RESIDENCIAL 'LOS VIÑEDOS'", Element.ALIGN_CENTER, fontTh, 1))
         tablaTitl.addCell(poneCelda("COMPROBANTE DE PAGO\n${comprobante?.numero}", Element.ALIGN_CENTER, fontTh,1));
         def tx_titl = "Dirección: ${condominio?.direccion} \n Teléfono: ${condominio?.telefono?.toString()}\nQuito - Ecuador"
 
-        addCellTabla(tablaTitl, new Paragraph(tx_titl, fontTd), prmsTdNoBorder)
+        tablaTitl.addCell(poneCeldaNoBorde(tx_titl, Element.ALIGN_CENTER, fontTd,1))
         tablaTitl.addCell(poneCelda("R.U.C. ${condominio?.ruc}\n\nFecha: ${comprobante.pago.fechaPago.format('dd-MMM-yyyy')}",
                 Element.ALIGN_CENTER, fontTd,1))
         document.add(tablaTitl)
-        /**/
 
-        Paragraph preface = new Paragraph();
-        addEmptyLine(preface, 1);
-        document.add(preface);
+//        document.add(new Phrase("\n"))
+        document.add(new Phrase(" "))
 
         def tablaDatos = new PdfPTable(4);
         tablaDatos.setWidthPercentage(100);
         tablaDatos.setWidths(arregloEnteros([17,50,13, 20]))
 
-//        addCellTabla(tablaDatos, new Paragraph("Recibí de : ", fontTd10), frmtHd)
         tablaDatos.addCell(poneCelda("Recibí de : ", Element.ALIGN_RIGHT, fontTd,1))
         tablaDatos.addCell(poneCelda("${comprobante?.pago?.ingreso?.persona?.nombre} ${comprobante?.pago?.ingreso?.persona?.apellido}",
                 Element.ALIGN_LEFT, fontTd10,1))
@@ -225,9 +241,7 @@ class Reportes2Controller {
 
         document.add(tablaDatos)
 
-        Paragraph preface2 = new Paragraph();
-        addEmptyLine(preface2, 1);
-        document.add(preface2);
+        document.add(new Phrase(" "))
 
         def tablaValores = new PdfPTable(3);
         tablaValores.setWidthPercentage(100);
@@ -258,9 +272,9 @@ class Reportes2Controller {
             document.add(h)
         }
 
-        Paragraph a = new Paragraph();
-        addEmptyLine(a, comprobante?.estado == 'A' ? 1 : 2);
-        document.add(a)
+//        Paragraph a = new Paragraph();
+//        addEmptyLine(document, comprobante?.estado == 'A' ? 1 : 2);
+//        document.add(a)
 
         def tbFirma = new PdfPTable(2);
         tbFirma.setWidthPercentage(60);
@@ -279,7 +293,7 @@ class Reportes2Controller {
 
         def tbNota = new PdfPTable(2);
         tbNota.setWidthPercentage(100);
-        tbNota.setWidths(arregloEnteros([7,93]))
+        tbNota.setWidths(arregloEnteros([8,92]))
         tbNota.addCell(poneCeldaNoBorde("Nota:", Element.ALIGN_LEFT, fontTd10,1))
         tbNota.addCell(poneCeldaNoBorde("Sr. Copropietario y/o arrendatario pague su cuota condominal los 5 " +
                 "primeros días de cada mes, caso contrario se cobrará el 8% intereses por mora, aprobado en la " +

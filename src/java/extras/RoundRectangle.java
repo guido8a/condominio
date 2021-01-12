@@ -1,25 +1,25 @@
 package extras;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPCellEvent;
+import com.itextpdf.text.pdf.PdfPTable;
 
-import java.io.FileOutputStream;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.Element;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.GrayColor;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPCellEvent;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
-
+/**
+ * Created by guido on 12/01/21.
+ */
 class RoundRectangle implements PdfPCellEvent {
-    public void cellLayout(PdfPCell cell, Rectangle rect, PdfContentByte[] canvas) {
+    public void cellLayout(PdfPCell cell, Rectangle rect,
+                           PdfContentByte[] canvas) {
         PdfContentByte cb = canvas[PdfPTable.LINECANVAS];
-        cb.setColorStroke(new GrayColor(0.8f));
-//        cb.roundRectangle(rect.left() + 4, rect.bottom(), rect.width() - 8, rect.height() - 4, 4);
-        cb.roundRectangle(rect.left() + 2, rect.bottom(), rect.width() -4, rect.height() -2, 2);
+        cb.setLineWidth(0.1);
+        cb.setColorStroke(BaseColor.GRAY);
+        cb.roundRectangle(
+                rect.getLeft() + 1.5f, rect.getBottom() + 1.5f, rect.getWidth() - 3,
+                rect.getHeight() - 3, 4);
         cb.stroke();
     }
 }
+
