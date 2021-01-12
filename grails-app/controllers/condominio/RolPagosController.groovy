@@ -80,6 +80,7 @@ class RolPagosController extends Shield {
         def condominio = Condominio.get(params."condominio.id")
         def fechaInicio
         def fechaFin
+        def band = 0
 
         switch (params.tipo){
             case 'mensual':
@@ -90,8 +91,12 @@ class RolPagosController extends Shield {
                 def cn = dbConnectionService.getConnection()
                 def sql = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fechaInicio}', '${fechaFin}', '${params.descuentoDescripcion}', '${params.descuentoValor.toDouble()}', '${params.bono}', '${params.bonoValor.toDouble()}');"
                 def res = cn.rows(sql.toString())
+                if(res != null){
+                    render "ok"
+                }else{
+                    render "no"
+                }
                 break;
-
             case "tercero":
                 def salario = Salario.get(params."salario.id")
                 def fecha1 = "1-jan-" + new Date().format("yyyy")
@@ -100,6 +105,11 @@ class RolPagosController extends Shield {
                 def cn2 = dbConnectionService.getConnection()
                 def sql2 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', null,0, null,0);"
                 def res2 = cn2.rows(sql2.toString())
+                if(res2 != null){
+                    render "ok"
+                }else{
+                    render "no"
+                }
                 break;
 
             case "cuarto":
@@ -110,20 +120,32 @@ class RolPagosController extends Shield {
                 def cn3 = dbConnectionService.getConnection()
                 def sql3 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', null,0, null,0);"
                 def res3 = cn3.rows(sql3.toString())
+                if(res3 != null){
+                    render "ok"
+                }else{
+                    render "no"
+                }
                 break;
             case "vacaciones":
                 def salario = Salario.get(params."salario.id")
                 def fecha1 = "1-jan-" + new Date().format("yyyy")
                 def fecha2 = "31-dec-" + new Date().format("yyyy")
-
+                def sql4
                 def cn4 = dbConnectionService.getConnection()
-                def sql4 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', '${params.descuentoDescripcion}', '${params.descuentoValor.toInteger()}', null,0);"
+                if(params.descuentoValor == '0'){
+                    sql4 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', null, 0, null,0);"
+                }else{
+                    sql4 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', '${"Vacaciones tomadas_" + params.descuentoValor.toInteger() + "_días" }', '${params.descuentoValor.toInteger()}', null,0);"
+                }
                 def res4 = cn4.rows(sql4.toString())
+                if(res4 != null){
+                    render "ok"
+                }else{
+                    render "no"
+                }
                 break;
         }
-
     }
-
 
     def sacarFechas(id) {
 

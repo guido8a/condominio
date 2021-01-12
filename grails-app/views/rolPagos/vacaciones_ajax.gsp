@@ -35,17 +35,17 @@
             </span>
         </div>
 
-        <div class="form-group keeptogether">
-            <span class="grupo">
-                <label for="descuentoDescripcion" class="col-md-2 control-label">
-                    Vacaciones descripción
-                </label>
-                <div class="col-md-8">
-                    <g:textField name="descuentoDescripcion" maxlength="63" class="form-control" required="" value="${vacaciones?.descuentoDescripcion}"/>
-                </div>
-                *
-            </span>
-        </div>
+        %{--<div class="form-group keeptogether">--}%
+            %{--<span class="grupo">--}%
+                %{--<label for="descuentoDescripcion" class="col-md-2 control-label">--}%
+                    %{--Vacaciones descripción--}%
+                %{--</label>--}%
+                %{--<div class="col-md-8">--}%
+                    %{--<g:textField name="descuentoDescripcion" maxlength="63" class="form-control" required="" value="${vacaciones?.descuentoDescripcion}"/>--}%
+                %{--</div>--}%
+                %{--*--}%
+            %{--</span>--}%
+        %{--</div>--}%
 
         <div class="form-group keeptogether">
             <span class="grupo">

@@ -295,9 +295,8 @@
                     if(msg == 'ok'){
                         log("Guardado correctamente","success");
                         setTimeout(function() {
-//                            spinner.replaceWith($btn);
                             location.reload(true)
-                        }, 100);
+                        }, 1000);
                     }else{
                         log("Error al guardar","error")
                     }
@@ -308,50 +307,50 @@
         } //else
     }
 
-    function createContextMenu(node) {
-        var $tr = $(node);
-        var items = {
-            header: {
-                label: "Acciones",
-                header: true
-            }
-        };
-
-        var id = $tr.data("id");
-
-        var editar = {
-            label: " Editar",
-            icon: "fa fa-edit",
-            action : function ($element) {
-                mensual(id);
-            }
-        };
-
-        var sueldo = {
-            label: "Sueldo",
-            icon: "fa fa-money",
-            action : function ($element) {
-                sueldoEmpleado(id)
-            }
-        };
-
-        items.editar = editar;
-//        items.sueldo = sueldo;
-
-        return items
-    }
-
-    $(function () {
-        $("tr").contextMenu({
-            items  : createContextMenu,
-            onShow : function ($element) {
-                $element.addClass("trHighlight");
-            },
-            onHide : function ($element) {
-                $(".trHighlight").removeClass("trHighlight");
-            }
-        });
-    });
+//    function createContextMenu(node) {
+//        var $tr = $(node);
+//        var items = {
+//            header: {
+//                label: "Acciones",
+//                header: true
+//            }
+//        };
+//
+//        var id = $tr.data("id");
+//
+//        var editar = {
+//            label: " Editar",
+//            icon: "fa fa-edit",
+//            action : function ($element) {
+//                mensual(id);
+//            }
+//        };
+//
+//        var sueldo = {
+//            label: "Sueldo",
+//            icon: "fa fa-money",
+//            action : function ($element) {
+//                sueldoEmpleado(id)
+//            }
+//        };
+//
+//        items.editar = editar;
+////        items.sueldo = sueldo;
+//
+//        return items
+//    }
+//
+//    $(function () {
+//        $("tr").contextMenu({
+//            items  : createContextMenu,
+//            onShow : function ($element) {
+//                $element.addClass("trHighlight");
+//            },
+//            onHide : function ($element) {
+//                $(".trHighlight").removeClass("trHighlight");
+//            }
+//        });
+//    });
 
 
 </script>
