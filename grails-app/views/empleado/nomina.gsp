@@ -21,18 +21,18 @@
 
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <a href="${createLink(controller: "empleado", action: "list")}" class="btn btn-primary">
+        <a href="#" class="btn btn-primary btnRegresar">
             <i class="fa fa-arrow-left"></i> Regresar
         </a>
     </div>
     <div class="btn-group">
-        <a href="#" class="btn btn-warning btnMensual"> <i class="fa fa-user "></i> Sueldo mensual
+        <a href="#" class="btn btn-warning btnMensual"> <i class="fa fa-plus-square"></i> Sueldo mensual
         </a>
-        <a href="#" class="btn btn-info btnTercero"> <i class="fa fa-user "></i> Décimo tercero
+        <a href="#" class="btn btn-info btnTercero"> <i class="fa fa-plus-circle"></i> Décimo tercero
         </a>
-        <a href="#" class="btn btn-primary btnCuarto"> <i class="fa fa-user "></i> Décimo cuarto
+        <a href="#" class="btn btn-primary btnCuarto"> <i class="fa fa-plus-circle"></i> Décimo cuarto
         </a>
-        <a href="#" class="btn btn-success btnVacaciones"> <i class="fa fa-user "></i> Vacaciones
+        <a href="#" class="btn btn-success btnVacaciones"> <i class="fa fa-plane "></i> Vacaciones
         </a>
     </div>
 </div>
@@ -82,104 +82,231 @@
 
 <script type="text/javascript">
 
-    $(".btnNuevo").click(function (){
-        createEditRow();
+    $(".btnRegresar").click(function () {
+        location.href="${createLink(controller: 'empleado', action: 'list')}?id=" + '${empleado?.id}'
+    })
+
+    $(".btnMensual").click(function (){
+        mensual();
     });
 
-    %{--function createEditRow(id) {--}%
-        %{--var title = id ? "Editar" : "Nuevo";--}%
-        %{--$.ajax({--}%
-            %{--type    : "POST",--}%
-            %{--url     : "${createLink(controller:'empleado', action:'form_ajax')}",--}%
-            %{--data    : {--}%
-                %{--id : id ? id : '',--}%
-                %{--condominio: ${condominio?.id}--}%
-            %{--},--}%
-            %{--success : function (msg) {--}%
-                %{--var b = bootbox.dialog({--}%
-                    %{--id      : "dlgCreateEdit",--}%
-                    %{--title   : title + " Empleado",--}%
-%{--//                    class   : "long",--}%
-                    %{--message : msg,--}%
-                    %{--buttons : {--}%
-                        %{--cancelar : {--}%
-                            %{--label     : "Cancelar",--}%
-                            %{--className : "btn-primary",--}%
-                            %{--callback  : function () {--}%
-                            %{--}--}%
-                        %{--},--}%
-                        %{--guardar  : {--}%
-                            %{--id        : "btnSave",--}%
-                            %{--label     : "<i class='fa fa-save'></i> Guardar",--}%
-                            %{--className : "btn-success",--}%
-                            %{--callback  : function () {--}%
-                                %{--return submitFormEmpleado();--}%
-                            %{--} //callback--}%
-                        %{--} //guardar--}%
-                    %{--} //buttons--}%
-                %{--}); //dialog--}%
-                %{--setTimeout(function () {--}%
-                    %{--b.find(".form-control").first().focus()--}%
-                %{--}, 500);--}%
-            %{--} //success--}%
-        %{--}); //ajax--}%
-    %{--} //createEdit--}%
+    $(".btnTercero").click(function (){
+        tercero();
+    });
 
-    %{--function submitFormEmpleado() {--}%
-        %{--var $form = $("#frmEmpleado");--}%
-        %{--var $btn = $("#dlgCreateEdit").find("#btnSave");--}%
-        %{--if ($form.valid()) {--}%
-            %{--$btn.replaceWith(spinner);--}%
-            %{--openLoader("Guardando...");--}%
-            %{--$.ajax({--}%
-                %{--type    : "POST",--}%
-                %{--url     : $form.attr("action"),--}%
-                %{--data    : $form.serialize(),--}%
-                %{--success : function (msg) {--}%
-                    %{--closeLoader();--}%
-                    %{--if(msg == 'ok'){--}%
-                        %{--log("Empleado guardado correctamente","success");--}%
-                        %{--setTimeout(function() {--}%
-%{--//                            spinner.replaceWith($btn);--}%
-                            %{--location.reload(true)--}%
-                        %{--}, 100);--}%
-                    %{--}else{--}%
-                        %{--log("Error al guardar la información del empleado","error")--}%
-                    %{--}--}%
-                %{--}--}%
-            %{--});--}%
-        %{--} else {--}%
-            %{--return false;--}%
-        %{--} //else--}%
-    %{--}--}%
+    $(".btnCuarto").click(function (){
+        cuarto();
+    });
 
-    %{--function sueldoEmpleado(id){--}%
-        %{--$.ajax({--}%
-            %{--type    : "POST",--}%
-            %{--url     : "${createLink(controller:'sueldo', action:'form_ajax')}",--}%
-            %{--data    : {--}%
-                %{--id : id ? id : ''--}%
-            %{--},--}%
-            %{--success : function (msg) {--}%
-                %{--var b = bootbox.dialog({--}%
-                    %{--id      : "dlgSueldo",--}%
-                    %{--title   : "Sueldo",--}%
-                    %{--message : msg,--}%
-                    %{--buttons : {--}%
-                        %{--cancelar : {--}%
-                            %{--label     : '<i class="fa fa-times"></i> Cancelar',--}%
-                            %{--className : "btn-primary",--}%
-                            %{--callback  : function () {--}%
-                            %{--}--}%
-                        %{--}--}%
-                    %{--} //buttons--}%
-                %{--}); //dialog--}%
-                %{--setTimeout(function () {--}%
-                    %{--b.find(".form-control").first().focus()--}%
-                %{--}, 500);--}%
-            %{--} //success--}%
-        %{--}); //ajax--}%
-    %{--}--}%
+    $(".btnVacaciones").click(function (){
+        vacaciones();
+    });
+
+
+    function mensual(id) {
+        var title = id ? "Editar" : "Nuevo";
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'rolPagos', action:'mensual_ajax')}",
+            data    : {
+                id : id ? id : '',
+                condominio: '${condominio?.id}',
+                empleado: '${empleado?.id}'
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgMensual",
+                    title   : title + " Sueldo mensual",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return submitFormMensual(1);
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 500);
+            } //success
+        }); //ajax
+    } //createEdit
+
+    function tercero(id) {
+        var title = id ? "Editar" : "Nuevo";
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'rolPagos', action:'tercero_ajax')}",
+            data    : {
+                id : id ? id : '',
+                condominio: '${condominio?.id}',
+                empleado: '${empleado?.id}'
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgTercero",
+                    title   : title + " Décimo tercero",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return submitFormMensual(2);
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 500);
+            } //success
+        }); //ajax
+    } //createEdit
+
+    function cuarto(id) {
+        var title = id ? "Editar" : "Nuevo";
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'rolPagos', action:'cuarto_ajax')}",
+            data    : {
+                id : id ? id : '',
+                condominio: '${condominio?.id}',
+                empleado: '${empleado?.id}'
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgCuarto",
+                    title   : title + " Décimo cuarto",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return submitFormMensual(3);
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 500);
+            } //success
+        }); //ajax
+    } //createEdit
+
+    function vacaciones(id) {
+        var title = id ? "Editar" : "Nuevo";
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'rolPagos', action:'vacaciones_ajax')}",
+            data    : {
+                id : id ? id : '',
+                condominio: '${condominio?.id}',
+                empleado: '${empleado?.id}'
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgVacaciones",
+                    title   : title + " Vacaciones",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return submitFormMensual(4);
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 500);
+            } //success
+        }); //ajax
+    } //createEdit
+
+    function submitFormMensual(tipo) {
+
+        var $form
+        var $btn
+
+        switch (tipo){
+            case 1:
+                $form =  $("#frmMensual");
+                $btn = $("#dlgMensual").find("#btnSave");
+                break;
+            case 2:
+                $form =  $("#frmTercero");
+                $btn = $("#dlgTercero").find("#btnSave");
+                break;
+            case 3:
+                $form =  $("#frmCuarto");
+                $btn = $("#dlgCuarto").find("#btnSave");
+                break;
+            case 4:
+                $form =  $("#frmVacaciones");
+                $btn = $("#dlgVacaciones").find("#btnSave");
+                break;
+        }
+
+        if ($form.valid()) {
+            $btn.replaceWith(spinner);
+            openLoader("Guardando...");
+            $.ajax({
+                type    : "POST",
+                url     : $form.attr("action"),
+                data    : $form.serialize(),
+                success : function (msg) {
+                    closeLoader();
+                    if(msg == 'ok'){
+                        log("Guardado correctamente","success");
+                        setTimeout(function() {
+//                            spinner.replaceWith($btn);
+                            location.reload(true)
+                        }, 100);
+                    }else{
+                        log("Error al guardar","error")
+                    }
+                }
+            });
+        } else {
+            return false;
+        } //else
+    }
 
     function createContextMenu(node) {
         var $tr = $(node);
@@ -196,7 +323,7 @@
             label: " Editar",
             icon: "fa fa-edit",
             action : function ($element) {
-                createEditRow(id);
+                mensual(id);
             }
         };
 
