@@ -31,7 +31,6 @@ import com.lowagie.text.pdf.PdfPCell
 import com.lowagie.text.pdf.PdfPTable
 import com.lowagie.text.pdf.PdfWriter
 */
-import extras.RoundRectangle
 import adicional.Redondea
 
 import java.awt.Color
@@ -42,90 +41,12 @@ import java.awt.Color
 
 class Reportes2Controller {
 
-    def RedondearService
-
     private static int[] arregloEnteros(array) {
         int[] ia = new int[array.size()]
         array.eachWithIndex { it, i ->
             ia[i] = it.toInteger()
         }
         return ia
-    }
-
-    private static void addCellTabla(PdfPTable table, paragraph, params) {
-        PdfPCell cell = new PdfPCell(paragraph);
-        if (params.height) {
-            cell.setFixedHeight(params.height.toFloat());
-        }
-        if (params.border) {
-            cell.setBorderColor(params.border);
-        }
-        if (params.bg) {
-            cell.setBackgroundColor(params.bg);
-        }
-        if (params.colspan) {
-            cell.setColspan(params.colspan);
-        }
-        if (params.align) {
-            cell.setHorizontalAlignment(params.align);
-        }
-        if (params.valign) {
-            cell.setVerticalAlignment(params.valign);
-        }
-        if (params.w) {
-            cell.setBorderWidth(params.w);
-            cell.setUseBorderPadding(true);
-        }
-        if (params.bwl) {
-            cell.setBorderWidthLeft(params.bwl.toFloat());
-            cell.setUseBorderPadding(true);
-        }
-        if (params.bwb) {
-            cell.setBorderWidthBottom(params.bwb.toFloat());
-            cell.setUseBorderPadding(true);
-        }
-        if (params.bwr) {
-            cell.setBorderWidthRight(params.bwr.toFloat());
-            cell.setUseBorderPadding(true);
-        }
-        if (params.bwt) {
-            cell.setBorderWidthTop(params.bwt.toFloat());
-            cell.setUseBorderPadding(true);
-        }
-        if (params.bcl) {
-            cell.setBorderColorLeft(params.bcl);
-        }
-        if (params.bcb) {
-            cell.setBorderColorBottom(params.bcb);
-        }
-        if (params.bcr) {
-            cell.setBorderColorRight(params.bcr);
-        }
-        if (params.bct) {
-            cell.setBorderColorTop(params.bct);
-        }
-        if (params.padding) {
-            cell.setPadding(params.padding.toFloat());
-        }
-        if (params.pl) {
-            cell.setPaddingLeft(params.pl.toFloat());
-        }
-        if (params.pr) {
-            cell.setPaddingRight(params.pr.toFloat());
-        }
-        if (params.pt) {
-            cell.setPaddingTop(params.pt.toFloat());
-        }
-        if (params.pb) {
-            cell.setPaddingBottom(params.pb.toFloat());
-        }
-        table.addCell(cell);
-    }
-
-    private static void addEmptyLine(Document document, int number) {
-        for (int i = 0; i < number; i++) {
-            document.add(Chunk.NEWLINE )
-        }
     }
 
 
@@ -179,12 +100,12 @@ class Reportes2Controller {
         def titulo = new Color(40, 140, 180)
 //        Font nota = new Font(Font.FontFamily.HELVETICA, 9, Font.ITALIC)
         Font nota = new Font(Font.FontFamily.TIMES_ROMAN, 9, Font.ITALIC)
-        Font nota7 = new Font(Font.getFamily('TIMES'), 6, Font.ITALIC)
-        Font fontTh = new Font(Font.getFamily('TIMES'), 12, Font.BOLD);
+        Font nota7 = new Font(Font.FontFamily.TIMES_ROMAN, 6, Font.ITALIC)
+        Font fontTh = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
         Font f2 = new Font(Font.FontFamily.HELVETICA, 10)
-        Font fontTd = new Font(Font.getFamily('TIMES'), 10, Font.NORMAL);
-        Font fontTd10 = new Font(Font.getFamily('TIMES'), 10, Font.BOLD);
-        Font fontTdRojo = new Font(Font.getFamily('TIMES'), 14, Font.BOLD);
+        Font fontTd = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
+        Font fontTd10 = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD);
+        Font fontTdRojo = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
 
         def fondoTotal = new Color(240, 240, 240);
 
@@ -244,7 +165,7 @@ class Reportes2Controller {
 
         document.add(tablaDatos)
 
-        document.add(new Phrase(" "))
+//        document.add(new Phrase(" "))
 
         def tablaValores = new PdfPTable(3);
         tablaValores.setWidthPercentage(100);
@@ -262,7 +183,10 @@ class Reportes2Controller {
         txto = g.formatNumber(number:comprobante?.pago?.valor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString()
         tablaValores.addCell(poneCelda(txto, Element.ALIGN_CENTER, fontTd10,1))
 
+        tablaValores.setSpacingBefore(10.0)
         document.add(tablaValores)
+        tablaValores.setSpacingAfter(10.0)
+//        document.add(tablaValores)
 
         if(comprobante.estado == 'A'){
             Paragraph h1 = new Paragraph();
@@ -288,6 +212,7 @@ class Reportes2Controller {
         firma_img.setAlignment(Image.RIGHT | Image.TEXTWRAP)
 
         tbFirma.addCell(poneCeldaImag(firma_img))
+        tbFirma.setSpacingBefore(15.0)
         document.add(tbFirma);
 
 //        Paragraph a1 = new Paragraph();
@@ -299,11 +224,12 @@ class Reportes2Controller {
         tbNota.setWidths(arregloEnteros([8,92]))
         tbNota.addCell(poneCeldaNoBorde("Nota:", Element.ALIGN_LEFT, fontTd10,1))
         tbNota.addCell(poneCeldaNoBorde("Sr. Copropietario y/o arrendatario pague su cuota condominal los 5 " +
-                "primeros días de cada mes, caso contrario se cobrará el 8% intereses por mora, aprobado en la " +
-                "asamblea de Copropietarios.", Element.ALIGN_JUSTIFIED, nota,1))
-        tbNota.addCell(poneCeldaNoBorde(" ",
-                Element.ALIGN_JUSTIFIED, nota7,1))
-        tbNota.addCell(poneCeldaNoBorde("Sistema de Administración de Condominios.     www.tedein.com.ec",
+                "primeros días de cada mes, caso contrario se cobrará el 8% de intereses por mora, aprobado en la " +
+                "Asamblea de Copropietarios.", Element.ALIGN_JUSTIFIED, nota,1))
+        tbNota.addCell(poneCeldaNoBorde(" ", Element.ALIGN_JUSTIFIED, nota7,1))
+        tbNota.addCell(poneCeldaNoBorde(" ", Element.ALIGN_JUSTIFIED, nota7,1))
+        tbNota.addCell(poneCeldaNoBorde(" ", Element.ALIGN_JUSTIFIED, nota7,1))
+        tbNota.addCell(poneCeldaNoBorde("Sistema de Administración de Condominios.         www.tedein.com.ec/vinedos",
                 Element.ALIGN_RIGHT, nota7,1))
         document.add(tbNota)
 

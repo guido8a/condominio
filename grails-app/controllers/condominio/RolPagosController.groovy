@@ -90,7 +90,9 @@ class RolPagosController extends Shield {
                 fechaFin = sacarFechas(salario.id).fin
 
                 def cn = dbConnectionService.getConnection()
-                def sql = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fechaInicio}', '${fechaFin}', '${params.descuentoDescripcion}', '${params.descuentoValor.toDouble()}', '${params.bono}', '${params.bonoValor.toDouble()}');"
+                def sql = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fechaInicio}', " +
+                        "'${fechaFin}', '${params.descuentoDescripcion}', '${params.descuentoValor.toDouble()}', " +
+                        "'${params.bono}', '${params.bonoValor.toDouble()}');"
                 def res = cn.rows(sql.toString())
                 if(res != null){
                     render "ok"
@@ -104,7 +106,8 @@ class RolPagosController extends Shield {
                 def fecha2 = "30-nov-" + new Date().format("yyyy")
 
                 def cn2 = dbConnectionService.getConnection()
-                def sql2 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', null,0, null,0);"
+                def sql2 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', " +
+                        "null,0, null,0)"
                 def res2 = cn2.rows(sql2.toString())
                 if(res2 != null){
                     render "ok"
@@ -119,7 +122,8 @@ class RolPagosController extends Shield {
                 def fecha2 = "31-dec-" + new Date().format("yyyy")
 
                 def cn3 = dbConnectionService.getConnection()
-                def sql3 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', null,0, null,0);"
+                def sql3 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', " +
+                        "null,0, null,0)"
                 def res3 = cn3.rows(sql3.toString())
                 if(res3 != null){
                     render "ok"
@@ -134,9 +138,12 @@ class RolPagosController extends Shield {
                 def sql4
                 def cn4 = dbConnectionService.getConnection()
                 if(params.descuentoValor == '0'){
-                    sql4 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', null, 0, null,0);"
+                    sql4 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', " +
+                            "null, 0, null,0)"
                 }else{
-                    sql4 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', '${"Vacaciones tomadas..................................._" + params.descuentoValor.toInteger() + "_días" }', '${params.descuentoValor.toInteger()}', null,0);"
+                    sql4 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}'," +
+                            " '${"Vacaciones tomadas " + params.descuentoValor.toInteger() + " días" }', " +
+                            "'${params.descuentoValor.toInteger()}', null,0)"
                 }
                 def res4 = cn4.rows(sql4.toString())
                 if(res4 != null){
