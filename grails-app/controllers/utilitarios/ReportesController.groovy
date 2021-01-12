@@ -1943,9 +1943,9 @@ class ReportesController extends Shield{
             def nuevaFecha
 
             if(r.mes.toInteger() == 2){
-                nuevaFecha = "28-" + r.mes + "-" + r.anio
+                nuevaFecha = r.anio + "-" + r.mes + "-28"
             }else{
-                nuevaFecha = "30-" + r.mes + "-" + r.anio
+                nuevaFecha = r.anio + "-" + r.mes + "-30"
             }
 
             def cn7 = dbConnectionService.getConnection()
