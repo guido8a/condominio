@@ -75,6 +75,7 @@ class RolPagosController extends Shield {
     def save_ajax(){
 
         println("params " + params)
+        println("params " + params + "")
 
         def empleado = Empleado.get(params.empleado)
         def condominio = Condominio.get(params."condominio.id")
@@ -206,6 +207,7 @@ class RolPagosController extends Shield {
 
 
         return[inicio:inicio, fin:fin]
+
     }
 
 }
