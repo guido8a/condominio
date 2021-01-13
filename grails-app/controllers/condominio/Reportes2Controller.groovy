@@ -72,14 +72,19 @@ class Reportes2Controller {
 
 
     def comprobante() {
+        println "comprobante: $params"
         def baos = new ByteArrayOutputStream()
         def condominio = Condominio.get(session.condominio.id)
         def comprobante = Comprobante.get(params.comp)
 
         Document document
-//        document = new Document(PageSize.A5.rotate())
-        document = new Document(PageSize.A4)
-        document.setMargins(74, 60, 74, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        if(params.copia) {
+            document = new Document(PageSize.A5.rotate())
+        } else {
+            document = new Document(PageSize.A4)
+        }
+
+        document.setMargins(74, 60, 60, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos)
 
         document.open();
@@ -113,28 +118,28 @@ class Reportes2Controller {
         document.add(tablaNota())
 
         /* ---------- segunda copia ---------- */
-        document.add(new Phrase("\n\n\n\n"))  // espacio intermedio
+        if(!params.copia) {
+            document.add(new Phrase("\n\n\n\n\n"))  // espacio intermedio
 
-        document.add(tituloCmpr(comprobante, condominio))
-        document.add(new Phrase(" "))
-
-        document.add(tablaDatos(comprobante))
-
-        def tblaValores2 = tablaValores(comprobante)
-        tblaValores.setSpacingBefore(10.0)
-        document.add(tblaValores)
-        tblaValores.setSpacingAfter(10.0)
-
-        if(comprobante.estado == 'A'){
-//        if(comprobante.estado != 'A'){
+            document.add(tituloCmpr(comprobante, condominio))
             document.add(new Phrase(" "))
-            document.add(anulado())
+
+            document.add(tablaDatos(comprobante))
+
+            def tblaValores2 = tablaValores(comprobante)
+            tblaValores.setSpacingBefore(10.0)
+            document.add(tblaValores)
+            tblaValores.setSpacingAfter(10.0)
+
+            if(comprobante.estado == 'A'){
+//        if(comprobante.estado != 'A'){
+                document.add(new Phrase(" "))
+                document.add(anulado())
+            }
+
+            document.add(tablaFirma(comprobante))
+            document.add(tablaNota())
         }
-
-        document.add(tablaFirma(comprobante))
-        document.add(tablaNota())
-
-        /* fin */
 
         document.close();
         pdfw.close()

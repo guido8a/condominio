@@ -52,19 +52,24 @@
         </div>
 
         <div class="form-group keeptogether ${hasErrors(bean: pago, field: 'documento', 'error')} ">
+
+            <g:if test="${!condominio}">
+                <span class="grupo">
+                    <label for="documento" class="col-md-3 control-label">
+                        Documento
+                    </label>
+                    <div class="col-md-4">
+                        <g:textField name="documento" class="form-control" value="${pago?.documento}"/>
+                    </div>
+                </span>
+
+            </g:if>
+
             <span class="grupo">
-                <label for="documento" class="col-md-3 control-label">
-                    Documento
-                </label>
-                <div class="col-md-4">
-                    <g:textField name="documento" class="form-control" value="${pago?.documento}"/>
-                </div>
-            </span>
-            <span class="grupo">
-                <label for="transferencia" class="col-md-2 control-label">
+                <label for="transferencia" class="col-md-3 control-label">
                     Transferencia:
                 </label>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     %{--<g:textField name="transferencia" class="form-control" value="${pago?.documento}"/>--}%
 %{--
                     <g:select name="transferencia" from="${pago?.constraints?.transferencia?.inList}" class=""

@@ -194,6 +194,7 @@ class IngresoController extends Shield {
     def pago_ajax () {
         println "--> $params"
         def cn = dbConnectionService.getConnection()
+        def condominio = Condominio.get(session.condominio.id)
         def pago
         def tx = ""
         def mora = 0, mess = 0
@@ -215,7 +216,8 @@ class IngresoController extends Shield {
         def saldo = (ingreso.valor - (pagos?.valor?.sum() ?: 0))
         def dscr  = "${ingreso.observaciones?: ingreso?.obligacion?.descripcion}"
 
-        return[ingreso: ingreso, pagos: pagos, saldo: saldo, pago: pago, dscr: dscr, mora: mora, mess: mess]
+        return[ingreso: ingreso, pagos: pagos, saldo: saldo, pago: pago, dscr: dscr, mora: mora, mess: mess,
+            condominio: condominio?.comprobante == 'S']
     }
 
 
@@ -315,6 +317,10 @@ class IngresoController extends Shield {
                                talonarioActual.numeroFin = numero
                                talonarioActual.save(flush:true)
 
+                               /* actualiza el documento de pago */
+                               pago.documento = comprobante.numero
+                               pago.save(flush:true)
+                               /* fin */
                                render "ok"
                            }
 
