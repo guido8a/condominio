@@ -61,14 +61,7 @@ class Reportes2Controller {
     }
 
 
-    public static PdfPCell createImageCell(String path) throws DocumentException, IOException {
-        Image img = Image.getInstance(path);
-        PdfPCell cell = new PdfPCell(img, true);
-        return cell;
-    }
-
     def comprobante() {
-
         def baos = new ByteArrayOutputStream()
         def condominio = Condominio.get(session.condominio.id)
         def comprobante = Comprobante.get(params.comp)
@@ -83,7 +76,8 @@ class Reportes2Controller {
         Font fontTdRojo = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
 
         Document document
-        document = new Document(PageSize.A5.rotate())
+//        document = new Document(PageSize.A5.rotate())
+        document = new Document(PageSize.A4)
         document.setMargins(74, 60, 74, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos)
 
