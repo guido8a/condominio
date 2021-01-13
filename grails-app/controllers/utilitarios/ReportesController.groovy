@@ -1942,11 +1942,8 @@ class ReportesController extends Shield{
         res8.eachWithIndex{ r, k->
             def nuevaFecha
 
-            if(r.mes.toInteger() == 2){
-                nuevaFecha = r.anio + "-" + r.mes + "-28"
-            }else{
-                nuevaFecha = r.anio + "-" + r.mes + "-30"
-            }
+            def a = new Date().parse("dd-MM-yyyy", 01 + "-" + r.mes + "-" + r.anio)
+            nuevaFecha = ultimoDiaDelMes(a).format("dd-MM-yyyy")
 
             def cn7 = dbConnectionService.getConnection()
             def valores4 = "select ingrsldo + sldopgad por_cobrar, ingrsldo + sldofnal total\n" +
@@ -1969,6 +1966,17 @@ class ReportesController extends Shield{
 
 
         return [desde:params.desde, hasta: params.hasta, promedioIngreso: promedioIngreso, promedioEgreso: promedioEgreso, promedioPorCobrar: promedioPorCobrar, promedioTotal: promedioTotal]
+    }
+
+    def ultimoDiaDelMes(fecha) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+
+        calendar.add(Calendar.MONTH, 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.add(Calendar.DATE, -1);
+
+        return calendar.getTime();
     }
 
     def ingresoEgresoData_ajax(){
