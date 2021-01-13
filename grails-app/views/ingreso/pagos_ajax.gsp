@@ -62,21 +62,21 @@
     <table class="table table-condensed table-bordered table-striped table-hover">
         <thead>
         <tr style="width: 100%">
-            <th style="width: 35%">Pago realizado por:</th>
-            <th style="width: 20%">Documento</th>
+            <th style="width: 38%">Pago realizado por:</th>
+            <th style="width: 15%">Documento</th>
             <th style="width: 13%">Fecha Pago</th>
-            <th style="width: 13%">Pago</th>
-            <th class="centro" style="width: 19%"><i class="fa fa-pencil"></i></th>
+            <th style="width: 10%">Pago</th>
+            <th class="centro" style="width: 24%"><i class="fa fa-pencil"></i></th>
         </tr>
         </thead>
         <tbody>
         <g:each in="${pagos}" var="pagoUsuario">
             <tr data-id="${pagoUsuario.id}" style="background-color: #efffef !important; width: 100%">
-                <td style="width: 35%">${pagoUsuario?.observaciones}</td>
-                <td style="width: 20%">${pagoUsuario?.documento}</td>
+                <td style="width: 38%">${pagoUsuario?.observaciones}</td>
+                <td style="width: 15%">${pagoUsuario?.documento}</td>
                 <td style="width: 13%"><g:formatDate date="${pagoUsuario?.fechaPago}" format="dd-MM-yyyy"/></td>
-                <td class="derecha" style="width: 13%"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
-                <td class="centro" style="width: 19%">
+                <td class="derecha" style="width: 10%"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
+                <td class="centro" style="width: 24%">
                     <g:if test="${pagoUsuario?.estado != 'R'}">
                         <g:if test="${pagoUsuario?.valor != 0}">
                             <g:if test="${!condominio.Comprobante.findByPago(pagoUsuario) || condominio.Comprobante.findByPago(pagoUsuario).estado == 'V'}">
@@ -102,6 +102,10 @@
                                 <a href="#" class="btn btn-info btn-sm btnImprimirComprobante" data-id="${pagoUsuario?.id}"
                                    data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Imprimir comprobante">
                                     <i class="fa fa-print"></i>
+                                </a>
+                                <a href="#" class="btn btn-info btn-sm btnGenerarPdf" data-id="${pagoUsuario?.id}"
+                                   data-com="${condominio.Comprobante.findByPago(pagoUsuario)?.id}" title="Copia pdf">
+                                    <i class="fa fa-file-pdf-o"></i>
                                 </a>
                             </g:else>
                         </g:if>
@@ -138,6 +142,28 @@
             success:function(msg){
                 if(msg == 'ok'){
                     location.href = "${g.createLink(controller: 'reportes2', action: 'comprobante')}?comp=" + comprobante;
+                    setTimeout(function() {
+                        location.reload(true);
+                    }, 3000);
+                }else{
+                    log("Error al imprimir el comprobante","error")
+                }
+            }
+        })
+    });
+
+    $(".btnGenerarPdf").click(function () {
+        var comprobante = $(this).data("com");
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'comprobante', action: 'verificarImpresion_ajax')}',
+            data:{
+                id: comprobante
+            },
+            success:function(msg){
+                if(msg == 'ok'){
+                    location.href = "${g.createLink(controller: 'reportes2', action: 'comprobante')}?comp=" +
+                        comprobante + "&copia=1";
                     setTimeout(function() {
                         location.reload(true);
                     }, 3000);
