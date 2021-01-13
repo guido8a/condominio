@@ -115,15 +115,15 @@
         <thead>
         <tr>
             <th class="alinear" style="width: 6%">Edificio</th>
-            <th class="alinear" style="width: 7%">Dept.</th>
-            <th class="alinear" style="width: 20%">Nombre</th>
-            <th class="alinear" style="width: 20%">Apellido</th>
+            <th class="alinear" style="width: 6%">Dept.</th>
+            <th class="alinear" style="width: 15%">Nombre</th>
+            <th class="alinear" style="width: 15%">Apellido</th>
             <th class="alinear" style="width: 4%">P/A</th>
             <th class="alinear" style="width: 10%">Teléfono</th>
-            <th class="alinear" style="width: 14%">Correo electrónico</th>
-            <th class="alinear" style="width: 8%">Alícuota</th>
-            <th class="alinear" style="width: 8%">Deuda</th>
-            <th class="alinear" style="width: 10%">Cargo</th>
+            <th class="alinear" style="width: 26%">Correo electrónico</th>
+            <th class="alinear" style="width: 9%">Alícuota</th>
+            <th class="alinear" style="width: 9%">Deuda</th>
+            %{--<th class="alinear" style="width: 10%">Cargo</th>--}%
         </tr>
         </thead>
     </table>

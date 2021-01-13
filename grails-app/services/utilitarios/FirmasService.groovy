@@ -17,7 +17,7 @@ class FirmasService {
                 def key = ""
                 def texto = ""
                 def pathQr = '/var/condominio/firmas/'
-                def nombre = "pago_${pago.ingreso.persona.departamento}_" + now.format("dd_MM_yyyy_mm_ss") + ".png"
+                def nombre = "pago_${pago.ingreso.persona.departamento}_" + now.format("dd_MMM_yyyy_HH_mm_ss") + ".png"
                 new File(pathQr).mkdirs()
                 texto += "Cobra: ${user.nombre} ${user.apellido}. Paga dpto: ${pago.ingreso.persona.departamento} " +
                         "${pago.ingreso.observaciones} valor: ${pago.valor}"

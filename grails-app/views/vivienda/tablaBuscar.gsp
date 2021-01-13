@@ -46,14 +46,14 @@ th, td {
                     ${dato?.edifdscr}
                 </td>
 
-                <td width="7%" class="text-info">
+                <td width="6%" class="text-info">
                     ${dato?.prsndpto}
                 </td>
 
-                <td width="20%" style="color:#186063">
+                <td width="15%" style="color:#186063">
                     ${dato?.prsnnmbr}
                 </td>
-                <td width="20%">
+                <td width="15%">
                     ${dato.prsnapll}
                 </td>
 
@@ -65,7 +65,7 @@ th, td {
                     ${dato.prsntelf}
                 </td>
 
-                <td width="14%" class="text-info">
+                <td width="26%" class="text-info">
                     ${dato.prsnmail}
                 </td>
 
@@ -73,13 +73,15 @@ th, td {
                     ${dato.alctvlor}
                 </td>
 
-                <td width="8%" class="text-info" style="text-align: right">
+                <td width="9%" class="text-info" style="text-align: right">
                     ${dato.prsnsldo}
                 </td>
 
+%{--
                 <td width="10%" class="text-info" style="text-align: right">
                     ${dato?.prsncrgo}
                 </td>
+--}%
 
             </tr>
         </g:each>
