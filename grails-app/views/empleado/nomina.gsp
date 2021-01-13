@@ -1,5 +1,5 @@
 
-<%@ page import="condominio.Empleado" %>
+<%@ page import="java.awt.List; java.lang.reflect.Array; condominio.Empleado" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,7 +66,7 @@
             <g:each in="${roles}" var="rol">
                 <tr data-id="${rol?.id}">
                     <td style="width: 18%">${rol?.salario?.descripcion}</td>
-                    <td class="derecha" style="width: 11%">${g.formatNumber(number: rol?.sueldo?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
+                    <td class="derecha" style="width: 11%">${g.formatNumber(number: rol?.sueldoRol ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
                     <td class="derecha" style="width: 11%">${g.formatNumber(number: rol?.fondoReserva ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
                     <td class="derecha" style="width: 11%">${g.formatNumber(number: rol?.iess ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
                     <td class="derecha" style="width: 11%" title="${rol?.descuentoDescripcion}">${g.formatNumber(number: rol?.descuentoValor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
@@ -74,7 +74,18 @@
                     <td style="width: 8%">${rol?.fechaDesde?.format("dd-MM-yyyy")}</td>
                     <td style="width: 8%">${rol?.fechaHasta?.format("dd-MM-yyyy")}</td>
                     <td class="derecha" style="width: 8%">${g.formatNumber(number: rol?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
-                    <td  style="width: 4%"><a href="#" class="btn btn-info btn-sm btnImprimir" data-id="${rol?.id}"><i class="fa fa-print"></i> </a></td>
+                    <g:if test="${rol?.salario?.id?.toInteger() in [1,2,3,4,5,6,7,8,9,10,11,12]}">
+                        <td  style="width: 4%"><a href="#" class="btn btn-info btn-sm btnImprimir" data-id="${rol?.id}" title="Imprimir sueldo"><i class="fa fa-print"></i> </a></td>
+                    </g:if>
+                    <g:elseif test="${rol?.salario?.id?.toInteger() == 13}">
+                        <td  style="width: 4%"><a href="#" class="btn btn-warning btn-sm btnImprimirTercero" data-id="${rol?.id}" title="Imprimir decimo tercero"><i class="fa fa-print"></i> </a></td>
+                    </g:elseif>
+                    <g:elseif test="${rol?.salario?.id?.toInteger() == 14}">
+                        <td  style="width: 4%"><a href="#" class="btn btn-warning btn-sm btnImprimirCuarto" data-id="${rol?.id}" title="Imprimir decimo cuarto"><i class="fa fa-print"></i> </a></td>
+                    </g:elseif>
+                    <g:elseif test="${rol?.salario?.id?.toInteger() == 15}">
+                        <td  style="width: 4%"><a href="#" class="btn btn-success btn-sm btnImprimirVacaciones" data-id="${rol?.id}" title="Imprimir vacaciones"><i class="fa fa-print"></i> </a></td>
+                    </g:elseif>
                 </tr>
             </g:each>
         </table>
@@ -86,7 +97,25 @@
     $(".btnImprimir").click(function () {
         var id = $(this).data("id");
         var condo = '${condominio?.id}';
-        location.href="${createLink(controller: 'reportes3', action: 'reporteRolPagos')}?id=" + id + "&condominio=" + condo
+        location.href="${createLink(controller: 'reportes3', action: 'reporteRolPagos')}?id=" + id + "&condominio=" + condo + "&tipo=" + 1
+    });
+
+    $(".btnImprimirTercero").click(function () {
+        var id = $(this).data("id");
+        var condo = '${condominio?.id}';
+        location.href="${createLink(controller: 'reportes3', action: 'reporteRolPagos')}?id=" + id + "&condominio=" + condo + "&tipo=" + 2
+    });
+
+    $(".btnImprimirCuarto").click(function () {
+        var id = $(this).data("id");
+        var condo = '${condominio?.id}';
+        location.href="${createLink(controller: 'reportes3', action: 'reporteRolPagos')}?id=" + id + "&condominio=" + condo + "&tipo=" + 3
+    });
+
+    $(".btnImprimirVacaciones").click(function () {
+        var id = $(this).data("id");
+        var condo = '${condominio?.id}';
+        location.href="${createLink(controller: 'reportes3', action: 'reporteRolPagos')}?id=" + id + "&condominio=" + condo + "&tipo=" + 4
     });
 
     $(".btnRegresar").click(function () {
