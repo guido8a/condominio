@@ -78,7 +78,7 @@ class Reportes3Controller {
 
         Document document
         document = new Document(PageSize.A4)
-        document.setMargins(74, 60, 74, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        document.setMargins(74, 60, 60, 30)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos)
 
         document.open();
@@ -113,6 +113,7 @@ class Reportes3Controller {
         document.add(firmasRol())
 
         //2
+        document.add(new Phrase("\n\n\n\n"))
         document.add(tituloRol(condominio,rol))
         document.add(new Phrase(" "))
 
