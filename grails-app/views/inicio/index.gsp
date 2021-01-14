@@ -97,7 +97,7 @@
                 </div>
 
                 <div class="texto">
-                    <span class="text-success"><strong>Departamentos y Personas</strong></span></div>
+                    <span class="text-success"><strong>Departamentos y Personas (Ingresos)</strong></span></div>
             </div>
         </div>
         </a>
@@ -110,23 +110,37 @@
                 </div>
 
                 <div class="texto">
-                    <span class="text-success"><strong>Ingresos y Gastos</strong></span></div>
+                    <span class="text-success"><strong>Registro de Gastos y Proveedores</strong></span></div>
             </div>
         </div>
         </a>
 
 
         <a href= "${createLink(controller:'obra', action: 'listaObras')}" style="text-decoration: none">
-            <div class="ui-corner-all item2 fuera">
-                <div class="ui-corner-all item2">
-                    <div class="imagen2">
+            <div class="ui-corner-all item fuera">
+                <div class="ui-corner-all item">
+                    <div class="imagen">
                         <img src="${resource(dir: 'images', file: 'actividades.png')}" width="100%" height="100%"/>
                     </div>
 
-                    <div style="margin-top: 50px; margin-left: 80px;">
-                        <span class="text-success" style="font-size: large"><strong>Gestión de Obras del Condominio</strong></span>
-                        <span class="text-success" style="margin-top: 20px; margin-left: 30px; width: 400px; display: block">
-                            <strong>Daños y reparaciones o mejoras pendientes en el Condominio</strong></span></div>
+                    <div class="texto">
+                        <span class="text-success"><strong>Obras del Condominio y Sugerencias</strong></span>
+                    </div>
+            </div>
+            </div>
+        </a>
+
+        <a href= "${createLink(controller:'empleado', action: 'list', id: session.condominio.id)}" style="text-decoration: none">
+            <div class="ui-corner-all item fuera">
+                <div class="ui-corner-all item">
+                    <div class="imagen">
+                        <img src="${resource(dir: 'images', file: 'mantenimiento.png')}" width="100%" height="100%"/>
+                    </div>
+
+                    <div class="texto">
+                        <span class="text-success"><strong>Nómina del Condominio - Empleados</strong></span>
+                    </div>
+
                 </div>
             </div>
         </a>
