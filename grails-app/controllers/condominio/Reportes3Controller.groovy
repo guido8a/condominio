@@ -265,8 +265,8 @@ class Reportes3Controller {
         tablaDatos.addCell(poneCelda("DESCUENTOS",Element.ALIGN_CENTER, fontTd10,1))
         tablaDatos.addCell(poneCelda("VALOR",Element.ALIGN_CENTER, fontTd10,1))
 
-        tablaDatos.addCell(poneCelda("SUELDO " + rol?.fechaDesde?.format("yyyy"), Element.ALIGN_CENTER, fontTh8N,1))
-        tablaDatos.addCell(poneCelda(g.formatNumber(number:rol?.sueldoRol, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(),Element.ALIGN_CENTER, fontTh8N,1))
+        tablaDatos.addCell(poneCelda("SUELDO " + rol?.fechaDesde?.format("yyyy") + " ( " + g.formatNumber(number:rol?.sueldoRol, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US') + " )", Element.ALIGN_CENTER, fontTh8N,1))
+        tablaDatos.addCell(poneCelda("",Element.ALIGN_CENTER, fontTh8N,1))
         tablaDatos.addCell(poneCeldaNoBorde("",Element.ALIGN_CENTER, fontTh8N,1))
         tablaDatos.addCell(poneCelda("",Element.ALIGN_CENTER, fontTh8N,1))
         tablaDatos.addCell(poneCelda("",Element.ALIGN_CENTER, fontTh8N,1))
