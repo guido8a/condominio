@@ -2,6 +2,7 @@ package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
 import seguridad.Shield
+import utilitarios.Anio
 
 
 /**
@@ -401,6 +402,28 @@ class EgresoController extends Shield {
 
 //        println "-->sql: $sqlSelect $sqlWhere $sqlOrder"
         "$sqlSelect $sqlWhere $sqlOrder".toString()
+    }
+
+    def costos_ajax(){
+        def meses = [1:"Enero",2:"Febrero",3:'Marzo',4:'Abril',5:'Mayo',6:'Junio',7:'Julio',8:'Agosto',9:'Septiembre',10:'Octubre',11:'Noviembre',12:'Diciembre']
+        return[meses:meses]
+    }
+
+    def guardarCostosBancarios_ajax() {
+        println("params " + params)
+        def anio = Anio.get(params.anio)
+        def condominio = Condominio.get(session.condominio.id)
+        def cn = dbConnectionService.getConnection()
+        def sql ="select * from transferencias(${condominio?.id},${params.mes},${anio.numero},52);"
+        def data = cn.execute(sql.toString())
+
+        if(data == null){
+            println("error al guardar el costo bancario ")
+            render "no"
+        }else{
+            render "ok"
+        }
+
     }
 
 

@@ -29,13 +29,13 @@
 
 
         <script type="text/javascript">
-            %{--var spinner24Url = "${resource(dir:'images/spinners', file:'spinner_login.GIF')}";--}%
-            %{--var spinner64Url = "${resource(dir:'images/spinners', file:'spinner_64.GIF')}";--}%
+            var spinner24Url = "${resource(dir:'images/spinners', file:'spinner_login.GIF')}";
+            var spinner64Url = "${resource(dir:'images/spinners', file:'spinner_64.GIF')}";
 
             var spinnerSquare64Url = "${resource(dir: 'images/spinners', file: 'spinner.gif')}";
 
-//            var spinner = $("<img src='" + spinner24Url + "' alt='Cargando...'/>");
-//            var spinner64 = $("<img src='" + spinner64Url + "' alt='Cargando...'/>");
+            var spinner = $("<img src='" + spinner24Url + "' alt='Cargando...'/>");
+            var spinner64 = $("<img src='" + spinner64Url + "' alt='Cargando...'/>");
             var spinnerSquare64 = $("<img src='" + spinnerSquare64Url + "' alt='Cargando...'/>");
         </script>
 

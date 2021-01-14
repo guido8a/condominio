@@ -96,10 +96,10 @@
                     </g:link>
                 </div>
             </div>
-            <div style="float: left; margin-top: 18px; height: 33px;" class="col-md-1" >
-                <g:link controller="proveedor" action="list" class="btn btn-warning" title="Costos bancarios">
+            <div style="float: left; margin-top: 20px; height: 33px;" class="col-md-1" >
+                <a href="#" class="btn btn-warning btnCostos" title="Costos Bancarios">
                     <i class="fa fa-building-o"> $</i>
-                </g:link>
+                </a>
             </div>
 
         </div>
@@ -168,6 +168,9 @@
 
 <script type="text/javascript">
 
+    $(".btnCostos").click(function () {
+        costosBancarios();
+    });
 
     $(function () {
         $("#limpiaBuscar").click(function () {
@@ -176,7 +179,6 @@
     });
 
     cargarBusqueda();
-
 
     function cargarBusqueda() {
             $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
@@ -480,8 +482,67 @@
         });
     }
 
-    /******/
+    function costosBancarios() {
+        $.ajax({
+            type: "POST",
+            url: "${createLink(controller:'egreso', action:'costos_ajax')}",
+            data: {
 
+            },
+            success: function (msg) {
+                var b = bootbox.dialog({
+                    id: "dlgCostos",
+                    title: "Costo Bancario",
+                    class: "modal-sm",
+                    message: msg,
+                    buttons: {
+                        cancelar: {
+                            label: "Cancelar",
+                            className: "btn-primary",
+                            callback: function () {
+                            }
+                        },
+                        guardar: {
+                            id: "btnSave",
+                            label: "<i class='fa fa-save'></i> Guardar",
+                            className: "btn-success",
+                            callback: function () {
+                                return submitFormCostos();
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 500);
+            } //success
+        }); //ajax
+    } //createEdit
+
+    function submitFormCostos() {
+        var $form = $("#frmBancarios");
+        var $btn = $("#dlgCostos").find("#btnSave");
+        if ($form.valid()) {
+            $btn.replaceWith(spinner);
+            openLoader("Guardando...");
+            $.ajax({
+                type: "POST",
+                url: $form.attr("action"),
+                data: $form.serialize(),
+                success: function (msg) {
+                    closeLoader();
+                    if(msg == 'ok'){
+                        log("Costo bancario guardado correctamente","success");
+                        cargarBusqueda();
+                    }else{
+                        log("Error al guardar el costo bancario","error");
+                    }
+                }
+            });
+        } else {
+            return false;
+        } //else
+    }
 
 
 
