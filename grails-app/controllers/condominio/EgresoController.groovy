@@ -415,13 +415,15 @@ class EgresoController extends Shield {
         def condominio = Condominio.get(session.condominio.id)
         def cn = dbConnectionService.getConnection()
         def sql ="select * from transferencias(${condominio?.id},${params.mes},${anio.numero},52);"
-        def data = cn.execute(sql.toString())
+        def data = cn.rows(sql.toString())
+
+//        println("data " + data[0].transferencias)
 
         if(data == null){
             println("error al guardar el costo bancario ")
             render "no"
         }else{
-            render "ok"
+            render "ok_" + data[0].transferencias
         }
 
     }

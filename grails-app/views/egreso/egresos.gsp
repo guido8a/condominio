@@ -531,8 +531,9 @@
                 data: $form.serialize(),
                 success: function (msg) {
                     closeLoader();
-                    if(msg == 'ok'){
-                        log("Costo bancario guardado correctamente","success");
+                    var parts = msg.split("_");
+                    if(parts[0] == 'ok'){
+                        log("Costo bancario guardado correctamente " + parts[1],"success");
                         cargarBusqueda();
                     }else{
                         log("Error al guardar el costo bancario","error");
