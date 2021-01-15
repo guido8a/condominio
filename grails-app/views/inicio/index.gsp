@@ -53,9 +53,9 @@
         width: 90%;
         height: 50px;
         padding-top: 0px;
-        margin: auto;
+        /*margin: auto;*/
         margin: 8px;
-        font-size: 16px;
+        font-size: 13px;
         font-style: normal;
     }
 
@@ -82,37 +82,37 @@
     <g:set var="inst" value="${utilitarios.Parametros.get(1)}"/>
 
     <div style="text-align: center;"><h2 class="titl">
-            <p class="text-warning">${session.condominio.nombre}</p>
-        </h2>
+        <p class="text-warning">${session.condominio.nombre}</p>
+    </h2>
     </div>
 
     <div class="body ui-corner-all" style="width: 680px;position: relative;margin: auto;margin-top: 40px;height: 280px; ">
 
 
         <a href= "${createLink(controller:'vivienda', action: 'index')}" style="text-decoration: none">
-        <div class="ui-corner-all item fuera">
-            <div class="ui-corner-all item">
-                <div class="imagen">
-                    <img src="${resource(dir: 'images', file: 'vivienda.png')}" width="100%" height="100%"/>
-                </div>
+            <div class="ui-corner-all item fuera">
+                <div class="ui-corner-all item">
+                    <div class="imagen">
+                        <img src="${resource(dir: 'images', file: 'vivienda.png')}" width="100%" height="100%"/>
+                    </div>
 
-                <div class="texto">
-                    <span class="text-success"><strong>Departamentos y Personas (Ingresos)</strong></span></div>
+                    <div class="texto">
+                        <span class="text-success"><strong>Departamentos y Personas (Ingresos)</strong></span></div>
+                </div>
             </div>
-        </div>
         </a>
 
         <a href= "${createLink(controller:'egreso', action: 'egresos')}" style="text-decoration: none">
-        <div class="ui-corner-all item fuera">
-            <div class="ui-corner-all item">
-                <div class="imagen">
-                    <img src="${resource(dir: 'images', file: 'agenda.png')}" width="100%" height="100%"/>
-                </div>
+            <div class="ui-corner-all item fuera">
+                <div class="ui-corner-all item">
+                    <div class="imagen">
+                        <img src="${resource(dir: 'images', file: 'agenda.png')}" width="100%" height="100%"/>
+                    </div>
 
-                <div class="texto">
-                    <span class="text-success"><strong>Registro de Gastos y Proveedores</strong></span></div>
+                    <div class="texto">
+                        <span class="text-success"><strong>Registro de Gastos y Proveedores</strong></span></div>
+                </div>
             </div>
-        </div>
         </a>
 
 
@@ -126,7 +126,7 @@
                     <div class="texto">
                         <span class="text-success"><strong>Obras del Condominio y Sugerencias</strong></span>
                     </div>
-            </div>
+                </div>
             </div>
         </a>
 
@@ -145,37 +145,38 @@
             </div>
         </a>
 
-
-
     </div>
-
-
 </div>
-    <script type="text/javascript">
-        $(".fuera").hover(function () {
-            var d = $(this).find(".imagen,.imagen2")
-            d.width(d.width() + 10)
-            d.height(d.height() + 10)
 
-        }, function () {
-            var d = $(this).find(".imagen, .imagen2")
-            d.width(d.width() - 10)
-            d.height(d.height() - 10)
-        })
+<div class="col-md-3" style="margin-top: 10px; float: right">
+    <label>Desarrollado por: Tedein S.A.</label>
+</div>
+
+<script type="text/javascript">
+    $(".fuera").hover(function () {
+        var d = $(this).find(".imagen,.imagen2")
+        d.width(d.width() + 10)
+        d.height(d.height() + 10)
+
+    }, function () {
+        var d = $(this).find(".imagen, .imagen2")
+        d.width(d.width() - 10)
+        d.height(d.height() - 10)
+    })
 
 
-        $(function () {
-            $(".openImagenDir").click(function () {
-                openLoader();
-            });
-
-            $(".openImagen").click(function () {
-                openLoader();
-            });
+    $(function () {
+        $(".openImagenDir").click(function () {
+            openLoader();
         });
 
+        $(".openImagen").click(function () {
+            openLoader();
+        });
+    });
 
 
-    </script>
+
+</script>
 </body>
 </html>

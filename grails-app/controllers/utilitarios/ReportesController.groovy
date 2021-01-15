@@ -5436,11 +5436,13 @@ class ReportesController extends Shield{
 
 //        println "fechas: '${fechaDesde}','${fechaHasta}'"
 
-        def sql3 = "select * from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') order by tpgsdscr;"
+        def sql3 = "select * from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mantenimiento';"
         def cn3 = dbConnectionService.getConnection()
-        def mejoras = cn3.rows(sql3.toString())
+        def mantenimientos = cn3.rows(sql3.toString())
 
-        def granTotal = (mejoras.egrsvlor.sum() ?: 0)
+        def sql6 = "select * from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mejoras';"
+        def cn6 = dbConnectionService.getConnection()
+        def mejoras = cn6.rows(sql6.toString())
 
         def baos = new ByteArrayOutputStream()
         def titulo = new Color(40, 140, 180)
@@ -5501,18 +5503,9 @@ class ReportesController extends Shield{
 
         printHeaderDetalle()
 
-        mejoras.each {mejora ->
-            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mejora.tpgsdscr.toString(), fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mejora.prve, fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mejora.egrsdscr, fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mejora.egrsfcha.toString(), fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mejora.egrsvlor.toString(), fontTd10), frmtNmro)
-
-        }
-
-        def tablaTotal = new com.lowagie.text.pdf.PdfPTable(2);
-        tablaTotal.setWidthPercentage(100);
-        tablaTotal.setWidths(arregloEnteros([88, 12]))
+        def tablaTotalMantenimiento = new com.lowagie.text.pdf.PdfPTable(2);
+        tablaTotalMantenimiento.setWidthPercentage(100);
+        tablaTotalMantenimiento.setWidths(arregloEnteros([88, 12]))
 
         def sql4 = "select sum(egrsvlor) from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mejoras';"
         def cn4 = dbConnectionService.getConnection()
@@ -5522,17 +5515,57 @@ class ReportesController extends Shield{
         def cn5 = dbConnectionService.getConnection()
         def totalMantenimiento = cn5.rows(sql5.toString())
 
-        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph("Total mantenimiento: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
-        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph(g.formatNumber(number:totalMantenimiento[0].sum, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+        mantenimientos.each {mantenimiento ->
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mantenimiento.tpgsdscr.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mantenimiento.prve, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mantenimiento.egrsdscr, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mantenimiento.egrsfcha.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mantenimiento.egrsvlor.toString(), fontTd10), frmtNmro)
+        }
 
-        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph("Total Mejoras: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
-        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph(g.formatNumber(number:totalMejoras[0].sum, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotalMantenimiento, new com.lowagie.text.Paragraph("Total mantenimiento: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotalMantenimiento, new com.lowagie.text.Paragraph(g.formatNumber(number:totalMantenimiento[0].sum, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+        addCellTabla(tablaDetalles, tablaTotalMantenimiento, [border: Color.WHITE, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, colspan: 5, pl: 0])
+
+
+        def tablaDetallesMejora = new com.lowagie.text.pdf.PdfPTable(5);
+        tablaDetallesMejora.setWidthPercentage(100);
+        tablaDetallesMejora.setWidths(arregloEnteros([16,30,30,12,12]))
+        tablaDetallesMejora.setSpacingAfter(1f);
+
+        mejoras.each {mejora ->
+            addCellTabla(tablaDetallesMejora, new com.lowagie.text.Paragraph(mejora.tpgsdscr.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetallesMejora, new com.lowagie.text.Paragraph(mejora.prve, fontTd10), frmtDato)
+            addCellTabla(tablaDetallesMejora, new com.lowagie.text.Paragraph(mejora.egrsdscr, fontTd10), frmtDato)
+            addCellTabla(tablaDetallesMejora, new com.lowagie.text.Paragraph(mejora.egrsfcha.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetallesMejora, new com.lowagie.text.Paragraph(mejora.egrsvlor.toString(), fontTd10), frmtNmro)
+        }
+
+        def tablaTotalMejora = new com.lowagie.text.pdf.PdfPTable(2);
+        tablaTotalMejora.setWidthPercentage(100);
+        tablaTotalMejora.setWidths(arregloEnteros([88, 12]))
+
+        addCellTabla(tablaTotalMejora, new com.lowagie.text.Paragraph("Total Mejoras: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotalMejora, new com.lowagie.text.Paragraph(g.formatNumber(number:totalMejoras[0].sum, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+        addCellTabla(tablaDetallesMejora, tablaTotalMejora, [border: Color.WHITE, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, colspan: 5, pl: 0])
+
+
+        def tablaTotal = new com.lowagie.text.pdf.PdfPTable(2);
+        tablaTotal.setWidthPercentage(100);
+        tablaTotal.setWidths(arregloEnteros([88, 12]))
+
+        def sql7 = "select sum(egrsvlor) from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}');"
+        def cn7= dbConnectionService.getConnection()
+        def total = cn7.rows(sql7.toString())
+
+        def granTotal = ( total[0].sum ?: 0)
 
         addCellTabla(tablaTotal, new com.lowagie.text.Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
         addCellTabla(tablaTotal, new com.lowagie.text.Paragraph(g.formatNumber(number:granTotal, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
-        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, colspan: 5, pl: 0])
+        addCellTabla(tablaDetallesMejora, tablaTotal, [border: Color.WHITE, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, colspan: 5, pl: 0])
 
         document.add(tablaDetalles)
+        document.add(tablaDetallesMejora)
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
