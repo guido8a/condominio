@@ -5429,21 +5429,20 @@ class ReportesController extends Shield{
     }
 
     def mantenimientoMejoras(){
-        println("params " + params)
+//        println("params " + params)
 
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
 //        println "fechas: '${fechaDesde}','${fechaHasta}'"
 
-        def sql3 = "select * from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by egrsfcha"
+        def sql3 = "select * from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') order by tpgsdscr;"
         def cn3 = dbConnectionService.getConnection()
-        def egresos = cn3.rows(sql3.toString())
+        def mejoras = cn3.rows(sql3.toString())
 
-        def totalEgresos = (egresos.egrsvlor.sum() ?: 0)
+        def granTotal = (mejoras.egrsvlor.sum() ?: 0)
 
         def baos = new ByteArrayOutputStream()
-        def name = "listaEgresos_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
         def titulo = new Color(40, 140, 180)
         com.lowagie.text.Font fontTitulo = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 12, com.lowagie.text.Font.BOLD, titulo);
         com.lowagie.text.Font fontTitulo16 = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 16, com.lowagie.text.Font.BOLD, titulo);
@@ -5467,7 +5466,7 @@ class ReportesController extends Shield{
 
         document.open();
         com.lowagie.text.pdf.PdfContentByte cb = pdfw.getDirectContent();
-        document.addTitle("Detalle de Egresos del ${fechaDesde} al ${fechaHasta}");
+        document.addTitle("Mantenimiento y Mejoras del ${fechaDesde} al ${fechaHasta}");
         document.addSubject("Generado por el sistema Condominio");
         document.addKeywords("reporte, condominio, pagos");
         document.addAuthor("Condominio");
@@ -5479,48 +5478,59 @@ class ReportesController extends Shield{
             def fondo = new Color(240, 248, 250);
             def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: com.lowagie.text.Element.ALIGN_CENTER, valign: com.lowagie.text.Element.ALIGN_MIDDLE]
 
-            def tablaHeaderDetalles = new com.lowagie.text.pdf.PdfPTable(4);
+            def tablaHeaderDetalles = new com.lowagie.text.pdf.PdfPTable(5);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([38,38,12,12]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([16,30,30,12,12]))
 
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Tipo", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Proveedor", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Descripción de Egresos", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Descripción", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Fecha", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Valor", fontTh), frmtHd)
-            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
+
+            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, colspan: 5, pl: 0])
         }
 
-        tablaDetalles = new com.lowagie.text.pdf.PdfPTable(4);
+        tablaDetalles = new com.lowagie.text.pdf.PdfPTable(5);
         tablaDetalles.setWidthPercentage(100);
-        tablaDetalles.setWidths(arregloEnteros([38,38,12,12]))
+        tablaDetalles.setWidths(arregloEnteros([16,30,30,12,12]))
         tablaDetalles.setSpacingAfter(1f);
-
 
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE]
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE]
 
         printHeaderDetalle()
 
-        egresos.each {egreso ->
-            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(egreso.prve, fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(egreso.egrsdscr, fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(egreso.egrsfcha.toString(), fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(egreso.egrsvlor.toString(), fontTd10), frmtNmro)
+        mejoras.each {mejora ->
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mejora.tpgsdscr.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mejora.prve, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mejora.egrsdscr, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mejora.egrsfcha.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(mejora.egrsvlor.toString(), fontTd10), frmtNmro)
+
         }
 
         def tablaTotal = new com.lowagie.text.pdf.PdfPTable(2);
         tablaTotal.setWidthPercentage(100);
         tablaTotal.setWidths(arregloEnteros([88, 12]))
 
-        def sql5 = "select sum(egrsvlor) from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}');"
-        def cn5 = dbConnectionService.getConnection()
-        def total = cn5.rows(sql5.toString())
+        def sql4 = "select sum(egrsvlor) from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mejoras';"
+        def cn4 = dbConnectionService.getConnection()
+        def totalMejoras = cn4.rows(sql4.toString())
 
-        println("sql " + sql5)
+        def sql5 = "select sum(egrsvlor) from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mantenimiento';"
+        def cn5 = dbConnectionService.getConnection()
+        def totalMantenimiento = cn5.rows(sql5.toString())
+
+        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph("Total mantenimiento: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph(g.formatNumber(number:totalMantenimiento[0].sum, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+
+        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph("Total Mejoras: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph(g.formatNumber(number:totalMejoras[0].sum, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
 
         addCellTabla(tablaTotal, new com.lowagie.text.Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
-        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph(g.formatNumber(number:total[0].sum, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
-        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
+        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph(g.formatNumber(number:granTotal, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, colspan: 5, pl: 0])
 
         document.add(tablaDetalles)
         document.close();
