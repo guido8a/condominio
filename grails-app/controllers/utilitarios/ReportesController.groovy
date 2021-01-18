@@ -2016,12 +2016,16 @@ class ReportesController extends Shield{
         res8.eachWithIndex{ r, k->
 
             def nuevaFecha
+            def a = new Date().parse("dd-MM-yyyy", 01 + "-" + r.mes + "-" + r.anio)
+            nuevaFecha = ultimoDiaDelMes(a).format("yyyy-MM-dd")
 
+/*
             if(r.mes.toInteger() == 2){
-                nuevaFecha = "28-" + r.mes + "-" + r.anio
+                nuevaFecha = "${r.anio}-${r.mes}- + "28-" + r.mes + "-" +
             }else{
                 nuevaFecha = "30-" + r.mes + "-" + r.anio
             }
+*/
 
             def cn7 = dbConnectionService.getConnection()
             def valores4 = "select ingrsldo + sldopgad por_cobrar, ingrsldo + sldofnal total\n" +
