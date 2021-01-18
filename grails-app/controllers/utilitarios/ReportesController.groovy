@@ -1870,11 +1870,8 @@ class ReportesController extends Shield{
 
             def nuevaFecha
 
-            if(it.mes.toInteger() == 2){
-                nuevaFecha = "28-" + it.mes + "-" + it.anio
-            }else{
-                nuevaFecha = "30-" + it.mes + "-" + it.anio
-            }
+            def a = new Date().parse("dd-MM-yyyy", 01 + "-" + it.mes + "-" + it.anio)
+            nuevaFecha = ultimoDiaDelMes(a).format("yyyy-MM-dd")
 
             def cn7 = dbConnectionService.getConnection()
             def valores4 = "select ingrsldo + sldopgad por_cobrar, ingrsldo + sldofnal total\n" +
@@ -1943,7 +1940,7 @@ class ReportesController extends Shield{
             def nuevaFecha
 
             def a = new Date().parse("dd-MM-yyyy", 01 + "-" + r.mes + "-" + r.anio)
-            nuevaFecha = ultimoDiaDelMes(a).format("dd-MM-yyyy")
+            nuevaFecha = ultimoDiaDelMes(a).format("yyyy-MM-dd")
 
             def cn7 = dbConnectionService.getConnection()
             def valores4 = "select ingrsldo + sldopgad por_cobrar, ingrsldo + sldofnal total\n" +
