@@ -55,7 +55,7 @@
         padding-top: 0px;
         /*margin: auto;*/
         margin: 8px;
-        font-size: 15px;
+        font-size: 13px;
         font-style: normal;
     }
 
