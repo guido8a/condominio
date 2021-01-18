@@ -35,6 +35,18 @@
             </span>
         </div>
 
+        <div class="form-group keeptogether required">
+            <span class="grupo">
+                <label for="anio" class="col-md-2 control-label">
+                    Año
+                </label>
+                <div class="col-md-8">
+                    <g:select id="anio" name="anio.id" from="${utilitarios.Anio.list()}" optionKey="id" optionValue="numero" required="" class="many-to-one form-control"/>
+                </div>
+                *
+            </span>
+        </div>
+
         <div class="form-group keeptogether">
             <span class="grupo">
                 <label for="descuentoDescripcion" class="col-md-2 control-label">

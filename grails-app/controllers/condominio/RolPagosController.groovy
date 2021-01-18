@@ -2,6 +2,7 @@ package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
 import seguridad.Shield
+import utilitarios.Anio
 
 /**
  * Controlador que muestra las pantallas de manejo de RolPagos
@@ -74,20 +75,21 @@ class RolPagosController extends Shield {
 
     def save_ajax(){
 
-        println("params " + params)
-        println("params " + params + "")
+//        println("params " + params)
 
         def empleado = Empleado.get(params.empleado)
         def condominio = Condominio.get(params."condominio.id")
         def fechaInicio
         def fechaFin
         def band = 0
+        def anioSeleccionado = Anio.get(params."anio.id")
+        def ani = anioSeleccionado.numero
 
         switch (params.tipo){
             case 'mensual':
                 def salario = Salario.get(params."salario.id")
-                fechaInicio = sacarFechas(salario.id).inicio
-                fechaFin = sacarFechas(salario.id).fin
+                fechaInicio = sacarFechas(salario.id, params."anio.id").inicio
+                fechaFin = sacarFechas(salario.id, params."anio.id").fin
 
                 def cn = dbConnectionService.getConnection()
                 def sql = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fechaInicio}', " +
@@ -102,8 +104,8 @@ class RolPagosController extends Shield {
                 break;
             case "tercero":
                 def salario = Salario.get(params."salario.id")
-                def fecha1 = "1-jan-" + new Date().format("yyyy")
-                def fecha2 = "30-nov-" + new Date().format("yyyy")
+                def fecha1 = "1-jan-" + ani
+                def fecha2 = "30-nov-" + ani
 
                 def cn2 = dbConnectionService.getConnection()
                 def sql2 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', " +
@@ -118,8 +120,8 @@ class RolPagosController extends Shield {
 
             case "cuarto":
                 def salario = Salario.get(params."salario.id")
-                def fecha1 = "1-jan-" + new Date().format("yyyy")
-                def fecha2 = "31-dec-" + new Date().format("yyyy")
+                def fecha1 = "1-jan-" + ani
+                def fecha2 = "31-dec-" + ani
 
                 def cn3 = dbConnectionService.getConnection()
                 def sql3 = "select * from nomina('${condominio?.id}', '${salario?.id}', '${empleado?.id}', '${fecha1}', '${fecha2}', " +
@@ -133,8 +135,8 @@ class RolPagosController extends Shield {
                 break;
             case "vacaciones":
                 def salario = Salario.get(params."salario.id")
-                def fecha1 = "1-jan-" + new Date().format("yyyy")
-                def fecha2 = "31-dec-" + new Date().format("yyyy")
+                def fecha1 = "1-jan-" + ani
+                def fecha2 = "31-dec-" + ani
                 def sql4
                 def cn4 = dbConnectionService.getConnection()
                 if(params.descuentoValor == '0'){
@@ -155,66 +157,84 @@ class RolPagosController extends Shield {
         }
     }
 
-    def sacarFechas(id) {
+    def sacarFechas(id, anio) {
 
-        def anioActual = new Date().format("yyyy")
+        def an = Anio.get(anio)
+        def anioActual = an.numero
         def inicio
         def fin
+        def f
+
+        def a = new Date().parse("dd-MM-yyyy", 01 + "-" + id + "-" + anioActual)
+        f = ultimoDiaDelMes(a).format("dd")
+
+//        println("f " + f)
 
         switch (id){
             case '1':
                 inicio = '1-jan-' + anioActual
-                fin = '31-jan-' + anioActual
+                fin = f + '-jan-' + anioActual
                 break;
             case "2":
                 inicio = '1-feb-' + anioActual
-                fin = '28-feb-' + anioActual
+                fin = f + '-feb-' + anioActual
                 break;
             case "3":
                 inicio = '1-mar-' + anioActual
-                fin = '31-mar-' + anioActual
+                fin = f + '-mar-' + anioActual
                 break;
             case "4":
                 inicio = '1-apr-' + anioActual
-                fin = '30-apr-' + anioActual
+                fin = f +'-apr-' + anioActual
                 break;
             case "5":
                 inicio = '1-may-' + anioActual
-                fin = '31-may-' + anioActual
+                fin = f + '-may-' + anioActual
                 break;
             case "6":
                 inicio = '1-jun-' + anioActual
-                fin = '30-jun-' + anioActual
+                fin = f + '-jun-' + anioActual
                 break;
             case "7":
                 inicio = '1-jul-' + anioActual
-                fin = '31-jul-' + anioActual
+                fin = f + '-jul-' + anioActual
                 break;
             case "8":
                 inicio = '1-aug-' + anioActual
-                fin = '31-aug-' + anioActual
+                fin = f + '-aug-' + anioActual
                 break;
             case "9":
                 inicio = '1-sep-' + anioActual
-                fin = '30-sep-' + anioActual
+                fin = f + '-sep-' + anioActual
                 break;
             case "10":
                 inicio = '1-oct-' + anioActual
-                fin = '31-oct-' + anioActual
+                fin = f + '-oct-' + anioActual
                 break;
             case "11":
                 inicio = '1-nov-' + anioActual
-                fin = '30-nov-' + anioActual
+                fin = f + '-nov-' + anioActual
                 break;
             case "12":
                 inicio = '1-dec-' + anioActual
-                fin = '31-dec-' + anioActual
+                fin = f + '-dec-' + anioActual
                 break;
         }
 
 
         return[inicio:inicio, fin:fin]
 
+    }
+
+    def ultimoDiaDelMes(fecha) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+
+        calendar.add(Calendar.MONTH, 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.add(Calendar.DATE, -1);
+
+        return calendar.getTime();
     }
 
 }
