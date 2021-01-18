@@ -3992,7 +3992,7 @@ class ReportesController extends Shield{
 
         def cn = dbConnectionService.getConnection()
         def cn2 = dbConnectionService.getConnection()
-        def sql = "select * from pendiente('${fecha.format('yyy-MM-dd')}', '${params.torre}')"
+        def sql = "select * from pendiente('${fecha.format('yyyy-MM-dd')}', '${params.torre}')"
 //        println "sql: $sql"
         def res = cn.rows(sql.toString())
 
