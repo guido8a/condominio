@@ -188,7 +188,8 @@ class EmpleadoController {
         def condominio = Condominio.get(params.con)
         def empleado = Empleado.get(params.id)
         def sueldos = Sueldo.findAllByEmpleado(empleado)
-        def roles = RolPagos.findAllBySueldoInList(sueldos).sort{a,b -> a.fechaDesde <=> b.fechaDesde ?: a.salario.id <=> b.salario.id}
+//        def roles = RolPagos.findAllBySueldoInList(sueldos).sort{a,b -> a.fechaDesde <=> b.fechaDesde ?: a.salario.id <=> b.salario.id}
+        def roles = RolPagos.findAllBySueldoInList(sueldos).sort{it.fechaHasta}
 
         return[roles: roles, empleado: empleado, condominio: condominio]
     }
