@@ -47,15 +47,17 @@
     <div class="linea"></div>
     <table class="table table-bordered table-hover table-condensed" style="width: 100%">
         <tr>
-            <th class="alinear" style="width: 18%">Tipo</th>
-            <th class="alinear" style="width: 11%">Sueldo</th>
-            <th class="alinear" style="width: 11%">Fondo de reserva</th>
-            <th class="alinear" style="width: 11%">Iess</th>
-            <th class="alinear" style="width: 11%">Descuento valor</th>
-            <th class="alinear" style="width: 10%">Bono Valor</th>
+            <th class="alinear" style="width: 25%">Tipo</th>
+            <th class="alinear" style="width: 7%">Sueldo</th>
+            <th class="alinear" style="width: 7%">Fondo de reserva</th>
+            <th class="alinear" style="width: 6%">Bono Valor</th>
+            <th class="alinear" style="width: 8%">Tot. Ingresos</th>
+            <th class="alinear" style="width: 6%">Iess</th>
+            <th class="alinear" style="width: 6%">Desc. Valor</th>
+            <th class="alinear" style="width: 8%">Tot. Egresos</th>
             <th class="alinear" style="width: 8%">Fecha Inicio</th>
             <th class="alinear" style="width: 8%">Fecha Fin</th>
-            <th class="alinear" style="width: 8%">Total</th>
+            <th class="alinear" style="width: 7%">Total</th>
             <th class="alinear" style="width: 4%"><i class="fa fa-print"></i> </th>
 
         </tr>
@@ -65,16 +67,19 @@
         <table class="table-bordered table-condensed table-hover" width="100%">
             <g:each in="${roles}" var="rol">
                 <tr data-id="${rol?.id}">
-                    <td style="width: 18%">${rol?.salario?.descripcion}</td>
-                    <td class="derecha" style="width: 11%">${g.formatNumber(number: rol?.sueldoRol ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
-                    <td class="derecha" style="width: 11%">${g.formatNumber(number: rol?.fondoReserva ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
-                    <td class="derecha" style="width: 11%">${g.formatNumber(number: rol?.iess ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
-                    <td class="derecha" style="width: 11%" title="${rol?.descuentoDescripcion}">${g.formatNumber(number: rol?.descuentoValor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
-                    <td class="derecha" style="width: 10%" title="${rol?.bono}">${g.formatNumber(number: rol?.bonoValor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
+                    <td style="width: 25%">${rol?.salario?.descripcion} - ${rol.fechaHasta.format('yyyy')}</td>
+                    <td class="derecha" style="width: 7%">${g.formatNumber(number: rol?.sueldoRol ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
+                    <td class="derecha" style="width: 7%">${g.formatNumber(number: rol?.fondoReserva ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
+                    <td class="derecha" style="width: 6%" title="${rol?.bono}">${g.formatNumber(number: rol?.bonoValor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
+                    <td class="derecha" style="width: 8%">${g.formatNumber(number: rol?.totalIngresos ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
+                    <td class="derecha" style="width: 6%">${g.formatNumber(number: rol?.iess ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
+                    <td class="derecha" style="width: 6%" title="${rol?.descuentoDescripcion}">${g.formatNumber(number: rol?.descuentoValor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
+                    <td class="derecha" style="width: 8%">${g.formatNumber(number: rol?.totalEgresos ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
                     <td style="width: 8%">${rol?.fechaDesde?.format("dd-MM-yyyy")}</td>
                     <td style="width: 8%">${rol?.fechaHasta?.format("dd-MM-yyyy")}</td>
-                    <td class="derecha" style="width: 8%">${g.formatNumber(number: rol?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
-                    <g:if test="${rol?.salario?.id?.toInteger() in [1,2,3,4,5,6,7,8,9,10,11,12]}">
+                    <td class="derecha" style="width: 7%">${g.formatNumber(number: rol?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}</td>
+                    %{--<g:if test="${rol?.salario?.id?.toInteger() in [1,2,3,4,5,6,7,8,9,10,11,12]}">--}%
+                    <g:if test="${rol?.salario?.id?.toInteger() in (1..12)}">
                         <td  style="width: 4%"><a href="#" class="btn btn-info btn-sm btnImprimir" data-id="${rol?.id}" title="Imprimir sueldo"><i class="fa fa-print"></i> </a></td>
                     </g:if>
                     <g:elseif test="${rol?.salario?.id?.toInteger() == 13}">
