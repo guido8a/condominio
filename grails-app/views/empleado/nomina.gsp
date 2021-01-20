@@ -41,7 +41,7 @@
     <h3>Nómina del empleado: ${empleado?.nombre + " " + empleado?.apellido}</h3>
 </div>
 
-<div style="margin-top: 30px; min-height: 350px" class="vertical-container">
+<div style="margin-top: 30px; min-height: 420px" class="vertical-container">
     <p class="css-vertical-text">Nómina</p>
 
     <div class="linea"></div>

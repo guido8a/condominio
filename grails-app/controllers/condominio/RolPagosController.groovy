@@ -104,7 +104,7 @@ class RolPagosController extends Shield {
                 break;
             case "tercero":
                 def salario = Salario.get(params."salario.id")
-                def fecha1 = "1-jan-" + ani
+                def fecha1 = "1-dec-" + (ani.toInteger() - 1)
                 def fecha2 = "30-nov-" + ani
 
                 def cn2 = dbConnectionService.getConnection()
