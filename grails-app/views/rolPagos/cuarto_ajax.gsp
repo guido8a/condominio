@@ -16,7 +16,7 @@
                 <label for="condominio" class="col-md-2 control-label">
                     Condominio
                 </label>
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <g:select id="condominio" name="condominio.id" from="${condominio}" optionKey="id" optionValue="nombre" required="" value="${condominio?.id}" class="many-to-one form-control"/>
                 </div>
                 *
@@ -28,7 +28,7 @@
                 <label for="anio" class="col-md-2 control-label">
                     Año
                 </label>
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <g:select id="anio" name="anio.id" from="${utilitarios.Anio.list()}" optionKey="id" optionValue="numero" required="" class="many-to-one form-control"/>
                 </div>
                 *
@@ -40,7 +40,7 @@
                 <label for="salario" class="col-md-2 control-label">
                     Salario
                 </label>
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <g:select id="salario" name="salario.id" from="${salarios}" optionKey="id" optionValue="descripcion" required="" value="${mensual?.salario?.id}" class="many-to-one form-control"/>
                 </div>
                 *

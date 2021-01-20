@@ -41,7 +41,7 @@
     <h3>Nómina del empleado: ${empleado?.nombre + " " + empleado?.apellido}</h3>
 </div>
 
-<div style="margin-top: 30px; min-height: 420px" class="vertical-container">
+<div style="margin-top: 30px; min-height: 620px" class="vertical-container">
     <p class="css-vertical-text">Nómina</p>
 
     <div class="linea"></div>
@@ -63,7 +63,7 @@
         </tr>
     </table>
 
-    <div class="" style="width: 100%;height: 350px; overflow-y: auto;float: right; margin-top: -15px" >
+    <div class="" style="width: 100%;height: 550px; overflow-y: auto;float: right; margin-top: -15px" >
         <table class="table-bordered table-condensed table-hover" width="100%">
             <g:each in="${roles}" var="rol">
                 <tr data-id="${rol?.id}">
