@@ -238,7 +238,6 @@
             }
         };
 
-
         var borrar = {
             label: " Eliminar",
             icon: "fa fa-trash-o",
@@ -248,12 +247,19 @@
             }
         };
 
+        var no_edit = {
+            label: " Ya está revisado",
+            icon: "fa fa-check",
+            header: true
+        };
+
         if(!revisado){
             items.editar = editar;
         } else {
             if(saldo){
                 items.editar = editar;
             }
+            items.no_edit = no_edit;
         }
 
 
