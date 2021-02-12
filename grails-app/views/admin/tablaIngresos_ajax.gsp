@@ -137,6 +137,9 @@ label {
         </div>
     </div>
 </div>
+<div>
+    Total documentos: ${ingresos.size()}
+</div>
 
 <script type="text/javascript">
 

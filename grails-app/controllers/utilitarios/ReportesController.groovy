@@ -25,6 +25,7 @@ import groovy.json.JsonBuilder
 import jxl.Workbook
 import jxl.WorkbookSettings
 import jxl.write.Label
+import jxl.write.Number
 import jxl.write.NumberFormat
 import jxl.write.WritableCellFormat
 import jxl.write.WritableFont
@@ -2861,13 +2862,13 @@ class ReportesController extends Shield{
 //        document.addAuthor("Condominio");
         document.addCreator("Tedein SA");
 
-//        Paragraph preface = new Paragraph();
-//        addEmptyLine(preface, 1);
-//        preface.setAlignment(Element.ALIGN_CENTER);
-//        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
-//        preface.add(new Paragraph("Balance General del ${fechaDesde} al ${fechaHasta}", fontTitulo));
-//        addEmptyLine(preface, 1);
-//        document.add(preface);
+        Paragraph preface = new Paragraph()
+//        addEmptyLine(preface, 1)
+        preface.setAlignment(Element.ALIGN_CENTER)
+        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16))
+        preface.add(new Paragraph("Balance General del ${fechaDesde} al ${fechaHasta}", fontTitulo))
+        addEmptyLine(preface, 1)
+        document.add(preface)
 
         PdfPTable tblaIngr = null
 
@@ -5768,15 +5769,13 @@ class ReportesController extends Shield{
 
         WritableFont times16font = new WritableFont(WritableFont.TIMES, 11, WritableFont.BOLD, false);
         WritableCellFormat times16format = new WritableCellFormat(times16font);
-        sheet.setColumnView(0, 12)
-        sheet.setColumnView(1, 60)
-        sheet.setColumnView(2, 25)
-        sheet.setColumnView(3, 25)
-        sheet.setColumnView(4, 40)
-        sheet.setColumnView(5, 25)
-        sheet.setColumnView(6, 25)
-        sheet.setColumnView(7, 15)
-        sheet.setColumnView(8, 15)
+        sheet.setColumnView(0, 10)
+        sheet.setColumnView(1, 40)
+        sheet.setColumnView(2, 20)
+        sheet.setColumnView(3, 30)
+        sheet.setColumnView(4, 12)
+        sheet.setColumnView(5, 12)
+        sheet.setColumnView(6, 10)
         // inicia textos y numeros para asocias a columnas
 
         def label
@@ -5789,14 +5788,14 @@ class ReportesController extends Shield{
         WritableCellFormat cf2obj = new WritableCellFormat(nf);
 
         label = new Label(1, 1, (condominio?.nombre ?: ''), times16format); sheet.addCell(label);
-        label = new Label(1, 2, "REPORTE EXCEL INGRESOS", times16format); sheet.addCell(label);
+        label = new Label(1, 2, "Detalle de Ingresos del ${fechaDesde} al ${fechaHasta}", times16format); sheet.addCell(label);
 
         label = new Label(0, 4, "Dpto: ", times16format); sheet.addCell(label);
         label = new Label(1, 4, "Persona", times16format); sheet.addCell(label);
-        label = new Label(2, 4, "Ocup.", times16format); sheet.addCell(label);
+        label = new Label(2, 4, "Ocupante", times16format); sheet.addCell(label);
         label = new Label(3, 4, "Descripción del ingreso", times16format); sheet.addCell(label);
         label = new Label(4, 4, "Fecha", times16format); sheet.addCell(label);
-        label = new Label(5, 4, "Doc.", times16format); sheet.addCell(label);
+        label = new Label(5, 4, "Documento", times16format); sheet.addCell(label);
         label = new Label(6, 4, "Valor", times16format); sheet.addCell(label);
 
         ingresos.eachWithIndex {i, j->
@@ -5806,7 +5805,7 @@ class ReportesController extends Shield{
             label = new Label(3, fila, i?.pagodscr?.toString()); sheet.addCell(label);
             label = new Label(4, fila, i?.pagofcha?.toString()); sheet.addCell(label);
             label = new Label(5, fila, i?.pagodcmt?.toString()); sheet.addCell(label);
-            label = new Label(6, fila, i?.pagovlor?.toString()); sheet.addCell(label);
+            number = new Number(6, fila, i?.pagovlor); sheet.addCell(number)
             fila++
         }
 
@@ -5816,7 +5815,7 @@ class ReportesController extends Shield{
         label = new Label(3, fila, ''); sheet.addCell(label);
         label = new Label(4, fila, ''); sheet.addCell(label);
         label = new Label(5, fila,'TOTAL'); sheet.addCell(label);
-        label = new Label(6, fila, totalIngresos.toString()); sheet.addCell(label);
+        number = new Number(6, fila, totalIngresos); sheet.addCell(number);
 
         workbook.write();
         workbook.close();
@@ -5860,15 +5859,11 @@ class ReportesController extends Shield{
 
         WritableFont times16font = new WritableFont(WritableFont.TIMES, 11, WritableFont.BOLD, false);
         WritableCellFormat times16format = new WritableCellFormat(times16font);
-        sheet.setColumnView(0, 12)
+        sheet.setColumnView(0, 60)
         sheet.setColumnView(1, 60)
-        sheet.setColumnView(2, 25)
-        sheet.setColumnView(3, 25)
-        sheet.setColumnView(4, 40)
-        sheet.setColumnView(5, 25)
-        sheet.setColumnView(6, 25)
-        sheet.setColumnView(7, 15)
-        sheet.setColumnView(8, 15)
+        sheet.setColumnView(2, 12)
+        sheet.setColumnView(3, 10)
+        sheet.setColumnView(4, 20)
         // inicia textos y numeros para asocias a columnas
 
         def label
@@ -5881,25 +5876,27 @@ class ReportesController extends Shield{
         WritableCellFormat cf2obj = new WritableCellFormat(nf);
 
         label = new Label(1, 1, (condominio?.nombre ?: ''), times16format); sheet.addCell(label);
-        label = new Label(1, 2, "REPORTE EXCEL EGRESOS", times16format); sheet.addCell(label);
+        label = new Label(1, 2, "Detalle de Egresos del ${fechaDesde} al ${fechaHasta}", times16format); sheet.addCell(label);
 
         label = new Label(0, 4, "Proveedor: ", times16format); sheet.addCell(label);
         label = new Label(1, 4, "Descripción de egresos", times16format); sheet.addCell(label);
         label = new Label(2, 4, "Fecha", times16format); sheet.addCell(label);
         label = new Label(3, 4, "Valor", times16format); sheet.addCell(label);
+        label = new Label(4, 4, "Factura", times16format); sheet.addCell(label);
 
         egresos.eachWithIndex {i, j->
             label = new Label(0, fila, i.prve.toString()); sheet.addCell(label);
             label = new Label(1, fila, i.egrsdscr.toString()); sheet.addCell(label);
             label = new Label(2, fila, i?.egrsfcha?.toString()); sheet.addCell(label);
-            label = new Label(3, fila, i?.egrsvlor?.toString()); sheet.addCell(label);
+            number = new Number(3, fila, i?.egrsvlor); sheet.addCell(number);
+            label = new Label(4, fila, i?.egrsfctr?.toString()); sheet.addCell(label);
             fila++
         }
 
         label = new Label(0, fila, ''); sheet.addCell(label);
         label = new Label(1, fila, ''); sheet.addCell(label);
         label = new Label(2, fila,'TOTAL'); sheet.addCell(label);
-        label = new Label(3, fila, totalEgresos.toString()); sheet.addCell(label);
+        number = new Number(3, fila, totalEgresos); sheet.addCell(number);
 
         workbook.write();
         workbook.close();

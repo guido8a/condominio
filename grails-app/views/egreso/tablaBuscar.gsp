@@ -37,7 +37,7 @@ th, td {
 <div class="" style="width: 100%;height: ${msg == '' ? 600 : 575}px; overflow-y: auto;float: left; margin-top: -20px">
     <table class="table-bordered table-condensed table-hover" width="100%">
         <g:each in="${data}" var="dato" status="z">
-            <tr id="${dato.egrs__id}" data-id="${dato.egrs__id}" data-tam="${condominio.PagoEgreso.findAllByEgreso(condominio.Egreso.get(dato.egrs__id)).size()}" class="${dato.egrssldo > 0 ? clase : ''} trEgreso ${z == 0 ? 'seleccionado' : ''} ${PagoEgreso.findByEgreso(Egreso.get(dato.egrs__id)).estado == 'R' ? 'revisado' : ''} ${dato.egrssldo > 0 ? 'saldo' : ''}">
+            <tr id="${dato.egrs__id}" data-id="${dato.egrs__id}" data-tam="${condominio.PagoEgreso.findAllByEgreso(condominio.Egreso.get(dato.egrs__id)).size()}" class="${dato.egrssldo > 0 ? clase : ''} trEgreso ${z == 0 ? 'seleccionado' : ''} ${PagoEgreso.findByEgreso(Egreso.get(dato.egrs__id))?.estado == 'R' ? 'revisado' : ''} ${dato.egrssldo > 0 ? 'saldo' : ''}">
                 <td width="30%">
                     ${dato?.egrsdscr}
                 </td>
