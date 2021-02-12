@@ -255,6 +255,8 @@
                 </button>
                 <button type="button" class="btn btnAceptarIngresos btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
                 </button>
+                <button type="button" class="btn btnAceptarIngresosExcel btn-info" data-dismiss="modal"><i class="fa fa-print"></i> Excel
+                </button>
             </div>
         </div>
     </div>
@@ -303,6 +305,8 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
                 </button>
                 <button type="button" class="btn btnAceptarEgresos btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+                <button type="button" class="btn btnAceptarEgresosExcel btn-info" data-dismiss="modal"><i class="fa fa-print"></i> Excel
                 </button>
             </div>
         </div>
@@ -1245,6 +1249,31 @@
             }
         });
 
+        $(".btnAceptarEgresosExcel").click(function () {
+            var fechaDesde = $("#fechaDesdeEgr").val();
+            var fechaHasta = $("#fechaHastaEgr").val();
+
+            if(fechaDesde == '' || fechaHasta == ''){
+                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: '${createLink(controller: 'reportes', action: 'revisarFecha_ajax')}',
+                    data:{
+                        desde: fechaDesde,
+                        hasta: fechaHasta
+                    },
+                    success: function (msg){
+                        if(msg == 'ok'){
+                            location.href = "${g.createLink(controller:'reportes' , action: 'imprimirEgresosExcel')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                        }else{
+                            bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
+                            return false;
+                        }
+                    }
+                });
+            }
+        });
 
         $(".btnAceptarIngresos").click(function () {
             var fechaDesde = $("#fechaDesdeIng").val();
@@ -1263,6 +1292,32 @@
                     success: function (msg){
                         if(msg == 'ok'){
                             location.href = "${g.createLink(controller:'reportes' , action: 'imprimirIngresos')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                        }else{
+                            bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
+                            return false;
+                        }
+                    }
+                });
+            }
+        });
+
+        $(".btnAceptarIngresosExcel").click(function () {
+            var fechaDesde = $("#fechaDesdeIng").val();
+            var fechaHasta = $("#fechaHastaIng").val();
+
+            if(fechaDesde == '' || fechaHasta == ''){
+                bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: '${createLink(controller: 'reportes', action: 'revisarFecha_ajax')}',
+                    data:{
+                        desde: fechaDesde,
+                        hasta: fechaHasta
+                    },
+                    success: function (msg){
+                        if(msg == 'ok'){
+                            location.href = "${g.createLink(controller:'reportes' , action: 'imprimirIngresosExcel')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
                         }else{
                             bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
                             return false;

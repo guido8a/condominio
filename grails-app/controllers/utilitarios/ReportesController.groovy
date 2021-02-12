@@ -22,6 +22,14 @@ import condominio.Texto
 import condominio.TipoAporte
 import grails.converters.JSON
 import groovy.json.JsonBuilder
+import jxl.Workbook
+import jxl.WorkbookSettings
+import jxl.write.Label
+import jxl.write.NumberFormat
+import jxl.write.WritableCellFormat
+import jxl.write.WritableFont
+import jxl.write.WritableSheet
+import jxl.write.WritableWorkbook
 import org.apache.poi.hwpf.usermodel.OfficeDrawing
 import org.apache.poi.xwpf.usermodel.TextAlignment
 import org.jfree.chart.ChartUtilities
@@ -5727,6 +5735,184 @@ class ReportesController extends Shield{
         document.close();
         pdfw.close()
         return baos
-
     }
+
+
+    def imprimirIngresosExcel () {
+
+//        println("imprimirIngresos " + params)
+
+        def condominio = Condominio.get(session.condominio.id)
+
+        def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
+        def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
+
+        def sql2 = "select * from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by prsndpto"
+        def cn2 = dbConnectionService.getConnection()
+        def ingresos = cn2.rows(sql2.toString())
+
+        def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
+
+        //excel
+        WorkbookSettings workbookSettings = new WorkbookSettings()
+        workbookSettings.locale = Locale.default
+
+        def file = File.createTempFile('myExcelDocument', '.xls')
+        file.deleteOnExit()
+
+        WritableWorkbook workbook = Workbook.createWorkbook(file, workbookSettings)
+
+        WritableFont font = new WritableFont(WritableFont.ARIAL, 12)
+        WritableCellFormat formatXls = new WritableCellFormat(font)
+
+        def row = 0
+        WritableSheet sheet = workbook.createSheet('MySheet', 0)
+        // fija el ancho de la columna
+        // sheet.setColumnView(1,40)
+
+        WritableFont times16font = new WritableFont(WritableFont.TIMES, 11, WritableFont.BOLD, false);
+        WritableCellFormat times16format = new WritableCellFormat(times16font);
+        sheet.setColumnView(0, 12)
+        sheet.setColumnView(1, 60)
+        sheet.setColumnView(2, 25)
+        sheet.setColumnView(3, 25)
+        sheet.setColumnView(4, 40)
+        sheet.setColumnView(5, 25)
+        sheet.setColumnView(6, 25)
+        sheet.setColumnView(7, 15)
+        sheet.setColumnView(8, 15)
+        // inicia textos y numeros para asocias a columnas
+
+        def label
+        def nmro
+        def number
+
+        def fila = 6;
+
+        NumberFormat nf = new NumberFormat("#.##");
+        WritableCellFormat cf2obj = new WritableCellFormat(nf);
+
+        label = new Label(1, 1, (condominio?.nombre ?: ''), times16format); sheet.addCell(label);
+        label = new Label(1, 2, "REPORTE EXCEL INGRESOS", times16format); sheet.addCell(label);
+
+        label = new Label(0, 4, "Dpto: ", times16format); sheet.addCell(label);
+        label = new Label(1, 4, "Persona", times16format); sheet.addCell(label);
+        label = new Label(2, 4, "Ocup.", times16format); sheet.addCell(label);
+        label = new Label(3, 4, "Descripción del ingreso", times16format); sheet.addCell(label);
+        label = new Label(4, 4, "Fecha", times16format); sheet.addCell(label);
+        label = new Label(5, 4, "Doc.", times16format); sheet.addCell(label);
+        label = new Label(6, 4, "Valor", times16format); sheet.addCell(label);
+
+        ingresos.eachWithIndex {i, j->
+            label = new Label(0, fila, i.prsndpto.toString()); sheet.addCell(label);
+            label = new Label(1, fila, i.prsn.toString()); sheet.addCell(label);
+            label = new Label(2, fila, i?.tpocdscr?.toString()); sheet.addCell(label);
+            label = new Label(3, fila, i?.pagodscr?.toString()); sheet.addCell(label);
+            label = new Label(4, fila, i?.pagofcha?.toString()); sheet.addCell(label);
+            label = new Label(5, fila, i?.pagodcmt?.toString()); sheet.addCell(label);
+            label = new Label(6, fila, i?.pagovlor?.toString()); sheet.addCell(label);
+            fila++
+        }
+
+        label = new Label(0, fila, ''); sheet.addCell(label);
+        label = new Label(1, fila, ''); sheet.addCell(label);
+        label = new Label(2, fila, ''); sheet.addCell(label);
+        label = new Label(3, fila, ''); sheet.addCell(label);
+        label = new Label(4, fila, ''); sheet.addCell(label);
+        label = new Label(5, fila,'TOTAL'); sheet.addCell(label);
+        label = new Label(6, fila, totalIngresos.toString()); sheet.addCell(label);
+
+        workbook.write();
+        workbook.close();
+        def output = response.getOutputStream()
+        def header = "attachment; filename=" + "DetalleIngresosExcel.xls";
+        response.setContentType("application/octet-stream")
+        response.setHeader("Content-Disposition", header);
+        output.write(file.getBytes());
+    }
+
+    def imprimirEgresosExcel () {
+
+//        println("imprimirIngresos " + params)
+
+        def condominio = Condominio.get(session.condominio.id)
+
+        def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
+        def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
+        def sql3 = "select * from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by egrsfcha"
+        def cn3 = dbConnectionService.getConnection()
+        def egresos = cn3.rows(sql3.toString())
+
+        def totalEgresos = (egresos.egrsvlor.sum() ?: 0)
+
+        //excel
+        WorkbookSettings workbookSettings = new WorkbookSettings()
+        workbookSettings.locale = Locale.default
+
+        def file = File.createTempFile('myExcelDocument', '.xls')
+        file.deleteOnExit()
+
+        WritableWorkbook workbook = Workbook.createWorkbook(file, workbookSettings)
+
+        WritableFont font = new WritableFont(WritableFont.ARIAL, 12)
+        WritableCellFormat formatXls = new WritableCellFormat(font)
+
+        def row = 0
+        WritableSheet sheet = workbook.createSheet('MySheet', 0)
+        // fija el ancho de la columna
+        // sheet.setColumnView(1,40)
+
+        WritableFont times16font = new WritableFont(WritableFont.TIMES, 11, WritableFont.BOLD, false);
+        WritableCellFormat times16format = new WritableCellFormat(times16font);
+        sheet.setColumnView(0, 12)
+        sheet.setColumnView(1, 60)
+        sheet.setColumnView(2, 25)
+        sheet.setColumnView(3, 25)
+        sheet.setColumnView(4, 40)
+        sheet.setColumnView(5, 25)
+        sheet.setColumnView(6, 25)
+        sheet.setColumnView(7, 15)
+        sheet.setColumnView(8, 15)
+        // inicia textos y numeros para asocias a columnas
+
+        def label
+        def nmro
+        def number
+
+        def fila = 6;
+
+        NumberFormat nf = new NumberFormat("#.##");
+        WritableCellFormat cf2obj = new WritableCellFormat(nf);
+
+        label = new Label(1, 1, (condominio?.nombre ?: ''), times16format); sheet.addCell(label);
+        label = new Label(1, 2, "REPORTE EXCEL EGRESOS", times16format); sheet.addCell(label);
+
+        label = new Label(0, 4, "Proveedor: ", times16format); sheet.addCell(label);
+        label = new Label(1, 4, "Descripción de egresos", times16format); sheet.addCell(label);
+        label = new Label(2, 4, "Fecha", times16format); sheet.addCell(label);
+        label = new Label(3, 4, "Valor", times16format); sheet.addCell(label);
+
+        egresos.eachWithIndex {i, j->
+            label = new Label(0, fila, i.prve.toString()); sheet.addCell(label);
+            label = new Label(1, fila, i.egrsdscr.toString()); sheet.addCell(label);
+            label = new Label(2, fila, i?.egrsfcha?.toString()); sheet.addCell(label);
+            label = new Label(3, fila, i?.egrsvlor?.toString()); sheet.addCell(label);
+            fila++
+        }
+
+        label = new Label(0, fila, ''); sheet.addCell(label);
+        label = new Label(1, fila, ''); sheet.addCell(label);
+        label = new Label(2, fila,'TOTAL'); sheet.addCell(label);
+        label = new Label(3, fila, totalEgresos.toString()); sheet.addCell(label);
+
+        workbook.write();
+        workbook.close();
+        def output = response.getOutputStream()
+        def header = "attachment; filename=" + "DetalleEgresosExcel.xls";
+        response.setContentType("application/octet-stream")
+        response.setHeader("Content-Disposition", header);
+        output.write(file.getBytes());
+    }
+
+
 }
