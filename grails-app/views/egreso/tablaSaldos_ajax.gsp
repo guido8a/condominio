@@ -26,6 +26,12 @@
         </div>
 
         <div class="col-xs-1" style="padding: 5px; width: 120px">
+            <label style="color: #42a151">Total Mora:</label>
+            <g:textField name="saldo_name" class="form-control derecha" readonly=""
+                         value="${g.formatNumber(number: totalMora, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
+        </div>
+
+        <div class="col-xs-1" style="padding: 5px; width: 120px">
             <label style="color: #a34a23">Total Egresos</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: totalEgresos, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
@@ -38,32 +44,33 @@
             </strong>
         </div>
 
-        <div class="col-xs-1">
-        </div>
+        %{--<div class="col-xs-1">--}%
+        %{--</div>--}%
 
 
-        <div class="col-xs-1" style="padding: 5px; width: 140px;">
-            <label>Pagos adelantados:</label>
+        <div class="col-xs-1" style="padding: 5px; width: 120px; margin-left: 40px">
+            <label>Pago adelantado:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly="" style="color: #408040"
                          value="${g.formatNumber(number: data[0].sldopgad, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-        <div class="col-xs-2" style="padding: 5px; width: 140px;">
-            <label>Valores por cobrar:</label>
+        <div class="col-xs-2" style="padding: 5px; width: 120px;">
+            <label>Por cobrar:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly="" style="color: #804040"
                          value="${g.formatNumber(number: data[0].ingrsldo + data[0].sldopgad, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
 
-        <div class="col-xs-2" style="padding: 5px; width: 140px">
+        <div class="col-xs-2" style="padding: 5px; width: 120px">
             <label>Pagos pendientes:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: data[0].egrssldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>
-        <div class="col-xs-2" style="padding: 5px; width: 140px">
+        <div class="col-xs-2" style="padding: 5px; width: 110px">
             <label>Resultado final:</label>
             <strong>
                 <g:textField  name="saldoTotal_name" class="form-control derecha" readonly=""
-                              value="${g.formatNumber(number: data[0].ingrsldo + data[0].sldofnal - data[0].egrssldo, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
+                              value="${g.formatNumber(number: data[0].ingrsldo + data[0].sldofnal - data[0].egrssldo + data[0].sldomora,
+                                      format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
             </strong>
         </div>
     </div>
@@ -77,12 +84,13 @@
 
             <table class="table-bordered table-condensed" style="width: 100%">
                 <tr style="width:100%;">
-                    <th style="width: 10%">Dpto.</th>
-                    <th style="width: 20%">Persona</th>
+                    <th style="width: 6%">Dpto.</th>
+                    <th style="width: 22%">Persona</th>
                     <th style="width: 12%">Ocupante</th>
-                    <th style="width: 30%">Descripción de Ingreso</th>
+                    <th style="width: 25%">Descripción de Ingreso</th>
                     <th style="width: 9%">Fecha</th>
-                    <th style="width: 9%">Valor</th>
+                    <th style="width: 8%">Valor</th>
+                    <th style="width: 8%">Mora</th>
                     <th style="width: 7%">Doc.</th>
                     <th style="width: 3%"></th>
                 </tr>
@@ -93,12 +101,13 @@
                     <table class="table-bordered table-condensed table-hover" width="98%">
                         <g:each in="${ingresos}" var="ingreso">
                             <tr style="width: 100%" class="${ingreso.pagovlor == 0 ? clase : ''}">
-                                <td style="width: 10%">${ingreso.prsndpto}</td>
-                                <td style="width: 20%">${ingreso.prsn}</td>
+                                <td style="width: 6%">${ingreso.prsndpto}</td>
+                                <td style="width: 22%">${ingreso.prsn}</td>
                                 <td style="width: 12%">${ingreso.tpocdscr}</td>
-                                <td style="width: 30%">${ingreso.pagodscr}</td>
+                                <td style="width: 25%">${ingreso.pagodscr}</td>
                                 <td style="width: 9%">${ingreso.pagofcha}</td>
-                                <td class="derecha" style="width: 9%">${ingreso.pagovlor}</td>
+                                <td class="derecha" style="width: 8%">${ingreso.pagovlor}</td>
+                                <td class="derecha" style="width: 8%">${ingreso.pagomora}</td>
                                 <td class="derecha" style="width: 7%">${ingreso.pagodcmt}</td>
                             </tr>
                         </g:each>

@@ -308,11 +308,12 @@ class EgresoController extends Shield {
         def egresos = cn3.rows(sql3.toString())
 //        println "egrs ...sql: $sql3"
 
+        def totalMora = (ingresos.pagomora.sum() ?: 0)
         def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
         def totalEgresos = (egresos.egrsvlor.sum() ?: 0)
 
         return [data: data, desde: fechaDesde, hasta: fechaHasta, totalIngresos: totalIngresos, totalEgresos: totalEgresos,
-                ingresos: ingresos, egresos: egresos]
+                ingresos: ingresos, egresos: egresos, totalMora: totalMora]
     }
 
     def tablaIngresos_ajax () {

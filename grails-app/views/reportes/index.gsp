@@ -1393,8 +1393,8 @@
     $(".btnImprimirBalance").click(function () {
         var fechaDesde = $("#fechaDesdeB").val();
         var fechaHasta = $("#fechaHastaB").val();
-        %{--location.href = "${g.createLink(controller:'reportes' , action: 'rpBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;--}%
-        location.href = "${g.createLink(controller:'reportes' , action: 'pdfBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+        location.href = "${g.createLink(controller:'reportes' , action: 'rpBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+        %{--location.href = "${g.createLink(controller:'reportes' , action: 'pdfBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;--}%
     });
 
     $(".btnImprimirInf").click(function () {
