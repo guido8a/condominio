@@ -40,16 +40,16 @@
                         <b>Buscar por: </b>
                         <elm:select name="buscador" from = "${buscadorServ.parmProcesos()}" value="${params.buscador}"
                                     optionKey="campo" optionValue="nombre" optionClass="operador" id="buscador_con"
-                                    style="width: 120px" class="form-control"/>
+                                    style="width: 110px" class="form-control"/>
                     </div>
                     <div class="col-xs-3 col-md-2">
                         <strong style="margin-left: 20px;">Operación:</strong>
                         <span id="selOpt"></span>
                     </div>
-                    <div class="col-xs-3 col-md-5">
+                    <div class="col-xs-2 col-md-3">
                         <b style="margin-left: 20px">Criterio: </b>
-                        <g:textField name="criterio" style="margin-right: 10px; width: 100%; border-color: #53a7ff" value="${params.criterio}"
-                                     id="criterio_con" class="form-control"/>
+                        <g:textField name="criterio" style="margin-left: 10px; width: 100%; border-color: #53a7ff"
+                                     value="${params.criterio}" id="criterio_con" class="form-control"/>
                     </div>
                     <div class="col-xs-3 col-md-3">
                         <b>Ordenado por: </b>
@@ -67,7 +67,15 @@
                 </div>
 
                 <div class="col-xs-3 col-md-4">
-                    <div class="btn-group col-xs-6 col-md-4" style="margin-left: -10px; margin-top: 20px;">
+                    <div class="btn-group col-xs-1" style="margin-left: -40px; margin-top: 0px;">
+                        <b>Torre: </b>
+                        <elm:select name="torres" from = "${torres}"
+                                    optionKey="descripcion" optionValue="descripcion" id="torres"
+                                    style="width: 100px" class="form-control"/>
+                    </div>
+
+
+                    <div class="btn-group col-xs-6 col-md-4" style="margin-left: 70px; margin-top: 20px;">
 
                         <a href="#" name="busqueda" class="btn btn-info" id="btnBusqueda" title="Buscar"
                            style="height: 34px; padding: 9px; width: 46px">
@@ -99,6 +107,7 @@
                     %{--<i class="fa fa-print"></i>--}%
                     %{--</g:link>--}%
                     %{--</div>--}%
+
                 </div>
 
             </div>
@@ -242,7 +251,8 @@ como máximo 30
                     ordenar:  $("#ordenar_por").val(),
                     criterio: $("#criterio_con").val(),
                     operador: $("#oprd").val(),
-                    condo: condo
+                    condo: condo,
+                    edif: $("#torres").val()
                 },
                 success: function (msg) {
                     $("#detalle").html(msg);

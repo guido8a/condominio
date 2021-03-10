@@ -14,11 +14,15 @@ class ViviendaController extends Shield {
 //        println "busqueda "
         def condominio = Parametros.get(1)
         params.ordenar = "prsndpto"
-        return[condominio: condominio]
+        def torres = Edificio.findAllByCondominio(session.usuario.condominio)
+        torres.add([id:0, descripcion: 'Todas...'])
+//        torres.sort{it.id}
+
+        return[condominio: condominio, torres: torres]
     }
 
     def tablaBuscar() {
-//        println "buscar .... $params"
+        println "buscar .... $params"
         def cn = dbConnectionService.getConnection()
         params.old = params.criterio
         params.criterio = buscadorService.limpiaCriterio(params.criterio)
@@ -26,14 +30,14 @@ class ViviendaController extends Shield {
 
         def sql = armaSql(params)
         params.criterio = params.old
-//        println "sql: $sql"
+        println "sql: $sql"
         def data = cn.rows(sql.toString())
 
         def msg = ""
         if(data?.size() > 50){
             data.pop()   //descarta el último puesto que son 21
             msg = "<div class='alert-danger' style='margin-top:-20px; diplay:block; height:25px;margin-bottom: 20px;'>" +
-                    " <i class='fa fa-warning fa-2x pull-left'></i> Su búsqueda ha generado más de 30 resultados. " +
+                    " <i class='fa fa-warning fa-2x pull-left'></i> Su búsqueda ha generado más de 50 resultados. " +
                     "Use más letras para especificar mejor la búsqueda.</div>"
         }
         cn.close()
@@ -75,6 +79,9 @@ class ViviendaController extends Shield {
                 sqlWhere += " and ${params.buscador} ${op.operador} ${op.strInicio}${params.criterio}${op.strFin}";
             }
         }
+        if(params.edif != 'Todas...') {
+            sqlWhere += " and edifdscr = '${params.edif}' ";
+        } 
 //        println "-->sql: $sqlSelect $sqlWhere $sqlOrder"
         "$sqlSelect $sqlWhere $sqlOrder".toString()
     }

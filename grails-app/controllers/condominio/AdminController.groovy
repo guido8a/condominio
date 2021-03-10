@@ -48,7 +48,7 @@ class AdminController extends Shield {
                 }
             }
         } else {
-            list = Admin.list(params)
+            list = Admin.findAllByAdministradorInList(Persona.findAllByCondominio(session.usuario.condominio))
         }
         if (!all && params.offset.toInteger() > 0 && list.size() == 0) {
             params.offset = params.offset.toInteger() - 1

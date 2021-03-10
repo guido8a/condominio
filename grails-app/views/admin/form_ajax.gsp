@@ -16,7 +16,7 @@
                         Administrador
                     </label>
                     <div class="col-md-8">
-                        <g:select id="administrador" name="administrador.id" from="${seguridad.Persona.list([sort: 'nombre'])}"
+                        <g:select id="administrador" name="administrador.id" from="${seguridad.Persona.findAllByCondominio(session.usuario.condominio, [sort: 'nombre'])}"
                                   optionKey="id" required="" value="${adminInstance?.administrador?.id}"
                                   class="many-to-one form-control"/>
                     </div>
@@ -30,7 +30,7 @@
                         Revisor
                     </label>
                     <div class="col-md-8">
-                        <g:select id="revisor" name="revisor.id" from="${seguridad.Persona.list([sort: 'nombre'])}"
+                        <g:select id="revisor" name="revisor.id" from="${seguridad.Persona.findAllByCondominio(session.usuario.condominio, [sort: 'nombre'])}"
                                   optionKey="id" required="" value="${adminInstance?.revisor?.id}" class="many-to-one form-control"/>
                     </div>
                     *
