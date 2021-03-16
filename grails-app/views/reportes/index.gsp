@@ -118,7 +118,7 @@
 <div class="row">
     <div class="col-md-12 col-xs-5">
         <p>
-            <a href="#" class="link btn btn-success btn-ajax" id="btnCondominos" data-toggle="modal">
+            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#modalCondominos">
                 <i class="fa fa-building-o fa-5x"></i><br/>
                 Listado de Condóminos
             </a>
@@ -313,7 +313,38 @@
     </div>
 </div>
 
+%{--dialog lista condóminos--}%
+<div class="modal fade col-md-12 col-xs-12" id="modalCondominos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Lista de condóminos</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-6 col-xs-4">
+                        <label>Torre:</label>
+                    </div>
+                    <div class="col-md-4 col-xs-6">
+                        <g:select name="torre_name" id="torre" from="${edificios}" optionKey="id" optionValue="descripcion" class="form-control"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+            </div>
 
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnCondominos btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 %{--dialog comprobante--}%
 <div class="modal fade" id="comprobante" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -415,7 +446,7 @@
                         <label>Torre:</label>
                     </div>
                     <div class="col-md-4 col-xs-6">
-                        <g:select name="torre_name" id="torre" from="${edificios}" optionKey="id" optionValue="descripcion" class="form-control"/>
+                        <g:select name="torre_name" id="torreDeudas" from="${edificios}" optionKey="id" optionValue="descripcion" class="form-control"/>
                     </div>
                     <div class="col-md-1 col-xs-1">
                     </div>
@@ -1080,7 +1111,7 @@
 
         $(".btnDeudas").click(function () {
             var fechaI = $("#fechaImprime").val();
-            var torre = $("#torre").val();
+            var torre = $("#torreDeudas").val();
             location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes4')}?fecha=" + fechaI + "&torre=" + torre
         });
 
@@ -1219,8 +1250,9 @@
             });
         }
 
-        $("#btnCondominos").click(function () {
-            location.href = "${g.createLink(controller: 'reportes', action: 'listaCondominos')}";
+        $(".btnCondominos").click(function () {
+            var torre = $("#torre").val();
+            location.href = "${g.createLink(controller: 'reportes', action: 'listaCondominos')}?torre=" + torre;
         });
 
         $(".btnAceptarEgresos").click(function () {

@@ -2141,7 +2141,8 @@ class ReportesController extends Shield{
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
 
         def condominio = Condominio.get(session.condominio.id)
-        def lista = Persona.findAllByCondominioAndActivoAndExterno(condominio, 1, 0).sort{it.departamento}
+        def edificio = Edificio.get(params.torre)
+        def lista = Persona.findAllByCondominioAndActivoAndExternoAndEdificio(condominio, 1, 0, edificio).sort{it.departamento}
         printHeaderDetalle()
 
         lista.each { persona ->
@@ -2158,7 +2159,7 @@ class ReportesController extends Shield{
         byte[] b = baos.toByteArray();
 
 
-        encabezadoYnumeracion(b, session.condominio.nombre,"LISTADO DE CONDÓMINOS", "listadoCondominos_${new Date().format("dd-MM-yyyy")}.pdf")
+        encabezadoYnumeracion(b, session.condominio.nombre,"LISTADO DE CONDÓMINOS - ${edificio.descripcion ?: ''}", "listadoCondominos_${new Date().format("dd-MM-yyyy")}.pdf")
 
 
 //        response.setContentType("application/pdf")
@@ -3654,7 +3655,10 @@ class ReportesController extends Shield{
 
     def pagosPendientes4() {
 
+        println("params " + params)
+
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
+        def edificio = Edificio.get(params.torre)
 
         def cn = dbConnectionService.getConnection()
         def sql = "select * from pendiente('${fecha.format('yyy-MM-dd')}', '${params.torre}')"
@@ -3812,8 +3816,7 @@ class ReportesController extends Shield{
         pdfw.close()
         byte[] b = baos.toByteArray();
 
-        encabezadoYnumeracion(b, session.condominio.nombre,"Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}",
-                "pagosPendientes_${new Date().format("dd-MM-yyyy")}.pdf")
+        encabezadoYnumeracion(b, session.condominio.nombre,"Deudas pendientes al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')} - ${edificio?.descripcion}","pagosPendientes_${new Date().format("dd-MM-yyyy")}.pdf")
     }
 
 
@@ -3886,6 +3889,7 @@ class ReportesController extends Shield{
 
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
 
         PdfPTable table = new PdfPTable(7);
         table.setWidthPercentage(100);
@@ -3999,7 +4003,7 @@ class ReportesController extends Shield{
     def pagosPendientesTotales() {
 
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
-
+        def edificio = Edificio.get(params.torre)
         def cn = dbConnectionService.getConnection()
         def cn2 = dbConnectionService.getConnection()
         def sql = "select * from pendiente('${fecha.format('yyyy-MM-dd')}', '${params.torre}')"
@@ -4179,7 +4183,7 @@ class ReportesController extends Shield{
         pdfw.close()
         byte[] b = baos.toByteArray();
 
-                encabezadoYnumeracion(b, session.condominio.nombre, "Deudas pendientes totales al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')}",
+                encabezadoYnumeracion(b, session.condominio.nombre, "Deudas pendientes totales al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')} - ${edificio?.descripcion}",
                 "pagosPendientesTotales_${new Date().format("dd-MM-yyyy")}.pdf")
 
     }

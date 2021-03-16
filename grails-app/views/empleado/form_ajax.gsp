@@ -5,10 +5,13 @@
     <elm:notFound elem="Empleado" genero="o" />
 </g:if>
 <g:else>
-    
+
+
+
     <div class="modal-contenido">
         <g:form class="form-horizontal" name="frmEmpleado" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${empleadoInstance?.id}" />
+            <g:hiddenField name="condominio" value="${condominio?.id}" />
 
             
             <div class="form-group keeptogether ${hasErrors(bean: empleadoInstance, field: 'condominio', 'error')} required">
@@ -16,10 +19,11 @@
                     <label for="condominio" class="col-md-2 control-label">
                         Condominio
                     </label>
-                    <div class="col-md-8">
-                        <g:select id="condominio" name="condominio.id" from="${condominio.Condominio.list()}" optionKey="id" required="" value="${empleadoInstance?.condominio?.id ?: condominio?.id}" class="many-to-one form-control"/>
+                    <div class="col-md-8" style="margin-top: 8px">
+                        %{--<g:select id="condominio" name="condominio.id" from="${condominio.Condominio.list()}" optionKey="id" required="" value="${condominio?.id}" class="many-to-one form-control" />--}%
+                       <strong style="font-size: 14px">${condominio?.nombre}</strong>
                     </div>
-                     *
+
                 </span>
             </div>
             
