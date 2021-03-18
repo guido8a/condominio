@@ -42,7 +42,7 @@
     dep. <strong>(${ingreso[0].persona.departamento})</strong></h3>
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary">
+        <a href="${createLink(controller: 'vivienda', action: 'index')}/?edif=${actual}" class="btn btn-primary">
             <i class="fa fa-arrow-left"></i> Regresar
         </a>
     </div>
