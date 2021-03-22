@@ -49,6 +49,14 @@
                     <elm:datepicker name="fechaPago"  class="datepicker form-control required" value="${pago?.fechaPago}"  />
                 </div>
             </span>
+            <span class="grupo">
+                <label for="abono" class="col-md-2 control-label">
+                    Descuento:
+                </label>
+                <div class="col-md-3">
+                    <g:textField name="descuento" value="${pago?.descuento ?: 0}" class="number form-control required"/>
+                </div>
+            </span>
         </div>
 
         <div class="form-group keeptogether ${hasErrors(bean: pago, field: 'documento', 'error')} ">

@@ -244,12 +244,22 @@ class IngresoController extends Shield {
                if(params.abono.toDouble() > saldo2){
                    render "er_El abono ingresado supera el valor del saldo"
                    return
+               }else{
+                   if((params.abono.toDouble() + params.descuento.toDouble()) > saldo2){
+                       render "er_El abono mas el descuento ingresado supera el valor del saldo"
+                       return
+                   }
                }
            }else{
                println "saldo: $saldo, pago: ${params.abono.toDouble()}"
                if(params.abono.toDouble() > saldo){
                    render "er_El abono ingresado supera el valor del saldo"
                    return
+               }else{
+                   if((params.abono.toDouble() + params.descuento.toDouble()) > saldo){
+                       render "er_El abono mas el descuento ingresado supera el valor del saldo"
+                       return
+                   }
                }
            }
 
@@ -268,6 +278,7 @@ class IngresoController extends Shield {
            pago.observaciones = params.observaciones
            mess = params.mess.toInteger()
            pago.transferencia = params.transferencia == 'SI' ? 'S' :'N'
+           pago.descuento = params.descuento.toDouble()
 
            if(mess > 2) {
                pago.mora = params.mora.toDouble()

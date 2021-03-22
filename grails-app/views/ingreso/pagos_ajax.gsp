@@ -246,10 +246,14 @@
                         }, 1000);
                     }else{
                         if(parts[0] == 'er'){
-                            bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" + parts[1])
-                            setTimeout(function() {
-                                location.reload(true);
-                            }, 1000);
+//                            bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" + parts[1])
+//                            setTimeout(function() {
+//                                location.reload(true);
+//                            }, 1000);
+
+                            bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" + parts[1], function(){
+                                location.reload(true)
+                            })
                         }
                         else{
                             log("Error al guardar el pago","error");

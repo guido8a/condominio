@@ -2395,9 +2395,11 @@ class ReportesController extends Shield{
 
         println "fechas: '${fechaDesde}','${fechaHasta}'"
 
-        def sql2 = "select * from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by prsndpto"
+        def sql2 = "select * from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by edifdscr, prsndpto"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
+
+        println("sql " + sql2)
 
         def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
 
@@ -2448,10 +2450,11 @@ class ReportesController extends Shield{
             def fondo = new Color(240, 248, 250);
             def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
 
-            def tablaHeaderDetalles = new PdfPTable(7);
+            def tablaHeaderDetalles = new PdfPTable(8);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([6,18,8,36,11,8,9]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([7,6,17,6,32,11,8,9]))
 
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Torre", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Persona", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Ocup.", fontTh), frmtHd)
@@ -2459,13 +2462,13 @@ class ReportesController extends Shield{
             addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Doc.", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
-            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
+            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
         }
 
-        tablaDetalles = new PdfPTable(7);
+        tablaDetalles = new PdfPTable(8);
         tablaDetalles.setWidthPercentage(100);
 //        tablaDetalles.setWidths(arregloEnteros([10,20,10,30,10,10,10]))
-        tablaDetalles.setWidths(arregloEnteros([6,18,8,36,11,8,9]))
+        tablaDetalles.setWidths(arregloEnteros([7,6,17,6,32,11,8,9]))
         tablaDetalles.setSpacingAfter(1f);
 
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
@@ -2474,6 +2477,7 @@ class ReportesController extends Shield{
         printHeaderDetalle()
 
         ingresos.each {ingreso ->
+            addCellTabla(tablaDetalles, new Paragraph(ingreso.edifdscr, fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.prsndpto, fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.prsn, fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph("${ingreso.tpocdscr.toString()[0..5]}..", fontTd10), frmtDato)
@@ -2489,7 +2493,7 @@ class ReportesController extends Shield{
 
         addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalIngresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
+        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
 
         document.add(tablaDetalles)
         document.close();
@@ -5748,7 +5752,7 @@ class ReportesController extends Shield{
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
-        def sql2 = "select * from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by prsndpto"
+        def sql2 = "select * from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by edifdscr, prsndpto"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
 
@@ -5774,12 +5778,13 @@ class ReportesController extends Shield{
         WritableFont times16font = new WritableFont(WritableFont.TIMES, 11, WritableFont.BOLD, false);
         WritableCellFormat times16format = new WritableCellFormat(times16font);
         sheet.setColumnView(0, 10)
-        sheet.setColumnView(1, 40)
-        sheet.setColumnView(2, 20)
-        sheet.setColumnView(3, 30)
-        sheet.setColumnView(4, 12)
+        sheet.setColumnView(1, 10)
+        sheet.setColumnView(2, 30)
+        sheet.setColumnView(3, 20)
+        sheet.setColumnView(4, 30)
         sheet.setColumnView(5, 12)
-        sheet.setColumnView(6, 10)
+        sheet.setColumnView(6, 12)
+        sheet.setColumnView(7, 10)
         // inicia textos y numeros para asocias a columnas
 
         def label
@@ -5794,22 +5799,24 @@ class ReportesController extends Shield{
         label = new Label(1, 1, (condominio?.nombre ?: ''), times16format); sheet.addCell(label);
         label = new Label(1, 2, "Detalle de Ingresos del ${fechaDesde} al ${fechaHasta}", times16format); sheet.addCell(label);
 
-        label = new Label(0, 4, "Dpto: ", times16format); sheet.addCell(label);
-        label = new Label(1, 4, "Persona", times16format); sheet.addCell(label);
-        label = new Label(2, 4, "Ocupante", times16format); sheet.addCell(label);
-        label = new Label(3, 4, "Descripción del ingreso", times16format); sheet.addCell(label);
-        label = new Label(4, 4, "Fecha", times16format); sheet.addCell(label);
-        label = new Label(5, 4, "Documento", times16format); sheet.addCell(label);
-        label = new Label(6, 4, "Valor", times16format); sheet.addCell(label);
+        label = new Label(0, 4, "Torre: ", times16format); sheet.addCell(label);
+        label = new Label(1, 4, "Dpto: ", times16format); sheet.addCell(label);
+        label = new Label(2, 4, "Persona", times16format); sheet.addCell(label);
+        label = new Label(3, 4, "Ocupante", times16format); sheet.addCell(label);
+        label = new Label(4, 4, "Descripción del ingreso", times16format); sheet.addCell(label);
+        label = new Label(5, 4, "Fecha", times16format); sheet.addCell(label);
+        label = new Label(6, 4, "Documento", times16format); sheet.addCell(label);
+        label = new Label(7, 4, "Valor", times16format); sheet.addCell(label);
 
         ingresos.eachWithIndex {i, j->
-            label = new Label(0, fila, i.prsndpto.toString()); sheet.addCell(label);
-            label = new Label(1, fila, i.prsn.toString()); sheet.addCell(label);
-            label = new Label(2, fila, i?.tpocdscr?.toString()); sheet.addCell(label);
-            label = new Label(3, fila, i?.pagodscr?.toString()); sheet.addCell(label);
-            label = new Label(4, fila, i?.pagofcha?.toString()); sheet.addCell(label);
-            label = new Label(5, fila, i?.pagodcmt?.toString()); sheet.addCell(label);
-            number = new Number(6, fila, i?.pagovlor); sheet.addCell(number)
+            label = new Label(0, fila, i.edifdscr.toString()); sheet.addCell(label);
+            label = new Label(1, fila, i.prsndpto.toString()); sheet.addCell(label);
+            label = new Label(2, fila, i.prsn.toString()); sheet.addCell(label);
+            label = new Label(3, fila, i?.tpocdscr?.toString()); sheet.addCell(label);
+            label = new Label(4, fila, i?.pagodscr?.toString()); sheet.addCell(label);
+            label = new Label(5, fila, i?.pagofcha?.toString()); sheet.addCell(label);
+            label = new Label(6, fila, i?.pagodcmt?.toString()); sheet.addCell(label);
+            number = new Number(7, fila, i?.pagovlor); sheet.addCell(number)
             fila++
         }
 
@@ -5818,8 +5825,9 @@ class ReportesController extends Shield{
         label = new Label(2, fila, ''); sheet.addCell(label);
         label = new Label(3, fila, ''); sheet.addCell(label);
         label = new Label(4, fila, ''); sheet.addCell(label);
-        label = new Label(5, fila,'TOTAL'); sheet.addCell(label);
-        number = new Number(6, fila, totalIngresos); sheet.addCell(number);
+        label = new Label(5, fila, ''); sheet.addCell(label);
+        label = new Label(6, fila,'TOTAL'); sheet.addCell(label);
+        number = new Number(7, fila, totalIngresos); sheet.addCell(number);
 
         workbook.write();
         workbook.close();
