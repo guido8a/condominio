@@ -16,9 +16,9 @@ class ViviendaController extends Shield {
         params.ordenar = "prsndpto"
         def torres = Edificio.findAllByCondominio(session.usuario.condominio)
         torres.add([id:0, descripcion: 'Todas...'])
-//        torres.sort{it.id}
 
-        return[condominio: condominio, torres: torres]
+        println "actual: ${params}"
+        return[condominio: condominio, torres: torres, actual: params.edif]
     }
 
     def tablaBuscar() {

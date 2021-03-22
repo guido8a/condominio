@@ -68,9 +68,9 @@
 
                 <div class="col-xs-3 col-md-4">
                     <div class="btn-group col-xs-1" style="margin-left: -40px; margin-top: 0px;">
-                        <b>Torre: </b>
+                        <b>Torre:</b>
                         <elm:select name="torres" from = "${torres}"
-                                    optionKey="descripcion" optionValue="descripcion" id="torres"
+                                    optionKey="descripcion" optionValue="descripcion" value="${actual}"
                                     style="width: 100px" class="form-control"/>
                     </div>
 
@@ -670,7 +670,7 @@ como máximo 30
 
     function pagoAlicuota (id) {
         var url = "${createLink(controller:'ingreso', action:'pendiente')}";
-        location.href = url + "/" + id;
+        location.href = url + "/?id=" + id;
     }
 
 

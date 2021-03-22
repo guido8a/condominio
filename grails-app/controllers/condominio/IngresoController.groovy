@@ -74,14 +74,14 @@ class IngresoController extends Shield {
      * @return ingresoInstanceList: la lista de elementos filtrados, ingresoInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def pendiente() {
-//        println "params: $params"
+        println "pendiente: $params"
         def prsn = Persona.get(params.id)
         def condominio = Condominio.get(session.condominio.id)
         def ingr = Ingreso.findAllByPersona(prsn, [sort: 'fecha'])
         def sql = "select * from personas(${condominio?.id}) where prsn__id= ${prsn.id}"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
-        return [ingreso: ingr, ingrCount: ingr.size(), persona: prsn, data:data]
+        return [ingreso: ingr, ingrCount: ingr.size(), persona: prsn, data:data, actual: prsn.edificio.descripcion]
     }
 
     /**

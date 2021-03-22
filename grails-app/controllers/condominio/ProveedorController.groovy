@@ -100,11 +100,13 @@ class ProveedorController extends Shield {
         }
 
         if(!params.busqueda){
-            sql ="select * from prve order by prvenmbr, prve_ruc"
+            sql ="select * from prve where cndm__id = ${session.usuario.condominio.id} order by prvenmbr, prve_ruc"
         }else{
-            sql = "select * from prve where ${parametro} ilike '%${params.busqueda}%' order by prvenmbr, prve_ruc"
+            sql = "select * from prve where cndm__id = ${session.usuario.condominio.id} and ${parametro} " +
+                    "ilike '%${params.busqueda}%' order by prvenmbr, prve_ruc"
         }
 
+        println "sql: $sql"
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
 
