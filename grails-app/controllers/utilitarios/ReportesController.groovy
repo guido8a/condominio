@@ -2452,23 +2452,24 @@ class ReportesController extends Shield{
 
             def tablaHeaderDetalles = new PdfPTable(8);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([7,6,17,6,32,11,8,9]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([7,6,17,30,11,8,9,8]))
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Torre", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Persona", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Ocup.", fontTh), frmtHd)
+//            addCellTabla(tablaHeaderDetalles, new Paragraph("Ocup.", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Descripción del Ingreso", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Doc.", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Multa", fontTh), frmtHd)
             addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
         }
 
         tablaDetalles = new PdfPTable(8);
         tablaDetalles.setWidthPercentage(100);
 //        tablaDetalles.setWidths(arregloEnteros([10,20,10,30,10,10,10]))
-        tablaDetalles.setWidths(arregloEnteros([7,6,17,6,32,11,8,9]))
+        tablaDetalles.setWidths(arregloEnteros([7,6,17,30,11,8,9,8]))
         tablaDetalles.setSpacingAfter(1f);
 
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
@@ -2480,19 +2481,21 @@ class ReportesController extends Shield{
             addCellTabla(tablaDetalles, new Paragraph(ingreso.edifdscr, fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.prsndpto, fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.prsn, fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new Paragraph("${ingreso.tpocdscr.toString()[0..5]}..", fontTd10), frmtDato)
+//            addCellTabla(tablaDetalles, new Paragraph("${ingreso.tpocdscr.toString()[0..5]}..", fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.pagodscr.toString(), fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.pagofcha.toString(), fontTd10), frmtNmro)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.pagodcmt ? ingreso.pagodcmt.toString() : '', fontTd10), frmtNmro)
             addCellTabla(tablaDetalles, new Paragraph(ingreso.pagovlor.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(ingreso.pagomora.toString(), fontTd10), frmtNmro)
         }
 
-        def tablaTotal = new PdfPTable(2);
+        def tablaTotal = new PdfPTable(3);
         tablaTotal.setWidthPercentage(100);
-        tablaTotal.setWidths(arregloEnteros([87, 9]))
-
+        tablaTotal.setWidths(arregloEnteros([79, 9, 8]))
         addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalIngresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph("", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+
         addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
 
         document.add(tablaDetalles)
@@ -5807,21 +5810,23 @@ class ReportesController extends Shield{
         label = new Label(0, 4, "Torre: ", times16format); sheet.addCell(label);
         label = new Label(1, 4, "Dpto: ", times16format); sheet.addCell(label);
         label = new Label(2, 4, "Persona", times16format); sheet.addCell(label);
-        label = new Label(3, 4, "Ocupante", times16format); sheet.addCell(label);
-        label = new Label(4, 4, "Descripción del ingreso", times16format); sheet.addCell(label);
-        label = new Label(5, 4, "Fecha", times16format); sheet.addCell(label);
-        label = new Label(6, 4, "Documento", times16format); sheet.addCell(label);
-        label = new Label(7, 4, "Valor", times16format); sheet.addCell(label);
+//        label = new Label(3, 4, "Ocupante", times16format); sheet.addCell(label);
+        label = new Label(3, 4, "Descripción del ingreso", times16format); sheet.addCell(label);
+        label = new Label(4, 4, "Fecha", times16format); sheet.addCell(label);
+        label = new Label(5, 4, "Documento", times16format); sheet.addCell(label);
+        label = new Label(6, 4, "Valor", times16format); sheet.addCell(label);
+        label = new Label(7, 4, "Multa", times16format); sheet.addCell(label);
 
         ingresos.eachWithIndex {i, j->
             label = new Label(0, fila, i.edifdscr.toString()); sheet.addCell(label);
             label = new Label(1, fila, i.prsndpto.toString()); sheet.addCell(label);
             label = new Label(2, fila, i.prsn.toString()); sheet.addCell(label);
-            label = new Label(3, fila, i?.tpocdscr?.toString()); sheet.addCell(label);
-            label = new Label(4, fila, i?.pagodscr?.toString()); sheet.addCell(label);
-            label = new Label(5, fila, i?.pagofcha?.toString()); sheet.addCell(label);
-            label = new Label(6, fila, i?.pagodcmt?.toString()); sheet.addCell(label);
-            number = new Number(7, fila, i?.pagovlor); sheet.addCell(number)
+//            label = new Label(3, fila, i?.tpocdscr?.toString()); sheet.addCell(label);
+            label = new Label(3, fila, i?.pagodscr?.toString()); sheet.addCell(label);
+            label = new Label(4, fila, i?.pagofcha?.toString()); sheet.addCell(label);
+            label = new Label(5, fila, i?.pagodcmt?.toString()); sheet.addCell(label);
+            number = new Number(6, fila, i?.pagovlor); sheet.addCell(number)
+            number = new Number(7, fila, i?.pagomora); sheet.addCell(number)
             fila++
         }
 
@@ -5830,9 +5835,9 @@ class ReportesController extends Shield{
         label = new Label(2, fila, ''); sheet.addCell(label);
         label = new Label(3, fila, ''); sheet.addCell(label);
         label = new Label(4, fila, ''); sheet.addCell(label);
-        label = new Label(5, fila, ''); sheet.addCell(label);
-        label = new Label(6, fila,'TOTAL'); sheet.addCell(label);
-        number = new Number(7, fila, totalIngresos); sheet.addCell(number);
+        label = new Label(5, fila, 'TOTAL'); sheet.addCell(label);
+        number = new Number(6, fila, totalIngresos); sheet.addCell(number);
+        label = new Label(7, fila,''); sheet.addCell(label);
 
         workbook.write();
         workbook.close();

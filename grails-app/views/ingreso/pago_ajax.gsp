@@ -78,13 +78,16 @@
                     Transferencia:
                 </label>
                 <div class="col-md-2">
-                    %{--<g:textField name="transferencia" class="form-control" value="${pago?.documento}"/>--}%
-%{--
-                    <g:select name="transferencia" from="${pago?.constraints?.transferencia?.inList}" class=""
-                              value="${pago?.transferencia?:'N'}" />
---}%
                     <g:select name="transferencia" from="${["NO", "SI"]}" class="form-control "
                               value="${pago?.transferencia == 'S' ? 'SI' : 'NO'}" />
+                </div>
+            </span>
+            <span class="grupo">
+                <label for="banco" class="col-md-4 control-label">
+                   Costo Bancario:
+                </label>
+                <div class="col-md-3">
+                    <g:textField name="banco" value="${pago?.banco ?: 0}" class="number form-control"/>
                 </div>
             </span>
         </div>

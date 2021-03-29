@@ -276,9 +276,16 @@ class IngresoController extends Shield {
            pago.fechaPago = params.fecha
            pago.documento = params.documento
            pago.observaciones = params.observaciones
+           pago.banco =  params.banco ? params.banco.toDouble() : 0;
            mess = params.mess.toInteger()
            pago.transferencia = params.transferencia == 'SI' ? 'S' :'N'
            pago.descuento = params.descuento.toDouble()
+
+           if(params.banco){
+
+           }else{
+               params.banco = 0
+           }
 
            if(mess > 2) {
                pago.mora = params.mora.toDouble()
