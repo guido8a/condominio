@@ -2509,7 +2509,7 @@ class ReportesController extends Shield{
     }
 
     def rpInforme() {
-//        println "rpInforme --> params: $params"
+        println "rpInforme --> params: $params"
         def desde = new Date().parse("dd-MM-yyyy", params.desde)
         def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
 
@@ -2540,19 +2540,24 @@ class ReportesController extends Shield{
             contador++
         }
         /*Pendientes 1*/
+        Edificio.findAllByCondominio(session.usuario.condominio, [sort: 'id']).each {ed ->
+            pd = pdfPendientes(hasta, ed)
+            if(pd){
+                pdfs.add(pd.toByteArray())
+                contador++
+            }
+/*
 
-        pd = pdfPendientes(hasta,1)
-        if(pd){
-            pdfs.add(pd.toByteArray())
-            contador++
-        }
+            */
+/*Pendientes 2*//*
 
-        /*Pendientes 2*/
 
-        pd = pdfPendientes(hasta,2)
-        if(pd){
-            pdfs.add(pd.toByteArray())
-            contador++
+            pd = pdfPendientes(hasta,2)
+            if(pd){
+                pdfs.add(pd.toByteArray())
+                contador++
+            }
+*/
         }
 
         /*egresos*/
@@ -2815,7 +2820,7 @@ class ReportesController extends Shield{
                 "substr(pagofcha::varchar, 1, 7), tpapdscr " +
                 "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
                 "group by 2,3,4 order by 3"
-//        println "--> $sql2"
+        println "--> $sql2"
 
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
@@ -2959,7 +2964,7 @@ class ReportesController extends Shield{
         addCellTabla(tablaSaldos, new Paragraph("(-) Pagos pendientes", fontTh), frmtHdR)
         addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: sldo.egrssldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
-        addCellTabla(tablaSaldos, new Paragraph("(+) Pagos por mora", fontTh), frmtHdR)
+        addCellTabla(tablaSaldos, new Paragraph("(+) Pagos por multas", fontTh), frmtHdR)
         addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: sldo.sldomora, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
 
@@ -3824,13 +3829,13 @@ class ReportesController extends Shield{
     }
 
 
-    def pdfPendientes(hasta,torre) {
+    def pdfPendientes(hasta, torre) {
 
         def h = hasta.format("dd-MM-yyyy")
         def fecha = new Date().parse("dd-MM-yyyy", h)
 
         def cn = dbConnectionService.getConnection()
-        def sql = "select * from pendiente('${fecha.format('yyyy-MM-dd')}', '${torre}')"
+        def sql = "select * from pendiente('${fecha.format('yyyy-MM-dd')}', '${torre.id}')"
 //        println "sql: $sql"
         def res = cn.rows(sql.toString())
         def tamano = res.size()
@@ -3874,7 +3879,7 @@ class ReportesController extends Shield{
         addEmptyLine(prefaceT, 1);
         prefaceT.setAlignment(Element.ALIGN_CENTER);
         prefaceT.add(new Paragraph(session.condominio.nombre, fontTitulo16));
-        prefaceT.add(new Paragraph("Deudas pendientes al ${fecha.format("dd-MM-yyyy")} - Torre ${torre}" , fontTitulo));
+        prefaceT.add(new Paragraph("Deudas pendientes al ${fecha.format("dd-MM-yyyy")} - ${torre.descripcion}" , fontTitulo));
         addEmptyLine(prefaceT, 1);
         document.add(prefaceT);
 

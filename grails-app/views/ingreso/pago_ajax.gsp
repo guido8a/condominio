@@ -32,7 +32,7 @@
             </span>
             <span class="grupo">
                 <label for="abono" class="col-md-3 control-label">
-                    Intereses mora:
+                    Multas:
                 </label>
                 <div class="col-md-3">
                     <g:textField name="mora" value="${pago?.mora?:mora}" class="number form-control required"/>
