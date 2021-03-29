@@ -2452,10 +2452,10 @@ class ReportesController extends Shield{
 
             def tablaHeaderDetalles = new PdfPTable(8);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([7,6,17,30,11,8,9,8]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([7,4,17,30,9,5,9,6]))
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Torre", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Dpto.", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Dp.", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Persona", fontTh), frmtHd)
 //            addCellTabla(tablaHeaderDetalles, new Paragraph("Ocup.", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Descripción del Ingreso", fontTh), frmtHd)
@@ -2469,7 +2469,7 @@ class ReportesController extends Shield{
         tablaDetalles = new PdfPTable(8);
         tablaDetalles.setWidthPercentage(100);
 //        tablaDetalles.setWidths(arregloEnteros([10,20,10,30,10,10,10]))
-        tablaDetalles.setWidths(arregloEnteros([7,6,17,30,11,8,9,8]))
+        tablaDetalles.setWidths(arregloEnteros([7,4,17,30,9,5,9,6]))
         tablaDetalles.setSpacingAfter(1f);
 
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
@@ -2491,7 +2491,7 @@ class ReportesController extends Shield{
 
         def tablaTotal = new PdfPTable(3);
         tablaTotal.setWidthPercentage(100);
-        tablaTotal.setWidths(arregloEnteros([79, 9, 8]))
+        tablaTotal.setWidths(arregloEnteros([72, 9, 6]))
         addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalIngresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaTotal, new Paragraph("", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])

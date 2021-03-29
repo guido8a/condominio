@@ -73,6 +73,8 @@
 
             </g:if>
 
+        </div>
+        <div class="form-group keeptogether ${hasErrors(bean: pago, field: 'observaciones', 'error')} ">
             <span class="grupo">
                 <label for="transferencia" class="col-md-3 control-label">
                     Transferencia:
