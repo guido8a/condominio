@@ -280,6 +280,7 @@ class IngresoController extends Shield {
            mess = params.mess.toInteger()
            pago.transferencia = params.transferencia == 'SI' ? 'S' :'N'
            pago.descuento = params.descuento.toDouble()
+           pago.anterior = params.anterior == 'SI' ? 'S' :'N'
 
            if(params.banco){
 

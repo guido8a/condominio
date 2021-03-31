@@ -66,14 +66,22 @@
                     <label for="documento" class="col-md-3 control-label">
                         Documento
                     </label>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <g:textField name="documento" class="form-control" value="${pago?.documento}"/>
                     </div>
                 </span>
-
             </g:if>
-
+            <span class="grupo">
+                <label for="anterior" class="col-md-4 control-label text-warning">
+                    Pagado a la Administración Anterior
+                </label>
+                <div class="col-md-2 text-info">
+                    <g:select name="anterior" from="${["NO", "SI"]}" class="form-control text-info"
+                              value="${pago?.anterior == 'S' ? 'SI' : 'NO'}" />
+                </div>
+            </span>
         </div>
+
         <div class="form-group keeptogether ${hasErrors(bean: pago, field: 'observaciones', 'error')} ">
             <span class="grupo">
                 <label for="transferencia" class="col-md-3 control-label">

@@ -17,6 +17,7 @@ class Pago {
     String transferencia = 'N'
     double descuento
     double banco = 0
+    String anterior = 'N'
 
     static mapping = {
         table 'pago'
@@ -39,6 +40,7 @@ class Pago {
             transferencia column: 'pagotrnf'
             descuento column: 'pagodsct'
             banco column: 'pagobnco'
+            anterior column: 'pagoantr'
         }
     }
 
