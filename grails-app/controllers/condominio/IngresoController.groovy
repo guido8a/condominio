@@ -288,11 +288,15 @@ class IngresoController extends Shield {
                params.banco = 0
            }
 
+/*
            if(mess > 2) {
                pago.mora = params.mora.toDouble()
                pago.tasa = 8.0  //todo -> obtener ta de parámetros geenrales del sistema
                pago.mess = mess
            }
+*/
+
+           pago.mora = params.mora.toDouble()
 
            if(!pago.save(flush: true)){
                println("error al guardar el pago " + pago.errors)
