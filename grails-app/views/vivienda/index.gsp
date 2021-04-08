@@ -24,6 +24,9 @@
     <h3>Condóminos y Departamentos</h3>
 </div>
 
+<elm:flashMessage tipo="${flash.tipo}" icon="${flash.icon}"
+                  clase="${flash.clase}">${flash.message}</elm:flashMessage>
+
 <div style="margin-top: -15px;" class="vertical-container">
     <p class="css-icono" style="margin-bottom: -15px"><i class="fa fa-folder-open-o"></i></p>
 
@@ -97,8 +100,13 @@
 
                     </div>
                     <div class="btn-group col-xs-1" style="margin-left: 20px; margin-top: 20px;">
-
                         <g:link action="creaIngresos" class="btn btn-info" title="Registro de aportes" style="height: 34px; padding: 9px; width: 46px">
+                            <i class="fa fa-money"></i>
+                        </g:link>
+                    </div>
+                    <div class="btn-group col-xs-1" style="margin-left: 20px; margin-top: 20px;">
+                        <g:link action="admnAnterior" class="btn btn-warning" title="Actualizar pagos a la Administración Anterior"
+                                style="height: 34px; padding: 9px; width: 46px">
                             <i class="fa fa-money"></i>
                         </g:link>
                     </div>

@@ -35,7 +35,7 @@
                     Multas:
                 </label>
                 <div class="col-md-3">
-                    <g:textField name="mora" value="${pago?.mora?:mora}" class="number form-control required"/>
+                    <g:textField name="mora" value="${pago?.mora?:0}" class="number form-control required"/>
                 </div>
             </span>
         </div>
