@@ -4522,14 +4522,21 @@ class ReportesController extends Shield{
 //        printHeaderDetalle()
 
         ingresos.each {ingreso->
-
-            nested1 = new PdfPTable(2);
+            def ingr_pago = Pago.findAllByIngreso(ingreso)
+            def pagado = 0
+            if(ingr_pago) {
+                pagado = ingr_pago.valor.sum().toDouble() + ingr_pago.descuento.sum().toDouble()
+            } else {
+                pagado = 0
+            }
+            nested1 = new PdfPTable(4);
             nested2 = new PdfPTable(1);
             nested3 = new PdfPTable(1);
 
             addCellTabla(tablaDetalles, new Paragraph("Concepto: " + ingreso?.obligacion?.descripcion, fontTh), frmN2)
             addCellTabla(tablaDetalles, new Paragraph("Valor: " + ingreso?.valor + " ", fontTh), frmN)
-            addCellTabla(tablaDetalles, new Paragraph("Pendiente: " + (ingreso?.valor?.toDouble() - (Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0) ?: 0.00) + " ", fontTh), frmN)
+//            addCellTabla(tablaDetalles, new Paragraph("Pendiente: " + (ingreso?.valor?.toDouble() - (pago?.valor?.sum()?.toDouble() ?: 0) ?: 0.00) + " ", fontTh), frmN)
+            addCellTabla(tablaDetalles, new Paragraph("Pendiente: " + (ingreso?.valor?.toDouble() - pagado) + " ", fontTh), frmN)
 
             total += ingreso?.valor?.toDouble() - (Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0) ?: 0.00
 
@@ -4538,6 +4545,8 @@ class ReportesController extends Shield{
                 Pago.findAllByIngreso(ingreso).eachWithIndex {pago, u->
                     addCellTabla(nested1, new Paragraph("Pago " + (u+1), fontTd10), frmtR)
                     addCellTabla(nested1, new Paragraph(pago?.fechaPago?.format("dd-MM-yyyy")?.toString() ?: '', fontTd10), frmtNmro)
+                    addCellTabla(nested1, new Paragraph("Descuento ", fontTd10), frmtR)
+                    addCellTabla(nested1, new Paragraph(pago?.descuento + " ", fontTd10), frmtNmro)
 //                addCellTabla(nested1, new Paragraph(pago?.ingreso?.obligacion?.descripcion + " ", fontTd10), frmtDato)
 //                addCellTabla(nested2, new Paragraph(pago?.ingreso?.valor + " ", fontTd10), frmtNmro)
                     addCellTabla(nested2, new Paragraph(pago?.valor + " ", fontTd10), frmtNmro)
@@ -4545,8 +4554,7 @@ class ReportesController extends Shield{
                     addCellTabla(nested3, new Paragraph("Comprobante: " + pago?.documento, fontTd10), frmtDato)
                 }
             }else{
-                addCellTabla(nested1, new Paragraph(" -- Sin pagos realizados--", fontTd10), frmtNmro)
-                addCellTabla(nested1, new Paragraph("", fontTd10), frmtDato)
+                addCellTabla(nested1, new Paragraph(" -- Sin pagos realizados--", fontTd10), frmtNmro + [colspan: 4])
                 addCellTabla(nested2, new Paragraph("", fontTd10), frmtDato)
                 addCellTabla(nested3, new Paragraph("", fontTd10), frmtDato)
 
