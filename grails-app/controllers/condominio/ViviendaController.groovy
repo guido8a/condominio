@@ -345,12 +345,15 @@ class ViviendaController extends Shield {
     }
 
     def admnAnterior() {
+        def sql1 = "update ingr set ingretdo = 'N' where prsn__id in " +
+                "(select prsn__id from prsn where cndm__id = ${session.usuario.condominio.id})"
         def sql = "update ingr set ingretdo = 'B' where ingr__id in (select distinct ingr__id from pago " +
                 "where pagoantr = 'S') and prsn__id in " +
                 "(select prsn__id from prsn where cndm__id = ${session.usuario.condominio.id})"
 //        println("sql " + sql)
         def cn = dbConnectionService.getConnection()
-        def data = cn.executeUpdate(sql.toString())
+        def data = cn.executeUpdate(sql1.toString())
+        data = cn.executeUpdate(sql.toString())
 //        println "data: $data"
         if(data) {
             flash.message = "Se han actualizado ${data} pagos realizados a la Administración anterior"
