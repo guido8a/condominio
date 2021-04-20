@@ -344,10 +344,11 @@ class ViviendaController extends Shield {
         }
     }
 
+/*
     def admnAnterior() {
         def sql1 = "update ingr set ingretdo = 'N' where prsn__id in " +
                 "(select prsn__id from prsn where cndm__id = ${session.usuario.condominio.id})"
-        def sql = "update ingr set ingretdo = 'B' where ingr__id in (select distinct ingr__id from pago " +
+        def sql = "update ingr set ingretdo = 'N' where ingr__id in (select distinct ingr__id from pago " +
                 "where pagoantr = 'S') and prsn__id in " +
                 "(select prsn__id from prsn where cndm__id = ${session.usuario.condominio.id})"
 //        println("sql " + sql)
@@ -363,5 +364,6 @@ class ViviendaController extends Shield {
         }
         redirect(action:"index", params: params)
     }
+*/
 
 }

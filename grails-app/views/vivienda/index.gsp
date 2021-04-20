@@ -104,12 +104,14 @@
                             <i class="fa fa-money"></i>
                         </g:link>
                     </div>
+%{--
                     <div class="btn-group col-xs-1" style="margin-left: 20px; margin-top: 20px;">
                         <g:link action="admnAnterior" class="btn btn-warning" title="Actualizar pagos a la Administración Anterior"
                                 style="height: 34px; padding: 9px; width: 46px">
                             <i class="fa fa-money"></i>
                         </g:link>
                     </div>
+--}%
                     %{--<div class="btn-group col-xs-3 col-md-3" style="margin-left: -10px; margin-top: 20px;">--}%
                     %{--<g:link controller="reportes" action="imprimirSolicitudes" class="btn btn-warning" title="Imprimir solicitudes de pago" style="height: 34px; padding: 9px; width: 46px">--}%
                     %{--<i class="fa fa-print"></i>--}%
