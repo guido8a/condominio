@@ -2388,20 +2388,21 @@ class ReportesController extends Shield{
 
     def imprimirIngresos () {
 
-        println("imprimirIngresos " + params)
+//        println("imprimirIngresos " + params)
 
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
-        println "fechas: '${fechaDesde}','${fechaHasta}'"
+//        println "fechas: '${fechaDesde}','${fechaHasta}'"
 
         def sql2 = "select * from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by edifdscr, prsndpto"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
 
-        println("sql " + sql2)
+//        println("sql " + sql2)
 
         def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
+        def totalMultas = (ingresos.pagomora.sum() ?: 0)
 
         def baos = new ByteArrayOutputStream()
         def name = "listaIngresos_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
@@ -2494,7 +2495,8 @@ class ReportesController extends Shield{
         tablaTotal.setWidths(arregloEnteros([72, 9, 6]))
         addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalIngresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-        addCellTabla(tablaTotal, new Paragraph("", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalMultas, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+//        addCellTabla(tablaTotal, new Paragraph("", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
 
         addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
 
@@ -5773,6 +5775,7 @@ class ReportesController extends Shield{
         def ingresos = cn2.rows(sql2.toString())
 
         def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
+        def totalMultas = (ingresos.pagomora.sum() ?: 0)
 
         //excel
         WorkbookSettings workbookSettings = new WorkbookSettings()
@@ -5845,7 +5848,8 @@ class ReportesController extends Shield{
         label = new Label(4, fila, ''); sheet.addCell(label);
         label = new Label(5, fila, 'TOTAL'); sheet.addCell(label);
         number = new Number(6, fila, totalIngresos); sheet.addCell(number);
-        label = new Label(7, fila,''); sheet.addCell(label);
+        number = new Number(7, fila, totalMultas); sheet.addCell(number);
+//        label = new Label(7, fila,''); sheet.addCell(label);
 
         workbook.write();
         workbook.close();
