@@ -4456,10 +4456,10 @@ class ReportesController extends Shield{
 
         def fondoTotal = new Color(240, 240, 240);
         def fondoN = new Color(240, 248, 250);
-        def frmN = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondoN, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
-        def frmN2 = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondoN, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
-        def frmN3 = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondoN, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
-        def frmTT = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondoN, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmN = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bct: Color.BLACK,bcl: Color.BLACK, bcr: Color.BLACK, bg: fondoN, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmN2 = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bct: Color.BLACK, bcl: Color.BLACK, bcr: Color.BLACK,bg: fondoN, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmN3 = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bct: Color.BLACK, bcl: Color.BLACK, bcr: Color.BLACK, bg: fondoN, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def frmTT = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bct: Color.BLACK, bcl: Color.BLACK, bcr: Color.BLACK,bg: fondoN, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
 
 
         Document document
@@ -4495,7 +4495,7 @@ class ReportesController extends Shield{
 
         def printHeaderDetalle = {
             def fondo = new Color(240, 248, 250);
-            def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+            def frmtHd = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bct: Color.BLACK, bcl: Color.BLACK, bcr: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
 
 //            def tablaHeaderDetalles = new PdfPTable(6);
             def tablaHeaderDetalles = new PdfPTable(4);
@@ -4510,7 +4510,7 @@ class ReportesController extends Shield{
             addCellTabla(tablaHeaderDetalles, new Paragraph("Valor Pagado", fontTh), frmtHd)
 //            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor Restante", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Comprobante", fontTh), frmtHd)
-            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
+            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
         }
 
         tablaDetalles = new PdfPTable(3);
@@ -4518,9 +4518,9 @@ class ReportesController extends Shield{
         tablaDetalles.setWidths(arregloEnteros([60,20,20]))
         tablaDetalles.setSpacingAfter(1f);
 
-        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
-        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
-        def frmtR = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def frmtDato = [border: Color.BLACK, bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bcl: Color.BLACK, bcr: Color.BLACK,  align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [border: Color.BLACK, bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bcl: Color.BLACK, bcr: Color.BLACK,  align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtR = [border: Color.BLACK, bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bcl: Color.BLACK, bcr: Color.BLACK,  align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
 //        printHeaderDetalle()
         println "ingresos: ${ingresos.size()}"
