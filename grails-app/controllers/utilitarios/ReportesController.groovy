@@ -4427,6 +4427,7 @@ class ReportesController extends Shield{
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde)
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta)
         def persona = Persona.get(params.id)
+        def pagado = 0
 
         def ingresos = Ingreso.withCriteria {
             eq("persona",persona)
@@ -4522,12 +4523,15 @@ class ReportesController extends Shield{
         def frmtR = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
 //        printHeaderDetalle()
-
+        println "ingresos: ${ingresos.size()}"
         ingresos.each {ingreso->
+            println "ingr: $ingreso"
             def ingr_pago = Pago.findAllByIngreso(ingreso)
-            def pagado = 0
+            println "ingr_pago: $ingr_pago, pagado: $pagado"
+            pagado = 0
             if(ingr_pago) {
-                pagado = ingr_pago.valor.sum().toDouble() + ingr_pago.descuento.sum().toDouble()
+                pagado = ingr_pago?.valor?.sum()?.toDouble() + ingr_pago?.descuento?.sum()?.toDouble()
+                println "pagado: ${pagado}"
             } else {
                 pagado = 0
             }
@@ -4540,7 +4544,9 @@ class ReportesController extends Shield{
 //            addCellTabla(tablaDetalles, new Paragraph("Pendiente: " + (ingreso?.valor?.toDouble() - (pago?.valor?.sum()?.toDouble() ?: 0) ?: 0.00) + " ", fontTh), frmN)
             addCellTabla(tablaDetalles, new Paragraph("Pendiente: " + (ingreso?.valor?.toDouble() - pagado) + " ", fontTh), frmN)
 
-            total += ingreso?.valor?.toDouble() - (Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0) ?: 0.00
+//            total += ingreso?.valor?.toDouble() - (Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0) ?: 0.00
+            println "valor: ${ingreso.valor} pagado: $pagado"
+            total += ingreso?.valor - pagado
 
 //            printHeaderDetalle()
             if( Pago.findAllByIngreso(ingreso)){

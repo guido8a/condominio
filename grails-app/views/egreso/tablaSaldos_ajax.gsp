@@ -26,7 +26,7 @@
         </div>
 
         <div class="col-xs-1" style="padding: 5px; width: 120px">
-            <label style="color: #42a151">Total Mora:</label>
+            <label style="color: #42a151">Total Multas:</label>
             <g:textField name="saldo_name" class="form-control derecha" readonly=""
                          value="${g.formatNumber(number: totalMora, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
         </div>

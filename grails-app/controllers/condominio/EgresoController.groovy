@@ -295,18 +295,18 @@ class EgresoController extends Shield {
         def sql = "select * from saldos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') "
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())
-//        println "....sql: $sql"
+        println "....sql: $sql"
 
         def sql2 = "select * from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
                 "order by pagodcmt, ingrfcha"
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
-//        println "ingr...sql: $sql2"
+        println "ingr...sql: $sql2"
 
         def sql3 = "select * from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') order by egrsfcha"
         def cn3 = dbConnectionService.getConnection()
         def egresos = cn3.rows(sql3.toString())
-//        println "egrs ...sql: $sql3"
+        println "egrs ...sql: $sql3"
 
         def totalMora = (ingresos.pagomora.sum() ?: 0)
         def totalIngresos = (ingresos.pagovlor.sum() ?: 0)
