@@ -69,7 +69,7 @@
             <label>Resultado final:</label>
             <strong>
                 <g:textField  name="saldoTotal_name" class="form-control derecha" readonly=""
-                              value="${g.formatNumber(number: data[0].ingrsldo + data[0].sldofnal - data[0].egrssldo + data[0].sldomora,
+                              value="${g.formatNumber(number: data[0].ingrsldo + data[0].sldofnal - data[0].egrssldo,
                                       format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>
             </strong>
         </div>

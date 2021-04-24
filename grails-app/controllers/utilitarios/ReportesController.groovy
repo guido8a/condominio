@@ -2958,7 +2958,8 @@ class ReportesController extends Shield{
 //        println "sql2: $sql2"
         def sldo = cn3.rows(sql2.toString())[0]
 //        println "sql2: $sql2 --> ${sldo}"
-        def rstt = sldo.ingrsldo + sldo.sldofnal - sldo.egrssldo + sldo.sldomora
+//        def rstt = sldo.ingrsldo + sldo.sldofnal - sldo.egrssldo + sldo.sldomora
+        def rstt = sldo.ingrsldo + sldo.sldofnal - sldo.egrssldo
 
         addCellTabla(tablaSaldos, new Paragraph("Saldo al ${fechaHasta}", fontTh), frmtHdR)
         addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: totalIngresos - totalEgresos + saldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
@@ -2969,8 +2970,8 @@ class ReportesController extends Shield{
         addCellTabla(tablaSaldos, new Paragraph("(-) Pagos pendientes", fontTh), frmtHdR)
         addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: sldo.egrssldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
-        addCellTabla(tablaSaldos, new Paragraph("(+) Pagos por multas", fontTh), frmtHdR)
-        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: sldo.sldomora, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+//        addCellTabla(tablaSaldos, new Paragraph("(+) Pagos por multas", fontTh), frmtHdR)
+//        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: sldo.sldomora, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
 
         addCellTabla(tablaSaldos, new Paragraph("Resultado Final al ${fechaHasta}", fontTh), frmtHdR)
