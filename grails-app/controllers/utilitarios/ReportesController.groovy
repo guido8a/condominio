@@ -5951,7 +5951,7 @@ class ReportesController extends Shield{
 
     def imprimirPagosPendientes(){
 
-        println("params " + params)
+//        println("params " + params)
 
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
@@ -5960,8 +5960,9 @@ class ReportesController extends Shield{
         def cn3 = dbConnectionService.getConnection()
         def egresos = cn3.rows(sql3.toString())
 
-        println("sql3 " + sql3)
+//        println("sql3 " + sql3)
 
+        def totalValor = (egresos.egrsvlor.sum() ?: 0)
         def totalEgresos = (egresos.egrssldo.sum() ?: 0)
 
         def baos = new ByteArrayOutputStream()
@@ -6032,11 +6033,12 @@ class ReportesController extends Shield{
             addCellTabla(tablaDetalles, new Paragraph(egreso.egrssldo.toString(), fontTd10), frmtNmro)
         }
 
-        def tablaTotal = new PdfPTable(2);
+        def tablaTotal = new PdfPTable(3);
         tablaTotal.setWidthPercentage(100);
-        tablaTotal.setWidths(arregloEnteros([88, 12]))
+        tablaTotal.setWidths(arregloEnteros([76, 12, 12]))
 
         addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalValor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 5, pl: 0])
 
