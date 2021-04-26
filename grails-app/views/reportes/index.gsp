@@ -212,6 +212,19 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12 col-xs-5">
+        <p>
+            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#pagosPendientes"
+               title="Detalle de pagos pendientes">
+                <i class="fa fa-sign-out fa-5x"></i><br/>
+                Detalle de pagos pendientes
+            </a>
+        </p>
+    </div>
+</div>
+
+
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 %{--//dialog de contabilidad--}%
 <div class="modal fade col-md-12 col-xs-12" id="detalleIngresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -974,6 +987,54 @@
     </div>
 </div>
 
+<div class="modal fade col-md-12 col-xs-12" id="pagosPendientes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelDP">Pagos pendientes</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Desde</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaDesde_DP_name" id="fechaDesde_DP" class="datepicker form-control" value="${new Date() - 30}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Hasta</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaHasta_DP_name" id="fechaHasta_DP" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnAceptarDP btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+                <button type="button" class="btn btnAceptarDPExcel btn-info" data-dismiss="modal"><i class="fa fa-print"></i> Excel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 
@@ -1434,6 +1495,34 @@
         var fechaHasta = $("#fechaHastaInf").val();
         location.href = "${g.createLink(controller:'reportes' , action: 'rpInforme')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
     });
+
+
+    $(".btnAceptarDP").click(function () {
+        var fechaDesde = $("#fechaDesde_DP").val();
+        var fechaHasta = $("#fechaHasta_DP").val();
+
+        if(fechaDesde == '' || fechaHasta == ''){
+            bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
+        }else{
+            $.ajax({
+                type: 'POST',
+                url: '${createLink(controller: 'reportes', action: 'revisarFecha_ajax')}',
+                data:{
+                    desde: fechaDesde,
+                    hasta: fechaHasta
+                },
+                success: function (msg){
+                    if(msg == 'ok'){
+                        location.href = "${g.createLink(controller:'reportes' , action: 'imprimirPagosPendientes')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                    }else{
+                        bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
+                        return false;
+                    }
+                }
+            });
+        }
+    });
+
 
 </script>
 
