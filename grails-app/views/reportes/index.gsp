@@ -1028,8 +1028,6 @@
                 </button>
                 <button type="button" class="btn btnAceptarDP btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
                 </button>
-                <button type="button" class="btn btnAceptarDPExcel btn-info" data-dismiss="modal"><i class="fa fa-print"></i> Excel
-                </button>
             </div>
         </div>
     </div>
