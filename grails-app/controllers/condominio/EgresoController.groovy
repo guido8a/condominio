@@ -361,7 +361,7 @@ class EgresoController extends Shield {
 
         def sql = armaSql(params)
         params.criterio = params.old
-//        println "sql: $sql"
+        println "sql: $sql"
         def data = cn.rows(sql.toString())
 
         def msg = ""
