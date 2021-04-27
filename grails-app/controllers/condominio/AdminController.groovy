@@ -108,7 +108,7 @@ class AdminController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-        println "params: $params"
+        println "params admin: $params"
         def adminInstance = new Admin()
         if(params.id) {
             adminInstance = Admin.get(params.id)
@@ -118,6 +118,7 @@ class AdminController extends Shield {
             }
         }
         adminInstance.properties = params
+        adminInstance.saldoInicial = params.saldoInicial.toDouble()
         if(!adminInstance.save(flush: true)) {
             render "ERROR*Ha ocurrido un error al guardar Admin: " + renderErrors(bean: adminInstance)
             return

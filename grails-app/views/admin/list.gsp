@@ -233,6 +233,15 @@
                 }
             };
 
+            var editar = {
+                label  : "Editar",
+                icon   : "fa fa-pencil",
+                action : function ($element) {
+                    var id = $element.data("id");
+                    createEditRow(id);
+                }
+            };
+
             var cerrar = {
                 label  : "Cerrar administración",
                 icon   : "fa fa-times-circle",
@@ -245,6 +254,7 @@
 
             if(id){
                 items.ver = ver;
+                items.editar = editar;
             }
 
             if(!cerrado && id){

@@ -65,7 +65,7 @@
                     </label>
                     <div class="col-md-4">
                         <g:textField name="saldoInicial" value="${fieldValue(bean: adminInstance, field: 'saldoInicial')}"
-                                 class="number form-control  required" required=""/>
+                                 class="form-control  required" required=""/>
                     </div>
                 </span>
 
