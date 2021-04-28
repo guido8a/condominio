@@ -240,7 +240,7 @@ class Reportes2Controller {
         tbNota.addCell(poneCeldaNoBorde(" ", Element.ALIGN_JUSTIFIED, nota7,1))
         tbNota.addCell(poneCeldaNoBorde(" ", Element.ALIGN_JUSTIFIED, nota7,1))
         tbNota.addCell(poneCeldaNoBorde(" ", Element.ALIGN_JUSTIFIED, nota7,1))
-        tbNota.addCell(poneCeldaNoBorde("Sistema de Administración de Condominios.         www.tedein.com.ec/vinedos",
+        tbNota.addCell(poneCeldaNoBorde("Sistema de Administración de Condominios.         www.tedein.com.ec/condominio",
                 Element.ALIGN_RIGHT, nota7,1))
 
         tbNota

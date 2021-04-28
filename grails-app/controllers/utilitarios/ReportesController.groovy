@@ -80,7 +80,7 @@ class ReportesController extends Shield{
     def dbConnectionService
     def reportesService
 
-    def tx_footer = "Sistema de Administración de Condominios " + " " * 144 + "www.tedein.com.ec/vinedos"
+    def tx_footer = "Sistema de Administración de Condominios " + " " * 136 + "www.tedein.com.ec/condominio"
 
     def index() {
         def cn = dbConnectionService.getConnection()
@@ -3904,16 +3904,16 @@ class ReportesController extends Shield{
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
 
-        PdfPTable table = new PdfPTable(7);
+        PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100);
-        table.setWidths(arregloEnteros([5, 8, 45, 20, 10, 8, 10]))
+        table.setWidths(arregloEnteros([5, 8, 40, 35, 10]))
         addCellTabla(table, new Paragraph("Dp.", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Cuota", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Detalle", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Saldo", fontTh), frmtHd)
-        addCellTabla(table, new Paragraph("Interés", fontTh), frmtHd)
-        addCellTabla(table, new Paragraph("Total", fontTh), frmtHd)
+//        addCellTabla(table, new Paragraph("Interés", fontTh), frmtHd)
+//        addCellTabla(table, new Paragraph("Total", fontTh), frmtHd)
         table.setHeaderRows(1);
 
         def tablaTotal = new PdfPTable(2);
