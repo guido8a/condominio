@@ -747,27 +747,24 @@ class ReportesController extends Shield{
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         addCellTabla(tabla, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
         addCellTabla(tabla, new Paragraph(fila.alct.toString(), fontTd10), frmtNmro)
-/*
-        if(fila.tipo in [2,3]){
-            addCellTabla(tabla, new Paragraph(fila.prop, fontTd10), frmtDato)
-        } else {
-            addCellTabla(tabla, new Paragraph(' ' + fila.prsn, fontTd10), frmtDato)
-        }
-*/
         if(fila.prop != fila.prsn) {
             if(fila.tipo in [2,3]){
                 addCellTabla(tabla, new Paragraph(fila.prop, fontTd10), frmtDato)
             } else {
-                addCellTabla(tabla, new Paragraph(fila.prop + ' / ' + fila.prsn, fontTd10), frmtDato)
+                println "prop: ${fila.prop + ' / ' + fila.prsn}"
+                if(fila.prop != fila.prsn) {
+                    addCellTabla(tabla, new Paragraph(fila.prop + ' / ' + fila.prsn, fontTd10), frmtDato)
+                } else {
+                    addCellTabla(tabla, new Paragraph(fila.prop, fontTd10), frmtDato)
+                }
             }
         } else {
             addCellTabla(tabla, new Paragraph(fila.prsn, fontTd10), frmtDato)
         }
         addCellTabla(tabla, new Paragraph(fila.oblg, fontTd10), frmtDato)
         addCellTabla(tabla, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
-        addCellTabla(tabla, new Paragraph(fila.ingrintr.toString(), fontTd10), frmtNmro)
 //        addCellTabla(tabla, new Paragraph(fila.ingrintr.toString(), fontTd10), frmtNmro)
-        addCellTabla(tabla, new Paragraph((fila.sldo + fila.ingrintr).toString(), fontTd10), frmtNmro)
+//        addCellTabla(tabla, new Paragraph((fila.sldo + fila.ingrintr).toString(), fontTd10), frmtNmro)
     }
 
     def poneDatos2(tabla, fila) {
@@ -801,8 +798,8 @@ class ReportesController extends Shield{
         addCellTabla(tabla, new Paragraph('', fontTd10), frmtDato)
         addCellTabla(tabla, new Paragraph("TOTAL:", fontTd10), frmtNmro)
         addCellTabla(tabla, new Paragraph(total.toString(), fontTd10), frmtNmro)
-        addCellTabla(tabla, new Paragraph(total2.toString(), fontTd10), frmtNmro)
-        addCellTabla(tabla, new Paragraph((total + total2).toString(), fontTd10), frmtNmro)
+//        addCellTabla(tabla, new Paragraph(total2.toString(), fontTd10), frmtNmro)
+//        addCellTabla(tabla, new Paragraph((total + total2).toString(), fontTd10), frmtNmro)
     }
 
     def totalesDeudas2(tabla,total, total2, fontTd10,frmtDato,frmtNmro) {
@@ -3732,16 +3729,17 @@ class ReportesController extends Shield{
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
 
-        PdfPTable table = new PdfPTable(7);
+        PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100);
-        table.setWidths(arregloEnteros([5, 8, 45, 20, 10, 8, 10]))
+//        table.setWidths(arregloEnteros([5, 8, 45, 20, 10, 8, 10]))
+        table.setWidths(arregloEnteros([5, 8, 40, 35, 10]))
         addCellTabla(table, new Paragraph("Dp.", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Cuota", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Detalle", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Saldo", fontTh), frmtHd)
-        addCellTabla(table, new Paragraph("Interés", fontTh), frmtHd)
-        addCellTabla(table, new Paragraph("Total", fontTh), frmtHd)
+//        addCellTabla(table, new Paragraph("Interés", fontTh), frmtHd)
+//        addCellTabla(table, new Paragraph("Total", fontTh), frmtHd)
         table.setHeaderRows(1);
 
         def tablaTotal = new PdfPTable(2);
@@ -4088,16 +4086,17 @@ class ReportesController extends Shield{
         def pActual
         def pAnterior
 
-        PdfPTable table = new PdfPTable(7);
+        PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100);
-        table.setWidths(arregloEnteros([5, 8, 40, 25, 10, 8, 10]))
+//        table.setWidths(arregloEnteros([5, 8, 40, 25, 10, 8, 10]))
+        table.setWidths(arregloEnteros([5, 8, 40, 25, 10]))
         addCellTabla(table, new Paragraph("Dp.", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Cuota", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Nombre", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Concepto", fontTh), frmtHd)
         addCellTabla(table, new Paragraph("Saldo", fontTh), frmtHd)
-        addCellTabla(table, new Paragraph("Interés", fontTh), frmtHd)
-        addCellTabla(table, new Paragraph("Total", fontTh), frmtHd)
+//        addCellTabla(table, new Paragraph("Interés", fontTh), frmtHd)
+//        addCellTabla(table, new Paragraph("Total", fontTh), frmtHd)
         table.setHeaderRows(1);
 
         def tablaTotal = new PdfPTable(2);
@@ -4135,8 +4134,8 @@ class ReportesController extends Shield{
                     }else{
                         addCellTabla(table, new Paragraph("Total", fontTh), frmtHd4c)
                         addCellTabla(table, new Paragraph(g.formatNumber(number:totalSaldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
-                        addCellTabla(table, new Paragraph(g.formatNumber(number:totalInteres, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
-                        addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+//                        addCellTabla(table, new Paragraph(g.formatNumber(number:totalInteres, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+//                        addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
 
                         totalPersona = fila.total
                         totalSaldo = fila.sldo
@@ -4149,8 +4148,8 @@ class ReportesController extends Shield{
                 addCellTabla(table, new Paragraph(fila.prsn, fontTd10), frmtDato)
                 addCellTabla(table, new Paragraph(fila.tpapdscr, fontTd10), frmtDato)
                 addCellTabla(table, new Paragraph(fila.sldo.toString(), fontTd10), frmtNmro)
-                addCellTabla(table, new Paragraph(fila.intr.toString(), fontTd10), frmtNmro)
-                addCellTabla(table, new Paragraph(fila.total.toString(), fontTd10), frmtNmro)
+//                addCellTabla(table, new Paragraph(fila.intr.toString(), fontTd10), frmtNmro)
+//                addCellTabla(table, new Paragraph(fila.total.toString(), fontTd10), frmtNmro)
 
                 total += (fila.total ? fila.total.toDouble() : 0)
                 ts += (fila.sldo ? fila.sldo.toDouble() : 0)
@@ -4161,8 +4160,8 @@ class ReportesController extends Shield{
                 if(k == tam.toInteger()){
                     addCellTabla(table, new Paragraph("Total", fontTh), frmtHd4c)
                     addCellTabla(table, new Paragraph(g.formatNumber(number:totalSaldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
-                    addCellTabla(table, new Paragraph(g.formatNumber(number:totalInteres, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
-                    addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+//                    addCellTabla(table, new Paragraph(g.formatNumber(number:totalInteres, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+//                    addCellTabla(table, new Paragraph(g.formatNumber(number:totalPersona, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
                 }
 
                 contador++
@@ -4190,8 +4189,8 @@ class ReportesController extends Shield{
 
         addCellTabla(table, new Paragraph("GRAN TOTAL", fontTh), frmtHd4c)
         addCellTabla(table, new Paragraph(g.formatNumber(number:ts, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
-        addCellTabla(table, new Paragraph(g.formatNumber(number:ti, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
-        addCellTabla(table, new Paragraph(g.formatNumber(number:total, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+//        addCellTabla(table, new Paragraph(g.formatNumber(number:ti, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
+//        addCellTabla(table, new Paragraph(g.formatNumber(number:total, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHd1)
 
         document.add(table);
         document.close();
