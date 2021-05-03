@@ -162,29 +162,31 @@ class ProveedorController extends Shield {
         def proveedorInstance = new Proveedor()
 
         if(params.id) {
-            if(existeRuc){
-                if(existeRuc.ruc == Proveedor.get(params.id).ruc){
-                    proveedorInstance = Proveedor.get(params.id)
-                    if(!proveedorInstance) {
-                        render "no_No se encontró Proveedor."
-                        return
-                    }
-                }else{
-                    render "no_Existe ya un proveedor con ese RUC"
-                }
-            }else{
-                proveedorInstance = Proveedor.get(params.id)
-                if(!proveedorInstance) {
-                    render "no_No se encontró Proveedor."
-                    return
-                }
+//            if(existeRuc){
+//                if(existeRuc.ruc == Proveedor.get(params.id).ruc){
+            proveedorInstance = Proveedor.get(params.id)
+            if(!proveedorInstance) {
+                render "no_No se encontró Proveedor."
+                return
             }
+//                }else{
+//                    render "no_Existe ya un proveedor con ese RUC"
+//                    return
+//                }
+//            }else{
+//                proveedorInstance = Proveedor.get(params.id)
+//                if(!proveedorInstance) {
+//                    render "no_No se encontró Proveedor."
+//                    return
+//                }
+//            }
         }else {
-            if(existeRuc){
-                render "no_Existe ya un proveedor con ese RUC"
-            }else{
-                proveedorInstance.fecha = new Date()
-            }
+//            if(existeRuc){
+//                render "no_Existe ya un proveedor con ese RUC"
+//                return
+//            }else{
+            proveedorInstance.fecha = new Date()
+//            }
         }
 
         proveedorInstance.properties = params
@@ -241,6 +243,31 @@ class ProveedorController extends Shield {
         } else {
             render Proveedor.countByMailIlike(params.mail) == 0
             return
+        }
+    }
+
+    def verificarRUC_ajax(){
+//        println("params ----->" + params)
+
+        def condominio = Condominio.get(session.condominio.id)
+        def existeRuc = Proveedor.findByRucAndCondominio(params.ruc, condominio)
+
+        if(params.id) {
+            if(existeRuc){
+                if(existeRuc.ruc == Proveedor.get(params.id).ruc){
+                    render true
+                }else{
+                    render false
+                }
+            }else{
+                render true
+            }
+        }else {
+            if(existeRuc){
+                render false
+            }else{
+                render true
+            }
         }
     }
 

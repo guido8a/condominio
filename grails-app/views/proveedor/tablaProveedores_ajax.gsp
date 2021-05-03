@@ -58,12 +58,12 @@ th, td {
                 success : function (msg) {
                     closeLoader();
                     var parts = msg.split("_");
-//                    log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
                     if(parts[0] == 'ok'){
                         log(parts[1],"success")
                         cargarTablaProveedores(null, null);
                     }else{
                        bootbox.alert(parts[1])
+                       return false;
                     }
                 }
             });
@@ -137,6 +137,7 @@ th, td {
                             className : "btn-success",
                             callback  : function () {
                                 return submitFormProveedor();
+
                             } //callback
                         } //guardar
                     } //buttons

@@ -5,7 +5,7 @@
     <elm:notFound elem="Proveedor" genero="o" />
 </g:if>
 <g:else>
-    
+
     <div class="modal-contenido">
         <g:form class="form-horizontal" name="frmProveedor" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${proveedorInstance?.id}" />
@@ -64,10 +64,10 @@
                     <div class="col-md-9">
                         <g:textField name="direccion" class="form-control" maxlength="255" value="${proveedorInstance?.direccion}"/>
                     </div>
-                    
+
                 </span>
             </div>
-            
+
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'telefono', 'error')} required">
                 <span class="grupo">
                     <label for="telefono" class="col-md-3 control-label">
@@ -78,18 +78,18 @@
                     </div>
                 </span>
             </div>
-            
+
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'mail', 'error')} ">
                 <span class="grupo">
                     <label for="mail" class="col-md-3 control-label">
                         Mail
                     </label>
                     <div class="col-md-7">
-                        <g:textField name="mail" class=" form-control" maxlength="63" value="${proveedorInstance?.mail}"/>
+                        <g:textField name="mail" class="form-control email" maxlength="63" value="${proveedorInstance?.mail}"/>
                     </div>
                 </span>
             </div>
-            
+
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'observaciones', 'error')} ">
                 <span class="grupo">
                     <label for="observaciones" class="col-md-3 control-label">
@@ -100,7 +100,7 @@
                     </div>
                 </span>
             </div>
-            
+
             <div class="form-group keeptogether ${hasErrors(bean: proveedorInstance, field: 'activo', 'error')} required">
                 <span class="grupo">
                     <label for="activo" class="col-md-3 control-label">
@@ -117,10 +117,10 @@
     </div>
 
     <script type="text/javascript">
-        var validator = $("#frmProveedor").validate({
+        $("#frmProveedor").validate({
             errorClass     : "help-block",
             errorPlacement : function (error, element) {
-                if (element.parent().hasClass("input-group")) {
+                if (element.parent().hasClass("form-group")) {
                     error.insertAfter(element.parent());
                 } else {
                     error.insertAfter(element);
@@ -129,29 +129,38 @@
             },
             success        : function (label) {
                 label.parents(".grupo").removeClass('has-error');
-            }
-            
-            , rules          : {
-        
-        mail: {
-            remote: {
-                url: "${createLink(action: 'validar_unique_mail_ajax')}",
-                    type: "post",
-                    data: {
-                    id: "${proveedorInstance?.id}"
+            },
+            rules          : {
+                mail: {
+                    remote: {
+                        url: "${createLink(action: 'validar_unique_mail_ajax')}",
+                        type: "post",
+                        data: {
+                            id: "${proveedorInstance?.id}"
+                        }
+                    }
+                },
+                ruc: {
+                    remote: {
+                        url: "${createLink(action: 'verificarRUC_ajax')}",
+                        type: "post",
+                        data: {
+                            id: "${proveedorInstance?.id}"
+                        }
+                    }
                 }
+            },
+            messages : {
+
+                mail: {
+                    remote: "Ya existe Mail"
+                },
+                ruc:{
+                    remote: "Ya exite un proveedor con ese RUC"
+                }
+
             }
-        }
-        
-        },
-        messages : {
-            
-            mail: {
-                remote: "Ya existe Mail"
-            }
-            
-        }
-        
+
         });
         $(".form-control").keydown(function (ev) {
             if (ev.keyCode == 13) {
