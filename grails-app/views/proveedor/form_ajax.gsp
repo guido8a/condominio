@@ -29,7 +29,7 @@
                         Nombre
                     </label>
                     <div class="col-md-8">
-                        <g:textField name="nombre" required="" class=" form-control required" value="${proveedorInstance?.nombre}"/>
+                        <g:textField name="nombre" required="" maxlength="127" class=" form-control required" value="${proveedorInstance?.nombre}"/>
                     </div>
                 </span>
             </div>
@@ -40,7 +40,7 @@
                         Apellido
                     </label>
                     <div class="col-md-7">
-                        <g:textField name="apellido" class=" form-control" value="${proveedorInstance?.apellido}"/>
+                        <g:textField name="apellido" maxlength="31" class=" form-control" value="${proveedorInstance?.apellido}"/>
                     </div>
                 </span>
             </div>
@@ -51,7 +51,7 @@
                         Ruc
                     </label>
                     <div class="col-md-4">
-                        <g:textField name="ruc" required="" class="digits form-control required" value="${proveedorInstance?.ruc}"/>
+                        <g:textField name="ruc" required="" maxlength="13" class="digits form-control required" value="${proveedorInstance?.ruc}"/>
                     </div>
                 </span>
             </div>
@@ -62,7 +62,7 @@
                         Dirección
                     </label>
                     <div class="col-md-9">
-                        <g:textField name="direccion" class=" form-control" value="${proveedorInstance?.direccion}"/>
+                        <g:textField name="direccion" class="form-control" maxlength="255" value="${proveedorInstance?.direccion}"/>
                     </div>
                     
                 </span>
@@ -74,7 +74,7 @@
                         Teléfono
                     </label>
                     <div class="col-md-5">
-                        <g:textField name="telefono" required="" class="form-control required" value="${proveedorInstance?.telefono}"/>
+                        <g:textField name="telefono" required="" maxlength="63" class="form-control required" value="${proveedorInstance?.telefono}"/>
                     </div>
                 </span>
             </div>
@@ -85,7 +85,7 @@
                         Mail
                     </label>
                     <div class="col-md-7">
-                        <g:textField name="mail" class=" form-control" value="${proveedorInstance?.mail}"/>
+                        <g:textField name="mail" class=" form-control" maxlength="63" value="${proveedorInstance?.mail}"/>
                     </div>
                 </span>
             </div>
@@ -96,9 +96,8 @@
                         Observaciones
                     </label>
                     <div class="col-md-9">
-                        <g:textField name="observaciones" class=" form-control" value="${proveedorInstance?.observaciones}"/>
+                        <g:textField name="observaciones" class=" form-control" maxlength="255" value="${proveedorInstance?.observaciones}"/>
                     </div>
-                    
                 </span>
             </div>
             

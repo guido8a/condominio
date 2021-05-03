@@ -154,25 +154,48 @@ class ProveedorController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-        def proveedorInstance = new Proveedor()
+//        println("params " + params)
         def condominio = Condominio.get(session.condominio.id)
+
+        def existeRuc = Proveedor.findByRucAndCondominio(params.ruc, condominio)
+
+        def proveedorInstance = new Proveedor()
+
         if(params.id) {
-            proveedorInstance = Proveedor.get(params.id)
-            if(!proveedorInstance) {
-                render "ERROR*No se encontró Proveedor."
-                return
+            if(existeRuc){
+                if(existeRuc.ruc == Proveedor.get(params.id).ruc){
+                    proveedorInstance = Proveedor.get(params.id)
+                    if(!proveedorInstance) {
+                        render "no_No se encontró Proveedor."
+                        return
+                    }
+                }else{
+                    render "no_Existe ya un proveedor con ese RUC"
+                }
+            }else{
+                proveedorInstance = Proveedor.get(params.id)
+                if(!proveedorInstance) {
+                    render "no_No se encontró Proveedor."
+                    return
+                }
             }
-        } else {
-            proveedorInstance.fecha = new Date()
+        }else {
+            if(existeRuc){
+                render "no_Existe ya un proveedor con ese RUC"
+            }else{
+                proveedorInstance.fecha = new Date()
+            }
         }
+
         proveedorInstance.properties = params
         proveedorInstance.condominio = condominio
         if(!proveedorInstance.save(flush: true)) {
-            render "ERROR*Ha ocurrido un error al guardar Proveedor: " + renderErrors(bean: proveedorInstance)
+            render "no_Ha ocurrido un error al guardar Proveedor"
             return
         }
-        render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Proveedor exitosa."
+        render "ok_Proveedor guardado correctamente"
         return
+
     } //save para grabar desde ajax
 
     /**

@@ -56,17 +56,15 @@ th, td {
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
                 success : function (msg) {
-                    var parts = msg.split("*");
-                    log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                    setTimeout(function() {
-                        if (parts[0] == "SUCCESS") {
-//                            location.reload(true);
-                            cargarTablaProveedores(null, null);
-                        } else {
-                            spinner.replaceWith($btn);
-                            return false;
-                        }
-                    }, 1000);
+                    closeLoader();
+                    var parts = msg.split("_");
+//                    log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
+                    if(parts[0] == 'ok'){
+                        log(parts[1],"success")
+                        cargarTablaProveedores(null, null);
+                    }else{
+                       bootbox.alert(parts[1])
+                    }
                 }
             });
         } else {
