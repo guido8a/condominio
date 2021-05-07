@@ -783,6 +783,19 @@
                     <div class="col-md-1 col-xs-1">
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-4 col-xs-4">
+                        <label>Depósitos no registrados</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <g:textField name="depos" class="form-control"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -1059,10 +1072,22 @@
         ev.keyCode == 173 || ev.keyCode == 109);
     }
 
+    function validarNumPunto(ev) {
+        return ((ev.keyCode >= 48 && ev.keyCode <= 57) ||
+        (ev.keyCode >= 96 && ev.keyCode <= 105) ||
+        ev.keyCode == 190 || ev.keyCode == 110 ||
+        ev.keyCode == 8 || ev.keyCode == 46 || ev.keyCode == 9 ||
+        ev.keyCode == 37 || ev.keyCode == 39 ||
+        ev.keyCode == 173 || ev.keyCode == 109);
+    }
+
     $("#valorAli").keydown(function (ev) {
         return validarNum(ev)
     });
 
+    $("#depos").keydown(function (ev) {
+        return validarNumPunto(ev)
+    });
     $(".btnNuevasAlicuotas").click(function () {
         var valor = $("#valorAli").val();
         if(valor == '' || valor == null || valor == 0){
@@ -1484,7 +1509,8 @@
     $(".btnImprimirBalance").click(function () {
         var fechaDesde = $("#fechaDesdeB").val();
         var fechaHasta = $("#fechaHastaB").val();
-        location.href = "${g.createLink(controller:'reportes' , action: 'rpBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+        var depositos = $("#depos").val()
+        location.href = "${g.createLink(controller:'reportes' , action: 'rpBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta + "&depositos=" + depositos;
         %{--location.href = "${g.createLink(controller:'reportes' , action: 'pdfBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;--}%
     });
 

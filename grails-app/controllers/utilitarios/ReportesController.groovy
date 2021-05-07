@@ -2621,7 +2621,7 @@ class ReportesController extends Shield{
         byte[] b
         def name = "balance_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
 
-        b = pdfBalance(desde, hasta).toByteArray()
+        b = pdfBalance(desde, hasta, params.depositos).toByteArray()
 //        b = pdfBalance(desde, hasta)
 
         response.setContentType("application/pdf")
@@ -2803,7 +2803,7 @@ class ReportesController extends Shield{
         response.getOutputStream().write(b)
     }
 
-    def pdfBalance(desde, hasta) {
+    def pdfBalance(desde, hasta, deposito) {
 //    def pdfBalance() {
         println "pdfBalance: $params"
 
@@ -2822,11 +2822,11 @@ class ReportesController extends Shield{
                 "substr(pagofcha::varchar, 1, 7), tpapdscr " +
                 "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
                 "group by 2,3,4 order by 3"
-        println "--> $sql2"
+//        println "--> $sql2"
 
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
-        def totalIngresos = (ingresos.vlor.sum() ?: 0)
+        def totalIngresos = (ingresos.vlor.sum() ?  ingresos.vlor.sum() + (params.depositos ? params.depositos.toDouble() : 0)  : (params.depositos ? params.depositos.toDouble() : 0))
 
         sql2 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4) fcha, " +
                 "substr(egrsfcha::varchar, 1, 7), tpgsdscr " +
@@ -2856,7 +2856,6 @@ class ReportesController extends Shield{
         Font fontTdTiny = new Font(Font.TIMES_ROMAN, 7, Font.NORMAL);
 
         def fondoTotal = new Color(240, 240, 240);
-
 
         Document document
         document = new Document(PageSize.A4);
@@ -2892,7 +2891,6 @@ class ReportesController extends Shield{
         def frmtNmro = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         def printHeaderDetalle = {
 
-
             def tablaHeaderDetalles = new PdfPTable(2);
             tablaHeaderDetalles.setWidthPercentage(100);
             tablaHeaderDetalles.setWidths(arregloEnteros([8,2]))
@@ -2922,6 +2920,11 @@ class ReportesController extends Shield{
         ingresos.each {ingreso ->
             addCellTabla(tblaIngr, new Paragraph("${ingreso.fcha}: ${ingreso.tpapdscr}", fontTd10), frmtDato)
             addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNm)
+        }
+
+        if(params.depositos){
+            addCellTabla(tblaIngr, new Paragraph("Depósitos no registrados a " + fechaHasta, fontTd10), frmtDato)
+            addCellTabla(tblaIngr, new Paragraph(params.depositos.toString(), fontTd10), frmtNm)
         }
 
         addCellTabla(tblaIngr, new Paragraph("Egresos", fontTh), frmtHd)
