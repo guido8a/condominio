@@ -2620,8 +2620,9 @@ class ReportesController extends Shield{
         def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
         byte[] b
         def name = "balance_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def depositos = params.depositos? params.depositos.toDouble() : 0
 
-        b = pdfBalance(desde, hasta, params.depositos).toByteArray()
+        b = pdfBalance(desde, hasta, depositos).toByteArray()
 //        b = pdfBalance(desde, hasta)
 
         response.setContentType("application/pdf")
@@ -2805,7 +2806,7 @@ class ReportesController extends Shield{
 
     def pdfBalance(desde, hasta, deposito) {
 //    def pdfBalance() {
-        println "pdfBalance: $params"
+        println "pdfBalance: $params --> deposito: ${deposito} ${deposito.class}"
 
 //        def desde = new Date().parse("dd-MM-yyyy", params.desde)
 //        def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
@@ -2826,7 +2827,7 @@ class ReportesController extends Shield{
 
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
-        def totalIngresos = (ingresos.vlor.sum() ?  ingresos.vlor.sum() + (params.depositos ? params.depositos.toDouble() : 0)  : (params.depositos ? params.depositos.toDouble() : 0))
+        def totalIngresos = (ingresos.vlor.sum() ?  ingresos.vlor.sum() + deposito  : deposito )
 
         sql2 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4) fcha, " +
                 "substr(egrsfcha::varchar, 1, 7), tpgsdscr " +
@@ -2922,9 +2923,10 @@ class ReportesController extends Shield{
             addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNm)
         }
 
-        if(params.depositos){
+        if(deposito > 0){
             addCellTabla(tblaIngr, new Paragraph("Depósitos no registrados a " + fechaHasta, fontTd10), frmtDato)
-            addCellTabla(tblaIngr, new Paragraph(params.depositos.toString(), fontTd10), frmtNm)
+            addCellTabla(tblaIngr, new Paragraph(g.formatNumber(number: deposito, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
+//            addCellTabla(tblaIngr, new Paragraph(params.depositos.toString(), fontTd10), frmtNm)
         }
 
         addCellTabla(tblaIngr, new Paragraph("Egresos", fontTh), frmtHd)
@@ -2959,7 +2961,7 @@ class ReportesController extends Shield{
         def sldo = cn3.rows(sql2.toString())[0]
 //        println "sql2: $sql2 --> ${sldo}"
 //        def rstt = sldo.ingrsldo + sldo.sldofnal - sldo.egrssldo + sldo.sldomora
-        def rstt = sldo.ingrsldo + sldo.sldofnal - sldo.egrssldo
+        def rstt = sldo.ingrsldo + sldo.sldofnal - sldo.egrssldo + deposito
 
         addCellTabla(tablaSaldos, new Paragraph("Saldo al ${fechaHasta}", fontTh), frmtHdR)
         addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: totalIngresos - totalEgresos + saldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)

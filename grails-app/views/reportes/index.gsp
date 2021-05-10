@@ -753,14 +753,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabelB">Balance</h4>
+                <h4 class="modal-title" id="myModalLabelB">Balance General</h4>
             </div>
 
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-1 col-xs-1">
                     </div>
-                    <div class="col-md-2 col-xs-2">
+                    <div class="col-md-5 col-xs-2">
                         <label>Desde</label>
                     </div>
                     <div class="col-md-4 col-xs-7">
@@ -774,7 +774,7 @@
                 <div class="row">
                     <div class="col-md-1 col-xs-1">
                     </div>
-                    <div class="col-md-2 col-xs-2">
+                    <div class="col-md-5 col-xs-2">
                         <label>Hasta</label>
                     </div>
                     <div class="col-md-4 col-xs-7">
@@ -787,13 +787,11 @@
                 <div class="row">
                     <div class="col-md-1 col-xs-1">
                     </div>
-                    <div class="col-md-4 col-xs-4">
-                        <label>Depósitos no registrados</label>
+                    <div class="col-md-5 col-xs-4">
+                        <label>Depósitos no registrados a la fecha de cierre del reporte</label>
                     </div>
-                    <div class="col-md-4 col-xs-7">
+                    <div class="col-md-3 col-xs-7">
                         <g:textField name="depos" class="form-control"/>
-                    </div>
-                    <div class="col-md-1 col-xs-1">
                     </div>
                 </div>
             </div>
