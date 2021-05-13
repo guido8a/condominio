@@ -32,7 +32,7 @@
             <th>Depto.</th>
             <th>Nombres</th>
             <th>Apellidos</th>
-            <th>Propietario</th>
+            <th>Fecha</th>
             <th>Valor</th>
             <th>Estado</th>
             <th>Aplicar <g:checkBox name="ck_name" style="margin-left: 10px" class="todosCk" /></th>
@@ -57,7 +57,7 @@
                     ${prsn?.prsnapll}
                 </td>
                 <td align="left" width="10%">
-                    ${prsn?.tpocdscr}
+                    ${prsn?.ingrfcha?.format('dd-MMM-yyyy')}
                 </td>
                 <td class="${!Pago.findAllByIngreso(condominio.Ingreso.get(prsn?.ingr__id))?.estadoAdministrador?.contains("S") ? 'editable' : ''} alineacion ${prsn?.ingrvlor? '':'gris'}" id="${prsn?.prsn__id}"
                     data-original="${prsn?.ingrvlor}" data-valor="${prsn?.ingrvlor?:oblg.valor}"  data-ingr="${prsn?.ingr__id}"

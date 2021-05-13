@@ -28,7 +28,7 @@
 
         <div class="col-sm-2" style="margin-left: -30px">
             Tipo de Aporte
-            <g:select from="${condominio.TipoAporte.list()}" optionValue="descripcion" optionKey="id"
+            <g:select from="${condominio.TipoAporte.findAllByIdGreaterThan(1, [sort: 'descripcion'])}" optionValue="descripcion" optionKey="id"
                       name="tp" id="tipoAporte" class="form-control" style="width: 180px;"/>
         </div>
 
@@ -51,8 +51,8 @@
         </div>
 --}%
 
-        <div class="btn-group col-sm-2" style="width: 160px; margin-left: -25px">
-            Fecha
+        <div class="btn-group col-sm-2 text-info" style="width: 160px; margin-left: -25px;">
+            <strong>Fecha</strong>
             <elm:datepicker name="fechaOb_name" id="fechaOb" class="datepicker form-control required"
                             value="${params.fecha?: new Date()}"/>
         </div>
