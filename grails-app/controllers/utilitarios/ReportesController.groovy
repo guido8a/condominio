@@ -4428,7 +4428,7 @@ class ReportesController extends Shield{
     }
 
     def reporteDetallePagos (){
-//        println("params " + params)
+        println "reporteDetallePagos $params"
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde)
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta)
         def persona = Persona.get(params.id)
@@ -4439,6 +4439,7 @@ class ReportesController extends Shield{
             ge("fecha", fechaDesde)
             le("fecha",fechaHasta)
             order("fecha","asc")
+            order("obligacion","asc")
         }
 
         def pagos = Pago.findAllByIngresoInList(ingresos,[sort: 'ingreso.obligacion.descripcion', order: 'asc'])
