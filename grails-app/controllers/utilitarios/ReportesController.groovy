@@ -2577,7 +2577,7 @@ class ReportesController extends Shield{
             def pdfw = PdfWriter.getInstance(document, baos);
 
 //            println "footer: $tx_footer"
-            
+
             HeaderFooter footer1 = new HeaderFooter( new Phrase(tx_footer, new Font(fontTitulo8)), false);
             footer1.setBorder(Rectangle.NO_BORDER);
             footer1.setBorder(Rectangle.TOP);
@@ -4200,7 +4200,7 @@ class ReportesController extends Shield{
         pdfw.close()
         byte[] b = baos.toByteArray();
 
-                encabezadoYnumeracion(b, session.condominio.nombre, "Deudas pendientes totales al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')} - ${edificio?.descripcion}",
+        encabezadoYnumeracion(b, session.condominio.nombre, "Deudas pendientes totales al ${util.fechaConFormato(fecha: fecha, formato: 'dd MMMM yyyy')} - ${edificio?.descripcion}",
                 "pagosPendientesTotales_${new Date().format("dd-MM-yyyy")}.pdf")
 
     }
@@ -4243,7 +4243,7 @@ class ReportesController extends Shield{
 //            if(nombreReporte == 'pagosPendientes') {
 //                reportesService.numeracion3(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
 //            } else {
-                reportesService.numeracion(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+            reportesService.numeracion(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
 //            }
             document.add(en)
         }
@@ -5433,19 +5433,19 @@ class ReportesController extends Shield{
             res.eachWithIndex { fila, k ->
 
 //                if(fila.diff != 0) {    /* para que impriman sólo los reg. con diferencias */
-                    addCellTabla(table, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
-                    addCellTabla(table, new Paragraph(fila.prsnnmbr.toString(), fontTd10), frmtDato)
-                    addCellTabla(table, new Paragraph(fila.prsnapll, fontTd10), frmtDato)
-                    addCellTabla(table, new Paragraph(fila.propdtlle, fontTd8), frmtDato)
-                    addCellTabla(table, new Paragraph(g.formatNumber(number:fila.proptotl, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
-                    addCellTabla(table, new Paragraph(g.formatNumber(number:fila.prsnalct, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
-                    addCellTabla(table, new Paragraph(g.formatNumber(number:fila.alctvlor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
-                    addCellTabla(table, new Paragraph(g.formatNumber(number:fila.diff, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+                addCellTabla(table, new Paragraph(fila.prsndpto, fontTd10), frmtDato)
+                addCellTabla(table, new Paragraph(fila.prsnnmbr.toString(), fontTd10), frmtDato)
+                addCellTabla(table, new Paragraph(fila.prsnapll, fontTd10), frmtDato)
+                addCellTabla(table, new Paragraph(fila.propdtlle, fontTd8), frmtDato)
+                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.proptotl, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.prsnalct, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.alctvlor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
+                addCellTabla(table, new Paragraph(g.formatNumber(number:fila.diff, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), frmtNmro)
 
-                    total += (fila.proptotl ? fila.proptotl.toDouble() : 0)
-                    totalAli += (fila.prsnalct ? fila.prsnalct.toDouble() : 0)
-                    totalValor += (fila.alctvlor ? fila.alctvlor.toDouble() : 0)
-                    totalDif += (fila.diff ? fila.diff.toDouble() : 0)
+                total += (fila.proptotl ? fila.proptotl.toDouble() : 0)
+                totalAli += (fila.prsnalct ? fila.prsnalct.toDouble() : 0)
+                totalValor += (fila.alctvlor ? fila.alctvlor.toDouble() : 0)
+                totalDif += (fila.diff ? fila.diff.toDouble() : 0)
 //                }
             }
         } else {
@@ -6063,7 +6063,6 @@ class ReportesController extends Shield{
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
 
-
         def persona = Persona.get(params.id)
         def pagado = 0
 
@@ -6071,7 +6070,17 @@ class ReportesController extends Shield{
         def cn2 = dbConnectionService.getConnection()
         def detalle = cn2.rows(sql.toString())
 
-//        println("sql " + sql)
+        def sql3 = "select sum(ingrvlor) ingreso, sum(pagovlor) pago from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}');"
+        def cn3 = dbConnectionService.getConnection()
+        def total1 = cn3.rows(sql3.toString())
+
+        def sql4 = "select sum(pagos.sldo) from (\n" +
+                "       SELECT min(ingrsldo) sldo, ingr__id from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}')\n" +
+                "       group by ingr__id) as PAGOS;"
+        def cn4 = dbConnectionService.getConnection()
+        def total2 = cn4.rows(sql4.toString())
+
+//        println("sql " + sql4)
 //        println("pagos " + detalle)
 
         def baos = new ByteArrayOutputStream()
@@ -6095,7 +6104,6 @@ class ReportesController extends Shield{
         def frmN2 = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bct: Color.BLACK, bcl: Color.BLACK, bcr: Color.BLACK,bg: fondoN, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmN3 = [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, bct: Color.BLACK, bcl: Color.BLACK, bcr: Color.BLACK, bg: fondoN, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         def frmTT = [border: Color.BLACK, bcb: Color.BLACK, bct: Color.BLACK, bcl: Color.BLACK, bcr: Color.BLACK,bg: fondoN, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
-
 
         Document document
         document = new Document(PageSize.A4);
@@ -6132,13 +6140,13 @@ class ReportesController extends Shield{
 
             def tablaHeaderDetalles = new PdfPTable(7);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([11,35,10,11,10,15,10]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([11,33,10,11,10,15,10]))
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Concepto", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Paga", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new Paragraph("valor", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Documento", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Saldo", fontTh), frmtHd)
             addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
@@ -6147,31 +6155,42 @@ class ReportesController extends Shield{
         tablaDetalles = new PdfPTable(7);
         tablaDetalles.setWidthPercentage(100);
         tablaDetalles.setWidths(arregloEnteros([11,33,10,11,10,15,10]))
-        tablaDetalles.setSpacingAfter(1f);
+//        tablaDetalles.setSpacingAfter(1f);
         def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def frmtDoc = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
 
         printHeaderDetalle()
+
+        def band = ''
 
         detalle.each { d->
             addCellTabla2(tablaDetalles, new Paragraph(d.ingrfcha.toString(), fontTd10), frmtNmro)
             addCellTabla(tablaDetalles, new Paragraph(d.ingrdscr.toString(), fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new Paragraph(d.ingrvlor.toString(), fontTd10), frmtNmro)
+            if(d.ingrdscr == band){
+                addCellTabla(tablaDetalles, new Paragraph('', fontTd10), frmtNmro)
+            }else{
+                addCellTabla(tablaDetalles, new Paragraph(d.ingrvlor.toString(), fontTd10), frmtNmro)
+            }
             addCellTabla(tablaDetalles, new Paragraph(d.pagofcha.toString(), fontTd10), frmtNmro)
             addCellTabla(tablaDetalles, new Paragraph(d.pagovlor.toString(), fontTd10), frmtNmro)
-            addCellTabla(tablaDetalles, new Paragraph(d.pagodcmt.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(d.pagodcmt.toString(), fontTd10), frmtDoc)
             addCellTabla(tablaDetalles, new Paragraph(d.ingrsldo.toString(), fontTd10), frmtNmro)
+            band = d.ingrdscr
         }
 
-//        def tablaTotales = new PdfPTable(3);
-//        tablaTotales.setWidthPercentage(100);
-//        tablaTotales.setWidths(arregloEnteros([60,20,20]))
-//        addCellTabla(tablaDetalles, new Paragraph("", fontTh), frmN2)
-//        addCellTabla(tablaDetalles, new Paragraph("Total Pendiente: ", fontTh), frmN3)
-//        addCellTabla(tablaDetalles, new Paragraph(total + " ", fontTh), frmTT)
+        def tablaTotal = new PdfPTable(7);
+        tablaTotal.setWidthPercentage(100);
+        tablaTotal.setWidths(arregloEnteros([11,33,10,11,10,15,10]))
+        addCellTabla(tablaTotal, new Paragraph("Totales: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE, colspan: 2])
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:total1.ingreso[0], format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph('', fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:total1.pago[0], format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph('', fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:total2.sum[0], format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
 
         document.add(tablaDetalles)
-//        document.add(tablaTotales)
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
