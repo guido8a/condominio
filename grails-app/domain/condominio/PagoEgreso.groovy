@@ -12,6 +12,7 @@ class PagoEgreso {
         String estado
         String revision
         String estadoAdministrador
+        String cajaChica = 'N'
 
         static mapping = {
             table 'pgeg'
@@ -29,6 +30,7 @@ class PagoEgreso {
                 estado column: 'pgegetdo'
                 revision column: 'pgegrevs'
                 estadoAdministrador column: 'pgegedad'
+                cajaChica column: 'pgegjch'
             }
         }
 
@@ -39,6 +41,7 @@ class PagoEgreso {
             estado(blank: true, nullable: true)
             revision(blank: true, nullable: true)
             estadoAdministrador(blank: true, nullable: true)
+            cajaChica(blank: true, nullable: true)
         }
 
     }

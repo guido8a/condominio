@@ -132,9 +132,7 @@ class EgresoController extends Shield {
             egresoInstance.estado = 'E'
         }
         params.valor = params.valor.toDouble()
-//        params.abono = params.abono.toDouble()
         egresoInstance.properties = params
-//        if(egresoInstance.valor <= egresoInstance.abono) egresoInstance.estado = 'P'
 
         if(params.valor.toDouble() >= pagos?.valor?.sum()){
             if(egresoInstance.save(flush: true)) {
@@ -146,6 +144,9 @@ class EgresoController extends Shield {
                     pagos.observaciones = egresoInstance.descripcion
                     pagos.cheque = params.pg_chqe
                     pagos.documento = params.pg_cmpr
+//                    if(params.pagar_CC){
+//                    pagos.
+//                    }
                     pagos.save(flush: true)
                 }
                 render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Egreso exitosa."

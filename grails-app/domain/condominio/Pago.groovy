@@ -18,7 +18,7 @@ class Pago {
     double descuento
     double banco = 0
     String anterior = 'N'
-    String cajaChica = 'N'
+
 
     static mapping = {
         table 'pago'
@@ -42,13 +42,11 @@ class Pago {
             descuento column: 'pagodsct'
             banco column: 'pagobnco'
             anterior column: 'pagoantr'
-            cajaChica column: 'pagocjch'
         }
     }
 
     static constraints = {
         documento(blank: true, nullable: true)
-        cajaChica(blank: true, nullable: true)
         observaciones(blank: true, nullable: true)
         estado(blank: true, nullable: true)
         revision(blank: true, nullable: true)
