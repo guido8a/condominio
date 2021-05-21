@@ -2822,7 +2822,7 @@ class ReportesController extends Shield{
                 "substr(pagofcha::varchar, 1, 7), tpapdscr " +
                 "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
                 "group by 2,3,4 order by 3"
-//        println "--> $sql2"
+        println "--> $sql2"
 
         def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
@@ -6063,7 +6063,7 @@ class ReportesController extends Shield{
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
         def persona = Persona.get(params.id)
 
-        def sql = "select * from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') order by 1,5;"
+        def sql = "select * from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') order by 2,5;"
         def detalle = cn.rows(sql.toString())
 
         sql = "select sum(ingr.valor) vlor from (select distinct ingr__id, ingrvlor valor " +

@@ -232,7 +232,7 @@ class LoginController {
                         def cn = "inicio"
                         def an = "index"
 
-                        println "perf: $perfiles"
+//                        println "perf: $perfiles"
                         if (perfiles[0].perfil.codigo == 'USU') {
                             redirect(controller: 'persona', action: 'personal')
                             return

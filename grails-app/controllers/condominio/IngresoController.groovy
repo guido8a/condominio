@@ -74,7 +74,7 @@ class IngresoController extends Shield {
      * @return ingresoInstanceList: la lista de elementos filtrados, ingresoInstanceCount: la cantidad total de elementos (sin máximo)
      */
     def pendiente() {
-        println "pendiente: $params"
+//        println "pendiente: $params"
         def prsn = Persona.get(params.id)
         def condominio = Condominio.get(session.condominio.id)
         def ingr = Ingreso.findAllByPersona(prsn, [sort: 'fecha'])
@@ -192,7 +192,7 @@ class IngresoController extends Shield {
 
 
     def pago_ajax () {
-        println "--> $params"
+//        println "--> $params"
         def cn = dbConnectionService.getConnection()
         def condominio = Condominio.get(session.condominio.id)
         def pago
@@ -201,12 +201,12 @@ class IngresoController extends Shield {
         def ingreso = Ingreso.get(params.id)
         tx = "select ingrintr, mess from pendiente(now()::date, ${ingreso.persona.edificio.id}) " +
                 "where ingr__id = ${params.id}"
-        println "sql: $tx"
+//        println "sql: $tx"
         cn.eachRow(tx.toString()) { d ->
             mora = d.ingrintr
             mess = d.mess
         }
-        println "---> mora: $mora, meses: $mess"
+//        println "---> mora: $mora, meses: $mess"
 
         if(params.pago){
             pago = Pago.get(params.pago)
@@ -222,7 +222,7 @@ class IngresoController extends Shield {
 
 
     def guardarPago_ajax (){
-        println("guardarPago_ajax: " + params)
+//        println("guardarPago_ajax: " + params)
         def condominio = Condominio.get(session.condominio.id)
         def ingreso = Ingreso.get(params.ingreso)
         def pagos = Pago.findAllByIngreso(ingreso)
@@ -240,7 +240,7 @@ class IngresoController extends Shield {
            if(params.id){
                pago = Pago.get(params.id)
                saldo2 = saldo + (pago.valor ? pago.valor.toDouble() : 0)
-               println "saldo2: $saldo2, pago: ${params.abono.toDouble()}"
+//               println "saldo2: $saldo2, pago: ${params.abono.toDouble()}"
                if(params.abono.toDouble() > saldo2){
                    render "er_El abono ingresado supera el valor del saldo"
                    return
@@ -251,7 +251,7 @@ class IngresoController extends Shield {
                    }
                }
            }else{
-               println "saldo: $saldo, pago: ${params.abono.toDouble()}"
+//               println "saldo: $saldo, pago: ${params.abono.toDouble()}"
                if(params.abono.toDouble() > saldo){
                    render "er_El abono ingresado supera el valor del saldo"
                    return
@@ -408,7 +408,7 @@ class IngresoController extends Shield {
 
 
     def obligaciones_ajax () {
-        println("params " + params)
+//        println "obligaciones_ajax params: $params"
 
         def persona = Persona.get(params.persona)
         def ingresos= Ingreso.findAllByPersona(persona).sort{it.fecha}
@@ -419,7 +419,7 @@ class IngresoController extends Shield {
         } else {
             sql += "where coalesce(pagofcha, now()::date) > now()::date - 180 order by ingrsldo desc, ingrfcha"
         }
-        println("sql " + sql)
+//        println("sql " + sql)
 
         def cn = dbConnectionService.getConnection()
         def data = cn.rows(sql.toString())

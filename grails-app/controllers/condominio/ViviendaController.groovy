@@ -22,7 +22,7 @@ class ViviendaController extends Shield {
     }
 
     def tablaBuscar() {
-        println "buscar .... $params"
+//        println "buscar .... $params"
         def cn = dbConnectionService.getConnection()
         params.old = params.criterio
         params.criterio = buscadorService.limpiaCriterio(params.criterio)
@@ -30,7 +30,7 @@ class ViviendaController extends Shield {
 
         def sql = armaSql(params)
         params.criterio = params.old
-        println "sql: $sql"
+//        println "sql: $sql"
         def data = cn.rows(sql.toString())
 
         def msg = ""
@@ -46,7 +46,7 @@ class ViviendaController extends Shield {
     }
 
     def armaSql(params){
-        println "armaSql: $params"
+//        println "armaSql: $params"
         def campos = buscadorService.parmProcesos()
         def operador = buscadorService.operadores()
 //        def wh = " edif.edif__id = prsn.edif__id and tpoc.tpoc__id = prsn.tpoc__id and prsnactv = 1 " //condicion fija
@@ -256,7 +256,7 @@ class ViviendaController extends Shield {
 
         def cn = dbConnectionService.getConnection()
         def sql = "select * from alicuota(${session.condominio.id}, '${fecha.format('yyyy-MM-dd')}','${observacion}')"
-        println "sql: $sql"
+//        println "sql: $sql"
 
         def res = cn.rows(sql.toString())
 
