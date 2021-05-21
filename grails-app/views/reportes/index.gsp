@@ -832,6 +832,17 @@
                         <elm:datepicker id="fechaHastaInf" class="datepicker form-control" value="${new Date()}"/>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-5 col-xs-4">
+                        <label>Depósitos no registrados a la fecha de cierre del reporte</label>
+                    </div>
+                    <div class="col-md-3 col-xs-7">
+                        <g:textField name="depositos" class="form-control"/>
+                    </div>
+                </div>
+
             </div>
 
             <div class="modal-footer">
@@ -1508,14 +1519,17 @@
         var fechaDesde = $("#fechaDesdeB").val();
         var fechaHasta = $("#fechaHastaB").val();
         var depositos = $("#depos").val()
-        location.href = "${g.createLink(controller:'reportes' , action: 'rpBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta + "&depositos=" + depositos;
+        location.href = "${g.createLink(controller:'reportes' , action: 'rpBalance')}?desde=" + fechaDesde +
+            "&hasta=" + fechaHasta + "&depositos=" + depositos;
         %{--location.href = "${g.createLink(controller:'reportes' , action: 'pdfBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;--}%
     });
 
     $(".btnImprimirInf").click(function () {
         var fechaDesde = $("#fechaDesdeInf").val();
         var fechaHasta = $("#fechaHastaInf").val();
-        location.href = "${g.createLink(controller:'reportes' , action: 'rpInforme')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+        var depositos = $("#depositos").val()
+        location.href = "${g.createLink(controller:'reportes' , action: 'rpInforme')}?desde=" + fechaDesde +
+            "&hasta=" + fechaHasta + "&depositos=" + depositos;
     });
 
 

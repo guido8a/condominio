@@ -14,7 +14,8 @@
             <label>Desde</label>
         </div>
         <div class="col-md-4 col-xs-7">
-            <elm:datepicker name="fechaDesdeDet_name" id="fechaDesdeDet" class="datepicker form-control" value="${new Date() - 30}"/>
+            <elm:datepicker name="fechaDesdeDet_name" id="fechaDesdeDet" class="datepicker form-control"
+                            value="${new Date() - 180}"/>
         </div>
         <div class="col-md-1 col-xs-1">
         </div>

@@ -46,7 +46,7 @@ class ViviendaController extends Shield {
     }
 
     def armaSql(params){
-//        println "armaSql: $params"
+        println "armaSql: $params"
         def campos = buscadorService.parmProcesos()
         def operador = buscadorService.operadores()
 //        def wh = " edif.edif__id = prsn.edif__id and tpoc.tpoc__id = prsn.tpoc__id and prsnactv = 1 " //condicion fija

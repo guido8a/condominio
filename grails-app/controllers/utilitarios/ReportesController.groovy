@@ -751,7 +751,7 @@ class ReportesController extends Shield{
             if(fila.tipo in [2,3]){
                 addCellTabla(tabla, new Paragraph(fila.prop, fontTd10), frmtDato)
             } else {
-                println "prop: ${fila.prop + ' / ' + fila.prsn}"
+//                println "prop: ${fila.prop + ' / ' + fila.prsn}"
                 if(fila.prop != fila.prsn) {
                     addCellTabla(tabla, new Paragraph(fila.prop + ' / ' + fila.prsn, fontTd10), frmtDato)
                 } else {
@@ -2524,10 +2524,11 @@ class ReportesController extends Shield{
         def pdfs = []  /** pdfs a armar en el nuevo documento **/
         def contador = 0
         def name = "informe_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def depositos = params.depositos? params.depositos.toDouble() : 0
 
         /* 1. Balance */
 //        rp = pdfBalance1(desde, hasta)
-        rp = pdfBalance(desde, hasta)
+        rp = pdfBalance(desde, hasta, depositos)
         if (rp) {
             pdfs.add(rp.toByteArray())
             contador++
@@ -6160,9 +6161,9 @@ class ReportesController extends Shield{
                 addCellTabla(tablaDetalles, new Paragraph(d.ingrdscr.toString(), fontTd10), frmtDato)
                 addCellTabla(tablaDetalles, new Paragraph(d.ingrvlor.toString(), fontTd10), frmtNmro)
             }
-            addCellTabla(tablaDetalles, new Paragraph(d.pagofcha.toString(), fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new Paragraph(d.pagovlor.toString(), fontTd10), frmtNmro)
-            addCellTabla(tablaDetalles, new Paragraph(d.pagodcmt.toString(), fontTd10), frmtDoc)
+            addCellTabla(tablaDetalles, new Paragraph(d.pagofcha?.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(d.pagovlor?.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(d.pagodcmt?.toString(), fontTd10), frmtDoc)
             addCellTabla(tablaDetalles, new Paragraph(d.ingrsldo.toString(), fontTd10), frmtNmro)
             band = d.ingrdscr
         }
