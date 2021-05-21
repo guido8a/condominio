@@ -89,6 +89,17 @@
             </span>
         </div>
 
+        <div class="form-group keeptogether ${hasErrors(bean: pago, field: 'cajaChica', 'error')} ">
+            <span class="grupo">
+                <label class="col-md-4 control-label">
+                    Pagar con caja chica
+                </label>
+                <div class="col-md-2">
+                    <g:select name="pagar_CC" from="${['N': 'No', 'S': 'Si']}" class="form-control" optionKey="key" optionValue="value" value="${pago?.cajaChica}"/>
+                </div>
+            </span>
+        </div>
+
     </g:form>
 </div>
 
@@ -108,13 +119,13 @@
         }
 
     });
-//    $(".form-control").keydown(function (ev) {
-//        if (ev.keyCode == 13) {
-//            submitFormIngreso();
-//            return false;
-//        }
-//        return true;
-//    });
+    //    $(".form-control").keydown(function (ev) {
+    //        if (ev.keyCode == 13) {
+    //            submitFormIngreso();
+    //            return false;
+    //        }
+    //        return true;
+    //    });
 </script>
 
 %{--</g:else>--}%

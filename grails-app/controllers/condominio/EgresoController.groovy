@@ -137,6 +137,7 @@ class EgresoController extends Shield {
         if(params.valor.toDouble() >= pagos?.valor?.sum()){
             if(egresoInstance.save(flush: true)) {
                 if(params.pagar && !pagos){
+                    println("entro")
                     pagos = new PagoEgreso()
                     pagos.egreso = egresoInstance
                     pagos.fechaPago = egresoInstance.fecha
@@ -144,9 +145,7 @@ class EgresoController extends Shield {
                     pagos.observaciones = egresoInstance.descripcion
                     pagos.cheque = params.pg_chqe
                     pagos.documento = params.pg_cmpr
-//                    if(params.pagar_CC){
-//                    pagos.
-//                    }
+                    pagos.cajaChica = params.pagar_CC
                     pagos.save(flush: true)
                 }
                 render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Egreso exitosa."
@@ -241,6 +240,7 @@ class EgresoController extends Shield {
         pago.documento = params.documento.toUpperCase();
         pago.cheque = params.cheque.toUpperCase();
         pago.observaciones = params.observaciones
+        pago.cajaChica = params.pagar_CC
 
         if(!pago.save(flush: true)){
             println("error al guardar el pago " + pago.errors)

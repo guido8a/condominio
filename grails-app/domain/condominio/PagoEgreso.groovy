@@ -30,7 +30,7 @@ class PagoEgreso {
                 estado column: 'pgegetdo'
                 revision column: 'pgegrevs'
                 estadoAdministrador column: 'pgegedad'
-                cajaChica column: 'pgegjch'
+                cajaChica column: 'pgegcjch'
             }
         }
 

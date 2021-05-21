@@ -5,7 +5,7 @@
     <elm:notFound elem="Egreso" genero="o" />
 </g:if>
 <g:else>
-    
+
     <div class="modal-contenido">
         <g:form class="form-horizontal" name="frmEgreso" role="form" action="save_ajax" method="POST">
             <g:hiddenField name="id" value="${egresoInstance?.id}" />
@@ -42,7 +42,7 @@
                     <div class="col-md-10">
                         <g:textField name="descripcion" class="form-control" value="${egresoInstance?.descripcion}"/>
                     </div>
-                    
+
                 </span>
             </div>
 
@@ -78,57 +78,58 @@
 
             <g:if test="${!pago}">
 
-            <hr style="border: 1px solid #888; margin-top: -5px;">
+                <hr style="border: 1px solid #888; margin-top: -5px;">
 
-            <div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'fechaPago', 'error')} required">
-                <span class="grupo">
-                    <label class="col-md-4 control-label">
-                        Generar pago a esta Fecha
-                    </label>
-                    <div class="col-md-2">
-                        <input type="checkbox" name="pagar" id="pagarId">
-                    </div>
-                </span>
+                <div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'fechaPago', 'error')} required">
+                    <span class="grupo">
+                        <label class="col-md-4 control-label">
+                            Generar pago a esta Fecha
+                        </label>
+                        <div class="col-md-2">
+                            <input type="checkbox" name="pagar" id="pagarId">
+                        </div>
+                    </span>
 
-                <span class="grupo">
-                    <label class="col-md-4 control-label">
-                        Pagar con caja chica
-                    </label>
-                    <div class="col-md-2">
-                        <input type="checkbox" name="pagar_CC" id="pagarCC">
-                    </div>
-                </span>
-            </div>
-            <div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'fechaPago', 'error')} required">
-                <span class="grupo">
-                    <label class="col-md-2 control-label">
-                        Cheque:
-                    </label>
-                    <div class="col-md-4">
-                        <input type="text" name="pg_chqe" id="pg_chqe">
-                    </div>
-                </span>
-                <span class="grupo">
-                    <label class="col-md-2 control-label">
-                        Comprobante
-                    </label>
-                    <div class="col-md-4">
-                        <input type="text" name="pg_cmpr" id="pg_cmpr">
-                    </div>
-                </span>
-            </div>
+                    <span class="grupo">
+                        <label class="col-md-4 control-label">
+                            Pagar con caja chica
+                        </label>
+                        <div class="col-md-2">
+                            %{--<input type="checkbox" name="pagar_CC" id="pagarCC">--}%
+                            <g:select name="pagar_CC" from="${['N': 'No', 'S': 'Si']}" class="form-control" optionKey="key" optionValue="value"/>
+                        </div>
+                    </span>
+                </div>
+                <div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'fechaPago', 'error')} required">
+                    <span class="grupo">
+                        <label class="col-md-2 control-label">
+                            Cheque:
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" name="pg_chqe" id="pg_chqe">
+                        </div>
+                    </span>
+                    <span class="grupo">
+                        <label class="col-md-2 control-label">
+                            Comprobante
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" name="pg_cmpr" id="pg_cmpr">
+                        </div>
+                    </span>
+                </div>
 
             </g:if>
-            %{--<div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'abono', 'error')} required">--}%
-                %{--<span class="grupo">--}%
-                    %{--<label for="abono" class="col-md-2 control-label">--}%
-                        %{--Pago--}%
-                    %{--</label>--}%
-                    %{--<div class="col-md-3">--}%
-                        %{--<g:textField name="abono" value="${egresoInstance?.abono}" class="number form-control required"/>--}%
-                    %{--</div>--}%
-                %{--</span>--}%
-            %{--</div>--}%
+        %{--<div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'abono', 'error')} required">--}%
+        %{--<span class="grupo">--}%
+        %{--<label for="abono" class="col-md-2 control-label">--}%
+        %{--Pago--}%
+        %{--</label>--}%
+        %{--<div class="col-md-3">--}%
+        %{--<g:textField name="abono" value="${egresoInstance?.abono}" class="number form-control required"/>--}%
+        %{--</div>--}%
+        %{--</span>--}%
+        %{--</div>--}%
         </g:form>
     </div>
 
@@ -146,7 +147,7 @@
             success        : function (label) {
                 label.parents(".grupo").removeClass('has-error');
             }
-            
+
         });
         $(".form-control").keydown(function (ev) {
             if (ev.keyCode == 13) {
