@@ -794,6 +794,15 @@
                         <g:textField name="depos" class="form-control"/>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-1 col-xs-1"></div>
+                    <div class="col-md-5 col-xs-4">
+                        <label>Balance con detalle de valores por mes</label>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                        <g:checkBox name="detalleMes"/>
+                    </div>
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -840,6 +849,15 @@
                     </div>
                     <div class="col-md-3 col-xs-7">
                         <g:textField name="depositos" class="form-control"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1 col-xs-1"></div>
+                    <div class="col-md-5 col-xs-4">
+                        <label>Balance con detalle de valores por mes</label>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                        <g:checkBox name="detalleMesInf"/>
                     </div>
                 </div>
 
@@ -1519,8 +1537,9 @@
         var fechaDesde = $("#fechaDesdeB").val();
         var fechaHasta = $("#fechaHastaB").val();
         var depositos = $("#depos").val()
+        var dtmeses = $("#detalleMes").is(':checked');
         location.href = "${g.createLink(controller:'reportes' , action: 'rpBalance')}?desde=" + fechaDesde +
-            "&hasta=" + fechaHasta + "&depositos=" + depositos;
+            "&hasta=" + fechaHasta + "&depositos=" + depositos + "&dtmeses=" + dtmeses;
         %{--location.href = "${g.createLink(controller:'reportes' , action: 'pdfBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;--}%
     });
 
@@ -1528,8 +1547,9 @@
         var fechaDesde = $("#fechaDesdeInf").val();
         var fechaHasta = $("#fechaHastaInf").val();
         var depositos = $("#depositos").val()
+        var dtmeses = $("#detalleMesInf").is(':checked');
         location.href = "${g.createLink(controller:'reportes' , action: 'rpInforme')}?desde=" + fechaDesde +
-            "&hasta=" + fechaHasta + "&depositos=" + depositos;
+            "&hasta=" + fechaHasta + "&depositos=" + depositos + "&dtmeses=" + dtmeses;
     });
 
 

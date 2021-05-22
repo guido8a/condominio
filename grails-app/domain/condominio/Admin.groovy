@@ -11,6 +11,7 @@ class Admin {
     Date fechaFin
     double saldoInicial
     double saldoFinal
+    double cajaChica = 0
     String observaciones
 
     static mapping = {
@@ -26,6 +27,7 @@ class Admin {
             fechaFin column: 'admnfcfn'
             saldoInicial column: 'admnslin'
             saldoFinal column: 'admnslfn'
+            cajaChica column: 'admncjch'
             observaciones column: 'ingrobsr'
         }
     }

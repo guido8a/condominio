@@ -32,6 +32,7 @@ class CajaChicaController {
         }
 
         cajaChica.properties = params
+        cajaChica.valor = params.valor.toDouble()
 
         if(!cajaChica.save(flush: true)){
             println("error al guardar la caha chica" + cajaChica.errors)

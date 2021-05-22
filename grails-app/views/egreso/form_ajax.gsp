@@ -82,17 +82,17 @@
 
                 <div class="form-group keeptogether ${hasErrors(bean: egresoInstance, field: 'fechaPago', 'error')} required">
                     <span class="grupo">
-                        <label class="col-md-4 control-label">
+                        <label class="col-md-5 control-label text-info">
                             Generar pago a esta Fecha
                         </label>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <input type="checkbox" name="pagar" id="pagarId">
                         </div>
                     </span>
 
                     <span class="grupo">
                         <label class="col-md-4 control-label">
-                            Pagar con caja chica
+                            Pagado con caja chica
                         </label>
                         <div class="col-md-2">
                             %{--<input type="checkbox" name="pagar_CC" id="pagarCC">--}%

@@ -11,6 +11,7 @@ import com.lowagie.text.pdf.BaseFont
 import com.lowagie.text.pdf.DefaultFontMapper
 import com.lowagie.text.pdf.PdfGState
 import com.lowagie.text.pdf.PdfTemplate
+import condominio.Admin
 import condominio.Comprobante
 import condominio.Condominio
 import condominio.Edificio
@@ -2528,7 +2529,7 @@ class ReportesController extends Shield{
 
         /* 1. Balance */
 //        rp = pdfBalance1(desde, hasta)
-        rp = pdfBalance(desde, hasta, depositos)
+        rp = pdfBalance(desde, hasta, depositos, params.dtmeses)
         if (rp) {
             pdfs.add(rp.toByteArray())
             contador++
@@ -2614,14 +2615,14 @@ class ReportesController extends Shield{
     }
 
     def rpBalance() {
-//        println "rpBalance --> params: $params"
+        println "rpBalance --> params: $params"
         def desde = new Date().parse("dd-MM-yyyy", params.desde)
         def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
         byte[] b
         def name = "balance_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
         def depositos = params.depositos? params.depositos.toDouble() : 0
 
-        b = pdfBalance(desde, hasta, depositos).toByteArray()
+        b = pdfBalance(desde, hasta, depositos, params.dtmeses).toByteArray()
 //        b = pdfBalance(desde, hasta)
 
         response.setContentType("application/pdf")
@@ -2803,36 +2804,47 @@ class ReportesController extends Shield{
         response.getOutputStream().write(b)
     }
 
-    def pdfBalance(desde, hasta, deposito) {
+    def pdfBalance(desde, hasta, deposito, dtmeses) {
 //    def pdfBalance() {
         println "pdfBalance: $params --> deposito: ${deposito} ${deposito.class}"
-
-//        def desde = new Date().parse("dd-MM-yyyy", params.desde)
-//        def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
-
+        def cn = dbConnectionService.getConnection()
+        def cn2 = dbConnectionService.getConnection()
         def fechaDesde = desde.format('yyyy-MM-dd')
         def fechaHasta = hasta.format('yyyy-MM-dd')
-
         def fechaAntes = desde - 1
-
+        def cjch = cn.rows("select admncjch from admn where prsn__id in (select prsn__id from prsn " +
+                "where cndm__id = ${session.usuario.condominio.id})")[0].admncjch
+        println "cjch: $cjch"
 //        println "balance fechas: '${fechaDesde}','${fechaHasta}' antes: ${fechaAntes.format('yyyy-MM-dd')}"
 
-//        def sql2 = "select sum(pagovlor) vlor, substr(pagofcha::varchar, 1,7) fcha, tpapdscr " +
-        def sql2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4) fcha, " +
-                "substr(pagofcha::varchar, 1, 7), tpapdscr " +
-                "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
-                "group by 2,3,4 order by 3"
+        def sql2 = ""
+        if(dtmeses == "true"){
+            sql2 = "select sum(pagovlor) vlor, to_char(pagofcha, 'TMMonth')||' '|| substr(pagofcha::varchar, 1, 4)||':' fcha, " +
+                    "substr(pagofcha::varchar, 1, 7), tpapdscr " +
+                    "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
+                    "group by 2,3,4 order by 3"
+        } else {
+            sql2 = "select sum(pagovlor) vlor, tpapdscr, '' fcha " +
+                    "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
+                    "group by 2 order by 2"
+        }
         println "--> $sql2"
 
-        def cn2 = dbConnectionService.getConnection()
         def ingresos = cn2.rows(sql2.toString())
         def totalIngresos = (ingresos.vlor.sum() ?  ingresos.vlor.sum() + deposito  : deposito )
 
-        sql2 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4) fcha, " +
-                "substr(egrsfcha::varchar, 1, 7), tpgsdscr " +
-                "from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
-                "group by 2,3,4 order by 3"
-//        println "egrs: $sql2"
+        if(dtmeses == "true"){
+            sql2 = "select sum(egrsvlor) vlor, to_char(egrsfcha, 'TMMonth')||' '|| substr(egrsfcha::varchar, 1, 4)||':' fcha, " +
+                    "substr(egrsfcha::varchar, 1, 7), tpgsdscr " +
+                    "from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
+                    "group by 2,3,4 order by 3"
+        } else {
+            sql2 = "select sum(egrsvlor) vlor, tpgsdscr, '' fcha " +
+                    "from egresos(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
+                    "group by 2 order by 2"
+        }
+
+        println "egrs: $sql2"
         def egresos = cn2.rows(sql2.toString())
 
         def totalEgresos = (egresos.vlor.sum() ?: 0)
@@ -2918,7 +2930,7 @@ class ReportesController extends Shield{
         addCellTabla(tblaIngr, new Paragraph(g.formatNumber(number:totalIngresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
 
         ingresos.each {ingreso ->
-            addCellTabla(tblaIngr, new Paragraph("${ingreso.fcha}: ${ingreso.tpapdscr}", fontTd10), frmtDato)
+            addCellTabla(tblaIngr, new Paragraph("${ingreso.fcha} ${ingreso.tpapdscr}", fontTd10), frmtDato)
             addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNm)
         }
 
@@ -2932,7 +2944,7 @@ class ReportesController extends Shield{
         addCellTabla(tblaIngr, new Paragraph(g.formatNumber(number:totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtNmro)
 
         egresos.each {ingreso ->
-            addCellTabla(tblaIngr, new Paragraph("${ingreso.fcha}: ${ingreso.tpgsdscr}", fontTd10), frmtDato)
+            addCellTabla(tblaIngr, new Paragraph("${ingreso.fcha} ${ingreso.tpgsdscr}", fontTd10), frmtDato)
             addCellTabla(tblaIngr, new Paragraph(ingreso.vlor.toString(), fontTd10), frmtNm)
         }
 
@@ -2965,6 +2977,13 @@ class ReportesController extends Shield{
         addCellTabla(tablaSaldos, new Paragraph("Saldo al ${fechaHasta}", fontTh), frmtHdR)
         addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: totalIngresos - totalEgresos + saldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
+        if(cjch > 0) {
+            addCellTabla(tablaSaldos, new Paragraph("Valores entregados a Caja Chica", fontTh), frmtHdR)
+            addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: cjch, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+            addCellTabla(tablaSaldos, new Paragraph("Saldo Bancos", fontTh), frmtHdR)
+            addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: cjch + totalIngresos - totalEgresos + saldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+        }
+
         addCellTabla(tablaSaldos, new Paragraph("(+) Valores por cobrar", fontTh), frmtHdR)
         addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: sldo.ingrsldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
@@ -2974,9 +2993,13 @@ class ReportesController extends Shield{
 //        addCellTabla(tablaSaldos, new Paragraph("(+) Pagos por multas", fontTh), frmtHdR)
 //        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: sldo.sldomora, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
 
-
-        addCellTabla(tablaSaldos, new Paragraph("Resultado Final al ${fechaHasta}", fontTh), frmtHdR)
-        addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:rstt, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+        if(cjch > 0) {
+            addCellTabla(tablaSaldos, new Paragraph("Resultado Final al ${fechaHasta}", fontTh), frmtHdR)
+            addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:rstt + cjch, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+        } else {
+            addCellTabla(tablaSaldos, new Paragraph("Resultado Final al ${fechaHasta}", fontTh), frmtHdR)
+            addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number:rstt, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
+        }
 
         document.add(tblaIngr)
         document.add(preface2);

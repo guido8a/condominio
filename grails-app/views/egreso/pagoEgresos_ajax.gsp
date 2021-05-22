@@ -16,6 +16,14 @@
         text-align: right;
     }
 
+    .cajachica {
+        color: #4040af;
+        background-color: #efefdf !important;
+    }
+    .normal {
+        background-color: #ffffff !important;
+    }
+
 </style>
 
 <div class="alert alert-warning col-md-12">
@@ -55,7 +63,7 @@
         </thead>
         <tbody>
         <g:each in="${pagos}" var="pagoUsuario">
-            <tr data-id="${pagoUsuario.id}" style="width: 100%">
+            <tr data-id="${pagoUsuario.id}" style="width: 100%" class="${pagoUsuario.cajaChica == 'S' ? 'cajachica' : 'normal'}">
                 <td style="width: 15%"><g:formatDate date="${pagoUsuario?.fechaPago}" format="dd-MM-yyyy"/></td>
                 <td style="width: 20%">${pagoUsuario?.documento}</td>
                 <td class="derecha" style="width: 15%"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>

@@ -91,8 +91,8 @@
 
         <div class="form-group keeptogether ${hasErrors(bean: pago, field: 'cajaChica', 'error')} ">
             <span class="grupo">
-                <label class="col-md-4 control-label">
-                    Pagar con caja chica
+                <label class="col-md-3 control-label">
+                    Pagado con caja chica
                 </label>
                 <div class="col-md-2">
                     <g:select name="pagar_CC" from="${['N': 'No', 'S': 'Si']}" class="form-control" optionKey="key" optionValue="value" value="${pago?.cajaChica}"/>
