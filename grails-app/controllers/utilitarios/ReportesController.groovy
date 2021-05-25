@@ -353,7 +353,7 @@ class ReportesController extends Shield{
         // where prsn.prsn__id = ingr.prsn__id and oblg.oblg__id = ingr.oblg__id and   ingrvlor > ingrabno Order by prsndpto, oblgdscr;"
 
         def sql = "select * from pendiente('${fcha.format('yyyy-MM-dd')} 23:59')"
-        println "sql: $sql"
+//        println "sql: $sql"
         def res = cn.rows(sql.toString())
         def tamano = res.size()
         def max = 54
@@ -2510,7 +2510,7 @@ class ReportesController extends Shield{
     }
 
     def rpInforme() {
-        println "rpInforme --> params: $params"
+//        println "rpInforme --> params: $params"
         def desde = new Date().parse("dd-MM-yyyy", params.desde)
         def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
 
@@ -2615,7 +2615,7 @@ class ReportesController extends Shield{
     }
 
     def rpBalance() {
-        println "rpBalance --> params: $params"
+//        println "rpBalance --> params: $params"
         def desde = new Date().parse("dd-MM-yyyy", params.desde)
         def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
         byte[] b
@@ -2623,7 +2623,7 @@ class ReportesController extends Shield{
         def depositos = params.depositos? params.depositos.toDouble() : 0
 
         b = pdfBalance(desde, hasta, depositos, params.dtmeses).toByteArray()
-//        b = pdfBalance(desde, hasta)
+//        b = pdfBalance(desde, hasta, depositos, params.dtmeses)
 
         response.setContentType("application/pdf")
         response.setHeader("Content-disposition", "attachment; filename=${name}")
@@ -2806,7 +2806,7 @@ class ReportesController extends Shield{
 
     def pdfBalance(desde, hasta, deposito, dtmeses) {
 //    def pdfBalance() {
-        println "pdfBalance: $params --> deposito: ${deposito} ${deposito.class}"
+//        println "pdfBalance: $params --> deposito: ${deposito} ${deposito.class}"
         def cn = dbConnectionService.getConnection()
         def cn2 = dbConnectionService.getConnection()
         def fechaDesde = desde.format('yyyy-MM-dd')
@@ -2814,7 +2814,7 @@ class ReportesController extends Shield{
         def fechaAntes = desde - 1
         def cjch = cn.rows("select admncjch from admn where prsn__id in (select prsn__id from prsn " +
                 "where cndm__id = ${session.usuario.condominio.id})")[0].admncjch
-        println "cjch: $cjch"
+//        println "cjch: $cjch"
 //        println "balance fechas: '${fechaDesde}','${fechaHasta}' antes: ${fechaAntes.format('yyyy-MM-dd')}"
 
         def sql2 = ""
@@ -2828,7 +2828,7 @@ class ReportesController extends Shield{
                     "from aportes(${session.condominio.id}, '${fechaDesde}','${fechaHasta}') " +
                     "group by 2 order by 2"
         }
-        println "--> $sql2"
+//        println "--> $sql2"
 
         def ingresos = cn2.rows(sql2.toString())
         def totalIngresos = (ingresos.vlor.sum() ?  ingresos.vlor.sum() + deposito  : deposito )
@@ -2844,7 +2844,7 @@ class ReportesController extends Shield{
                     "group by 2 order by 2"
         }
 
-        println "egrs: $sql2"
+//        println "egrs: $sql2"
         def egresos = cn2.rows(sql2.toString())
 
         def totalEgresos = (egresos.vlor.sum() ?: 0)
@@ -3006,9 +3006,10 @@ class ReportesController extends Shield{
         document.add(tablaSaldos)
         document.close();
         pdfw.close()
-        return baos
-//        byte[] b = baos.toByteArray();
 
+        byte[] b = baos.toByteArray();
+        encabezadoPie(b, session.condominio.nombre,"Balance General del ${fechaDesde} al ${fechaHasta}", "balanceGeneral_${new Date().format("dd-MM-yyyy")}.pdf")
+        return baos
 //        encabezadoYnumeracion(b, session.condominio.nombre,"Balance General del ${fechaDesde} al ${fechaHasta}", "balanceGeneral_${new Date().format("dd-MM-yyyy")}.pdf")
 
     }
@@ -3694,7 +3695,7 @@ class ReportesController extends Shield{
 
     def pagosPendientes4() {
 
-        println("params " + params)
+//        println "pagosPendientes4 $params"
 
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
         def edificio = Edificio.get(params.torre)
@@ -4054,7 +4055,7 @@ class ReportesController extends Shield{
                 "sum(ingrintr) total from pendiente('${fecha.format('yyy-MM-dd')}', '${params.torre}'), tpap " +
                 "where tpap__id = tipo and sldo > 0 group by prsndpto, alct, prsn, tpapdscr order by prsndpto, tpapdscr"
         def res1 = cn2.rows(sql2.toString())
-        println "sql: $sql2"
+//        println "sql: $sql2"
 
         def tamano = res1.size()
         def max = 43
@@ -4244,11 +4245,6 @@ class ReportesController extends Shield{
         def pdfw = PdfWriter.getInstance(document, baos);
 
         HeaderFooter footer1 = new HeaderFooter( new Phrase(tx_footer, new Font(fontTitulo8)), false);
-/*
-        HeaderFooter footer1 = new HeaderFooter(
-        new Phrase("Sistema de Administración de Condominios " + " " * 144 +
-                "www.tedein.com.ec/vinedos", new Font(fontTitulo8)), false);
-*/
         footer1.setBorder(Rectangle.NO_BORDER);
         footer1.setBorder(Rectangle.TOP);
         footer1.setAlignment(Element.ALIGN_CENTER);
@@ -4264,11 +4260,7 @@ class ReportesController extends Shield{
             PdfImportedPage page = pdfw.getImportedPage(reader, i);
             cb.addTemplate(page, 0, 0);
             def en = reportesService.encabezado(tituloReporte, subtitulo, fontTitulo16, fontTitulo)
-//            if(nombreReporte == 'pagosPendientes') {
-//                reportesService.numeracion3(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
-//            } else {
             reportesService.numeracion(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
-//            }
             document.add(en)
         }
 
@@ -4279,6 +4271,45 @@ class ReportesController extends Shield{
         response.setHeader("Content-disposition", "attachment; filename=" + nombreReporte)
         response.setContentLength(b.length)
         response.getOutputStream().write(b)
+    }
+
+    def encabezadoPie (f, tituloReporte, subtitulo, nombreReporte) {
+
+        def titulo = new Color(30, 140, 160)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo16 = new Font(Font.TIMES_ROMAN, 16, Font.BOLD, titulo);
+        Font fontTitulo8 = new Font(Font.TIMES_ROMAN, 8, Font.NORMAL, titulo);
+
+        def baos = new ByteArrayOutputStream()
+
+        Document document
+        document = new Document(PageSize.A4);
+
+        def pdfw = PdfWriter.getInstance(document, baos);
+
+        HeaderFooter footer1 = new HeaderFooter( new Phrase(tx_footer, new Font(fontTitulo8)), false);
+        footer1.setBorder(Rectangle.NO_BORDER);
+        footer1.setBorder(Rectangle.TOP);
+        footer1.setAlignment(Element.ALIGN_CENTER);
+        document.setFooter(footer1);
+
+        document.open();
+
+        PdfContentByte cb = pdfw.getDirectContent();
+
+        PdfReader reader = new PdfReader(f);
+        for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+            document.newPage();
+            PdfImportedPage page = pdfw.getImportedPage(reader, i);
+            cb.addTemplate(page, 0, 0);
+            def en = reportesService.encabezado(tituloReporte, subtitulo, fontTitulo16, fontTitulo)
+            reportesService.numeracion(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+            document.add(en)
+        }
+
+        document.close();
+        byte[] b = baos.toByteArray();
+        return b
     }
 
 //    public static PdfPTable getHeaderTable(int x, int y) {
@@ -6139,7 +6170,7 @@ class ReportesController extends Shield{
         Paragraph preface = new Paragraph();
         addEmptyLine(preface, 1);
         preface.setAlignment(Element.ALIGN_CENTER);
-        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+//        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
         preface.add(new Paragraph("", fontTitle));
         preface.add(new Paragraph("Detalle de Pagos de ${persona.nombre} ${persona.apellido} (" +
                 "${persona.departamento} - ${persona.edificio.descripcion})", fontTitulo14));
@@ -6206,10 +6237,7 @@ class ReportesController extends Shield{
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
-        response.setContentType("application/pdf")
-        response.setHeader("Content-disposition", "attachment; filename=" + "detallePagos_" + new Date().format("dd-MM-yyyy"))
-        response.setContentLength(b.length)
-        response.getOutputStream().write(b)
+        encabezadoYnumeracion(b, session.condominio.nombre,"", "dt_pagos_${persona.nombre}.pdf")
     }
 
 
