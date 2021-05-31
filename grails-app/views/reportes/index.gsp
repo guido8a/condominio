@@ -1120,25 +1120,33 @@
         if(valor == '' || valor == null || valor == 0){
             bootbox.alert("Ingrese un valor!")
         }else{
+            openLoader("Cargando...");
             location.href="${createLink(controller: 'reportes', action: 'nuevaAlicuotaReporte')}?valor=" + valor
+            closeLoader();
         }
     });
 
     $(".btnIngresosEgresos").click(function () {
         var anio = $("#anio").val();
+        openLoader("Cargando...");
         location.href="${createLink(controller: 'reportes', action: 'ingresosImprimir')}?anio=" + anio
+        closeLoader();
     });
 
     $(".btnIngresosEgresos2").click(function () {
         var desde = $("#fechaDesdeIG").val();
         var hasta = $("#fechaHastaIG").val();
+        openLoader("Cargando...");
         location.href="${createLink(controller: 'reportes', action: 'ingresosEgresos')}?desde=" + desde + "&hasta=" + hasta
+        closeLoader();
     });
 
     $(".btnIngresosEgresos3").click(function () {
         var desde = $("#fechaDesdeIG3").val();
         var hasta = $("#fechaHastaIG3").val();
+        openLoader("Cargando...");
         location.href="${createLink(controller: 'reportes', action: 'ingresosEgresosNuevo')}?desde=" + desde + "&hasta=" + hasta
+        closeLoader();
     });
 
     $("#btnAceptarGestor").click(function () {
@@ -1223,19 +1231,22 @@
         $(".btnDeudas").click(function () {
             var fechaI = $("#fechaImprime").val();
             var torre = $("#torreDeudas").val();
+            openLoader("Cargando...");
             location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes4')}?fecha=" + fechaI + "&torre=" + torre
+            closeLoader();
         });
 
         $(".btnDeudasTotales").click(function () {
             var fechaI = $("#fechaImprimeTot").val();
             var torre = $("#torre2").val();
+            openLoader("Cargando...");
             location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientesTotales')}?fecha=" + fechaI + "&torre=" + torre
+            closeLoader();
         });
 
         $(".btnSolicitud").click(function () {
             var vlor = $("#valorHasta").val();
-            %{--location.href = "${g.createLink(controller: 'reportes', action: 'imprimirSolicitudes')}?vlor=" + vlor;--}%
-
+            openLoader("Cargando....")
             $.ajax({
                 type: 'POST',
                 url: '${createLink(controller: 'reportes', action: 'tablaSolicitudPago_ajax')}',
@@ -1245,6 +1256,7 @@
                     tipo: 1
                 },
                 success: function(msg){
+                    closeLoader();
                     bootbox.dialog({
                         title   : "Personas con solicitud de pago",
                         message : msg,
@@ -1363,7 +1375,9 @@
 
         $(".btnCondominos").click(function () {
             var torre = $("#torre").val();
+            openLoader("Cargando...");
             location.href = "${g.createLink(controller: 'reportes', action: 'listaCondominos')}?torre=" + torre;
+            closeLoader();
         });
 
         $(".btnAceptarEgresos").click(function () {
@@ -1382,7 +1396,9 @@
                     },
                     success: function (msg){
                         if(msg == 'ok'){
+                            openLoader("Cargando...");
                             location.href = "${g.createLink(controller:'reportes' , action: 'imprimirEgresos')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                            closeLoader();
                         }else{
                             bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
                             return false;
@@ -1408,7 +1424,9 @@
                     },
                     success: function (msg){
                         if(msg == 'ok'){
+                            openLoader("Cargando...");
                             location.href = "${g.createLink(controller:'reportes' , action: 'imprimirEgresosExcel')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                            closeLoader();
                         }else{
                             bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
                             return false;
@@ -1434,7 +1452,9 @@
                     },
                     success: function (msg){
                         if(msg == 'ok'){
+                            openLoader("Cargando...");
                             location.href = "${g.createLink(controller:'reportes' , action: 'imprimirIngresos')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                            closeLoader();
                         }else{
                             bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
                             return false;
@@ -1460,7 +1480,9 @@
                     },
                     success: function (msg){
                         if(msg == 'ok'){
+                            openLoader("Cargando...");
                             location.href = "${g.createLink(controller:'reportes' , action: 'imprimirIngresosExcel')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                            closeLoader();
                         }else{
                             bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
                             return false;
@@ -1487,7 +1509,9 @@
                     },
                     success: function (msg){
                         if(msg == 'ok'){
+                            openLoader("Cargando...");
                             location.href = "${g.createLink(controller:'reportes' , action: 'reporteObras')}?desde=" + fechaDesde + "&hasta=" + fechaHasta
+                            closeLoader();
                         }else{
                             bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
                             return false;
@@ -1514,7 +1538,9 @@
                 },
                 success: function (msg){
                     if(msg == 'ok'){
+                        openLoader("Cargando...");
                         location.href = "${g.createLink(controller:'reportes' , action: 'mantenimientoMejoras')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                        closeLoader();
                     }else{
                         bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
                         return false;
@@ -1529,8 +1555,10 @@
         var fechaDesde = $("#fechaDesdeProveedor").val();
         var fechaHasta = $("#fechaHastaProveedor").val();
         var valor = $("#valor").val();
+        openLoader("Cargando...");
         location.href = "${g.createLink(controller:'reportes' , action: 'reporteEgresosProveedor')}?desde=" +
             fechaDesde + "&hasta=" + fechaHasta + "&valor=" + valor;
+        closeLoader();
     });
 
     $(".btnImprimirBalance").click(function () {
@@ -1538,9 +1566,10 @@
         var fechaHasta = $("#fechaHastaB").val();
         var depositos = $("#depos").val()
         var dtmeses = $("#detalleMes").is(':checked');
+        openLoader("Cargando...");
         location.href = "${g.createLink(controller:'reportes' , action: 'rpBalance')}?desde=" + fechaDesde +
             "&hasta=" + fechaHasta + "&depositos=" + depositos + "&dtmeses=" + dtmeses;
-        %{--location.href = "${g.createLink(controller:'reportes' , action: 'pdfBalance')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;--}%
+        closeLoader();
     });
 
     $(".btnImprimirInf").click(function () {
@@ -1548,8 +1577,10 @@
         var fechaHasta = $("#fechaHastaInf").val();
         var depositos = $("#depositos").val()
         var dtmeses = $("#detalleMesInf").is(':checked');
+        openLoader("Cargando...");
         location.href = "${g.createLink(controller:'reportes' , action: 'rpInforme')}?desde=" + fechaDesde +
             "&hasta=" + fechaHasta + "&depositos=" + depositos + "&dtmeses=" + dtmeses;
+        closeLoader();
     });
 
 
@@ -1569,7 +1600,9 @@
                 },
                 success: function (msg){
                     if(msg == 'ok'){
+                        openLoader("Cargando...");
                         location.href = "${g.createLink(controller:'reportes' , action: 'imprimirPagosPendientes')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                        closeLoader();
                     }else{
                         bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
                         return false;
@@ -1578,7 +1611,6 @@
             });
         }
     });
-
 
 </script>
 
