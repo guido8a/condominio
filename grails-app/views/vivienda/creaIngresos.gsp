@@ -86,7 +86,6 @@
 
             <div style="margin-left: 420px">
                 Ingrese los parámetros de búsqueda!
-
             </div>
         </div>
 
@@ -264,10 +263,18 @@
 
         $("#btn-consultar").click(function () {
             var lgar = $("#listaPrecio").val();
+            var oblg = $("#obligaciones").val();
+            console.log("oblg " + oblg)
             if (lgar != -1) {
                 $("#error").hide();
-                consultar();
-                $("#divTabla").show();
+
+                if(oblg != '' && oblg != null){
+                    consultar();
+                    $("#divTabla").show();
+                }else{
+                    $("#divTabla").html("").hide();
+                   bootbox.alert("Seleccione un concepto del aporte")
+                }
             }
             else {
                 $("#divTabla").html("").hide();

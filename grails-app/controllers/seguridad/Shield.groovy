@@ -99,58 +99,58 @@ class Shield {
 
 
     boolean isAllowed() {
-//        try {
-//            if (request.method == "POST") {
-////                println "es post no audit"
-//                return true
-//            }
-////            println "is allowed Accion: ${actionName.toLowerCase()} ---  Controlador: ${controllerName.toLowerCase()} --- Permisos de ese controlador: "+session.permisos[controllerName.toLowerCase()]
-//            if (!session.permisos[controllerName.toLowerCase()]) {
-//                return false
-//            } else {
-//                if (session.permisos[controllerName.toLowerCase()].contains(actionName.toLowerCase())) {
-//                    return true
-//                } else {
-//                    return false
-//                }
-//            }
-//
-//        } catch (e) {
-//            println "Shield execption e: " + e
-//            return false
-//        }
-//            return false
-        return true
-
-    }
-
-    boolean isAllowedBloqueo() {
-        def permitidas = [
-                "inicio"          : ["index"],
-                "tramite"         : ["bandejaEntrada", "tablaBandeja", "busquedaBandeja", "revisarConfidencial", "revisarHijos", "archivar", "saveTramite"],
-                "tramite3"        : ["detalles", "arbolTramite", "recibirTramite", "bandejaEntradaDpto", "tablaBandejaEntradaDpto", "enviarTramiteJefe", "infoRemitente", "busquedaBandeja"],
-                "documentoTramite": ["verAnexos", "cargaDocs"],
-                "alertas"         : ["list", "revisar"],
-                "persona"         : ["show_ajax"],
-                "departamento"    : ["show_ajax"],
-                "tramiteExport"   : ["crearPdf"]
-        ]
-
         try {
-
-            if (!permitidas[controllerName]) {
-                return false
-            }
-            if (permitidas[controllerName].contains(actionName)) {
+            if (request.method == "POST") {
+//                println "es post no audit"
                 return true
             }
+//            println "is allowed Accion: ${actionName.toLowerCase()} ---  Controlador: ${controllerName.toLowerCase()} --- Permisos de ese controlador: "+session.permisos[controllerName.toLowerCase()]
+            if (!session.permisos[controllerName.toLowerCase()]) {
+                return false
+            } else {
+                if (session.permisos[controllerName.toLowerCase()].contains(actionName.toLowerCase())) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+
         } catch (e) {
             println "Shield execption e: " + e
             return false
         }
+//            return false
+//        return true
 
-        return false
     }
+
+//    boolean isAllowedBloqueo() {
+//        def permitidas = [
+//                "inicio"          : ["index"],
+//                "tramite"         : ["bandejaEntrada", "tablaBandeja", "busquedaBandeja", "revisarConfidencial", "revisarHijos", "archivar", "saveTramite"],
+//                "tramite3"        : ["detalles", "arbolTramite", "recibirTramite", "bandejaEntradaDpto", "tablaBandejaEntradaDpto", "enviarTramiteJefe", "infoRemitente", "busquedaBandeja"],
+//                "documentoTramite": ["verAnexos", "cargaDocs"],
+//                "alertas"         : ["list", "revisar"],
+//                "persona"         : ["show_ajax"],
+//                "departamento"    : ["show_ajax"],
+//                "tramiteExport"   : ["crearPdf"]
+//        ]
+//
+//        try {
+//
+//            if (!permitidas[controllerName]) {
+//                return false
+//            }
+//            if (permitidas[controllerName].contains(actionName)) {
+//                return true
+//            }
+//        } catch (e) {
+//            println "Shield execption e: " + e
+//            return false
+//        }
+//
+//        return false
+//    }
 
 
 }
