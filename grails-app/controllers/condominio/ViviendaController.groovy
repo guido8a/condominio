@@ -218,6 +218,7 @@ class ViviendaController extends Shield {
                 } else {
                     println "edita ingreso ${ingreso.id}"
                     ingreso.observaciones = obsr
+                    ingreso.fecha = fecha
                 }
 
                 if (!ingreso.save(flush: true)) {
