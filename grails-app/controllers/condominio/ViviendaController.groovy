@@ -159,14 +159,15 @@ class ViviendaController extends Shield {
                     ingreso.persona = Persona.get(prsnId)
                     ingreso.obligacion = oblg
                     ingreso.valor = valor
-                    ingreso.fecha = new Date()
+//                    ingreso.fecha = new Date()
+                    ingreso.fecha = fecha
                 } else {
                     ingreso.valor = valor
-                    ingreso.fecha = new Date()
+                    ingreso.fecha = fecha
                     ingreso.estado = 'M'
                 }
 
-                ingreso.observaciones = obsr
+//                ingreso.observaciones = obsr
 
                 if (!ingreso.save(flush: true)) {
                     println "error $parts, --> ${ingreso.errors}"
@@ -212,7 +213,7 @@ class ViviendaController extends Shield {
                     println "crea ingreso"
                     ingreso = new Ingreso()
                     ingreso.persona = Persona.get(id)
-                    ingreso.fecha = new Date()
+                    ingreso.fecha = fecha
                     ingreso.observaciones = obsr
                 } else {
                     println "edita ingreso ${ingreso.id}"
