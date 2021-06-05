@@ -167,7 +167,7 @@ class ViviendaController extends Shield {
                     ingreso.estado = 'M'
                 }
 
-//                ingreso.observaciones = obsr
+                if(obsr) ingreso.observaciones = obsr
 
                 if (!ingreso.save(flush: true)) {
                     println "error $parts, --> ${ingreso.errors}"

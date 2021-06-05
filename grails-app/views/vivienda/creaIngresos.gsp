@@ -296,13 +296,12 @@
                 var ingr  = $(this).data("ingr");
                 var obsrog = $(this).data("obsrog");
 
-                console.log('valor', valor);
                 var chk = $(this).siblings(".chk").children("input").is(":checked");
 //                        console.log(chk);
                 var obsr = $(this).siblings(".observaciones").children("input").val();
 
                 if(chk && (obsr != obsrog) && (ingr)){
-//                            console.log('obsr:', obsr, 'obsrog:', obsrog);
+                    console.log('obsr:', obsr, 'obsrog:', obsrog);
                     if(data != '') {
                         data += "&"
                     }
