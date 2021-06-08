@@ -275,7 +275,7 @@ class Reportes2Controller {
         tablaSaldo.setWidths(arregloEnteros([88, 12]))
 
         addCellTabla(tablaSaldo, new Paragraph("Saldo: ", fontTh), [border: Color.BLACK, bwb: 0.1, bwt: 0.1, bcb: Color.BLACK,  bct: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-        addCellTabla(tablaSaldo, new Paragraph(g.formatNumber(number:totalIngresos - totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [bwl: 0.1, border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
+        addCellTabla(tablaSaldo, new Paragraph(g.formatNumber(number:totalIngresos - totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), [bwl: 0.1, border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaDetalles, tablaSaldo, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
 
         document.add(tablaDetalles)
