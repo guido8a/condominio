@@ -534,12 +534,19 @@ class IngresoController extends Shield {
         def ingreso = Ingreso.get(params.id)
         ingreso.properties = params
 
-        if(!ingreso.save(flush:true)){
-            println("error al guardar el ingreso " + ingreso.errors)
-            render "no"
+        def pagos = Pago.findAllByIngreso(ingreso)
+
+        if(params.valor.toDouble() >= pagos.valor.sum()){
+            if(!ingreso.save(flush:true)){
+                println("error al guardar el ingreso " + ingreso.errors)
+                render "no"
+            }else{
+                render "ok"
+            }
         }else{
-            render "ok"
+            render "er"
         }
+
     }
 
 }

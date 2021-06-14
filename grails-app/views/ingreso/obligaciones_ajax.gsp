@@ -124,7 +124,7 @@
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
                     title   : "Editar Pendiente",
-                    class   : "modal-sm",
+//                    class   : "modal-sm",
                     message : msg,
                     buttons : {
                         cancelar : {
@@ -138,7 +138,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitIngresoValor();
+                               return submitIngresoValor();
                             } //callback
                         } //guardar
                     } //buttons
@@ -164,7 +164,12 @@
                         log("Valor guardado correctamente","success");
                         cargarObligaciones(true);
                     }else{
-                        log("Error al guardar el valor","error");
+                        if(msg == 'er'){
+                            bootbox.alert("<i class='fa fa-exclamation-triangle fa-2x text-warning'></i>&nbsp; No puede ingresar un valor menor a la suma de los pagos");
+                        }else{
+                            log("Error al guardar el valor","error");
+                        }
+
                     }
                 }
             });
