@@ -43,10 +43,10 @@ class IngresoController extends Shield {
             list = c.list(params) {
                 or {
                     /* TODO: cambiar aqui segun sea necesario */
-                    
-                            ilike("documento", "%" + params.search + "%")  
-                            ilike("estado", "%" + params.search + "%")  
-                            ilike("observaciones", "%" + params.search + "%")  
+
+                    ilike("documento", "%" + params.search + "%")
+                    ilike("estado", "%" + params.search + "%")
+                    ilike("observaciones", "%" + params.search + "%")
                 }
             }
         } else {
@@ -217,7 +217,7 @@ class IngresoController extends Shield {
         def dscr  = "${ingreso.observaciones?: ingreso?.obligacion?.descripcion}"
 
         return[ingreso: ingreso, pagos: pagos, saldo: saldo, pago: pago, dscr: dscr, mora: mora, mess: mess,
-            condominio: condominio?.comprobante == 'S']
+               condominio: condominio?.comprobante == 'S']
     }
 
 
@@ -234,59 +234,59 @@ class IngresoController extends Shield {
 
         saldo = Math.round(saldo*100)/100
 
-       if(params.abono.toDouble() < 0){
+        if(params.abono.toDouble() < 0){
             render "er_No se puede crear un pago en negativo"
-       }else{
-           if(params.id){
-               pago = Pago.get(params.id)
-               saldo2 = saldo + (pago.valor ? pago.valor.toDouble() : 0)
+        }else{
+            if(params.id){
+                pago = Pago.get(params.id)
+                saldo2 = saldo + (pago.valor ? pago.valor.toDouble() : 0)
 //               println "saldo2: $saldo2, pago: ${params.abono.toDouble()}"
-               if(params.abono.toDouble() > saldo2){
-                   render "er_El abono ingresado supera el valor del saldo"
-                   return
-               }else{
-                   if((params.abono.toDouble() + params.descuento.toDouble()) > saldo2){
-                       render "er_El abono mas el descuento ingresado supera el valor del saldo"
-                       return
-                   }
-               }
-           }else{
+                if(params.abono.toDouble() > saldo2){
+                    render "er_El abono ingresado supera el valor del saldo"
+                    return
+                }else{
+                    if((params.abono.toDouble() + params.descuento.toDouble()) > saldo2){
+                        render "er_El abono mas el descuento ingresado supera el valor del saldo"
+                        return
+                    }
+                }
+            }else{
 //               println "saldo: $saldo, pago: ${params.abono.toDouble()}"
-               if(params.abono.toDouble() > saldo){
-                   render "er_El abono ingresado supera el valor del saldo"
-                   return
-               }else{
-                   if((params.abono.toDouble() + params.descuento.toDouble()) > saldo){
-                       render "er_El abono mas el descuento ingresado supera el valor del saldo"
-                       return
-                   }
-               }
-           }
+                if(params.abono.toDouble() > saldo){
+                    render "er_El abono ingresado supera el valor del saldo"
+                    return
+                }else{
+                    if((params.abono.toDouble() + params.descuento.toDouble()) > saldo){
+                        render "er_El abono mas el descuento ingresado supera el valor del saldo"
+                        return
+                    }
+                }
+            }
 
-           if(params.id){
-               pago = Pago.get(params.id)
-           }else{
-               pago = new Pago()
-           }
+            if(params.id){
+                pago = Pago.get(params.id)
+            }else{
+                pago = new Pago()
+            }
 
-           params.fecha = new Date().parse("dd-MM-yyyy", params.fechaPago_input)
+            params.fecha = new Date().parse("dd-MM-yyyy", params.fechaPago_input)
 
-           pago.ingreso = ingreso
-           pago.valor = params.abono.toDouble()
-           pago.fechaPago = params.fecha
-           pago.documento = params.documento
-           pago.observaciones = params.observaciones
-           pago.banco =  params.banco ? params.banco.toDouble() : 0;
-           mess = params.mess.toInteger()
-           pago.transferencia = params.transferencia == 'SI' ? 'S' :'N'
-           pago.descuento = params.descuento.toDouble()
-           pago.anterior = params.anterior == 'SI' ? 'S' :'N'
+            pago.ingreso = ingreso
+            pago.valor = params.abono.toDouble()
+            pago.fechaPago = params.fecha
+            pago.documento = params.documento
+            pago.observaciones = params.observaciones
+            pago.banco =  params.banco ? params.banco.toDouble() : 0;
+            mess = params.mess.toInteger()
+            pago.transferencia = params.transferencia == 'SI' ? 'S' :'N'
+            pago.descuento = params.descuento.toDouble()
+            pago.anterior = params.anterior == 'SI' ? 'S' :'N'
 
-           if(params.banco){
+            if(params.banco){
 
-           }else{
-               params.banco = 0
-           }
+            }else{
+                params.banco = 0
+            }
 
 /*
            if(mess > 2) {
@@ -296,73 +296,73 @@ class IngresoController extends Shield {
            }
 */
 
-           pago.mora = params.mora.toDouble()
+            pago.mora = params.mora.toDouble()
 
-           if(!pago.save(flush: true)){
-               println("error al guardar el pago " + pago.errors)
-               band = 0
-           }else{
-               band = 1
-           }
+            if(!pago.save(flush: true)){
+                println("error al guardar el pago " + pago.errors)
+                band = 0
+            }else{
+                band = 1
+            }
 
-           if(condominio?.comprobante == 'S'){
-               if(band == 1){
-                   if(params.id){
-                       if(Comprobante.findByPago(pago)){
-                           render "ok"
-                           return
-                       }else{
-                           render "er_Ya existe un pago, no es posible generar un comprobante"
-                       }
-                   }else{
+            if(condominio?.comprobante == 'S'){
+                if(band == 1){
+                    if(params.id){
+                        if(Comprobante.findByPago(pago)){
+                            render "ok"
+                            return
+                        }else{
+                            render "er_Ya existe un pago, no es posible generar un comprobante"
+                        }
+                    }else{
 
-                       def talonarioActual = Talonario.findByCondominioAndEstado(condominio,'V')
+                        def talonarioActual = Talonario.findByCondominioAndEstado(condominio,'V')
 
-                       if(talonarioActual){
+                        if(talonarioActual){
 
-                           def numero = talonarioActual.numeroFin == 0 ?  talonarioActual.numeroInicio : (talonarioActual.numeroFin +1)
+                            def numero = talonarioActual.numeroFin == 0 ?  talonarioActual.numeroInicio : (talonarioActual.numeroFin +1)
 
-                           def comprobante = new Comprobante()
-                           comprobante.condominio = condominio
-                           comprobante.pago = pago
+                            def comprobante = new Comprobante()
+                            comprobante.condominio = condominio
+                            comprobante.pago = pago
 //                           comprobante.texto = Texto.findByCodigo('CMPR').parrafoUno ?: ''
-                           comprobante.fecha = new Date()
-                           comprobante.estado = 'V'
-                           comprobante.numero = numero
-                           /* genera el QR de la firma */
+                            comprobante.fecha = new Date()
+                            comprobante.estado = 'V'
+                            comprobante.numero = numero
+                            /* genera el QR de la firma */
 //                         firmasService.poneFirma(session.usuario, pago)
-                           comprobante.ruta = firmasService.poneFirma(session.usuario, pago)
+                            comprobante.ruta = firmasService.poneFirma(session.usuario, pago)
 
-                           if(!comprobante.save(flush:true)){
-                               println("error al guardar el comprobante " + comprobante.errors)
-                               render "er_Error al guardar el comprobante"
-                           }else{
-                               talonarioActual.numeroFin = numero
-                               talonarioActual.save(flush:true)
+                            if(!comprobante.save(flush:true)){
+                                println("error al guardar el comprobante " + comprobante.errors)
+                                render "er_Error al guardar el comprobante"
+                            }else{
+                                talonarioActual.numeroFin = numero
+                                talonarioActual.save(flush:true)
 
-                               /* actualiza el documento de pago */
-                               pago.documento = comprobante.numero
-                               pago.save(flush:true)
-                               /* fin */
-                               render "ok"
-                           }
+                                /* actualiza el documento de pago */
+                                pago.documento = comprobante.numero
+                                pago.save(flush:true)
+                                /* fin */
+                                render "ok"
+                            }
 
-                       }else{
-                           render "er_No existe un talonario digital creado, no es posible generar un comprobante"
-                           return
-                       }
-                   }
-               }else{
-                   render "no"
-               }
-           }else{
-               if(band == 1){
-                   render "ok"
-               }else{
-                   render "no"
-               }
-           }
-       }
+                        }else{
+                            render "er_No existe un talonario digital creado, no es posible generar un comprobante"
+                            return
+                        }
+                    }
+                }else{
+                    render "no"
+                }
+            }else{
+                if(band == 1){
+                    render "ok"
+                }else{
+                    render "no"
+                }
+            }
+        }
 
 
     }
@@ -521,9 +521,25 @@ class IngresoController extends Shield {
     }
 
     def comprobantes_ajax(){
-    def pago = Pago.get(params.id)
-//        def comprobante
+        def pago = Pago.get(params.id)
+    }
 
+    def ingreso_ajax(){
+        def ingreso = Ingreso.get(params.id)
+        return[ingreso: ingreso]
+    }
+
+
+    def saveValor_ajax(){
+        def ingreso = Ingreso.get(params.id)
+        ingreso.properties = params
+
+        if(!ingreso.save(flush:true)){
+            println("error al guardar el ingreso " + ingreso.errors)
+            render "no"
+        }else{
+            render "ok"
+        }
     }
 
 }
