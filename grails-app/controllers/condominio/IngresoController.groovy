@@ -533,6 +533,7 @@ class IngresoController extends Shield {
     def saveValor_ajax(){
         def ingreso = Ingreso.get(params.id)
         ingreso.properties = params
+        ingreso.valor = params.valor.toDouble()
 
         def pagos = Pago.findAllByIngreso(ingreso)
 
