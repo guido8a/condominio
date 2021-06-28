@@ -65,6 +65,7 @@ class LoginController {
     }
 
     def guardarPass() {
+        println "guardarPass: $params"
         def usu = Persona.get(params.id)
         usu.password = params.pass.toString().encodeAsMD5()
         usu.fechaPass = new Date() + 30
