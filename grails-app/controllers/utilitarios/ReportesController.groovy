@@ -2983,7 +2983,7 @@ class ReportesController extends Shield{
         if(cjch > 0 && cjchfcin < hasta) {
             addCellTabla(tablaSaldos, new Paragraph("Valores entregados a Caja Chica", fontTh), frmtHdR)
             addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: cjch, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
-            addCellTabla(tablaSaldos, new Paragraph("Saldo Bancos", fontTh), frmtHdR)
+            addCellTabla(tablaSaldos, new Paragraph("Saldo", fontTh), frmtHdR)
             addCellTabla(tablaSaldos, new Paragraph(g.formatNumber(number: cjch + totalIngresos - totalEgresos + saldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtHdR)
         }
 
