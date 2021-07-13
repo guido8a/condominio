@@ -5948,7 +5948,8 @@ class ReportesController extends Shield{
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
         def persona = Persona.get(params.id)
 
-        def sql = "select * from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') order by 2,5;"
+        def sql = "select * from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') order by 1,2,5;"
+//        println "sql: $sql"
         def detalle = cn.rows(sql.toString())
 
         sql = "select sum(ingr.valor) vlor from (select distinct ingr__id, ingrvlor valor " +
