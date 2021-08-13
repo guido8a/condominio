@@ -1,5 +1,6 @@
 package condominio
 
+import org.hibernate.criterion.MatchMode
 import seguridad.Persona
 import seguridad.Shield
 import utilitarios.Parametros
@@ -367,5 +368,29 @@ class ViviendaController extends Shield {
         redirect(action:"index", params: params)
     }
 */
+
+    def verificarDescripcion_ajax(){
+        println("params vd " + params)
+        def obligaciones =[]
+
+        Obligacion.list().each {
+            obligaciones += it.descripcion.trim().toLowerCase()
+        }
+
+        println("obligaciones " + obligaciones)
+
+        def texto = params.texto
+        def texto2 = texto.trim().toLowerCase()
+
+        println("texto " + texto2)
+
+//        if(texto in obligaciones){
+            render "no"
+//       }else{
+//           render "ok"
+//       }
+
+    }
+
 
 }

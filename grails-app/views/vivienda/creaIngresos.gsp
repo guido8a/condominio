@@ -43,13 +43,13 @@
             </div>
         </div>
 
-%{--
-        <div class="btn-group col-sm-1" style="width: 40px; margin-left: -28px; margin-top: 20px">
-            <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary">
-                <i class="fa fa-file-o"></i>
-            </a>
-        </div>
---}%
+        %{--
+                <div class="btn-group col-sm-1" style="width: 40px; margin-left: -28px; margin-top: 20px">
+                    <a href="${createLink(controller: "vivienda", action: "index")}" class="btn btn-primary">
+                        <i class="fa fa-file-o"></i>
+                    </a>
+                </div>
+        --}%
 
         <div class="btn-group col-sm-2 text-info" style="width: 160px; margin-left: -25px;">
             <strong>Fecha</strong>
@@ -102,24 +102,24 @@
 //        cargarBotones(tpp)
     });
 
-/*
-    function cargarBotones (tipo) {
-        if(tipo != '10'){
-            $("#btnNuevaOb").removeClass("hidden");
-            $("#btnEditarOb").removeClass("hidden")
-        }else{
-            $("#btnNuevaOb").addClass("hidden");
-            $("#btnEditarOb").addClass("hidden")
-        }
-    }
-*/
+    /*
+     function cargarBotones (tipo) {
+     if(tipo != '10'){
+     $("#btnNuevaOb").removeClass("hidden");
+     $("#btnEditarOb").removeClass("hidden")
+     }else{
+     $("#btnNuevaOb").addClass("hidden");
+     $("#btnEditarOb").addClass("hidden")
+     }
+     }
+     */
 
     $("#btnNuevaOb").click(function () {
         createEditRow();
     });
 
     $("#btnEditarOb").click(function () {
-       var idOb = $("#obligaciones").val();
+        var idOb = $("#obligaciones").val();
         createEditRow(idOb);
     });
 
@@ -128,28 +128,51 @@
         var $form = $("#frmObligacion");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
-            $btn.replaceWith(spinner);
-            openLoader("Guardando Obligación");
-            $.ajax({
-                type    : "POST",
-                url     : $form.attr("action"),
-                data    : $form.serialize(),
-                success : function (msg) {
-                    var parts = msg.split("*");
-                    log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                    setTimeout(function() {
-                        if (parts[0] == "SUCCESS") {
-                            location.reload(true);
-                        } else {
-                            spinner.replaceWith($btn);
-                            return false;
-                        }
-                    }, 1000);
-                }
-            });
+
+            if(verificarDescripcion()){
+                $btn.replaceWith(spinner);
+                openLoader("Guardando Obligación");
+                $.ajax({
+                    type    : "POST",
+                    url     : $form.attr("action"),
+                    data    : $form.serialize(),
+                    success : function (msg) {
+                        var parts = msg.split("*");
+                        log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
+                        setTimeout(function() {
+                            if (parts[0] == "SUCCESS") {
+                                location.reload(true);
+                            } else {
+                                spinner.replaceWith($btn);
+                                return false;
+                            }
+                        }, 1000);
+                    }
+                });
+            }else{
+                bootbox.alert("<i class='fa fa-triangle-exclamation fa-2x text-warning'></i> Esta descripción ya fue ingresada!");
+                return false;
+            }
         } else {
             return false;
         } //else
+    }
+
+    function verificarDescripcion(){
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller: 'vivienda', action: 'verificarDescripcion_ajax')}",
+            data    : {
+                texto : $("#descripcionObligacion").val()
+            },
+            success : function (msg) {
+                if(msg == 'ok'){
+                    return true
+                }else{
+                    return false
+                }
+            }
+        });
     }
 
     function createEditRow(id) {
@@ -163,7 +186,6 @@
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
                     title   : title + " Obligación",
-
                     message : msg,
                     buttons : {
                         cancelar : {
@@ -178,6 +200,7 @@
                             className : "btn-success",
                             callback  : function () {
                                 return submitFormObligacion();
+//                                return verificarDescripcion();
                             } //callback
                         } //guardar
                     } //buttons
@@ -273,7 +296,7 @@
                     $("#divTabla").show();
                 }else{
                     $("#divTabla").html("").hide();
-                   bootbox.alert("Seleccione un concepto del aporte")
+                    bootbox.alert("Seleccione un concepto del aporte")
                 }
             }
             else {

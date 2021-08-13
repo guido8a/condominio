@@ -17,7 +17,7 @@
                         Descripción
                     </label>
                     <div class="col-md-9">
-                        <g:textField name="descripcion" required="" class="form-control required" value="${obligacionInstance?.descripcion}"/>
+                        <g:textField name="descripcion" id="descripcionObligacion" required="" class="form-control required" value="${obligacionInstance?.descripcion}"/>
                     </div>
                      *
                 </span>
