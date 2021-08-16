@@ -375,6 +375,7 @@ class ViviendaController extends Shield {
         def sql = "select count(*) nada from oblg where oblgdscr = '${params.texto.trim()}'"
         println "sql: $sql"
         def cantidad = cn.rows(sql.toString())[0].nada
+        
 //        println "cantidad: $cantidad"
         if(cantidad > 0 ){
             render "no"
