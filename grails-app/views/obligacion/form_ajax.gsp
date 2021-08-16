@@ -29,7 +29,9 @@
                         Tipo de Aporte
                     </label>
                     <div class="col-md-5">
-                       <g:select name="tipoAporte" from="${condominio.TipoAporte.list()}" optionKey="id" optionValue="descripcion" value="${obligacionInstance?.tipoAporte?.id}" class="form-control"/>
+                       <g:select name="tipoAporte" from="${condominio.TipoAporte.findAllByIdGreaterThan(1, [sort: 'descripcion'])}"
+                                 optionKey="id" optionValue="descripcion" value="${obligacionInstance?.tipoAporte?.id}"
+                                 class="form-control"/>
                     </div>
                     *
                 </span>

@@ -28,7 +28,8 @@
 
         <div class="col-sm-2" style="margin-left: -30px">
             Tipo de Aporte
-            <g:select from="${condominio.TipoAporte.findAllByIdGreaterThan(1, [sort: 'descripcion'])}" optionValue="descripcion" optionKey="id"
+            <g:select from="${condominio.TipoAporte.findAllByIdGreaterThan(1, [sort: 'descripcion'])}"
+                      optionValue="descripcion" optionKey="id"
                       name="tp" id="tipoAporte" class="form-control" style="width: 180px;"/>
         </div>
 
@@ -155,7 +156,8 @@
                     texto: $("#descripcionObligacion").val()
                 },
                 success: function (msg) {
-                    if(msg == 'ok'){
+                    var partes = msg.split('_');
+                    if(partes[0] == 'ok'){
 
                         $btn.replaceWith(spinner);
                         openLoader("Guardando Obligación");
@@ -177,7 +179,7 @@
                             }
                         });
                     }else{
-                        bootbox.alert("<i class='fa fa-triangle-exclamation fa-2x text-warning'></i> Esta descripción ya fue ingresada!");
+                        bootbox.alert("<h3>No es posible crear este Aporte</h3><hr><i class='fa fa-triangle-exclamation fa-2x text-warning'></i>" + partes[1] );
                         return false;
                     }
                 }

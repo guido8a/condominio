@@ -372,13 +372,16 @@ class ViviendaController extends Shield {
     def verificarDescripcion_ajax(){
 //        println("params vd " + params)
         def cn = dbConnectionService.getConnection()
-        def sql = "select count(*) nada from oblg where oblgdscr = '${params.texto.trim()}'"
-        println "sql: $sql"
-        def cantidad = cn.rows(sql.toString())[0].nada
-        
-//        println "cantidad: $cantidad"
+        def sql = "select count(*) nada, oblgdscr, tpapdscr from oblg, tpap where oblgdscr = '${params.texto.trim()}' and " +
+                "tpap.tpap__id = oblg.tpap__id group by tpapdscr, oblgdscr"
+//        println "sql: $sql"
+        def cantidad = cn.rows(sql.toString())[0]?.nada?:0
+        def oblg = cn.rows(sql.toString())[0]?.oblgdscr
+        def tpap = cn.rows(sql.toString())[0]?.tpapdscr
+
+//        println "cantidad: $cantidad --> no_ya existe un aporte para: ${oblg} en ${tpap}"
         if(cantidad > 0 ){
-            render "no"
+            render "no_Ya existe un aporte para: '${oblg}' en <strong>${tpap}</strong>"
         }else{
             println "--> ok"
             render "ok"
