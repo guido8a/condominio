@@ -373,22 +373,22 @@ class ViviendaController extends Shield {
         println("params vd " + params)
         def obligaciones =[]
 
+        def texto = params.texto.toString().replaceAll("\\s","")
+        def texto2 = texto.toLowerCase()
+
         Obligacion.list().each {
-            obligaciones += it.descripcion.trim().toLowerCase()
+            obligaciones += it.descripcion.toString().replaceAll("\\s","").toLowerCase()
         }
 
         println("obligaciones " + obligaciones)
 
-        def texto = params.texto
-        def texto2 = texto.trim().toLowerCase()
-
         println("texto " + texto2)
 
-//        if(texto in obligaciones){
+        if(texto in obligaciones){
             render "no"
-//       }else{
-//           render "ok"
-//       }
+       }else{
+           render "ok"
+       }
 
     }
 
