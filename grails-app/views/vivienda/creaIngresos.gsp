@@ -123,57 +123,78 @@
         createEditRow(idOb);
     });
 
+    %{--function verificarDescripcion(){--}%
+    %{--$.ajax({--}%
+    %{--type    : "POST",--}%
+    %{--url     : "${createLink(controller: 'vivienda', action: 'verificarDescripcion_ajax')}",--}%
+    %{--async: false,--}%
+    %{--data    : {--}%
+    %{--texto: $("#descripcionObligacion").val()--}%
+    %{--},--}%
+    %{--success: function (msg) {--}%
+    %{--console.log("msg " + msg)--}%
+    %{--if(msg == 'ok'){--}%
+    %{--return true;--}%
+    %{--}else{--}%
+    %{--return false;--}%
+    %{--}--}%
+    %{--}--}%
+    %{--});--}%
+    %{--}--}%
 
     function submitFormObligacion() {
         var $form = $("#frmObligacion");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
-        if ($form.valid()) {
 
-            if(verificarDescripcion()){
-                $btn.replaceWith(spinner);
-                openLoader("Guardando Obligación");
-                $.ajax({
-                    type    : "POST",
-                    url     : $form.attr("action"),
-                    data    : $form.serialize(),
-                    success : function (msg) {
-                        var parts = msg.split("*");
-                        log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                        setTimeout(function() {
-                            if (parts[0] == "SUCCESS") {
-                                location.reload(true);
-                            } else {
-                                spinner.replaceWith($btn);
-                                return false;
+        if ($form.valid()) {
+            $.ajax({
+                type    : "POST",
+                url     : "${createLink(controller: 'vivienda', action: 'verificarDescripcion_ajax')}",
+                async: false,
+                data    : {
+                    texto: $("#descripcionObligacion").val()
+                },
+                success: function (msg) {
+                    if(msg == 'ok'){
+
+                        $btn.replaceWith(spinner);
+                        openLoader("Guardando Obligación");
+                        $.ajax({
+                            type    : "POST",
+                            url     : $form.attr("action"),
+                            data    : $form.serialize(),
+                            success : function (msg) {
+                                var parts = msg.split("*");
+                                log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
+                                setTimeout(function() {
+                                    if (parts[0] == "SUCCESS") {
+                                        location.reload(true);
+                                    } else {
+                                        spinner.replaceWith($btn);
+                                        return false;
+                                    }
+                                }, 1000);
                             }
-                        }, 1000);
+                        });
+                    }else{
+                        bootbox.alert("<i class='fa fa-triangle-exclamation fa-2x text-warning'></i> Esta descripción ya fue ingresada!");
+                        return false;
                     }
-                });
-            }else{
-                bootbox.alert("<i class='fa fa-triangle-exclamation fa-2x text-warning'></i> Esta descripción ya fue ingresada!");
-                return false;
-            }
+                }
+            });
+
+//            console.log("--- " + verificarDescripcion())
+//            if(verificarDescripcion( )){
+//
+//            }else{
+//
+//            }
         } else {
             return false;
         } //else
     }
 
-    function verificarDescripcion(){
-        $.ajax({
-            type    : "POST",
-            url     : "${createLink(controller: 'vivienda', action: 'verificarDescripcion_ajax')}",
-            data    : {
-                texto: $("#descripcionObligacion").val()
-            },
-            success : function (msg) {
-                if(msg == 'ok'){
-                    return true
-                }else{
-                    return false
-                }
-            }
-        });
-    }
+
 
     function createEditRow(id) {
         var title = id ? "Editar" : "Nueva";
@@ -200,7 +221,6 @@
                             className : "btn-success",
                             callback  : function () {
                                 return submitFormObligacion();
-//                                return verificarDescripcion();
                             } //callback
                         } //guardar
                     } //buttons
