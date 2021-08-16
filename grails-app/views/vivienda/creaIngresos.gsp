@@ -130,25 +130,25 @@
         if ($form.valid()) {
 
             if(verificarDescripcion()){
-//                $btn.replaceWith(spinner);
-//                openLoader("Guardando Obligación");
-//                $.ajax({
-//                    type    : "POST",
-//                    url     : $form.attr("action"),
-//                    data    : $form.serialize(),
-//                    success : function (msg) {
-//                        var parts = msg.split("*");
-//                        log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-//                        setTimeout(function() {
-//                            if (parts[0] == "SUCCESS") {
-//                                location.reload(true);
-//                            } else {
-//                                spinner.replaceWith($btn);
-//                                return false;
-//                            }
-//                        }, 1000);
-//                    }
-//                });
+                $btn.replaceWith(spinner);
+                openLoader("Guardando Obligación");
+                $.ajax({
+                    type    : "POST",
+                    url     : $form.attr("action"),
+                    data    : $form.serialize(),
+                    success : function (msg) {
+                        var parts = msg.split("*");
+                        log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
+                        setTimeout(function() {
+                            if (parts[0] == "SUCCESS") {
+                                location.reload(true);
+                            } else {
+                                spinner.replaceWith($btn);
+                                return false;
+                            }
+                        }, 1000);
+                    }
+                });
             }else{
                 bootbox.alert("<i class='fa fa-triangle-exclamation fa-2x text-warning'></i> Esta descripción ya fue ingresada!");
                 return false;
@@ -163,7 +163,7 @@
             type    : "POST",
             url     : "${createLink(controller: 'vivienda', action: 'verificarDescripcion_ajax')}",
             data    : {
-                texto : $("#descripcionObligacion").val()
+                texto: $("#descripcionObligacion").val()
             },
             success : function (msg) {
                 if(msg == 'ok'){

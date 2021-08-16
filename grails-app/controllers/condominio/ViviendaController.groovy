@@ -371,24 +371,18 @@ class ViviendaController extends Shield {
 
     def verificarDescripcion_ajax(){
         println("params vd " + params)
-        def obligaciones =[]
+        def cn = dbConnectionService.getConnection()
+        def sql = "select count(*) nada from oblg where oblgdscr = '${params.texto.trim()}'"
+        println "sql: $sql"
+        def cantidad = cn.rows(sql.toString())[0].nada
 
-        def texto = params.texto.toString().replaceAll("\\s","")
-        def texto2 = texto.toLowerCase()
-
-        Obligacion.list().each {
-            obligaciones += it.descripcion.toString().replaceAll("\\s","").toLowerCase()
-        }
-
-        println("obligaciones " + obligaciones)
-
-        println("texto " + texto2)
-
-        if(texto in obligaciones){
+        println "cantidad: $cantidad"
+        if(cantidad > 0 ){
             render "no"
-       }else{
-           render "ok"
-       }
+        }else{
+            println "--> ok"
+            render "ok"
+        }
 
     }
 
