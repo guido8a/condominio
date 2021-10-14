@@ -62,11 +62,31 @@
     <button class="btn btn-primary btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
        <strong class="colo">Nota</strong>
     </button>
-    <div class="card-body">
+    <div class="card-body" style="margin-bottom: 20px">
         <textarea name='editor3' id="nota" class="editor" rows="100" cols="80">${texto?.nota ?: nota}</textarea>
     </div>
-</div>
 
+    <div class="col-md-4">
+        <button class="btn btn-primary btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+            <strong class="colo">Nombre</strong>
+        </button>
+        <g:textField name="nombre" class="form-control" maxlength="127" value="${texto?.nombre}"/>
+    </div>
+
+    <div class="col-md-4">
+        <button class="btn btn-primary btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+            <strong class="colo">Cargo</strong>
+        </button>
+        <g:textField name="cargo" class="form-control" maxlength="127" value="${texto?.cargo}"/>
+    </div>
+
+    <div class="col-md-4" style="margin-bottom: 50px">
+        <button class="btn btn-primary btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+            <strong class="colo">Contacto</strong>
+        </button>
+        <g:textField name="contacto" class="form-control" maxlength="127" value="${texto?.contacto}"/>
+    </div>
+</div>
 
 <script type="text/javascript">
 
@@ -75,24 +95,46 @@
         var par2 = CKEDITOR.instances['parrafoDos'].getData();
         var par3 = CKEDITOR.instances['nota'].getData();
 
-        $.ajax({
-            type: 'POST',
-            url:'${createLink(controller: 'reportes', action: 'guardarParrafosSolicitud_ajax')}',
-            data:{
-                id: '${texto?.id}',
-                parrafo1: par1,
-                parrafo2: par2,
-                nota: par3,
-                tipo: 1
-            },
-            success: function (msg) {
-                if(msg == 'ok'){
-                    log("Texto guardado correctamente","success")
+        var nombre = $("#nombre").val();
+        var cargo = $("#cargo").val();
+        var contacto = $("#contacto").val();
+
+        if(nombre == ''){
+            bootbox.alert("<i class='fa fa-exclamation-triangle fa-2x text-warning'></i> Ingrese el nombre de la persona que genera la solicitud de pago")
+        }else{
+            if(cargo == ''){
+                bootbox.alert("<i class='fa fa-exclamation-triangle fa-2x text-warning'></i> Ingrese el cargo de la persona que genera la solicitud de pago")
+            }else{
+                if(contacto ==''){
+                    bootbox.alert("<i class='fa fa-exclamation-triangle fa-2x text-warning'></i> Ingrese el contacto de la persona que genera la solicitud de pago")
                 }else{
-                    log("Error al guardar el texto","error")
+                    $.ajax({
+                        type: 'POST',
+                        url:'${createLink(controller: 'reportes', action: 'guardarParrafosSolicitud_ajax')}',
+                        data:{
+                            id: '${texto?.id}',
+                            parrafo1: par1,
+                            parrafo2: par2,
+                            nota: par3,
+                            tipo: 1,
+                            nombre: nombre,
+                            cargo: cargo,
+                            contacto: contacto
+                        },
+                        success: function (msg) {
+                            if(msg == 'ok'){
+                                log("Texto guardado correctamente","success")
+                            }else{
+                                log("Error al guardar el texto","error")
+                            }
+                        }
+                    });
                 }
             }
-        });
+
+        }
+
+
     });
 
     CKEDITOR.replace( 'editor1', {

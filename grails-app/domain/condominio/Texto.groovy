@@ -8,6 +8,9 @@ class Texto {
     String parrafoDos
     String parrafoTres
     String nota
+    String nombre
+    String cargo
+    String contacto
 
     static mapping = {
         table 'txto'
@@ -22,6 +25,9 @@ class Texto {
             parrafoDos column: 'txtoslp2'
             parrafoTres column: 'txtoslp3'
             nota column: 'txtoslnt'
+            nombre column: 'txtoln01'
+            cargo column: 'txtoln02'
+            contacto column: 'txtoln03'
         }
     }
 
@@ -31,5 +37,8 @@ class Texto {
         parrafoDos(blank: true, nullable: true)
         parrafoTres(blank: true, nullable: true)
         nota(blank: true, nullable: true)
+        nombre(blank: true, nullable: true)
+        cargo(blank: true, nullable: true)
+        contacto(blank: true, nullable: true)
     }
 }

@@ -4751,6 +4751,10 @@ class ReportesController extends Shield{
             texto.nota = params.nota
         }
 
+        texto.nombre = params.nombre
+        texto.cargo = params.cargo
+        texto.contacto = params.contacto
+
         if(!texto.save(flush: true)){
             render "no"
         }else{
@@ -4877,48 +4881,48 @@ class ReportesController extends Shield{
         content += "<th width='15%' style='text-align:center'>"
         content += "Valor"
         content += "</th>"
-        content += "<th width='15%' style='text-align:center'>"
-        content += "Intereses"
-        content += "</th>"
-        content += "<th width='15%' style='text-align:center'>"
-        content += "Total"
-        content += "</th>"
+//        content += "<th width='15%' style='text-align:center'>"
+//        content += "Intereses"
+//        content += "</th>"
+//        content += "<th width='15%' style='text-align:center'>"
+//        content += "Total"
+//        content += "</th>"
         content += "</tr>"
         content += "</thead>"
         content += "<tbody>"
         data2.each {pendiente->
             if (pendiente.sldo > 0) {
                 content += "<tr>"
-                content += "<td>"
+                content += "<td style='text-align: left'>"
                 content += pendiente.oblg
                 content += "</td>"
                 content += "<td style='text-align: right'>"
                 content += pendiente.sldo
                 content += "</td>"
-                content += "<td style='text-align: right'>"
-                content += pendiente.ingrintr
-                content += "</td>"
-                content += "<td style='text-align: right'>"
-                content += (pendiente.sldo + pendiente.ingrintr)
-                content += "</td>"
+//                content += "<td style='text-align: right'>"
+//                content += pendiente.ingrintr
+//                content += "</td>"
+//                content += "<td style='text-align: right'>"
+//                content += (pendiente.sldo + pendiente.ingrintr)
+//                content += "</td>"
                 content += "</tr>"
                 totalIntereses += pendiente.ingrintr
                 totalFinal += (pendiente.sldo + pendiente.ingrintr)
             }
         }
         content += "<tr style='font-weight : bold'>"
-        content += "<td>"
+        content += "<td style='text-align: right'>"
         content += "Total"
         content += "</td>"
         content += "<td style='text-align: right'>"
         content += data[0].prsnsldo
         content += "</td>"
-        content += "<td style='text-align: right'>"
-        content += totalIntereses
-        content += "</td>"
-        content += "<td style='text-align: right'>"
-        content +=  totalFinal
-        content += "</td>"
+//        content += "<td style='text-align: right'>"
+//        content += totalIntereses
+//        content += "</td>"
+//        content += "<td style='text-align: right'>"
+//        content +=  totalFinal
+//        content += "</td>"
         content += "</tr>"
         content += "</tbody>"
         content += "</table>"
@@ -4928,9 +4932,12 @@ class ReportesController extends Shield{
                 "básicos, mantenimiento, conserje, vigilancia y mejora de los bienes comunales."
         content += "<br/>"
         content += "<p style='margin-bottom: 60px'>Atentamente,</p>"
-        content += data3[0].prsnnmbr + " " + data3[0].prsnapll + "<br/>"
-        content += "ADMINISTRADOR <br/>"
-        content += "Cel: " + (data3[0].prsntelf ?: '') + ", dpto.: " + (data3[0].prsndpto ?: '') + "<br/>"
+//        content += data3[0].prsnnmbr + " " + data3[0].prsnapll + "<br/>"
+        content += (texto?.nombre ?: '') + "<br/>"
+//        content += "ADMINISTRADOR <br/>"
+        content += (texto?.cargo?.toUpperCase() ?: '')  + "<br/>"
+//        content += "Cel: " + (data3[0].prsntelf ?: '') + ", dpto.: " + (data3[0].prsndpto ?: '') + "<br/>"
+        content += (texto?.contacto ?: '') + "<br/>"
         content += nota
         content += "</div>\n"
         content += "</body>\n"

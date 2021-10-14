@@ -1297,7 +1297,7 @@
 
         $(".btnSolicitud").click(function () {
             var vlor = $("#valorHasta").val();
-            openLoader("Cargando....")
+            openLoader("Cargando....");
             $.ajax({
                 type: 'POST',
                 url: '${createLink(controller: 'reportes', action: 'tablaSolicitudPago_ajax')}',
