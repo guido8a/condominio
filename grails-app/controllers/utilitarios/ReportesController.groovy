@@ -4928,8 +4928,10 @@ class ReportesController extends Shield{
         content += "</table>"
         content += "</div>"
         content += texto2
+/*
         content += "Agradezco su oportuna atención a la presente, lo que nos ayudará a cubrir los gastos de servicios\n" +
                 "básicos, mantenimiento, conserje, vigilancia y mejora de los bienes comunales."
+*/
         content += "<br/>"
         content += "<p style='margin-bottom: 60px'>Atentamente,</p>"
 //        content += data3[0].prsnnmbr + " " + data3[0].prsnapll + "<br/>"
