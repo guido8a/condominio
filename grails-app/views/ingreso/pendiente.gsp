@@ -234,7 +234,8 @@
                     }else{
                         if(msg == 'di'){
                             closeLoader();
-                            bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i> El abono ingresado supera el valor del saldo")
+                            bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" +
+                                " El pago ingresado supera el valor del saldo")
                         }
                         else{
                             log("Error al guardar el pago","error");

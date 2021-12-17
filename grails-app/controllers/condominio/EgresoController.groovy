@@ -202,17 +202,19 @@ class EgresoController extends Shield {
 
     def guardarPagoEgreso_ajax () {
 
-        //        println("params " + params)
+//        println "params $params"
 
         def egreso = Egreso.get(params.egreso)
         def pagos = PagoEgreso.findAllByEgreso(egreso)
-        def saldo = (egreso.valor - (pagos?.valor?.sum() ?: 0))
+//        def saldo = (egreso.valor - (pagos?.valor?.sum() ?: 0))
+        def saldo = Math.round(( egreso.valor - (pagos?.valor?.sum() ?: 0)) *100)/100
         def saldo2
         def pago
 
+//        println "saldo: $saldo, saldo2: $saldo2, abono: ${params.abono.toDouble()}"
         if(params.id){
             pago = PagoEgreso.get(params.id)
-            saldo2 = saldo + (pago.valor ? pago.valor.toDouble() : 0)
+            saldo2 = saldo + Math.round((pago.valor ? pago.valor.toDouble() : 0) *100 )/100
             if(params.abono.toDouble() > saldo2){
                 render "di"
                 return
