@@ -14,6 +14,11 @@
 .centro{
     text-align: center;
 }
+.descuento{
+    text-align: center;
+    background-color: #EFEFDF;
+    color: #0b2c89;
+}
 .anterior {
     color: #776f2d;
     background-color: #dfdfdf !important;
@@ -31,7 +36,7 @@
     %{--<label>Valor: </label>--}%
     %{--</div>--}%
 
-    <div class="col-md-3">
+    <div class="col-md-3" style="color: #8f2b00">
         %{--<g:textField name="saldo_name" class="form-control derecha" readonly=""--}%
         %{--value="${g.formatNumber(number: ingreso?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
         <label>Valor: $</label>
@@ -40,19 +45,18 @@
     %{--<div class="col-md-1">--}%
     %{--<label style="color: #1b8e36">Pagado:</label>--}%
     %{--</div>--}%
-    <div class="col-md-3">
+    <div class="col-md-3" style="color: #1b8e36">
         %{--<g:textField name="saldo_name" class="form-control derecha" readonly=""--}%
         %{--value="${g.formatNumber(number: condominio.Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
-        <label style="color: #1b8e36">Pagado: $</label>
+        <label>Pagado: $</label>
         ${g.formatNumber(number: condominio.Pago.findAllByIngreso(ingreso).valor?.sum()?.toDouble() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
     </div>
-    %{--<div class="col-md-1">--}%
-    %{--<label style="color: #701b19">Saldo:</label>--}%
-    %{--</div>--}%
-    <div class="col-md-3">
-        %{--<g:textField name="saldo_name" class="form-control derecha" readonly=""--}%
-        %{--value="${g.formatNumber(number: saldo ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
-        <label style="color: #701b19">Saldo:</label>
+    <div class="col-md-2" style="color: #404bff">
+        <label>Desc.:</label>
+        ${g.formatNumber(number: condominio.Pago.findAllByIngreso(ingreso).descuento?.sum()?.toDouble() ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
+    </div>
+    <div class="col-md-2" style="color: #701b19">
+        <label >Saldo:</label>
         ${g.formatNumber(number: saldo ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}
     </div>
 
@@ -70,12 +74,13 @@
     <table class="table table-condensed table-bordered table-striped table-hover">
         <thead>
         <tr style="width: 100%">
-            <th style="width: 38%">Pago realizado por:</th>
-            <th style="width: 12%">Documento</th>
+            <th style="width: 40%">Pago realizado por:</th>
+            <th style="width: 12%">Doc.</th>
             <th style="width: 13%">Fecha Pago</th>
             <th style="width: 10%">Pago</th>
+            <th style="width: 7%">Desc.</th>
             <th style="width: 6%">Ant.</th>
-            <th class="centro" style="width: 21%"><i class="fa fa-pencil"></i></th>
+            <th class="centro" style="width: 18%"><i class="fa fa-pencil"></i></th>
         </tr>
         </thead>
         <tbody>
@@ -83,12 +88,13 @@
             %{--<tr data-id="${pagoUsuario.id}" style="background-color: #efffef !important; width: 100%"--}%
             <tr data-id="${pagoUsuario.id}" style="width: 100%"
                 class="${pagoUsuario.anterior == 'S' ? 'anterior' : 'normal'}">
-                <td style="width: 38%">${pagoUsuario?.observaciones}</td>
-                <td style="width: 12%">${pagoUsuario?.documento}</td>
+                <td style="width: 40%">${pagoUsuario?.observaciones}</td>
+                <td style="width: 6%">${pagoUsuario?.documento}</td>
                 <td style="width: 13%"><g:formatDate date="${pagoUsuario?.fechaPago}" format="dd-MM-yyyy"/></td>
                 <td class="derecha" style="width: 10%"><g:formatNumber number="${pagoUsuario?.valor}" format="##,##0" locale="en_US" maxFractionDigits="2" minFractionDigits="2"/></td>
+                <td class="descuento" style="width: 7%">${pagoUsuario?.descuento}</td>
                 <td class="centro" style="width: 6%">${pagoUsuario?.anterior}</td>
-                <td class="centro" style="width: 21%">
+                <td class="centro" style="width: 18%">
                     <g:if test="${pagoUsuario?.estado != 'R'}">
                         %{--<g:if test="${pagoUsuario?.valor != 0}">--}%
                         <g:if test="${pagoUsuario?.valor >= 0}">

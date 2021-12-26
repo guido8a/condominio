@@ -433,7 +433,8 @@ class IngresoController extends Shield {
         def condominio = Condominio.get(ingreso.obligacion.condominio.id)
         def talonario = Talonario.findByCondominioAndEstado(condominio,'V')
 
-        def saldo = Math.round(ingreso?.valor*100)/100 - Math.round((pagos.valor?.sum() ?: 0) * 100)/100
+        def saldo = Math.round(ingreso?.valor*100)/100 - Math.round((pagos.valor?.sum() ?: 0) * 100)/100 -
+                Math.round((pagos.descuento?.sum() ?: 0) * 100)/100
 
         return[ingreso: ingreso, pagos: pagos, saldo: saldo, condominio: condominio, talonario: talonario]
     }
