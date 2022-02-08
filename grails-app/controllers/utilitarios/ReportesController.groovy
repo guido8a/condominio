@@ -5808,8 +5808,10 @@ class ReportesController extends Shield{
         sheet.setColumnView(0, 60)
         sheet.setColumnView(1, 60)
         sheet.setColumnView(2, 12)
-        sheet.setColumnView(3, 10)
-        sheet.setColumnView(4, 20)
+        sheet.setColumnView(3, 12)
+        sheet.setColumnView(4, 12)
+        sheet.setColumnView(5, 10)
+        sheet.setColumnView(6, 20)
         // inicia textos y numeros para asocias a columnas
 
         def label
@@ -5827,22 +5829,26 @@ class ReportesController extends Shield{
         label = new Label(0, 4, "Proveedor: ", times16format); sheet.addCell(label);
         label = new Label(1, 4, "Descripción de egresos", times16format); sheet.addCell(label);
         label = new Label(2, 4, "Fecha", times16format); sheet.addCell(label);
-        label = new Label(3, 4, "Valor", times16format); sheet.addCell(label);
-        label = new Label(4, 4, "Factura", times16format); sheet.addCell(label);
+        label = new Label(3, 4, "Egreso", times16format); sheet.addCell(label);
+        label = new Label(4, 4, "Cheque", times16format); sheet.addCell(label);
+        label = new Label(5, 4, "Valor", times16format); sheet.addCell(label);
+        label = new Label(6, 4, "Factura", times16format); sheet.addCell(label);
 
         egresos.eachWithIndex {i, j->
             label = new Label(0, fila, i.prve.toString()); sheet.addCell(label);
             label = new Label(1, fila, i.egrsdscr.toString()); sheet.addCell(label);
             label = new Label(2, fila, i?.egrsfcha?.toString()); sheet.addCell(label);
-            number = new Number(3, fila, i?.egrsvlor); sheet.addCell(number);
-            label = new Label(4, fila, i?.egrsfctr?.toString()); sheet.addCell(label);
+            label = new Label(3, fila, i?.pgegdcmt?.toString()); sheet.addCell(label);
+            label = new Label(4, fila, i?.pgegchqe?.toString()); sheet.addCell(label);
+            number = new Number(5, fila, i?.egrsvlor); sheet.addCell(number);
+            label = new Label(6, fila, i?.egrsfctr?.toString()); sheet.addCell(label);
             fila++
         }
 
         label = new Label(0, fila, ''); sheet.addCell(label);
         label = new Label(1, fila, ''); sheet.addCell(label);
-        label = new Label(2, fila,'TOTAL'); sheet.addCell(label);
-        number = new Number(3, fila, totalEgresos); sheet.addCell(number);
+        label = new Label(4, fila,'TOTAL'); sheet.addCell(label);
+        number = new Number(5, fila, totalEgresos); sheet.addCell(number);
 
         workbook.write();
         workbook.close();
