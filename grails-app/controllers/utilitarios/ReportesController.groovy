@@ -2227,20 +2227,24 @@ class ReportesController extends Shield{
             def fondo = new Color(240, 248, 250);
             def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
 
-            def tablaHeaderDetalles = new PdfPTable(4);
+            def tablaHeaderDetalles = new PdfPTable(6);
             tablaHeaderDetalles.setWidthPercentage(100);
-            tablaHeaderDetalles.setWidths(arregloEnteros([38,38,12,12]))
+//            tablaHeaderDetalles.setWidths(arregloEnteros([38,38,12,12]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([30,30,9,9,12,10]))
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Proveedor", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Descripción de Egresos", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Número egreso", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Cheque", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
-            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
+            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 6, pl: 0])
         }
 
-        tablaDetalles = new PdfPTable(4);
+        tablaDetalles = new PdfPTable(6);
         tablaDetalles.setWidthPercentage(100);
-        tablaDetalles.setWidths(arregloEnteros([38,38,12,12]))
+//        tablaDetalles.setWidths(arregloEnteros([38,38,12,12]))
+        tablaDetalles.setWidths(arregloEnteros([30,30,9,9,12,10]))
         tablaDetalles.setSpacingAfter(1f);
 
 
@@ -2252,17 +2256,19 @@ class ReportesController extends Shield{
         egresos.each {egreso ->
             addCellTabla(tablaDetalles, new Paragraph(egreso.prve, fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(egreso.egrsdscr, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(egreso.pgegdcmt, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(egreso.pgegchqe, fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(egreso.egrsfcha.toString(), fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(egreso.egrsvlor.toString(), fontTd10), frmtNmro)
         }
 
         def tablaTotal = new PdfPTable(2);
         tablaTotal.setWidthPercentage(100);
-        tablaTotal.setWidths(arregloEnteros([88, 12]))
+        tablaTotal.setWidths(arregloEnteros([90, 10]))
 
         addCellTabla(tablaTotal, new Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE])
-        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
+        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 6, pl: 0])
 
         document.add(tablaDetalles)
         document.close();
