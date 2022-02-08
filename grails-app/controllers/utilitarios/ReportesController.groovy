@@ -2230,13 +2230,13 @@ class ReportesController extends Shield{
             def tablaHeaderDetalles = new PdfPTable(6);
             tablaHeaderDetalles.setWidthPercentage(100);
 //            tablaHeaderDetalles.setWidths(arregloEnteros([38,38,12,12]))
-            tablaHeaderDetalles.setWidths(arregloEnteros([30,30,9,9,12,10]))
+            tablaHeaderDetalles.setWidths(arregloEnteros([30,30,11,9,10,10]))
 
             addCellTabla(tablaHeaderDetalles, new Paragraph("Proveedor", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Descripción de Egresos", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Número egreso", fontTh), frmtHd)
-            addCellTabla(tablaHeaderDetalles, new Paragraph("Cheque", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Egreso", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new Paragraph("Cheque", fontTh), frmtHd)
             addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
             addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 6, pl: 0])
         }
@@ -2244,7 +2244,7 @@ class ReportesController extends Shield{
         tablaDetalles = new PdfPTable(6);
         tablaDetalles.setWidthPercentage(100);
 //        tablaDetalles.setWidths(arregloEnteros([38,38,12,12]))
-        tablaDetalles.setWidths(arregloEnteros([30,30,9,9,12,10]))
+        tablaDetalles.setWidths(arregloEnteros([30,30,11,9,10,10]))
         tablaDetalles.setSpacingAfter(1f);
 
 
@@ -2256,9 +2256,9 @@ class ReportesController extends Shield{
         egresos.each {egreso ->
             addCellTabla(tablaDetalles, new Paragraph(egreso.prve, fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(egreso.egrsdscr, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(egreso.egrsfcha.toString(), fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(egreso.pgegdcmt, fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(egreso.pgegchqe, fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new Paragraph(egreso.egrsfcha.toString(), fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(egreso.egrsvlor.toString(), fontTd10), frmtNmro)
         }
 
