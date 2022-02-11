@@ -5373,6 +5373,8 @@ class ReportesController extends Shield{
                 "alicuotaNueva_${new Date().format("dd-MM-yyyy")}.pdf")
     }
 
+
+    /* todo: eliminar función mejoras y usar solo egresos*/
     def mantenimientoMejoras(){
 //        println("params " + params)
 
@@ -5381,11 +5383,11 @@ class ReportesController extends Shield{
 
 //        println "fechas: '${fechaDesde}','${fechaHasta}'"
 
-        def sql3 = "select * from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mantenimiento';"
+        def sql3 = "select * from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mantenimiento';"
         def cn3 = dbConnectionService.getConnection()
         def mantenimientos = cn3.rows(sql3.toString())
 
-        def sql6 = "select * from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mejoras';"
+        def sql6 = "select * from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mejoras';"
         def cn6 = dbConnectionService.getConnection()
         def mejoras = cn6.rows(sql6.toString())
 
@@ -5452,11 +5454,11 @@ class ReportesController extends Shield{
         tablaTotalMantenimiento.setWidthPercentage(100);
         tablaTotalMantenimiento.setWidths(arregloEnteros([88, 12]))
 
-        def sql4 = "select sum(egrsvlor) from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mejoras';"
+        def sql4 = "select sum(egrsvlor) from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mejoras';"
         def cn4 = dbConnectionService.getConnection()
         def totalMejoras = cn4.rows(sql4.toString())
 
-        def sql5 = "select sum(egrsvlor) from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mantenimiento';"
+        def sql5 = "select sum(egrsvlor) from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mantenimiento';"
         def cn5 = dbConnectionService.getConnection()
         def totalMantenimiento = cn5.rows(sql5.toString())
 
@@ -5499,7 +5501,7 @@ class ReportesController extends Shield{
         tablaTotal.setWidthPercentage(100);
         tablaTotal.setWidths(arregloEnteros([88, 12]))
 
-        def sql7 = "select sum(egrsvlor) from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}');"
+        def sql7 = "select sum(egrsvlor) from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}');"
         def cn7= dbConnectionService.getConnection()
         def total = cn7.rows(sql7.toString())
 
@@ -5518,6 +5520,117 @@ class ReportesController extends Shield{
         encabezadoYnumeracion(b, session.condominio.nombre,"Mantenimiento y Mejoras del ${fechaDesde} al ${fechaHasta}", "mantenimientoMejoras_${new Date().format("dd-MM-yyyy")}.pdf")
     }
 
+    def egresosPorTipo(){
+//        println("params " + params)
+
+        def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
+        def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
+
+
+        def sql = "select * from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') order by tpgsdscr, egrsfcha"
+        def cn = dbConnectionService.getConnection()
+        def egresos = cn.rows(sql.toString())
+        cn.close()
+        println "sql: $sql"
+
+
+        def baos = new ByteArrayOutputStream()
+        def titulo = new Color(40, 140, 180)
+        com.lowagie.text.Font fontTitulo = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 12, com.lowagie.text.Font.BOLD, titulo);
+        com.lowagie.text.Font fontTitulo16 = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 16, com.lowagie.text.Font.BOLD, titulo);
+        com.lowagie.text.Font info = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 10, com.lowagie.text.Font.NORMAL)
+        com.lowagie.text.Font fontTitle = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 14, com.lowagie.text.Font.BOLD);
+        com.lowagie.text.Font fontTitle1 = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 10, com.lowagie.text.Font.BOLD);
+        com.lowagie.text.Font fontTh = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 10, com.lowagie.text.Font.BOLD);
+        com.lowagie.text.Font fontTd = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 10, com.lowagie.text.Font.NORMAL);
+        com.lowagie.text.Font fontTd10 = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 10, com.lowagie.text.Font.NORMAL);
+        com.lowagie.text.Font fontThTiny = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 7, com.lowagie.text.Font.BOLD);
+        com.lowagie.text.Font fontTdTiny = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 7, com.lowagie.text.Font.NORMAL);
+
+        def fondoTotal = new Color(240, 240, 240);
+
+        com.lowagie.text.Document document
+        document = new com.lowagie.text.Document(com.lowagie.text.PageSize.A4);
+        document.setMargins(50, 30, 100, 45)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = com.lowagie.text.pdf.PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        com.lowagie.text.pdf.PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Gastos por Tipo de Egreso del ${fechaDesde} al ${fechaHasta}");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        com.lowagie.text.pdf.PdfPTable tablaDetalles = null
+
+        def printHeaderDetalle = {
+            def fondo = new Color(240, 248, 250);
+            def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: com.lowagie.text.Element.ALIGN_CENTER, valign: com.lowagie.text.Element.ALIGN_MIDDLE]
+
+            def tablaHeaderDetalles = new com.lowagie.text.pdf.PdfPTable(6);
+            tablaHeaderDetalles.setWidthPercentage(100);
+            tablaHeaderDetalles.setWidths(arregloEnteros([25,35,12,10,10,10]))
+
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Proveedor", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Descripción", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Fecha", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Egreso", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Cheque", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Valor", fontTh), frmtHd)
+
+            document.add(tablaHeaderDetalles)
+        }
+
+        tablaDetalles = new com.lowagie.text.pdf.PdfPTable(6);
+        tablaDetalles.setWidthPercentage(100);
+        tablaDetalles.setWidths(arregloEnteros([25,35,12,10,10,10]))
+        tablaDetalles.setSpacingAfter(1f);
+
+        def frmtFondo = [align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, bg: fondoTotal]
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE]
+        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE]
+
+        printHeaderDetalle()
+
+        def tipo = "", suma=0, sumaTotl=0
+        egresos.each {e ->
+            if(e.tpgsdscr != tipo) {
+                if(tipo != "") {
+                    addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph("Total ${tipo}:", fontTh), frmtNmro + [colspan: 5])
+                    addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(suma.toString(), fontTh), frmtNmro)
+                }
+                tipo = e.tpgsdscr
+                suma = 0
+                addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph("Grupo de gasto: " + tipo, fontTh), frmtFondo + [colspan: 6])
+            }
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(e.prve, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(e.egrsdscr, fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(e.egrsfcha.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(e.pgegdcmt.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(e.pgegchqe.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(e.egrsvlor.toString(), fontTd10), frmtNmro)
+
+            suma += e.egrsvlor
+            sumaTotl += e.egrsvlor
+        }
+
+        addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph("Total ${tipo}:", fontTh), frmtNmro + [colspan: 5])
+        addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(suma.toString(), fontTh), frmtNmro)
+
+        addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph("Gran Total:", fontTh), frmtNmro + [colspan: 5])
+        addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(sumaTotl.toString(), fontTh), frmtNmro)
+
+        document.add(tablaDetalles)
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+
+        encabezadoYnumeracion(b, session.condominio.nombre,"Mantenimiento y Mejoras del ${fechaDesde} al ${fechaHasta}", "mantenimientoMejoras_${new Date().format("dd-MM-yyyy")}.pdf")
+    }
+
     def pdfMantenimientoMejoras(desde,hasta){
 //        println("params " + params)
 
@@ -5529,11 +5642,11 @@ class ReportesController extends Shield{
 
 //        println "fechas: '${fechaDesde}','${fechaHasta}'"
 
-        def sql3 = "select * from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mantenimiento';"
+        def sql3 = "select * from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mantenimiento';"
         def cn3 = dbConnectionService.getConnection()
         def mantenimientos = cn3.rows(sql3.toString())
 
-        def sql6 = "select * from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mejoras';"
+        def sql6 = "select * from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mejoras';"
         def cn6 = dbConnectionService.getConnection()
         def mejoras = cn6.rows(sql6.toString())
 
@@ -5608,11 +5721,11 @@ class ReportesController extends Shield{
         tablaTotalMantenimiento.setWidthPercentage(100);
         tablaTotalMantenimiento.setWidths(arregloEnteros([88, 12]))
 
-        def sql4 = "select sum(egrsvlor) from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mejoras';"
+        def sql4 = "select sum(egrsvlor) from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mejoras';"
         def cn4 = dbConnectionService.getConnection()
         def totalMejoras = cn4.rows(sql4.toString())
 
-        def sql5 = "select sum(egrsvlor) from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mantenimiento';"
+        def sql5 = "select sum(egrsvlor) from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}') where tpgsdscr = 'Mantenimiento';"
         def cn5 = dbConnectionService.getConnection()
         def totalMantenimiento = cn5.rows(sql5.toString())
 
@@ -5655,7 +5768,7 @@ class ReportesController extends Shield{
         tablaTotal.setWidthPercentage(100);
         tablaTotal.setWidths(arregloEnteros([88, 12]))
 
-        def sql7 = "select sum(egrsvlor) from mejoras(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}');"
+        def sql7 = "select sum(egrsvlor) from egresos(${session.condominio.id}, '${fechaDesde}', '${fechaHasta}');"
         def cn7= dbConnectionService.getConnection()
         def total = cn7.rows(sql7.toString())
 

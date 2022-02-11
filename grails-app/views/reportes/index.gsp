@@ -225,6 +225,11 @@
                 <i class="fa fa-archive fa-5x"></i><br/>
                 Caja Chica
             </a>
+            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#tipoEgreso"
+               title="Detalle egresos clasificados por tipo">
+                <i class="fa fa-sign-out fa-5x"></i><br/>
+                Egresos por tipo de Gasto
+            </a>
         </p>
     </div>
 </div>
@@ -1125,6 +1130,53 @@
 </div>
 
 
+<div class="modal fade col-md-12 col-xs-12" id="tipoEgreso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelTG">Gastos clasificados por tipo de egreso</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Desde</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaDesde_DP_name" id="fechaDesde_TG" class="datepicker form-control" value="${new Date() - 30}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Hasta</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaHasta_DP_name" id="fechaHasta_TG" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnTipoEgreso btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 
 <script type="text/javascript">
@@ -1681,6 +1733,34 @@
                     if(msg == 'ok'){
                         openLoader("Cargando...");
                         location.href = "${g.createLink(controller:'reportes2' , action: 'imprimirCajaChica')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                        closeLoader();
+                    }else{
+                        bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
+                        return false;
+                    }
+                }
+            });
+        }
+    });
+
+    $(".btnTipoEgreso").click(function () {
+        var fechaDesde = $("#fechaDesde_TG").val();
+        var fechaHasta = $("#fechaHasta_TG").val();
+
+        if(fechaDesde == '' || fechaHasta == ''){
+            bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
+        }else{
+            $.ajax({
+                type: 'POST',
+                url: '${createLink(controller: 'reportes', action: 'revisarFecha_ajax')}',
+                data:{
+                    desde: fechaDesde,
+                    hasta: fechaHasta
+                },
+                success: function (msg){
+                    if(msg == 'ok'){
+                        openLoader("Cargando...");
+                        location.href = "${g.createLink(controller:'reportes' , action: 'egresosPorTipo')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
                         closeLoader();
                     }else{
                         bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
