@@ -51,7 +51,7 @@
                     Fecha Pago
                 </label>
                 <div class="col-md-4">
-                    <elm:datepicker name="fechaPago"  class="datepicker form-control required" value="${pago?.fechaPago}"  />
+                    <elm:datepicker name="fechaPago" maxDate="${new Date()}" class="datepicker form-control required" value="${pago?.fechaPago}"  />
                 </div>
             </span>
         </div>
