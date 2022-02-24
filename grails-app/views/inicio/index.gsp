@@ -145,6 +145,21 @@
             </div>
         </a>
 
+        <a href= "${createLink(controller:'documento', action: 'list', id: session.condominio.id)}" style="text-decoration: none">
+            <div class="ui-corner-all item fuera">
+                <div class="ui-corner-all item">
+                    <div class="imagen">
+                        <img src="${resource(dir: 'images', file: 'mantenimiento.png')}" width="100%" height="100%"/>
+                    </div>
+
+                    <div class="texto">
+                        <span class="text-success"><strong>Documentos</strong></span>
+                    </div>
+
+                </div>
+            </div>
+        </a>
+
     </div>
 </div>
 

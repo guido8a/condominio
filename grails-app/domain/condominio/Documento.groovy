@@ -26,6 +26,8 @@ class Documento {
      */
     String ruta
 
+    Date fecha
+
     /**
      * Define los campos que se van a ignorar al momento de hacer logs
      */
@@ -48,6 +50,7 @@ class Documento {
             clave column: 'dcmtclve'
             resumen column: 'dcmtrsmn'
             ruta column: 'dcmtruta'
+            fecha column: 'dcmtfcha'
         }
     }
 
@@ -61,6 +64,7 @@ class Documento {
         clave(size: 1..63, blank: true, nullable: true, attributes: [mensaje: 'Palabras clave'])
         resumen(size: 1..1024, blank: true, nullable: true, attributes: [mensaje: 'Resumen'])
         ruta(size: 1..255, blank: true, nullable: true, attributes: [mensaje: 'Ruta del documento'])
+        fecha(blank: true, nullable: true, attributes: [mensaje: 'Fecha del documento'])
     }
 
     /**
