@@ -261,7 +261,7 @@
                 }
             });
             if (error) {
-                bootbox.alert("llene todos los campos")
+                bootbox.alert("<i class='fa fa-exclamation-triangle fa-2x text-warning'></i> Para guardar el documento debe llenar todos los campos")
             } else {
                 /*Aqui subir*/
                 upload($(this).attr("clase") * 1 - 1);
@@ -364,8 +364,8 @@
     function deleteRow(itemId) {
         bootbox.dialog({
             title   : "Alerta",
-            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>" +
-            "¿Está seguro que desea eliminar el Documento seleccionado? Esta acción no se puede deshacer.</p>",
+            message : "<i class='fa fa-trash fa-3x pull-left text-danger text-shadow'></i><p>" +
+            "¿Está seguro que desea eliminar el documento seleccionado? Esta acción no se puede deshacer.</p>",
             buttons : {
                 cancelar : {
                     label     : "Cancelar",
@@ -380,19 +380,19 @@
                         openLoader("Eliminando Documento");
                         $.ajax({
                             type    : "POST",
-                            url     : '${createLink(controller:'documento', action:'delete_ajax')}',
+                            url     : '${createLink(controller:'documento', action:'borrarArchivo_ajax')}',
                             data    : {
                                 id : itemId
                             },
                             success : function (msg) {
-                                var parts = msg.split("*");
-                                log(parts[1], parts[0] == "SUCCESS" ? "success" : "error"); // log(msg, type, title, hide)
-                                if (parts[0] == "SUCCESS") {
+                                closeLoader();
+                                if(msg == 'ok'){
+                                    log("Documento borrado correctamente","success");
                                     setTimeout(function() {
                                         location.reload(true);
                                     }, 1000);
-                                } else {
-                                    closeLoader();
+                                }else{
+                                    log("Error al borrar el archivo","error");
                                 }
                             }
                         });
@@ -402,12 +402,72 @@
         });
     }
 
-    $(function () {
 
-        $(".btnCrear").click(function() {
-            createEditRow();
+    function submitFormDocumento() {
+        var $form = $("#frmDocumento");
+        var $btn = $("#dlgCreateEdit").find("#btnSave");
+        if ($form.valid()) {
+            openLoader("Guardando...");
+            $.ajax({
+                type    : "POST",
+                url     : $form.attr("action"),
+                data    : $form.serialize(),
+                success : function (msg) {
+                    closeLoader();
+                        if(msg == 'ok'){
+                            log("Guardado correctamente","success");
+                            setTimeout(function() {
+                                location.reload(true);
+                            }, 1000);
+                        }else{
+                            log("Error al guardar la información","error")
+                        }
+                }
+            });
+        } else {
             return false;
-        });
+        } //else
+    }
+
+
+    function createEditRow(id) {
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'documento', action:'form_ajax')}",
+            data    : {
+                id: id
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgCreateEdit",
+                    title   : "Editar documento",
+                    class   : "modal-lg",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return submitFormDocumento();
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 500);
+            } //success
+        }); //ajax
+    } //createEdit
+
+    $(function () {
 
         $("tbody>tr").contextMenu({
             items  : {
@@ -421,16 +481,14 @@
                     action : function ($element) {
                         var id = $element.data("id");
                         location.href="${createLink(controller: 'documento', action: 'descargar')}/" + id
-                        %{--$.ajax({--}%
-                            %{--type    : "POST",--}%
-                            %{--url     : "${createLink(controller:'documento', action:'descargar')}",--}%
-                            %{--data    : {--}%
-                                %{--id : id--}%
-                            %{--},--}%
-                            %{--success : function (msg) {--}%
-
-                            %{--}--}%
-                        %{--});--}%
+                    }
+                },
+                editar      : {
+                    label  : "Editar",
+                    icon   : "fa fa-edit",
+                    action : function ($element) {
+                        var id = $element.data("id");
+                        createEditRow(id);
                     }
                 },
                 eliminar : {

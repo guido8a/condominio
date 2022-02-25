@@ -168,46 +168,83 @@ class DocumentoController  {
         def anio = doc.fecha.format("yyyy")
 
 
-            def path = servletContext.getRealPath("/") + "documentos/" + condominio.id + "/" + anio + "/" + doc.ruta
-            def tipo = doc.ruta.split("\\.")
-            tipo = tipo[1]
-            switch (tipo) {
-                case "jpeg":
-                case "gif":
-                case "jpg":
-                case "bmp":
-                case "png":
-                    tipo = "application/image"
-                    break;
-                case "pdf":
-                    tipo = "application/pdf"
-                    break;
-                case "doc":
-                case "docx":
-                case "odt":
-                    tipo = "application/msword"
-                    break;
-                case "xls":
-                case "xlsx":
-                    tipo = "application/vnd.ms-excel"
-                    break;
-                default:
-                    tipo = "application/pdf"
-                    break;
-            }
-            try {
-                def file = new File(path)
-                def b = file.getBytes()
-                response.setContentType(tipo)
-                response.setHeader("Content-disposition", "attachment; filename=" + (doc.ruta))
-                response.setContentLength(b.length)
-                response.getOutputStream().write(b)
-            } catch (e) {
-                response.sendError(404)
-            }
+        def path = servletContext.getRealPath("/") + "documentos/" + condominio.id + "/" + anio + "/" + doc.ruta
+        def tipo = doc.ruta.split("\\.")
+        tipo = tipo[1]
+        switch (tipo) {
+            case "jpeg":
+            case "gif":
+            case "jpg":
+            case "bmp":
+            case "png":
+                tipo = "application/image"
+                break;
+            case "pdf":
+                tipo = "application/pdf"
+                break;
+            case "doc":
+            case "docx":
+            case "odt":
+                tipo = "application/msword"
+                break;
+            case "xls":
+            case "xlsx":
+                tipo = "application/vnd.ms-excel"
+                break;
+            default:
+                tipo = "application/pdf"
+                break;
+        }
+        try {
+            def file = new File(path)
+            def b = file.getBytes()
+            response.setContentType(tipo)
+            response.setHeader("Content-disposition", "attachment; filename=" + (doc.ruta))
+            response.setContentLength(b.length)
+            response.getOutputStream().write(b)
+        } catch (e) {
+            response.sendError(404)
+        }
+    }
+
+    def borrarArchivo_ajax() {
+        println("borrar archivo " + params)
+        def documento = Documento.get(params.id)
+        def condominio = documento.condominio
+        def anio = documento.fecha.format("yyyy")
+
+        def path = servletContext.getRealPath("/") + "documentos/" + condominio.id + "/" + anio + "/" + documento.ruta
+
+        try{
+            documento.delete(flush: true)
+            new File(path).delete()
+            render "ok"
+        }catch(e){
+            println("error al borrar el archivo " + e)
+            render "no"
+        }
     }
 
 
+    def form_ajax(){
+        println("params " + params)
+        def documento = Documento.get(params.id)
+        return[documento: documento]
+    }
 
-    
+
+    def guardarInfoDocumento_ajax(){
+        println("params " + params)
+        def documento = Documento.get(params.id)
+        documento.properties = params
+
+        if(!documento.save(flush:true)){
+            println("error al guardar " + documento.errors)
+            render "no"
+        }else{
+            render "ok"
+        }
+
+    }
+
 }
