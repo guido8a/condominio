@@ -30,6 +30,17 @@
             </span>
         </div>
 
+        <div class="form-group keeptogether ${hasErrors(bean: documento, field: 'tipoDocumento', 'error')} required">
+            <span class="grupo">
+                <label for="descripcion" class="col-md-3 control-label">
+                    Tipo de Documento
+                </label>
+                <div class="col-md-7">
+                    <g:select name="tipoDocumento" from="${condominio.TipoDocumento.list()}" optionValue="descripcion" optionKey="id" class="form-control" value="${documento?.tipoDocumento?.id}"/>
+                </div>
+            </span>
+        </div>
+
 
         <div class="form-group keeptogether ${hasErrors(bean: documento, field: 'descripcion', 'error')} required">
             <span class="grupo">
