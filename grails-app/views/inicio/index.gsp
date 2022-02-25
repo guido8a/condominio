@@ -86,7 +86,7 @@
     </h2>
     </div>
 
-    <div class="body ui-corner-all" style="width: 680px;position: relative;margin: auto;margin-top: 40px;height: 280px; ">
+    <div class="body ui-corner-all" style="width: 1020px;position: relative;margin: auto;margin-top: 40px;height: 280px; ">
 
 
         <a href= "${createLink(controller:'vivienda', action: 'index')}" style="text-decoration: none">
@@ -130,6 +130,36 @@
             </div>
         </a>
 
+        <a href= "${createLink(controller:'documento', action: 'list', id: session.condominio.id)}" style="text-decoration: none">
+            <div class="ui-corner-all item fuera">
+                <div class="ui-corner-all item">
+                    <div class="imagen">
+                        <img src="${resource(dir: 'images', file: 'documentos.png')}" width="100%" height="100%"/>
+                    </div>
+
+                    <div class="texto">
+                        <span class="text-success"><strong>Documentos del condominio: Reglamento, actas, etc.</strong></span>
+                    </div>
+
+                </div>
+            </div>
+        </a>
+
+        <a href= "${createLink(controller:'egreso', action: 'saldos', id: session.condominio.id)}" style="text-decoration: none">
+            <div class="ui-corner-all item fuera">
+                <div class="ui-corner-all item">
+                    <div class="imagen">
+                        <img src="${resource(dir: 'images', file: 'gastos.png')}" width="100%" height="100%"/>
+                    </div>
+
+                    <div class="texto">
+                        <span class="text-success"><strong>Consultar por fechas: Ingresos, Egresos y Saldos</strong></span>
+                    </div>
+
+                </div>
+            </div>
+        </a>
+
         <a href= "${createLink(controller:'empleado', action: 'list', id: session.condominio.id)}" style="text-decoration: none">
             <div class="ui-corner-all item fuera">
                 <div class="ui-corner-all item">
@@ -139,21 +169,6 @@
 
                     <div class="texto">
                         <span class="text-success"><strong>Nómina del Condominio - Empleados</strong></span>
-                    </div>
-
-                </div>
-            </div>
-        </a>
-
-        <a href= "${createLink(controller:'documento', action: 'list', id: session.condominio.id)}" style="text-decoration: none">
-            <div class="ui-corner-all item fuera">
-                <div class="ui-corner-all item">
-                    <div class="imagen">
-                        <img src="${resource(dir: 'images', file: 'mantenimiento.png')}" width="100%" height="100%"/>
-                    </div>
-
-                    <div class="texto">
-                        <span class="text-success"><strong>Documentos</strong></span>
                     </div>
 
                 </div>

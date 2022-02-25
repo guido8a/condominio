@@ -1,6 +1,7 @@
 package condominio
 
 import groovy.json.JsonBuilder
+import seguridad.Shield
 
 import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
@@ -12,7 +13,7 @@ import static java.awt.RenderingHints.VALUE_INTERPOLATION_BICUBIC
 /**
  * Controlador que muestra las pantallas de manejo de Documento
  */
-class DocumentoController  {
+class DocumentoController  extends Shield {
 
     def list(){
         def condominio = Condominio.get(params.id)
@@ -26,7 +27,8 @@ class DocumentoController  {
 
         def condominio = Condominio.get(params.id)
         def anio = new Date().format("yyyy")
-        def path = servletContext.getRealPath("/") + "documentos/" + condominio?.id + "/" + anio + "/"
+//        def path = servletContext.getRealPath("/") + "documentos/" + condominio?.id + "/" + anio + "/"
+        def path = "/var/condominio/documentos/${condominio?.id}/"
         new File(path).mkdirs()
         def f = request.getFile('file')  //archivo = name del input type file
         def imageContent = ['image/png': "png", 'image/jpeg': "jpeg", 'image/jpg': "jpg"]
@@ -168,7 +170,8 @@ class DocumentoController  {
         def anio = doc.fecha.format("yyyy")
 
 
-        def path = servletContext.getRealPath("/") + "documentos/" + condominio.id + "/" + anio + "/" + doc.ruta
+//        def path = servletContext.getRealPath("/") + "documentos/" + condominio.id + "/" + anio + "/" + doc.ruta
+        def path = "/var/condominio/documentos/${condominio?.id}/${doc.ruta}"
         def tipo = doc.ruta.split("\\.")
         tipo = tipo[1]
         switch (tipo) {
@@ -213,7 +216,8 @@ class DocumentoController  {
         def condominio = documento.condominio
         def anio = documento.fecha.format("yyyy")
 
-        def path = servletContext.getRealPath("/") + "documentos/" + condominio.id + "/" + anio + "/" + documento.ruta
+//        def path = servletContext.getRealPath("/") + "documentos/" + condominio.id + "/" + anio + "/" + documento.ruta
+        def path = "/var/condominio/documentos/${condominio?.id}/${documento.ruta}"
 
         try{
             documento.delete(flush: true)
