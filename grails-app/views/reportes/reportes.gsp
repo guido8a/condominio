@@ -43,67 +43,60 @@
 
 <div class="row">
     <div class="col-md-12 col-xs-12">
-        <p>
+        <div class="col-md-4 col-xs-4">
             <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#balance">
                 <i class="fa fa-book fa-5x"></i><br/>
-                Balance
+                Balance de<br/>Resultados
             </a>
-            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#libroMayor">
-                <i class="fa fa-home fa-5x"></i><br/>
-                Detalle de Obras
-            </a>
-        </p>
-    </div>
-</div>
-
-
-
-<div class="row">
-    <div class="col-md-12 col-xs-12">
-        <p>
-            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#detalleIngresos" title="Detalle de ingresos">
+        </div>
+            <div class="col-md-4 col-xs-4">
+            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#detalleIngresos" title="Detalle de ingresos">
                 <i class="fa fa-sign-in fa-5x"></i><br/>
-                Detalle Ingresos
+                Detalle<br/>Ingresos
             </a>
-            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#detalleEgresos">
-                <i class="fa fa-sign-out fa-5x"></i><br/>
-                Detalle Egresos
-            </a>
-        </p>
+            </div>
+                <div class="col-md-4 col-xs-4">
+        <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#detalleEgresos">
+            <i class="fa fa-sign-out fa-5x"></i><br/>
+            Detalle<br/>Egresos
+        </a>
+                </div>
+
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12 col-xs-12">
-        <p>
-
-        </p>
+        <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#mantenimientoMejoras"
+           title="Mantenimiento y mejoras">
+            <i class="fa fa-wrench fa-5x"></i><br/>
+            Mantenimiento y mejoras
+        </a>
+        <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#libroMayor">
+            <i class="fa fa-home fa-5x"></i><br/>
+            Detalle de Obras
+        </a>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-12 col-xs-12">
-        <p>
-            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#mantenimientoMejoras"
-               title="Mantenimiento y mejoras">
-                <i class="fa fa-wrench fa-5x"></i><br/>
-                Gastos por mantenimiento y mejoras
-            </a>
-        </p>
+    <div class="col-md-6 col-xs-6">
+        <a href="#" class="link btn btn-info btn-ajax" id="btnCondominos" data-toggle="modal"
+           data-target="#gestorContable">
+            <i class="fa fa-building-o fa-5x"></i><br/>
+            Listado de Condóminos
+        </a>
     </div>
+    <div class="col-md-6 col-xs-6">
+        <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#modalDeudas"
+           title="Estado de cuenta de los condóminos">
+            <i class="fa fa-file-text-o fa-5x"></i><br/>
+            Deudas Pendientes
+        </a>
+    </div>
+
 </div>
 
-
-<div class="row">
-    <div class="col-md-12 col-xs-12">
-        <p>
-            <a href="#" class="link btn btn-success btn-ajax" id="btnCondominos" data-toggle="modal" data-target="#gestorContable">
-                <i class="fa fa-building-o fa-5x"></i><br/>
-                Listado de Condóminos
-            </a>
-        </p>
-    </div>
-</div>
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 %{--//dialog de contabilidad--}%

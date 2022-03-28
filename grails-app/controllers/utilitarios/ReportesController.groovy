@@ -79,6 +79,7 @@ import java.awt.image.BufferedImage
 class ReportesController extends Shield{
 
     def dbConnectionService
+    
     def reportesService
 
     def tx_footer = "Sistema de Administración de Condominios " + " " * 136 + "www.tedein.com.ec/condominio"
