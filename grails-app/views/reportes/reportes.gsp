@@ -41,6 +41,21 @@
 <body>
 
 
+<div class="row">
+    <div class="col-md-12 col-xs-12">
+        <p>
+            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#balance">
+                <i class="fa fa-book fa-5x"></i><br/>
+                Balance
+            </a>
+            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#libroMayor">
+                <i class="fa fa-home fa-5x"></i><br/>
+                Detalle de Obras
+            </a>
+        </p>
+    </div>
+</div>
+
 
 
 <div class="row">
@@ -61,17 +76,23 @@
 <div class="row">
     <div class="col-md-12 col-xs-12">
         <p>
-            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#libroMayor">
-                <i class="fa fa-home fa-5x"></i><br/>
-                Detalle de Obras
-            </a>
-            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#ingresosEgresos">
-                <i class="fa fa-line-chart fa-5x"></i><br/>
-                Ingresos y Egresos
+
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-xs-12">
+        <p>
+            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#mantenimientoMejoras"
+               title="Mantenimiento y mejoras">
+                <i class="fa fa-wrench fa-5x"></i><br/>
+                Gastos por mantenimiento y mejoras
             </a>
         </p>
     </div>
 </div>
+
 
 <div class="row">
     <div class="col-md-12 col-xs-12">
@@ -80,7 +101,6 @@
                 <i class="fa fa-building-o fa-5x"></i><br/>
                 Listado de Condóminos
             </a>
-
         </p>
     </div>
 </div>
@@ -365,11 +385,165 @@
     </div>
 </div>
 
+<div class="modal fade col-md-12 col-xs-12" id="balance" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelB">Balance General</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-5 col-xs-2">
+                        <label>Desde</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker id="fechaDesdeB" class="datepicker form-control" value="${new Date() - 30}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-5 col-xs-2">
+                        <label>Hasta</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker id="fechaHastaB" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-5 col-xs-4">
+                        <label>Depósitos no registrados a la fecha de cierre del reporte</label>
+                    </div>
+                    <div class="col-md-3 col-xs-7">
+                        <g:textField name="depos" class="form-control"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1 col-xs-1"></div>
+                    <div class="col-md-5 col-xs-4">
+                        <label>Balance con detalle de valores por mes</label>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                        <g:checkBox name="detalleMes"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnImprimirBalance btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade col-md-12 col-xs-12" id="mantenimientoMejoras" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelMM">Mantenimiento y mejoras</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Desde</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaDesdeMM_name" id="fechaDesdeMM" class="datepicker form-control" value="${new Date() - 30}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Hasta</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaHastaMM_name" id="fechaHastaMM" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnMantenimientoMejoras btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
 
 <script type="text/javascript">
+
+    $(".btnMantenimientoMejoras").click(function () {
+        var fechaDesde = $("#fechaDesdeMM").val();
+        var fechaHasta = $("#fechaHastaMM").val();
+
+        if(fechaDesde == '' || fechaHasta == ''){
+            bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i>  Seleccione las fechas!")
+        }else{
+            $.ajax({
+                type: 'POST',
+                url: '${createLink(controller: 'reportes', action: 'revisarFecha_ajax')}',
+                data:{
+                    desde: fechaDesde,
+                    hasta: fechaHasta
+                },
+                success: function (msg){
+                    if(msg == 'ok'){
+                        openLoader("Cargando...");
+                        location.href = "${g.createLink(controller:'reportes' , action: 'mantenimientoMejoras')}?desde=" + fechaDesde + "&hasta=" + fechaHasta;
+                        closeLoader();
+                    }else{
+                        bootbox.alert("<i class='fa fa-exclamation-circle fa-3x pull-left text-warning text-shadow'></i> La fecha ingresada en 'Hasta' es menor a la fecha ingresada en 'Desde' ");
+                        return false;
+                    }
+                }
+            });
+        }
+    });
+
+    $(".btnImprimirBalance").click(function () {
+        var fechaDesde = $("#fechaDesdeB").val();
+        var fechaHasta = $("#fechaHastaB").val();
+        var depositos = $("#depos").val()
+        var dtmeses = $("#detalleMes").is(':checked');
+        openLoader("Cargando...");
+        location.href = "${g.createLink(controller:'reportes' , action: 'rpBalance')}?desde=" + fechaDesde +
+            "&hasta=" + fechaHasta + "&depositos=" + depositos + "&dtmeses=" + dtmeses;
+        closeLoader();
+    });
 
 
     $(".btnIngresosEgresos").click(function () {

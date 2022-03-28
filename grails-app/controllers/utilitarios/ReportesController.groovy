@@ -97,15 +97,12 @@ class ReportesController extends Shield{
     }
 
     def reportes() {
-
         def cn = dbConnectionService.getConnection()
         def sql = 'select distinct cast (extract(year from pagofcpg) as INT) from pago order by 1;'
         def res = cn.rows(sql.toString())
 
         return [anios: res.date_part]
-
     }
-
 
     def revisarFecha_ajax() {
 //        println("params revisar fecha " + params)
