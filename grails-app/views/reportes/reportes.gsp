@@ -81,8 +81,7 @@
 
 <div class="row">
     <div class="col-md-6 col-xs-6">
-        <a href="#" class="link btn btn-info btn-ajax" id="btnCondominos" data-toggle="modal"
-           data-target="#gestorContable">
+        <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#modalCondominos">
             <i class="fa fa-building-o fa-5x"></i><br/>
             Listado de Condóminos
         </a>
@@ -99,6 +98,43 @@
 
 
 <!-------------------------------------------- MODALES ----------------------------------------------------->
+
+
+<div class="modal fade col-md-12 col-xs-12" id="modalCondominos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Lista de condóminos</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-6 col-xs-4">
+                        <label>Torre:</label>
+                    </div>
+                    <div class="col-md-4 col-xs-6">
+                        <g:select name="torre_name" id="torre" from="${edificios}" optionKey="id" optionValue="descripcion" class="form-control"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnCondominos btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 %{--//dialog de contabilidad--}%
 <div class="modal fade col-md-12 col-xs-12" id="detalleIngresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -267,7 +303,7 @@
 </div>
 
 %{--dialog Deudas--}%
-<div class="modal fade col-md-12 col-xs-5" id="modalDeudas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade col-md-12 col-xs-12" id="modalDeudas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -289,10 +325,23 @@
                     </div>
 
                 </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-6 col-xs-4">
+                        <label>Torre:</label>
+                    </div>
+                    <div class="col-md-4 col-xs-6">
+                        <g:select name="torre_name" id="torreDeudas" from="${edificios}" optionKey="id" optionValue="descripcion" class="form-control"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
                 </button>
                 <button type="button" class="btn btnDeudas btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
                 </button>
@@ -499,6 +548,14 @@
 
 <script type="text/javascript">
 
+    $(".btnDeudas").click(function () {
+        var fechaI = $("#fechaImprime").val();
+        var torre = $("#torreDeudas").val();
+        openLoader("Cargando...");
+        location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes4')}?fecha=" + fechaI + "&torre=" + torre;
+        closeLoader();
+    });
+
     $(".btnMantenimientoMejoras").click(function () {
         var fechaDesde = $("#fechaDesdeMM").val();
         var fechaHasta = $("#fechaHastaMM").val();
@@ -553,13 +610,10 @@
 
         /* ******************************** DIALOGS ********************************************* */
 
-        $(".btnDeudas").click(function () {
-//            var cont = $("#contP20").val();
-//            var prms = $("#periodo20").val();
-            var fechaI = $("#fechaImprime").val();
-//            console.log('fecha', fechaI)
-            location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes3')}?fecha=" + fechaI
-        });
+        %{--$(".btnDeudas").click(function () {--}%
+            %{--var fechaI = $("#fechaImprime").val();--}%
+            %{--location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes3')}?fecha=" + fechaI--}%
+        %{--});--}%
 
         $(".btnSolicitud").click(function () {
             var vlor = $("#valorHasta").val();
@@ -567,8 +621,11 @@
             location.href = "${g.createLink(controller: 'reportes', action: 'imprimirSolicitudes')}?vlor=" + vlor;
         });
 
-        $("#btnCondominos").click(function () {
-            location.href = "${g.createLink(controller: 'reportes', action: 'listaCondominos')}";
+        $(".btnCondominos").click(function () {
+            var torre = $("#torre").val();
+            openLoader("Cargando...");
+            location.href = "${g.createLink(controller: 'reportes', action: 'listaCondominos')}?torre=" + torre;
+            closeLoader();
         });
 
         $(".btnAceptarEgresos").click(function () {

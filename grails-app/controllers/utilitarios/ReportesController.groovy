@@ -102,7 +102,11 @@ class ReportesController extends Shield{
         def sql = 'select distinct cast (extract(year from pagofcpg) as INT) from pago order by 1;'
         def res = cn.rows(sql.toString())
 
-        return [anios: res.date_part]
+        def usuario = Persona.get(session.usuario.id)
+        def condominio = usuario.condominio
+        def edificios = usuario.edificio
+
+        return [anios: res.date_part, edificios: edificios]
     }
 
     def revisarFecha_ajax() {
@@ -2155,7 +2159,7 @@ class ReportesController extends Shield{
         byte[] b = baos.toByteArray();
 
 
-        encabezadoYnumeracion(b, session.condominio.nombre,"LISTADO DE CONDÓMINOS - ${edificio.descripcion ?: ''}", "listadoCondominos_${new Date().format("dd-MM-yyyy")}.pdf")
+        encabezadoYnumeracion(b, session.condominio.nombre,"LISTADO DE CONDÓMINOS - ${edificio?.descripcion ?: ''}", "listadoCondominos_${new Date().format("dd-MM-yyyy")}.pdf")
 
 
 //        response.setContentType("application/pdf")
