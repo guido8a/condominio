@@ -73,7 +73,7 @@ class MenuTagLib {
         html += '<span class="icon-bar"></span>'
         html += '<span class="icon-bar"></span>'
         html += '</button>'
-        html += '<a class="navbar-brand" href="' + g.createLink(controller: 'inicio', action: 'index') +
+        html += '<a class="navbar-brand" href="' + g.createLink(controller: 'reportes', action: 'reportes') +
                 '" style="margin-top:-10px;font-size: 11px !important;width:220px;color:white;cursor:default;margin-left:-10px">'
         html += '<img src="'+g.resource(dir: 'images',file: 'logo.png')+'" height="38px" style="float:left" >'
         html += '<div style="width:130px !important;float:left;height:40px;margin-left:5px;font-weight:bold;text-align:center">'
@@ -187,7 +187,7 @@ class MenuTagLib {
         html += '<span class="icon-bar"></span>'
         html += '<span class="icon-bar"></span>'
         html += '</button>'
-        html += '<a class="navbar-brand navbar-logo" href="' + g.createLink(controller: 'inicio', action: 'index') +
+        html += '<a class="navbar-brand navbar-logo" href="' + g.createLink(controller: 'reportes', action: "${perfil.codigo == 'USU' ? 'reportes': 'index'}") +
                 '"><img src="' + resource(dir: 'images', file: 'logo.png') + '" height="32px"/></a>'
         html += '</div>'
 
