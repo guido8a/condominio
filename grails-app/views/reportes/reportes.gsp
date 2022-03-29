@@ -43,6 +43,15 @@
 
 <div class="row">
     <div class="col-md-12 col-xs-12">
+            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#detallePagos">
+                <i class="fa fa-list-ul fa-5x col-md-6"></i>
+                <div class="col-md-6" style="margin-top: 20px">Detalle de mis<br/>pagos realizados</div>
+            </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-xs-12">
         %{--<div class="col-md-4 col-xs-4">--}%
             <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#balance">
                 <i class="fa fa-book fa-5x"></i><br/>
@@ -71,11 +80,11 @@
         <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#mantenimientoMejoras"
            title="Mantenimiento y mejoras">
             <i class="fa fa-wrench fa-5x"></i><br/>
-            Mantenimiento y mejoras
+            Gastos por Mantenimiento<br/>y mejoras
         </a>
         <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#listaObras">
             <i class="fa fa-home fa-5x"></i><br/>
-            Detalle de Obras
+            Detalle<br/>de Obras
         </a>
     </div>
 </div>
@@ -85,14 +94,14 @@
     %{--<div class="col-md-6 col-xs-6">--}%
         <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#modalCondominos">
             <i class="fa fa-building-o fa-5x"></i><br/>
-            Listado de Condóminos
+            Listado<br/>de Condóminos
         </a>
     %{--</div>--}%
     %{--<div class="col-md-6 col-xs-6">--}%
-        <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#modalDeudas"
+        <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#modalDeudas"
            title="Estado de cuenta de los condóminos">
             <i class="fa fa-file-text-o fa-5x"></i><br/>
-            Deudas Pendientes
+            Deudas o pagos<br/> Pendientes
         </a>
     %{--</div>--}%
 
@@ -182,10 +191,54 @@
     </div>
 </div>
 
+%{--//dialog de detalle--}%
+<div class="modal fade col-md-12 col-xs-12" id="detallePagos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Detalle de Pagos realizados</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Desde</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaDesdeIng_name" id="fechaDesdeDet" class="datepicker form-control" value="${new Date() - 30}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <label>Hasta</label>
+                    </div>
+                    <div class="col-md-4 col-xs-7">
+                        <elm:datepicker name="fechaHastaIng_name" id="fechaHastaDet" class="datepicker form-control" value="${new Date()}"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btnDetallePagos btn-success" data-dismiss="modal"><i class="fa fa-print"></i> Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-
-%{--//dialog de contabilidad--}%
 <div class="modal fade col-md-12 col-xs-12" id="detalleIngresos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -688,10 +741,14 @@
 
         /* ******************************** DIALOGS ********************************************* */
 
-        %{--$(".btnDeudas").click(function () {--}%
-            %{--var fechaI = $("#fechaImprime").val();--}%
-            %{--location.href = "${g.createLink(controller:'reportes', action: 'pagosPendientes3')}?fecha=" + fechaI--}%
-        %{--});--}%
+        $(".btnDetallePagos").click(function () {
+            var hasta = $("#fechaHastaDet").val();
+            var desde = $("#fechaDesdeDet").val();
+            var id = "${session?.usuario?.id}"
+            console.log('detalle pagos')
+            location.href='${createLink(controller: 'reportes', action: 'reporteDetallePagos')}?id=' + id +
+                "&desde=" + desde + "&hasta=" + hasta ;
+        });
 
         $(".btnSolicitud").click(function () {
             var vlor = $("#valorHasta").val();
