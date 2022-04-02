@@ -52,9 +52,18 @@
 
 <div class="row">
     <div class="col-md-12 col-xs-12">
+            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#detallePagos">
+                <i class="fa fa-book fa-5x col-md-6"></i>
+                <div class="col-md-6" style="margin-top: 20px">Biblioteca del<br/>Condominio</div>
+            </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-xs-12">
         %{--<div class="col-md-4 col-xs-4">--}%
             <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#balance">
-                <i class="fa fa-book fa-5x"></i><br/>
+                <i class="fa fa-money fa-5x"></i><br/>
                 Balance de<br/>Resultados
             </a>
         %{--</div>--}%

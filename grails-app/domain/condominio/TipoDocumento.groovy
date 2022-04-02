@@ -19,4 +19,8 @@ class TipoDocumento {
     static constraints = {
         descripcion(blank: false, nullable: false)
     }
+
+    String toString() {
+        return this.descripcion
+    }
 }
