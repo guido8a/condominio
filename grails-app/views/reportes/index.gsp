@@ -118,30 +118,29 @@
 <div class="row">
     <div class="col-md-12 col-xs-5">
         <p>
-            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#modalCondominos">
-                <i class="fa fa-building-o fa-5x"></i><br/>
-                Listado de Condóminos
-            </a>
-            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#detalleIngresos" title="Detalle de ingresos">
+            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#detalleIngresos" title="Detalle de ingresos">
                 <i class="fa fa-sign-in fa-5x"></i><br/>
                 Detalle de Ingresos
             </a>
-            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#detalleEgresos">
+            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#detalleEgresos">
                 <i class="fa fa-sign-out fa-5x"></i><br/>
                 Detalle de Egresos
             </a>
-            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#listaObras">
-                <i class="fa fa-home fa-5x"></i><br/>
-                Detalle de Obras
-            </a>
             <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#balance">
                 <i class="fa fa-book fa-5x"></i><br/>
-                Balance
+                Balance de resultados
             </a>
-            <a href="#" class="link btn btn-warning btn-ajax" id="btnAceptarGestor">
-                <i class="fa fa-line-chart fa-5x"></i><br/>
-                Aportes y Gastos
+            <a href="#" class="link btn btn-primary btn-primary-outlined btn-ajax" data-toggle="modal" data-target="#informe"
+               title="Informe de Resultados del Período">
+                <i class="fa fa-tasks fa-5x"></i><br/>
+                Informe de Resultados
             </a>
+            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#pagosPendientes"
+               title="Detalle de pagos pendientes">
+                <i class="fa fa-sign-out fa-5x"></i><br/>
+                Detalle de pagos pendientes
+            </a>
+
         </p>
     </div>
 </div>
@@ -149,12 +148,48 @@
 <div class="row">
     <div class="col-md-12 col-xs-5">
         <p>
-            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#modalDeudas"
+            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#cajaChica"
+               title="Detalle Caja Chica">
+                <i class="fa fa-archive fa-5x"></i><br/>
+                Caja Chica
+            </a>
+            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#egresosProveedores">
+                <i class="fa fa-book fa-5x"></i><br/>
+                Egresos Proveedores
+            </a>
+            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#tipoEgreso"
+               title="Detalle egresos clasificados por tipo">
+                <i class="fa fa-sign-out fa-5x"></i><br/>
+                Egresos por tipo de Gasto
+            </a>
+            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#mantenimientoMejoras"
+               title="Mantenimiento y mejoras">
+                <i class="fa fa-wrench fa-5x"></i><br/>
+                Gastos por mantenimiento y mejoras
+            </a>
+            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#listaObras">
+                <i class="fa fa-home fa-5x"></i><br/>
+                Detalle de Obras
+            </a>
+
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-xs-5">
+        <p>
+            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#modalCondominos">
+                <i class="fa fa-building-o fa-5x"></i><br/>
+                Listado de Condóminos
+            </a>
+
+            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#modalDeudas"
                title="Estado de cuenta de los condóminos">
                 <i class="fa fa-file-text-o fa-5x"></i><br/>
                 Deudas Pendientes
             </a>
-            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#modalDeudasTotales"
+            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#modalDeudasTotales"
                title="Estado de cuenta de los condóminos con totales">
                 <i class="fa fa-file-text-o fa-5x"></i><br/>
                 Deudas Totales
@@ -163,17 +198,9 @@
                 <i class="fa fa-money fa-5x"></i><br/>
                 Solicitudes de Pago
             </a>
-            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#ingresosEgresos">
-                <i class="fa fa-line-chart fa-5x"></i><br/>
-                Ingresos y Egresos
-            </a>
-            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#egresosProveedores">
-                <i class="fa fa-book fa-5x"></i><br/>
-                Egresos Proveedores
-            </a>
             <a href="#" class="link btn btn-danger btn-ajax" data-toggle="modal" data-target="#monitorio">
                 <i class="fa fa-gavel fa-5x"></i><br/>
-                Monitorio
+                Juicio Monitorio
             </a>
 
         </p>
@@ -183,53 +210,35 @@
 <div class="row">
     <div class="col-md-12 col-xs-5">
         <p>
-            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#informe"
-               title="Informe de Resultados del Período">
-                <i class="fa fa-tasks fa-5x"></i><br/>
-                Informe de Resultados
+            <a href="${createLink(controller: 'documento', action: 'listDocu')}" class="link btn btn-primary btn-ajax">
+                <i class="fa fa-book fa-5x"></i><br/>
+                Biblioteca del<br/>Condominio
             </a>
-            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#nuevaAlicuota"
+            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#nuevaAlicuota"
                title="Cálculo de la Nueva Alícuota">
                 <i class="fa fa-cog fa-5x"></i><br/>
                 Cálculo Nueva Alícuota
             </a>
             %{--<a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#ingresosEgresos2"--}%
-               %{--title="Ingresos y egresos">--}%
-                %{--<i class="fa fa-line-chart fa-5x"></i><br/>--}%
-                %{--Ingresos y egresos mesuales--}%
+            %{--title="Ingresos y egresos">--}%
+            %{--<i class="fa fa-line-chart fa-5x"></i><br/>--}%
+            %{--Ingresos y egresos mesuales--}%
             %{--</a>--}%
             <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#ingresosEgresos3"
                title="Ingresos y egresos">
                 <i class="fa fa-line-chart fa-5x"></i><br/>
                 Ingresos y egresos mensuales
             </a>
-            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#mantenimientoMejoras"
-               title="Mantenimiento y mejoras">
-                <i class="fa fa-wrench fa-5x"></i><br/>
-                Gastos por mantenimiento y mejoras
+            <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#ingresosEgresos">
+                <i class="fa fa-line-chart fa-5x"></i><br/>
+                Ingresos y Egresos
             </a>
-        </p>
-    </div>
-</div>
+            <a href="#" class="link btn btn-info btn-ajax" id="btnAceptarGestor">
+                <i class="fa fa-line-chart fa-5x"></i><br/>
+                Aportes y Gastos
+            </a>
 
-<div class="row">
-    <div class="col-md-12 col-xs-5">
-        <p>
-            <a href="#" class="link btn btn-success btn-ajax" data-toggle="modal" data-target="#pagosPendientes"
-               title="Detalle de pagos pendientes">
-                <i class="fa fa-sign-out fa-5x"></i><br/>
-                Detalle de pagos pendientes
-            </a>
-            <a href="#" class="link btn btn-warning btn-ajax" data-toggle="modal" data-target="#cajaChica"
-               title="Detalle Caja Chica">
-                <i class="fa fa-archive fa-5x"></i><br/>
-                Caja Chica
-            </a>
-            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#tipoEgreso"
-               title="Detalle egresos clasificados por tipo">
-                <i class="fa fa-sign-out fa-5x"></i><br/>
-                Egresos por tipo de Gasto
-            </a>
+
         </p>
     </div>
 </div>

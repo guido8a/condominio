@@ -52,7 +52,7 @@
 
 <div class="row">
     <div class="col-md-12 col-xs-12">
-            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#detallePagos">
+            <a href="${createLink(controller: 'documento', action: 'listDocu')}" class="link btn btn-primary btn-ajax">
                 <i class="fa fa-book fa-5x col-md-6"></i>
                 <div class="col-md-6" style="margin-top: 20px">Biblioteca del<br/>Condominio</div>
             </a>
