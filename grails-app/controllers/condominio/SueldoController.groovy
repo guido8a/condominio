@@ -1,12 +1,13 @@
 package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
+import seguridad.Shield
 import utilitarios.Anio
 
 /**
  * Controlador que muestra las pantallas de manejo de Sueldo
  */
-class SueldoController {
+class SueldoController extends Shield {
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 

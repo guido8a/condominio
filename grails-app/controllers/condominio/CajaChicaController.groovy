@@ -1,6 +1,8 @@
 package condominio
 
-class CajaChicaController {
+import seguridad.Shield
+
+class CajaChicaController extends Shield {
 
     def list(){
         def cajas = CajaChica.list().sort{it.fecha}
