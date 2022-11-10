@@ -55,30 +55,30 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12 col-xs-12">
+%{--<div class="row">--}%
+    %{--<div class="col-md-12 col-xs-12">--}%
         %{--<div class="col-md-4 col-xs-4">--}%
-            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#balance">
-                <i class="fa fa-money fa-5x"></i><br/>
-                Balance de<br/>Resultados
-            </a>
+            %{--<a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#balance">--}%
+                %{--<i class="fa fa-money fa-5x"></i><br/>--}%
+                %{--Balance de<br/>Resultados--}%
+            %{--</a>--}%
         %{--</div>--}%
             %{--<div class="col-md-4 col-xs-4">--}%
-            <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#detalleIngresos"
-               title="Detalle de ingresos">
-                <i class="fa fa-sign-in fa-5x"></i><br/>
-                Detalle<br/>Ingresos
-            </a>
+            %{--<a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#detalleIngresos"--}%
+               %{--title="Detalle de ingresos">--}%
+                %{--<i class="fa fa-sign-in fa-5x"></i><br/>--}%
+                %{--Detalle<br/>Ingresos--}%
+            %{--</a>--}%
             %{--</div>--}%
                 %{--<div class="col-md-4 col-xs-4">--}%
-        <a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#detalleEgresos">
-            <i class="fa fa-sign-out fa-5x"></i><br/>
-            Detalle<br/>Egresos
-        </a>
+        %{--<a href="#" class="link btn btn-primary btn-ajax" data-toggle="modal" data-target="#detalleEgresos">--}%
+            %{--<i class="fa fa-sign-out fa-5x"></i><br/>--}%
+            %{--Detalle<br/>Egresos--}%
+        %{--</a>--}%
                 %{--</div>--}%
 
-    </div>
-</div>
+    %{--</div>--}%
+%{--</div>--}%
 
 <div class="row">
     <div class="col-md-12 col-xs-12">
@@ -101,14 +101,11 @@
             <i class="fa fa-building-o fa-5x"></i><br/>
             Listado<br/>de Condóminos
         </a>
-    %{--</div>--}%
-    %{--<div class="col-md-6 col-xs-6">--}%
-        <a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#modalDeudas"
-           title="Estado de cuenta de los condóminos">
-            <i class="fa fa-file-text-o fa-5x"></i><br/>
-            Deudas o pagos<br/> Pendientes
-        </a>
-    %{--</div>--}%
+        %{--<a href="#" class="link btn btn-info btn-ajax" data-toggle="modal" data-target="#modalDeudas"--}%
+           %{--title="Estado de cuenta de los condóminos">--}%
+            %{--<i class="fa fa-file-text-o fa-5x"></i><br/>--}%
+            %{--Deudas o pagos<br/> Pendientes--}%
+        %{--</a>--}%
 
     </div>
 </div>
