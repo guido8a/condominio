@@ -6122,7 +6122,7 @@ class ReportesController extends Shield{
 
         Document document
         document = new Document(PageSize.A4);
-        document.setMargins(50, 30, 30, 28)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        document.setMargins(50, 30, 60, 50)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
         def pdfw = PdfWriter.getInstance(document, baos);
         document.resetHeader()
         document.resetFooter()
