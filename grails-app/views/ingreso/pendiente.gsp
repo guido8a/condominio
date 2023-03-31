@@ -140,7 +140,8 @@
 
     $(".btnSolicitud").click(function () {
         var vlor = $("#valorHasta").val();
-        location.href = "${g.createLink(controller: 'reportes', action: 'solicitud')}?vlor=" + vlor + "&id=" + ${persona?.id};
+        location.href = "${g.createLink(controller: 'reportes', action: 'solicitud')}?vlor=" + vlor +
+            "&id=" + ${persona?.id};
     });
 
 

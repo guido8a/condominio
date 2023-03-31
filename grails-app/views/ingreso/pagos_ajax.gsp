@@ -36,7 +36,7 @@
     %{--<label>Valor: </label>--}%
     %{--</div>--}%
 
-    <div class="col-md-3" style="color: #8f2b00">
+    <div class="col-md-3" style="color: #444; font-weight: bold ">
         %{--<g:textField name="saldo_name" class="form-control derecha" readonly=""--}%
         %{--value="${g.formatNumber(number: ingreso?.valor ?: 0, format: '##,##0', maxFractionDigits: 2, minFractionDigits: 2, locale: 'en_US')}"/>--}%
         <label>Valor: $</label>
