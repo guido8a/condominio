@@ -371,6 +371,16 @@ como máximo 30
             }
         };
 
+        var detalleSldo = {
+            label: "Detalle de Saldos",
+            icon: "fa fa-print",
+//            separator_before : true,
+            action : function ($element) {
+                var id = $element.data("id");
+                cargarFechasSaldo(id);
+            }
+        };
+
         var solicitudPago = {
             label: "Solicitud de Pago",
             icon: "fa fa-print",
@@ -426,6 +436,7 @@ como máximo 30
             }
             items.administrar = administrar;
             items.detalle = detalle;
+            items.detalleSldo = detalleSldo;
             if(deuda <= 0 && codigo == 'P'){
                 items.certificado = certificado;
             }
@@ -480,6 +491,44 @@ como máximo 30
                                 var hasta = $("#fechaHastaDet").val();
                                 var desde = $("#fechaDesdeDet").val();
                                 location.href='${createLink(controller: 'reportes', action: 'reporteDetallePagos')}?id=' + id + "&desde=" + desde + "&hasta=" + hasta ;
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 100);
+            } //success
+        }); //ajax
+    }
+
+    function cargarFechasSaldo (id) {
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'reportes', action:'fechasDetalle_ajax')}",
+            data    : {
+                id: id
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgFechasDetalle",
+                    title   : "Período para el detalle de Pagos",
+//                    class   : "modal-lg",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "<i class='fa fa-times'></i> Cerrar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        aceptar : {
+                            label     : "<i class='fa fa-print'></i> Imprimir",
+                            className : "btn-success",
+                            callback  : function () {
+                                var hasta = $("#fechaHastaDet").val();
+                                var desde = $("#fechaDesdeDet").val();
+                                location.href='${createLink(controller: 'reportes', action: 'reporteDetalleSaldos')}?id=' + id + "&desde=" + desde + "&hasta=" + hasta ;
                             }
                         }
                     } //buttons
