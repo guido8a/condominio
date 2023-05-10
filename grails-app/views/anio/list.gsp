@@ -123,6 +123,7 @@
             }
         });
     }
+
     function createEditRow(id) {
         var title = id ? "Editar" : "Crear";
         var data = id ? { id: id } : {};

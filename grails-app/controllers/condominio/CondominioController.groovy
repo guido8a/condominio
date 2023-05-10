@@ -1,6 +1,7 @@
 package condominio
 
 import org.springframework.dao.DataIntegrityViolationException
+import seguridad.Persona
 import seguridad.Shield
 import utilitarios.Parametros
 
@@ -273,5 +274,42 @@ class CondominioController extends Shield {
         "$sqlSelect $sqlWhere $sqlOrder".toString()
     }
 
+    def cambioAdmn() {
+        println "cambio administración"
+        def condominio = Condominio.get(session.condominio.id)
+        return[condominio: condominio]
+    }
+
+    def procesaCambio() {
+        println "procesa cambio administración $params"
+        def cn = dbConnectionService.getConnection()
+        def cndm_anterior = Condominio.get(session.condominio.id)
+        def fcha = new Date().parse("dd-MM-yyyy", params.fecha)
+        def desde = fcha.format('yyyy-MM-dd')
+        println "ID anterior: $cndm_anterior.id , fecha: ${fcha}"
+        def sql = "select * from cambio_admn(${cndm_anterior.id}, '${desde}', ${params.admin}, '${params.login}', '${params.pass}')"
+        def mnsj = ''
+        def prsn = Persona.findByLogin(params.login)
+        println "---> $prsn"
+
+        if(prsn) {
+            mnsj = "eroor*Ya existe este nombre de usuario: ${params.login}"
+        } else {
+            try {
+                cn.eachRow(sql.toString()) { d ->
+                    if(d.cambio_admn.toString().contains('Se han creado')) {
+                        mnsj = "ok*Procesado correctamente: ${d.cambio_admn}"
+                    } else {
+                        mnsj = 'error*Problemas al procesar el inicio de la nueva administración'
+                    }
+                }
+            } catch (Exception ex) {
+                println "Error $ex"
+                println "sql: $sql"
+            }
+        }
+
+        render( mnsj )
+    }
 
 }

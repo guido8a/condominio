@@ -13,7 +13,7 @@
 
     .item {
         width: 320px;
-        height: 220px;
+        height: 210px;
         float: left;
         margin: 4px;
         font-family: 'open sans condensed';
@@ -23,12 +23,13 @@
         border-style: solid;
     }
     .item2 {
-        width: 660px;
-        height: 160px;
+        width: 1000px;
+        height: 80px;
         float: left;
         margin: 4px;
         font-family: 'open sans condensed';
-        background-color: #eceeff;
+        /*background-color: #eceeff;*/
+        background-color: #dcdedf;
         border: 1px;
         border-color: #5c6e80;
         border-style: solid;
@@ -36,17 +37,17 @@
 
     .imagen {
         width: 200px;
-        height: 160px;
+        height: 150px;
         margin: auto;
         margin-top: 10px;
     }
     .imagen2 {
-        width: 180px;
-        height: 130px;
-        margin: auto;
-        margin-top: 10px;
+        width: 160px;
+        height: 57px;
+        margin-top: 6px;
+        margin-left: 220px;
         margin-right: 40px;
-        float: right;
+        float: left;
     }
 
     .texto {
@@ -59,9 +60,18 @@
         font-style: normal;
     }
 
+    .texto2 {
+        width: 90%;
+        height: 50px;
+        padding-top: 15px;
+        margin: 8px;
+        font-size: 15px;
+        font-style: normal;
+    }
+
     .fuera {
         margin-left: 15px;
-        margin-top: 20px;
+        margin-top: 15px;
         /*background-color: #317fbf; */
         background-color: rgba(114, 131, 147, 0.9);
         border: none;
@@ -72,7 +82,7 @@
         font-weight: bold;
         text-shadow: -2px 2px 1px rgba(0, 0, 0, 0.25);
         color: #0070B0;
-        margin-top: 20px;
+        margin-top: 15px;
     }
     </style>
 </head>
@@ -86,7 +96,7 @@
     </h2>
     </div>
 
-    <div class="body ui-corner-all" style="width: 1020px;position: relative;margin: auto;margin-top: 40px;height: 280px; ">
+    <div class="body ui-corner-all" style="width: 1020px;position: relative;margin: auto;margin-top: 20px;height: 280px; ">
 
 
         <a href= "${createLink(controller:'vivienda', action: 'index')}" style="text-decoration: none">
@@ -174,6 +184,24 @@
                 </div>
             </div>
         </a>
+       %{--${session.perfil.codigo}--}%
+        <g:if test="${session.perfil.codigo == 'ADC'}">
+            <a href= "${createLink(controller:'condominio', action: 'cambioAdmn')}" style="text-decoration: none">
+                <div class="ui-corner-all item2 fuera">
+                    <div class="ui-corner-all item2">
+                        <div class="imagen2">
+                            <img src="${resource(dir: 'images', file: 'cambio.png')}" width="100%" height="100%"/>
+                        </div>
+
+                        <div class="texto2">
+                            <span class="text-info">
+                                <strong>Cambio de Administración o cambio de período de Administración</strong></span>
+                        </div>
+
+                    </div>
+                </div>
+            </a>
+        </g:if>
 
     </div>
 </div>
