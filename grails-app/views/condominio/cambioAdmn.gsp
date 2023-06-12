@@ -125,7 +125,8 @@
 
                                 if (parts[0] == "ok") {
                                     setTimeout(function() {
-                                        location.reload(true);
+                                        location.href = "${createLink(controller:'login',action:'logout')}"
+//                                        location.reload(true);
                                     }, 1000);
                                 } else {
                                     closeLoader();

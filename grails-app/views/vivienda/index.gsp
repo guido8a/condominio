@@ -372,7 +372,7 @@ como máximo 30
         };
 
         var detalleSldo = {
-            label: "Detalle de Saldos",
+            label: "Detalle de Deudas",
             icon: "fa fa-print",
 //            separator_before : true,
             action : function ($element) {
@@ -431,9 +431,10 @@ como máximo 30
         console.log('perfil', '${session.perfil.codigo}');
 
         if('${session.perfil.codigo}' == 'ADC'){
-            if(ingr>0){
-                items.pagar = ingresos;
-            }
+//            if(ingr>0){
+//                items.pagar = ingresos;
+//            }
+            items.pagar = ingresos;
             items.administrar = administrar;
             items.detalle = detalle;
             items.detalleSldo = detalleSldo;
@@ -442,6 +443,7 @@ como máximo 30
             }
         } else {
             items.detalle = detalle;
+            items.detalleSldo = detalleSldo;
         }
 
         return items

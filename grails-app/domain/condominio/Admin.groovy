@@ -28,7 +28,7 @@ class Admin {
             saldoInicial column: 'admnslin'
             saldoFinal column: 'admnslfn'
             cajaChica column: 'admncjch'
-            observaciones column: 'ingrobsr'
+            observaciones column: 'admnobsr'
         }
     }
 
