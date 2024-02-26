@@ -320,6 +320,9 @@ class Reportes2Controller {
         def fondoTotal = new Color(240, 240, 240);
         def fondo = new Color(240, 248, 250);
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def totalValor = 0
+        def totalPago = 0
+        def totalSaldo = 0
 
         Document document
         document = new Document(PageSize.A4);
@@ -379,18 +382,23 @@ class Reportes2Controller {
             addCellTabla(tablaDetalles, new Paragraph(d.pagovlor?.toString(), fontTd10), frmtNmro)
             addCellTabla(tablaDetalles, new Paragraph(d.pagodcmt?.toString(), fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(d.ingrsldo?.toString(), fontTd10), frmtNmro)
+
+            totalValor += d.ingrvlor ?: 0
+            totalPago += d.pagovlor ?: 0
+            totalSaldo += d.ingrsldo ?: 0
+
         }
 
-//        def tablaTotal = new PdfPTable(7);
-//        tablaTotal.setWidthPercentage(100);
-//        tablaTotal.setWidths(arregloEnteros([11,33,10,11,10,12,10]))
-//        addCellTabla(tablaTotal, new Paragraph("Totales: ", fontTh), frmtTotl2)
-//        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totali, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
-//        addCellTabla(tablaTotal, new Paragraph('', fontTd10), frmtTotl)
-//        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalp, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
-//        addCellTabla(tablaTotal, new Paragraph('', fontTd10), frmtTotl)
-//        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totals, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
-//        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
+        def tablaTotal = new PdfPTable(7);
+        tablaTotal.setWidthPercentage(100);
+        tablaTotal.setWidths(arregloEnteros([11,33,10,11,10,12,10]))
+        addCellTabla(tablaTotal, new Paragraph("Totales: ", fontTh), frmtTotl2)
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalValor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
+        addCellTabla(tablaTotal, new Paragraph('', fontTd10), frmtTotl)
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalPago, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
+        addCellTabla(tablaTotal, new Paragraph('', fontTd10), frmtTotl)
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalSaldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
+        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
 
         document.add(tablaDetalles)
         document.close();
