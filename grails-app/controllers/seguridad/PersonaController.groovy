@@ -129,7 +129,7 @@ class PersonaController extends Shield {
      * @render ERROR*[mensaje] cuando no se pudo grabar correctamente, SUCCESS*[mensaje] cuando se grabó correctamente
      */
     def save_ajax() {
-        println("params " + params)
+        println("save_ajax params " + params)
         def persona
         def perfil
         def perfil_frm = params.perfiles
