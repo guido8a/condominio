@@ -374,10 +374,18 @@ como máximo 30
         var detalleSldo = {
             label: "Detalle de Deudas",
             icon: "fa fa-print",
-//            separator_before : true,
             action : function ($element) {
                 var id = $element.data("id");
                 cargarFechasSaldo(id);
+            }
+        };
+
+        var detalleValores = {
+            label: "Valores pagados",
+            icon: "fa fa-print",
+            action : function ($element) {
+                var id = $element.data("id");
+                cargarDesde(id);
             }
         };
 
@@ -430,7 +438,7 @@ como máximo 30
 
         console.log('perfil', '${session.perfil.codigo}');
 
-        if('${session.perfil.codigo}' == 'ADC'){
+        if('${session.perfil.codigo}' === 'ADC'){
 //            if(ingr>0){
 //                items.pagar = ingresos;
 //            }
@@ -438,12 +446,14 @@ como máximo 30
             items.administrar = administrar;
             items.detalle = detalle;
             items.detalleSldo = detalleSldo;
-            if(deuda <= 0 && codigo == 'P'){
+            items.detalleValores = detalleValores;
+            if(deuda <= 0 && codigo === 'P'){
                 items.certificado = certificado;
             }
         } else {
             items.detalle = detalle;
             items.detalleSldo = detalleSldo;
+            items.detalleValores = detalleValores;
         }
 
         return items
@@ -541,6 +551,43 @@ como máximo 30
             } //success
         }); //ajax
     }
+
+    function cargarDesde (id) {
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller:'reportes2', action:'desde_ajax')}",
+            data    : {
+                id: id
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgValoresPagados",
+                    title   : "Valores pagados",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "<i class='fa fa-times'></i> Cerrar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        aceptar : {
+                            label     : "<i class='fa fa-print'></i> Imprimir",
+                            className : "btn-success",
+                            callback  : function () {
+                                var desde = $("#fechaDesdeValores").val();
+                                location.href='${createLink(controller: 'reportes2', action: 'reporteValoresPagados')}?id=' + id + "&desde=" + desde;
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    b.find(".form-control").first().focus()
+                }, 100);
+            } //success
+        }); //ajax
+    }
+
 
 
     function poneOperadores (opcn) {

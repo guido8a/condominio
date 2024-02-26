@@ -16,6 +16,7 @@ import com.lowagie.text.pdf.PdfReader
 import com.lowagie.text.pdf.PdfWriter
 import condominio.CajaChica
 import condominio.Condominio
+import seguridad.Persona
 
 import java.awt.Color
 
@@ -285,5 +286,116 @@ class Reportes2Controller {
 
         encabezadoYnumeracion(b, session.condominio.nombre,"Detalle de Caja Chica del ${fechaDesde} al ${fechaHasta}", "cajaChica_${new Date().format("dd-MM-yyyy")}.pdf")
 
+    }
+
+
+    def desde_ajax (){
+
+    }
+
+    private static void addEmptyLine(Paragraph paragraph, int number) {
+        for (int i = 0; i < number; i++) {
+            paragraph.add(new Paragraph(" "));
+        }
+    }
+
+    def reporteValoresPagados (){
+//        println("params vp  " + params)
+        def cn = dbConnectionService.getConnection()
+        def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
+        def persona = Persona.get(params.id)
+
+        def sql = "select * from dtpago_actual(${persona?.id}, '${fechaDesde}') order by 2,1,5;"
+        def detalle = cn.rows(sql.toString())
+//        println("--> " + sql)
+
+        def baos = new ByteArrayOutputStream()
+        def titulo = new Color(40, 140, 180)
+        Font fontTitulo = new Font(Font.TIMES_ROMAN, 12, Font.BOLD, titulo);
+        Font fontTitulo14 = new Font(Font.TIMES_ROMAN, 14, Font.BOLD, titulo);
+        Font fontTitle = new Font(Font.TIMES_ROMAN, 14, Font.BOLD);
+        Font fontTh = new Font(Font.TIMES_ROMAN, 10, Font.BOLD);
+        Font fontTd10 = new Font(Font.TIMES_ROMAN, 10, Font.NORMAL);
+
+        def fondoTotal = new Color(240, 240, 240);
+        def fondo = new Color(240, 248, 250);
+        def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+
+        Document document
+        document = new Document(PageSize.A4);
+        document.setMargins(50, 30, 60, 50)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Detalle de Valores Pagados desde ${fechaDesde.format("dd-MM-yyyyy")}");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, saldos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+        Paragraph preface = new Paragraph();
+        addEmptyLine(preface, 1);
+        preface.setAlignment(Element.ALIGN_CENTER);
+        preface.add(new Paragraph("", fontTitle));
+        preface.add(new Paragraph("Detalle de Valores Pagados de ${persona.nombre} ${persona.apellido} (" +
+                "${persona.departamento} - ${persona.edificio.descripcion})", fontTitulo14));
+        preface.add(new Paragraph("Período desde ${fechaDesde}", fontTitulo));
+        addEmptyLine(preface, 1);
+        document.add(preface);
+
+        PdfPTable tablaDetalles = null
+
+        def tablaHeaderDetalles = new PdfPTable(7);
+        tablaHeaderDetalles.setWidthPercentage(100);
+        tablaHeaderDetalles.setWidths(arregloEnteros([11,33,10,11,10,12,10]))
+
+        tablaDetalles = new PdfPTable(7);
+        tablaDetalles.setWidthPercentage(100);
+        tablaDetalles.setWidths(arregloEnteros([11,33,10,11,10,12,10]))
+        def frmtDato = [bwb: 0.1, bcb: Color.LIGHT_GRAY, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
+        def frmtNmro = [bwb: 0.1, bcb: Color.LIGHT_GRAY, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+        def frmtDoc = [bwb: 0.1, bcb: Color.LIGHT_GRAY, border: Color.LIGHT_GRAY, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
+        def frmtcol3 = [bwb: 0.1, bcb: Color.LIGHT_GRAY, border: Color.LIGHT_GRAY, colspan:3]
+        def frmtTotl2 = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.LIGHT_GRAY, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE, colspan: 2]
+        def frmtTotl = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.LIGHT_GRAY, bg: fondoTotal, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
+
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Concepto", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Pago Fecha", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Pago", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Documento", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Saldo", fontTh), frmtHd)
+        addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
+
+        detalle.each { d->
+            addCellTabla(tablaDetalles, new Paragraph(d.ingrfcha?.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(d.ingrdscr?.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(d.ingrvlor?.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(d.pagofcha?.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(d.pagovlor?.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(d.pagodcmt?.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(d.ingrsldo?.toString(), fontTd10), frmtNmro)
+        }
+
+//        def tablaTotal = new PdfPTable(7);
+//        tablaTotal.setWidthPercentage(100);
+//        tablaTotal.setWidths(arregloEnteros([11,33,10,11,10,12,10]))
+//        addCellTabla(tablaTotal, new Paragraph("Totales: ", fontTh), frmtTotl2)
+//        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totali, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
+//        addCellTabla(tablaTotal, new Paragraph('', fontTd10), frmtTotl)
+//        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalp, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
+//        addCellTabla(tablaTotal, new Paragraph('', fontTd10), frmtTotl)
+//        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totals, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
+//        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
+
+        document.add(tablaDetalles)
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+        encabezadoYnumeracion(b, session.condominio.nombre,"", "valoresPagados_${persona.nombre}.pdf")
     }
 }
