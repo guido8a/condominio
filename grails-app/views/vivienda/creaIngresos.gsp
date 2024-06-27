@@ -310,10 +310,8 @@
         $("#btn-consultar").click(function () {
             var lgar = $("#listaPrecio").val();
             var oblg = $("#obligaciones").val();
-            // console.log("oblg " + oblg)
             if (lgar != -1) {
                 $("#error").hide();
-
                 if(oblg != '' && oblg != null){
                     consultar();
                     $("#divTabla").show();

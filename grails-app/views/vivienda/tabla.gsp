@@ -153,9 +153,7 @@
                                             closeLoader();
                                             if(msg == 'ok'){
                                                 log("Guardado correctamente","success");
-                                                setTimeout(function() {
-                                                    location.reload(true);
-                                                }, 1000);
+                                                consultar();
                                             }else{
                                                 closeLoader();
                                                 log("Error al guardar la fecha","error")
@@ -185,9 +183,10 @@
                             closeLoader();
                             if(msg == 'ok'){
                                 log("Estado cambiado correctamente","success");
-                                setTimeout(function() {
-                                    location.reload(true);
-                                }, 1000);
+                                // setTimeout(function() {
+                                //     location.reload(true);
+                                // }, 1000);
+                                consultar();
                             }else{
                                 log("Error al cambiar el estado","error");
                             }
@@ -214,9 +213,10 @@
                             if(msg == 'ok'){
                                 closeLoader();
                                 log("Registro modificado correctamente","success");
-                                setTimeout(function() {
-                                    location.reload(true);
-                                }, 1000);
+                                // setTimeout(function() {
+                                //     location.reload(true);
+                                // }, 1000);
+                                consultar();
                             }else{
                                 closeLoader();
                                 log("No se puede modificar este registro","error")
