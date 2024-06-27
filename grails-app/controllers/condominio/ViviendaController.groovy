@@ -386,7 +386,29 @@ class ViviendaController extends Shield {
             println "--> ok"
             render "ok"
         }
+    }
 
+    def fecha_ajax(){
+        def persona = Persona.get(params.persona)
+        def obligacion = Obligacion.get(params.obligacion)
+        def ingreso = Ingreso.findByObligacionAndPersona(obligacion, persona)
+        return [ingreso: ingreso]
+    }
+
+    def guardarFecha_ajax(){
+        def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
+        def persona = Persona.get(params.persona)
+        def obligacion = Obligacion.get(params.obligacion)
+        def ingreso = Ingreso.findByObligacionAndPersona(obligacion, persona)
+
+        ingreso.fecha = fecha
+
+        if(!ingreso.save(flush:true)){
+            println("error al guardar la fecha " + ingreso.errors)
+            render "no"
+        }else{
+            render "ok"
+        }
     }
 
 

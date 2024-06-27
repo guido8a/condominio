@@ -280,7 +280,7 @@
 
     function consultar() {
         var oblg = $("#obligaciones").val();
-
+        openLoader("Cargando...");
         $.ajax({
             type    : "POST",
             url     : "${createLink(action:'tabla')}",
@@ -288,6 +288,7 @@
                 oblg  : oblg
             },
             success : function (msg) {
+                closeLoader();
                 $("#divTabla").html(msg);
             }
         });
@@ -309,7 +310,7 @@
         $("#btn-consultar").click(function () {
             var lgar = $("#listaPrecio").val();
             var oblg = $("#obligaciones").val();
-            console.log("oblg " + oblg)
+            // console.log("oblg " + oblg)
             if (lgar != -1) {
                 $("#error").hide();
 

@@ -1,9 +1,5 @@
 <%@ page import="condominio.Ingreso; condominio.Pago" %>
-
-
 <html>
-
-
 <head>
 
     <style type="text/css">
@@ -23,9 +19,7 @@
 
 <div id="tabla">
 
-    %{--<table class="table table-bordered table-striped table-hover table-condensed" id="tablaPrecios">--}%
     <table class="table table-bordered table-hover table-condensed">
-        %{--<thead style="background-color:#0074cc;">--}%
         <thead>
         <tr align="center">
             <th>Edificio</th>
@@ -38,6 +32,7 @@
             <th>Aplicar <g:checkBox name="ck_name" style="margin-left: 10px" class="todosCk" /></th>
             <th>Observaciones</th>
             <th>Borrar</th>
+            <th>Editar</th>
         </tr>
         </thead>
         <tbody>
@@ -97,6 +92,15 @@
                         </g:if>
                     </g:if>
                 </td>
+                <td style="text-align: center">
+                    <g:if test="${prsn?.ingrvlor}">
+                        <g:if test="${!Pago.findAllByIngreso(condominio.Ingreso.get(prsn?.ingr__id))?.estadoAdministrador?.contains("S")}">
+                            <g:if test="${!Pago.findAllByIngreso(Ingreso.get(prsn.ingr__id))}">
+                                <a href="#" class="btn btn-info btn-xs btnEditarFecha" data-id="${prsn?.prsn__id}" data-obl="${oblg.id}" title="Editar fecha"><i class="fa fa-calendar"></i> </a>
+                            </g:if>
+                        </g:if>
+                    </g:if>
+                </td>
             </tr>
         </g:each>
         </tbody>
@@ -107,6 +111,64 @@
     <script type="text/javascript" src="${resource(dir: 'js', file: 'tableHandler.js')}"></script>
 
     <script type="text/javascript">
+
+        $(".btnEditarFecha").click(function () {
+            var persona = $(this).data("id");
+            var obligacion = $(this).data("obl");
+            $.ajax({
+                type    : "POST",
+                url     : "${createLink(controller:'vivienda', action:'fecha_ajax')}",
+                data    : {
+                    persona: persona,
+                    obligacion: obligacion
+                },
+                success : function (msg) {
+                    var b = bootbox.dialog({
+                        id      : "dlgCreateEditFecha",
+                        title   : "Modificar Fecha",
+                        message : msg,
+                        buttons : {
+                            cancelar : {
+                                label     : "Cancelar",
+                                className : "btn-primary",
+                                callback  : function () {
+                                }
+                            },
+                            guardar  : {
+                                id        : "btnSave",
+                                label     : "<i class='fa fa-save'></i> Guardar",
+                                className : "btn-success",
+                                callback  : function () {
+                                    var fecha = $("#fechaIngreso").val();
+                                    openLoader("Guardando...");
+                                    $.ajax({
+                                        type    : "POST",
+                                        url : "${createLink(controller:'vivienda', action:'guardarFecha_ajax')}",
+                                        data    : {
+                                            persona: persona,
+                                            obligacion: obligacion,
+                                            fecha: fecha
+                                        },
+                                        success : function (msg) {
+                                            closeLoader();
+                                            if(msg == 'ok'){
+                                                log("Guardado correctamente","success");
+                                                setTimeout(function() {
+                                                    location.reload(true);
+                                                }, 1000);
+                                            }else{
+                                                closeLoader();
+                                                log("Error al guardar la fecha","error")
+                                            }
+                                        }
+                                    });
+                                } //callback
+                            } //guardar
+                        } //buttons
+                    }); //dialog
+                } //success
+            }); //ajax
+        });
 
         $(".btnCambiarEstado").click(function () {
             var id = $(this).data("id");
@@ -165,7 +227,6 @@
             });
         });
 
-
         $(".todosCk").click(function () {
             var cc = $(".todosCk:checked").val();
             if(cc == 'on'){
@@ -203,7 +264,6 @@
                     $("#divTabla").html(msg);
                 }
             });
-
         }
 
         $(function () {
@@ -216,8 +276,6 @@
             });
 
         });
-
-
     </script>
 </body>
 </html>
