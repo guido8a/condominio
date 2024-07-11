@@ -6087,6 +6087,7 @@ class ReportesController extends Shield{
         def sql = "select * from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') order by 2,1,5"
         println "sql: $sql"
         def detalle = cn.rows(sql.toString())
+        println "detalle: ${detalle.ingrmlta}"
 
         sql = "select sum(ingr.valor) vlor from (select distinct ingr__id, ingrvlor valor " +
                 "from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') ) as ingr"
@@ -6098,6 +6099,12 @@ class ReportesController extends Shield{
         def sql4 = "select sum(pagos.sldo) sldo from (select min(ingrsldo) sldo, ingr__id " +
                 "from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') group by ingr__id) as pagos"
         def totals = cn.rows(sql4.toString())[0].sldo
+
+        sql4 = "select sum(ingrmlta) vlor from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}')"
+        def multas = cn.rows(sql4.toString())[0].vlor
+
+        sql4 = "select sum(ingrdsct) vlor from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}')"
+        def tdesc = cn.rows(sql4.toString())[0].vlor
 
         def baos = new ByteArrayOutputStream()
         def name = "pagos" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
@@ -6149,13 +6156,13 @@ class ReportesController extends Shield{
         PdfPTable tablaDetalles = null
         def total = 0
 
-        def tablaHeaderDetalles = new PdfPTable(7);
+        def tablaHeaderDetalles = new PdfPTable(9);
         tablaHeaderDetalles.setWidthPercentage(100);
-        tablaHeaderDetalles.setWidths(arregloEnteros([11,33,10,11,10,12,10]))
+        tablaHeaderDetalles.setWidths(arregloEnteros([12,33,10,12,10,10,10,10,10]))
 
-        tablaDetalles = new PdfPTable(7);
+        tablaDetalles = new PdfPTable(9);
         tablaDetalles.setWidthPercentage(100);
-        tablaDetalles.setWidths(arregloEnteros([11,33,10,11,10,12,10]))
+        tablaDetalles.setWidths(arregloEnteros([12,33,10,12,10,10,10,10,10]))
         def frmtDato = [bwb: 0.1, bcb: Color.LIGHT_GRAY, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwb: 0.1, bcb: Color.LIGHT_GRAY, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         def frmtDoc = [bwb: 0.1, bcb: Color.LIGHT_GRAY, border: Color.LIGHT_GRAY, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
@@ -6167,11 +6174,13 @@ class ReportesController extends Shield{
         addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha", fontTh), frmtHd)
         addCellTabla(tablaHeaderDetalles, new Paragraph("Concepto", fontTh), frmtHd)
         addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
-        addCellTabla(tablaHeaderDetalles, new Paragraph("Pago", fontTh), frmtHd)
-        addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
-        addCellTabla(tablaHeaderDetalles, new Paragraph("Documento", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("F. Pago", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Pagado", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Docum.", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Multas", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Desc.", fontTh), frmtHd)
         addCellTabla(tablaHeaderDetalles, new Paragraph("Saldo", fontTh), frmtHd)
-        addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
+        addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 9, pl: 0])
 
         def band = ''
 
@@ -6186,20 +6195,24 @@ class ReportesController extends Shield{
             addCellTabla(tablaDetalles, new Paragraph(d.pagofcha?.toString(), fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(d.pagovlor?.toString(), fontTd10), frmtNmro)
             addCellTabla(tablaDetalles, new Paragraph(d.pagodcmt?.toString(), fontTd10), frmtDoc)
+            addCellTabla(tablaDetalles, new Paragraph(d.ingrmlta.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(d.ingrdsct.toString(), fontTd10), frmtNmro)
             addCellTabla(tablaDetalles, new Paragraph(d.ingrsldo.toString(), fontTd10), frmtNmro)
             band = d.ingrdscr
         }
 
-        def tablaTotal = new PdfPTable(7);
+        def tablaTotal = new PdfPTable(9);
         tablaTotal.setWidthPercentage(100);
-        tablaTotal.setWidths(arregloEnteros([11,33,10,11,10,12,10]))
+        tablaTotal.setWidths(arregloEnteros([12,33,10,12,10,10,10,10,10]))
         addCellTabla(tablaTotal, new Paragraph("Totales: ", fontTh), frmtTotl2)
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totali, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
         addCellTabla(tablaTotal, new Paragraph('', fontTd10), frmtTotl)
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalp, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
         addCellTabla(tablaTotal, new Paragraph('', fontTd10), frmtTotl)
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:multas, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:tdesc, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totals, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
-        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
+        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 9, pl: 0])
 
         document.add(tablaDetalles)
         document.close();

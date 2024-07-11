@@ -322,6 +322,8 @@ class Reportes2Controller {
         def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
         def totalValor = 0
         def totalPago = 0
+        def totalMlta = 0
+        def totalDsct = 0
         def totalSaldo = 0
 
         Document document
@@ -351,13 +353,13 @@ class Reportes2Controller {
 
         PdfPTable tablaDetalles = null
 
-        def tablaHeaderDetalles = new PdfPTable(7);
+        def tablaHeaderDetalles = new PdfPTable(9);
         tablaHeaderDetalles.setWidthPercentage(100);
-        tablaHeaderDetalles.setWidths(arregloEnteros([11,33,10,11,10,12,10]))
+        tablaHeaderDetalles.setWidths(arregloEnteros([12,33,10,12,10,12,10,10,10]))
 
-        tablaDetalles = new PdfPTable(7);
+        tablaDetalles = new PdfPTable(9);
         tablaDetalles.setWidthPercentage(100);
-        tablaDetalles.setWidths(arregloEnteros([11,33,10,11,10,12,10]))
+        tablaDetalles.setWidths(arregloEnteros([12,33,10,12,10,12,10,10,10]))
         def frmtDato = [bwb: 0.1, bcb: Color.LIGHT_GRAY, border: Color.LIGHT_GRAY, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def frmtNmro = [bwb: 0.1, bcb: Color.LIGHT_GRAY, border: Color.LIGHT_GRAY, align: Element.ALIGN_RIGHT, valign: Element.ALIGN_MIDDLE]
         def frmtDoc = [bwb: 0.1, bcb: Color.LIGHT_GRAY, border: Color.LIGHT_GRAY, align: Element.ALIGN_CENTER, valign: Element.ALIGN_MIDDLE]
@@ -368,11 +370,13 @@ class Reportes2Controller {
         addCellTabla(tablaHeaderDetalles, new Paragraph("Fecha", fontTh), frmtHd)
         addCellTabla(tablaHeaderDetalles, new Paragraph("Concepto", fontTh), frmtHd)
         addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
-        addCellTabla(tablaHeaderDetalles, new Paragraph("Pago Fecha", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Pago F.", fontTh), frmtHd)
         addCellTabla(tablaHeaderDetalles, new Paragraph("Pago", fontTh), frmtHd)
-        addCellTabla(tablaHeaderDetalles, new Paragraph("Documento", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Docum.", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Multas", fontTh), frmtHd)
+        addCellTabla(tablaHeaderDetalles, new Paragraph("Desc.", fontTh), frmtHd)
         addCellTabla(tablaHeaderDetalles, new Paragraph("Saldo", fontTh), frmtHd)
-        addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
+        addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 9, pl: 0])
 
         detalle.each { d->
             addCellTabla(tablaDetalles, new Paragraph(d.ingrfcha?.toString(), fontTd10), frmtDato)
@@ -381,24 +385,30 @@ class Reportes2Controller {
             addCellTabla(tablaDetalles, new Paragraph(d.pagofcha?.toString(), fontTd10), frmtDato)
             addCellTabla(tablaDetalles, new Paragraph(d.pagovlor?.toString(), fontTd10), frmtNmro)
             addCellTabla(tablaDetalles, new Paragraph(d.pagodcmt?.toString(), fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(d.ingrmlta?.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(d.ingrdsct?.toString(), fontTd10), frmtNmro)
             addCellTabla(tablaDetalles, new Paragraph(d.ingrsldo?.toString(), fontTd10), frmtNmro)
 
             totalValor += d.ingrvlor ?: 0
             totalPago += d.pagovlor ?: 0
+            totalMlta += d.ingrmlta ?: 0
+            totalDsct += d.ingrdsct ?: 0
             totalSaldo += d.ingrsldo ?: 0
 
         }
 
-        def tablaTotal = new PdfPTable(7);
+        def tablaTotal = new PdfPTable(9);
         tablaTotal.setWidthPercentage(100);
-        tablaTotal.setWidths(arregloEnteros([11,33,10,11,10,12,10]))
+        tablaTotal.setWidths(arregloEnteros([12,33,10,12,10,12,10,10,10]))
         addCellTabla(tablaTotal, new Paragraph("Totales: ", fontTh), frmtTotl2)
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalValor, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
         addCellTabla(tablaTotal, new Paragraph('', fontTd10), frmtTotl)
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalPago, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
         addCellTabla(tablaTotal, new Paragraph('', fontTd10), frmtTotl)
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalMlta, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
+        addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalDsct, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
         addCellTabla(tablaTotal, new Paragraph(g.formatNumber(number:totalSaldo, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTh), frmtTotl)
-        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 8, pl: 0])
+        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 9, pl: 0])
 
         document.add(tablaDetalles)
         document.close();
