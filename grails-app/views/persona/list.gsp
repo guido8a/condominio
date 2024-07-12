@@ -192,6 +192,37 @@
         }); //ajax
     } //createEdit
 
+
+    function submitForm() {
+        var $form = $("#frmPersona");
+        var $btn = $("#dlgCreateEdit").find("#btnSave");
+        if ($form.valid()) {
+            $btn.replaceWith(spinner);
+            openLoader("Guardando...");
+            $.ajax({
+                type    : "POST",
+                url     : $form.attr("action"),
+                data    : $form.serialize(),
+                success : function (msg) {
+                    closeLoader();
+                    spinner.replaceWith($btn);
+                    if(msg === 'ok'){
+                        log("Persona guardada correctamente","success");
+                        setTimeout(function() {
+                           location.reload()
+                        }, 100);
+                    }else{
+                        log("Error al guardar la información de persona","error");
+                        closeLoader();
+                    }
+                }
+            });
+        } else {
+            return false;
+        } //else
+    }
+
+
     $(function () {
 
         $(".btnCrear").click(function() {

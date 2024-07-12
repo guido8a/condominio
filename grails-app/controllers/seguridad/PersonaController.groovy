@@ -47,7 +47,7 @@ class PersonaController extends Shield {
                     /* TODO: cambiar aqui segun sea necesario */
 
                     ilike("apellido", "%" + params.search + "%")
-                    ilike("autorizacion", "%" + params.search + "%")
+//                    ilike("autorizacion", "%" + params.search + "%")
                     ilike("cargo", "%" + params.search + "%")
                     ilike("departamento", "%" + params.search + "%")
                     ilike("direccion", "%" + params.search + "%")
