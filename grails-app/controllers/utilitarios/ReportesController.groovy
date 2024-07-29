@@ -6356,5 +6356,12 @@ class ReportesController extends Shield{
         encabezadoYnumeracion(b, session.condominio.nombre,"", "dt_saldos_${persona.nombre}.pdf")
     }
 
+    def documento_ajax(){
+        def desde = new Date().parse("dd-MM-yyyy", params.desde)
+        def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
+        def documentos = Pago.findAllByFechaPagoBetweenAndDocumentoIsNotNull(desde, hasta).sort{it.documento}
+        return [documentos: documentos.documento]
+    }
+
 
 }

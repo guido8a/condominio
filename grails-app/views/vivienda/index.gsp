@@ -502,7 +502,8 @@ como máximo 30
                             callback  : function () {
                                 var hasta = $("#fechaHastaDet").val();
                                 var desde = $("#fechaDesdeDet").val();
-                                location.href='${createLink(controller: 'reportes', action: 'reporteDetallePagos')}?id=' + id + "&desde=" + desde + "&hasta=" + hasta ;
+                                var documento = $("#documento").val();
+                                location.href='${createLink(controller: 'reportes', action: 'reporteDetallePagos')}?id=' + id + "&desde=" + desde + "&hasta=" + hasta + "&documento=" + documento;
                             }
                         }
                     } //buttons

@@ -1,11 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 23/11/18
-  Time: 10:35
---%>
-
-
 <div class="modal-body">
     <div class="row">
         <div class="col-md-1 col-xs-1">
@@ -33,5 +25,50 @@
         <div class="col-md-1 col-xs-1">
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-1 col-xs-1">
+        </div>
+        <div class="col-md-2 col-xs-2">
+            <label>Documento</label>
+        </div>
+        <div class="col-md-4 col-xs-7" id="divDocumento">
+
+        </div>
+        <div class="col-md-1 col-xs-1">
+        </div>
+    </div>
+
 </div>
+
+<script type="text/javascript">
+
+    documento($("#fechaDesdeDet").val(), $("#fechaHastaDet").val());
+
+    function documento (desde, hasta) {
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'reportes', action: 'documento_ajax')}',
+            data:{
+                desde: desde,
+                hasta: hasta
+            },
+            success: function (msg) {
+                $("#divDocumento").html(msg)
+            }
+        })
+    }
+
+    $("#fechaDesdeDet").change(function () {
+        var desde = $(this).val();
+        documento(desde, $("#fechaHastaDet").val());
+    });
+
+    $("#fechaHastaDet").change(function () {
+        var hasta = $(this).val();
+        documento($("#fechaDesdeDet").val(), hasta);
+    });
+
+
+</script>
 
