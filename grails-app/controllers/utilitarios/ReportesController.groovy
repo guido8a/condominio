@@ -6084,29 +6084,68 @@ class ReportesController extends Shield{
         def fechaDesde = new Date().parse("dd-MM-yyyy", params.desde).format('yyyy-MM-dd')
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
         def persona = Persona.get(params.id)
+        def sql = ''
+        def sql2 = ''
+        def sql3 = ''
+        def sql4 = ''
+        def sql5 = ''
+        def sql6 = ''
 
 //        def sql = "select * from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') where pagodcmt::int = 10267 order by 2,1,5"
-        def sql = "select * from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') order by 2,1,5"
-        println "sql: $sql"
+
+        if(params.documento == '0'){
+            sql = "select * from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') order by 2,1,5"
+        }else{
+            sql = "select * from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') where pagodcmt::int = ${params.documento} order by 2,1,5"
+        }
+//        println "sql: $sql"
+
         def detalle = cn.rows(sql.toString())
-        println "detalle: ${detalle.ingrmlta}"
+//        println "detalle: ${detalle.ingrmlta}"
 
-        sql = "select sum(ingr.valor) vlor from (select distinct ingr__id, ingrvlor valor " +
-                "from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') ) as ingr"
-        def totali = cn.rows(sql.toString())[0].vlor
+        if(params.documento == '0'){
+            sql2 = "select sum(ingr.valor) vlor from (select distinct ingr__id, ingrvlor valor " +
+                    "from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') ) as ingr"
+        }else{
+            sql2 = "select sum(ingr.valor) vlor from (select distinct ingr__id, ingrvlor valor " +
+                    "from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') where pagodcmt::int = ${params.documento} ) as ingr"
+        }
 
-        sql = "select sum(pagovlor) pago from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}')"
-        def totalp = cn.rows(sql.toString())[0].pago
+        def totali = cn.rows(sql2.toString())[0].vlor
 
-        def sql4 = "select sum(pagos.sldo) sldo from (select min(ingrsldo) sldo, ingr__id " +
-                "from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') group by ingr__id) as pagos"
+        if(params.documento == '0'){
+            sql3 = "select sum(pagovlor) pago from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}')"
+        }else{
+            sql3 = "select sum(pagovlor) pago from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') where pagodcmt::int = ${params.documento}"
+        }
+
+        def totalp = cn.rows(sql3.toString())[0].pago
+
+        if(params.documento == '0'){
+            sql4 = "select sum(pagos.sldo) sldo from (select min(ingrsldo) sldo, ingr__id " +
+                    "from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') group by ingr__id) as pagos"
+        }else{
+            sql4 = "select sum(pagos.sldo) sldo from (select min(ingrsldo) sldo, ingr__id " +
+                    "from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') where pagodcmt::int = ${params.documento} group by ingr__id) as pagos"
+        }
+
         def totals = cn.rows(sql4.toString())[0].sldo
 
-        sql4 = "select sum(ingrmlta) vlor from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}')"
-        def multas = cn.rows(sql4.toString())[0].vlor
+        if(params.documento == '0'){
+            sql5 = "select sum(ingrmlta) vlor from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}')"
+        }else{
+            sql5 = "select sum(ingrmlta) vlor from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') where pagodcmt::int = ${params.documento}"
+        }
 
-        sql4 = "select sum(ingrdsct) vlor from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}')"
-        def tdesc = cn.rows(sql4.toString())[0].vlor
+        def multas = cn.rows(sql5.toString())[0].vlor
+
+        if(params.documento == '0'){
+            sql6 = "select sum(ingrdsct) vlor from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}')"
+        }else{
+            sql6 = "select sum(ingrdsct) vlor from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') where pagodcmt::int = ${params.documento}"
+        }
+
+        def tdesc = cn.rows(sql6.toString())[0].vlor
 
         def baos = new ByteArrayOutputStream()
         def name = "pagos" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
@@ -6191,15 +6230,15 @@ class ReportesController extends Shield{
                 addCellTabla(tablaDetalles, new Paragraph('', fontTd10), frmtcol3)
             }else{
                 addCellTabla(tablaDetalles, new Paragraph(d.ingrfcha.toString(), fontTd10), frmtDato)
-                addCellTabla(tablaDetalles, new Paragraph(d.ingrdscr.toString(), fontTd10), frmtDato)
-                addCellTabla(tablaDetalles, new Paragraph(d.ingrvlor.toString(), fontTd10), frmtNmro)
+                addCellTabla(tablaDetalles, new Paragraph(d.ingrdscr.toString() != 'null' ? d.ingrdscr.toString() : '', fontTd10), frmtDato)
+                addCellTabla(tablaDetalles, new Paragraph(d.ingrvlor.toString() ?: '', fontTd10), frmtNmro)
             }
-            addCellTabla(tablaDetalles, new Paragraph(d.pagofcha?.toString(), fontTd10), frmtDato)
-            addCellTabla(tablaDetalles, new Paragraph(d.pagovlor?.toString(), fontTd10), frmtNmro)
-            addCellTabla(tablaDetalles, new Paragraph(d.pagodcmt?.toString(), fontTd10), frmtDoc)
-            addCellTabla(tablaDetalles, new Paragraph(d.ingrmlta.toString(), fontTd10), frmtNmro)
-            addCellTabla(tablaDetalles, new Paragraph(d.ingrdsct.toString(), fontTd10), frmtNmro)
-            addCellTabla(tablaDetalles, new Paragraph(d.ingrsldo.toString(), fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(d.pagofcha?.toString() ?: '', fontTd10), frmtDato)
+            addCellTabla(tablaDetalles, new Paragraph(d.pagovlor?.toString() ?: '', fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(d.pagodcmt?.toString() ?: '', fontTd10), frmtDoc)
+            addCellTabla(tablaDetalles, new Paragraph(d.ingrmlta.toString() ?: '', fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(d.ingrdsct != null ? d.ingrdsct.toString() : '', fontTd10), frmtNmro)
+            addCellTabla(tablaDetalles, new Paragraph(d.ingrsldo.toString() ?: '', fontTd10), frmtNmro)
             band = d.ingrdscr
         }
 
