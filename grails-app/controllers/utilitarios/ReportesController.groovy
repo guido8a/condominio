@@ -4493,7 +4493,8 @@ class ReportesController extends Shield{
 ////    }
 
     def fechasDetalle_ajax () {
-
+        def persona = Persona.get(params.id)
+        return [persona: persona]
     }
 
     def reporteEgresosProveedor () {
@@ -6357,8 +6358,10 @@ class ReportesController extends Shield{
     }
 
     def documento_ajax(){
+        println("params doc " + params)
         def desde = new Date().parse("dd-MM-yyyy", params.desde)
         def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
+        def persona = Persona.get(params.persona)
         def documentos = Pago.findAllByFechaPagoBetweenAndDocumentoIsNotNull(desde, hasta).sort{it.documento}
         return [documentos: documentos.documento]
     }

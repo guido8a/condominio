@@ -51,7 +51,8 @@
             url: '${createLink(controller: 'reportes', action: 'documento_ajax')}',
             data:{
                 desde: desde,
-                hasta: hasta
+                hasta: hasta,
+                persona: '${persona?.id}'
             },
             success: function (msg) {
                 $("#divDocumento").html(msg)
