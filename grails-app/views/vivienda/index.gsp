@@ -486,7 +486,7 @@ como máximo 30
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgFechasDetalle",
-                    title   : "Período para el detalle de Pagos",
+                    title   : "Período para el detalle de Pagos - Fecha de la obligación",
 //                    class   : "modal-lg",
                     message : msg,
                     buttons : {
@@ -525,7 +525,7 @@ como máximo 30
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgFechasDetalle",
-                    title   : "Período para el detalle de Pagos",
+                    title   : "Período para el detalle de Pagos - Fecha de obligación",
 //                    class   : "modal-lg",
                     message : msg,
                     buttons : {
@@ -563,7 +563,7 @@ como máximo 30
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgValoresPagados",
-                    title   : "Valores pagados",
+                    title   : "Valores pagados -  Respecto a la fecha de pago",
                     message : msg,
                     buttons : {
                         cancelar : {
