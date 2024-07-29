@@ -6085,6 +6085,7 @@ class ReportesController extends Shield{
         def fechaHasta = new Date().parse("dd-MM-yyyy", params.hasta).format('yyyy-MM-dd')
         def persona = Persona.get(params.id)
 
+//        def sql = "select * from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') where pagodcmt::int = 10267 order by 2,1,5"
         def sql = "select * from dtpago(${persona?.id}, '${fechaDesde}', '${fechaHasta}') order by 2,1,5"
         println "sql: $sql"
         def detalle = cn.rows(sql.toString())
@@ -6359,11 +6360,14 @@ class ReportesController extends Shield{
 
     def documento_ajax(){
         println("params doc " + params)
-        def desde = new Date().parse("dd-MM-yyyy", params.desde)
-        def hasta = new Date().parse("dd-MM-yyyy", params.hasta)
-        def persona = Persona.get(params.persona)
-        def documentos = Pago.findAllByFechaPagoBetweenAndDocumentoIsNotNull(desde, hasta).sort{it.documento}
-        return [documentos: documentos.documento]
+        def desde = new Date().parse("dd-MM-yyyy", params.desde).format("yyyy-MM-dd")
+        def hasta = new Date().parse("dd-MM-yyyy", params.hasta).format("yyyy-MM-dd")
+        def cn = dbConnectionService.getConnection()
+        def sql = "select distinct pagodcmt from pago, ingr where ingr.ingr__id = pago.ingr__id and " +
+                "prsn__id = ${params.persona} and pagofcpg between '${desde}' and '${hasta}'  order by 1"
+        println "sql --> $sql"
+        def res = cn.rows(sql.toString())
+        return [documentos: res]
     }
 
 
