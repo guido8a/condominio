@@ -6409,5 +6409,9 @@ class ReportesController extends Shield{
         return [documentos: res]
     }
 
+    def fechaDetallesDeudas_ajax(){
+
+    }
+
 
 }

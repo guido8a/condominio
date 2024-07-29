@@ -518,7 +518,7 @@ como máximo 30
     function cargarFechasSaldo (id) {
         $.ajax({
             type    : "POST",
-            url     : "${createLink(controller:'reportes', action:'fechasDetalle_ajax')}",
+            url     : "${createLink(controller:'reportes', action:'fechaDetallesDeudas_ajax')}",
             data    : {
                 id: id
             },
