@@ -4408,7 +4408,7 @@ class ReportesController extends Shield{
 ////            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor", fontTh), frmtHd)
 //            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor Pagado", fontTh), frmtHd)
 ////            addCellTabla(tablaHeaderDetalles, new Paragraph("Valor Restante", fontTh), frmtHd)
-//            addCellTabla(tablaHeaderDetalles, new Paragraph("Comprobante", fontTh), frmtHd)
+//            addCellTabla(tablaHeaderDetalles, new Paragraph("ComprobanteCont", fontTh), frmtHd)
 //            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.BLACK, align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE, colspan: 7, pl: 0])
 //        }
 //
@@ -4458,7 +4458,7 @@ class ReportesController extends Shield{
 ////                addCellTabla(nested2, new Paragraph(pago?.ingreso?.valor + " ", fontTd10), frmtNmro)
 //                    addCellTabla(nested2, new Paragraph(pago?.valor + " ", fontTd10), frmtNmro)
 ////                addCellTabla(nested3, new Paragraph(pago?.ingreso?.valor?.toDouble() - (pago?.valor ?: 0) + " ", fontTd10), frmtNmro)
-//                    addCellTabla(nested3, new Paragraph("Comprobante: " + pago?.documento, fontTd10), frmtDato)
+//                    addCellTabla(nested3, new Paragraph("ComprobanteCont: " + pago?.documento, fontTd10), frmtDato)
 //                }
 //            }else{
 //                addCellTabla(nested1, new Paragraph(" -- Sin pagos realizados--", fontTd10), frmtNmro + [colspan: 4])

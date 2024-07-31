@@ -14,7 +14,7 @@ class ComprobanteController {
             texto.save(flush: true)
         }
 
-        def parrafo1 = "Comprobante de pago......."
+        def parrafo1 = "ComprobanteCont de pago......."
 
 
         return[condominio:condominio, texto:texto, parrafo1: parrafo1]

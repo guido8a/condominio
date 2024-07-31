@@ -441,7 +441,7 @@ class ContabilidadController extends seguridad.Shield {
             hasta = new Date().parse("dd-MM-yyyy", params.hasta)
         }
 
-        def comprobantes = Comprobante.withCriteria {
+        def comprobantes = ComprobanteCont.withCriteria {
 
             proceso{
                 eq("contabilidad", contabilidad)

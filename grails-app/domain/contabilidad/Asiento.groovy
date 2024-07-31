@@ -5,8 +5,8 @@ class Asiento implements Serializable {
     double debe=0
     int    numero
     Cuenta cuenta
-    Comprobante comprobante
-    String retencion
+    ComprobanteCont comprobante
+//    String retencion
     static auditable = true
     static mapping = {
         table 'asnt'
@@ -19,8 +19,8 @@ class Asiento implements Serializable {
             debe column: 'asntdebe'
             numero column: 'asntnmro'
             cuenta column: 'cnta__id'
-            comprobante column: 'cmpr__id'
-            retencion column: 'asntrtnc'
+            comprobante column: 'cmco__id'
+//            retencion column: 'asntrtnc'
         }
     }
     static constraints = {
@@ -29,7 +29,7 @@ class Asiento implements Serializable {
         numero(blank: false, attributes: [title: 'numero'])
         cuenta(blank: false, attributes: [title: 'cuenta'])
         comprobante(blank: false, attributes: [title: 'comprobante'])
-        retencion(blank: true,nullable: true, attributes: [title: 'si es o no parte de la retención'])
+//        retencion(blank: true,nullable: true, attributes: [title: 'si es o no parte de la retención'])
     }
 
 //    def suma(){

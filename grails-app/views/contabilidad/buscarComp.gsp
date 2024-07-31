@@ -170,7 +170,7 @@
         var id = $tr.data("id");
 
         var comprobante = {
-            label: 'Comprobante',
+            label: 'ComprobanteCont',
             icon: 'fa fa-calendar-o',
             action: function () {
                 location.href="${createLink(controller: 'proceso', action: 'comprobante')}/?proceso=" + id

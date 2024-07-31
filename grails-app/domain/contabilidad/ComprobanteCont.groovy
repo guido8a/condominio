@@ -1,6 +1,6 @@
 package contabilidad
 
-class Comprobante implements Serializable {
+class ComprobanteCont implements Serializable {
     Date fecha
     String descripcion
     String prefijo
@@ -12,19 +12,19 @@ class Comprobante implements Serializable {
 
     static auditable = true
     static mapping = {
-        table 'cmpr'
+        table 'cmco'
         cache usage: 'read-write', include: 'non-lazy'
-        id column: 'cmpr__id'
+        id column: 'cmco__id'
         id generator: 'identity'
         version false
         columns {
-            fecha column: 'cmprfcha'
-            descripcion column: 'cmprdscr'
-            numero column: 'cmprnmro'
+            fecha column: 'cmcofcha'
+            descripcion column: 'cmcodscr'
+            numero column: 'cmconmro'
             tipo column: 'tpcp__id'
-            registrado column: 'cmprrgst'
-            prefijo column: 'cmprprfj'
-            factura column: 'cmprfctr'
+            registrado column: 'cmcorgst'
+//            prefijo column: 'cmcoprfj'
+//            factura column: 'cmcofctr'
             contabilidad column: 'cont__id'
         }
     }
