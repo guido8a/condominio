@@ -1,5 +1,6 @@
 package seguridad
 
+import contabilidad.Contabilidad
 import utilitarios.Parametros
 
 class LoginController {
@@ -256,6 +257,31 @@ class LoginController {
                             redirect(controller: 'inicio', action: 'index')
                         }
 
+
+                        /** pone contabilidad */
+                        def ahora = new Date().clearTime()
+//                        def user = Persona.get(session.usuario.id)
+
+                        def cont = Contabilidad.withCriteria {
+                            eq("condominio", user.condominio)
+                            le("fechaInicio", ahora)
+                            ge("fechaCierre", ahora)
+                            order("fechaCierre", "desc")
+                        }
+                        if (cont.size() == 0) {
+                            def conts = Contabilidad.findAllByCondominio(user.condominio, [sort: "fechaCierre", order: "desc"])
+                            if (conts.size() > 0) {
+                                cont = conts[0]
+                            }
+                        } else if (cont.size() == 1) {
+                            cont = cont[0]
+                        } else {
+                            cont = cont[0]
+                        }
+                        session.contabilidad = cont
+                        println "contabilidad asignada: ${session.contabilidad}"
+
+
                         return
 
                     } else {
@@ -301,47 +327,36 @@ class LoginController {
                 }
 
             }
-//            println "permisos " + session.usuario.permisos.id + "  " + session.usuario.permisos
-//            println "add " + session.usuario.permisos
-//            println "puede recibir " + session.usuario.getPuedeRecibir()
-//            println "puede getPuedeVer " + session.usuario.getPuedeVer()
-//            println "puede getPuedeAdmin " + session.usuario.getPuedeAdmin()
-//            println "puede getPuedeJefe " + session.usuario.getPuedeJefe()
-//            println "puede getPuedeDirector " + session.usuario.getPuedeDirector()
-//            println "puede getPuedeExternos " + session.usuario.getPuedeExternos()
-//            println "puede getPuedeAnular " + session.usuario.getPuedeAnular()
-//            println "puede getPuedeTramitar " + session.usuario.getPuedeTramitar()
             session.perfil = perf
             cargarPermisos()
-//            if (session.an && session.cn) {
-//                if (session.an.toString().contains("ajax")) {
-//                    redirect(controller: "inicio", action: "index")
-//                } else {
-//                    redirect(controller: session.cn, action: session.an, params: session.pr)
-//                }
-//            } else {
-//            def count = 0
-//            if (session.usuario.esTriangulo()) {
-//                count = Alerta.countByDepartamentoAndFechaRecibidoIsNull(session.departamento)
-//            } else {
-//                count = Alerta.countByPersonaAndFechaRecibidoIsNull(session.usuario)
-//            }
+
+            def ahora = new Date().clearTime()
+            def user = Persona.get(session.usuario.id)
+
+            def cont = Contabilidad.withCriteria {
+                eq("condominio", user.condominio)
+                le("fechaInicio", ahora)
+                ge("fechaCierre", ahora)
+                order("fechaCierre", "desc")
+            }
+            if (cont.size() == 0) {
+                def conts = Contabilidad.findAllByCondominio(user.condominio, [sort: "fechaCierre", order: "desc"])
+                if (conts.size() > 0) {
+                    cont = conts[0]
+                }
+            } else if (cont.size() == 1) {
+                cont = cont[0]
+            } else {
+                cont = cont[0]
+            }
+            session.contabilidad = cont
+            println "contabilidad asignada: ${session.contabilidad}"
 
             def count = borrarAlertas()
             if (count > 0) {
                 redirect(controller: 'alertas', action: 'list')
             } else {//
-//                if (session.usuario.getPuedeDirector() || session.usuario.getPuedeJefe()) {
-//
-//                    redirect(controller: "retrasadosWeb", action: "reporteRetrasadosConsolidadoDir", params: [dpto: Persona.get(session.usuario.id).departamento.id, inicio: "1", dir: "1"])
-//                } else {
-//                    if (session.usuario.getPuedeJefe()) {
-//                        redirect(controller: "retrasadosWeb", action: "reporteRetrasadosConsolidado", params: [dpto: Persona.get(session.usuario.id).departamento.id, inicio: "1"])
-//                    } else {
                 redirect(controller: "inicio", action: "index")
-//                    }
-
-//                }
             }
 //            }
         } else {
