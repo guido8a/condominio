@@ -3,11 +3,11 @@ package contabilidad
 class ComprobanteCont implements Serializable {
     Date fecha
     String descripcion
-    String prefijo
+//    String prefijo
     int    numero
     TipoComprobante tipo
     String registrado
-    String factura
+//    String factura
     Contabilidad contabilidad
 
     static auditable = true
@@ -34,8 +34,8 @@ class ComprobanteCont implements Serializable {
         numero(blank: true, nullable: true, attributes: [title: 'numero'])
         tipo(blank: false, attributes: [title: 'tipoProveedor'])
         registrado(blank: false, maxSize: 1, attributes: [title: 'registrado'])
-        prefijo(blank: true,nullable: true,size: 1..20)
-        factura(blank: true,nullable: true)
+//        prefijo(blank: true,nullable: true,size: 1..20)
+//        factura(blank: true,nullable: true)
         contabilidad(blank: false, nullable: false)
     }
 }
