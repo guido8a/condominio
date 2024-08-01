@@ -1,4 +1,3 @@
-<%@ page import="cratos.Contabilidad" %>
 
 <g:if test="${!contabilidadInstance}">
     <elm:notFound elem="Contabilidad" genero="o"/>
@@ -50,38 +49,10 @@
                 Descripción
             </div>
 
-            <div class="col-md-5">
+            <div class="col-md-8">
                 <g:fieldValue bean="${contabilidadInstance}" field="descripcion"/>
             </div>
 
         </div>
     </g:if>
-
-    <g:if test="${contabilidadInstance?.cuenta}">
-        <div class="row">
-            <div class="col-md-3 text-info">
-                Cuenta
-            </div>
-
-            <div class="col-md-9">
-                ${contabilidadInstance?.cuenta?.descripcion}
-            </div>
-
-        </div>
-    </g:if>
-
-
-%{--<g:if test="${contabilidadInstance?.presupuesto}">--}%
-%{--<div class="row">--}%
-%{--<div class="col-md-3 text-info">--}%
-%{--Presupuesto--}%
-%{--</div>--}%
-%{----}%
-%{--<div class="col-md-3">--}%
-%{--<g:formatDate date="${contabilidadInstance?.presupuesto}" format="dd-MM-yyyy" />--}%
-%{--</div>--}%
-%{----}%
-%{--</div>--}%
-%{--</g:if>--}%
-
 </g:else>

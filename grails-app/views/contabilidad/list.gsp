@@ -1,4 +1,3 @@
-<%@ page import="cratos.Contabilidad" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,16 +12,13 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <a href="#" class="btn btn-info btnCrear">
+        <a href="#" class="btn btn-primary btnCrear">
             <i class="fa fa-file-o"></i> Nueva contabilidad
         </a>
     </div>
 </div>
 
-<div class="vertical-container vertical-container-list">
-    <p class="css-vertical-text">Lista de Contabilidades</p>
-
-    <div class="linea"></div>
+<div>
     <table class="table table-condensed table-bordered table-striped table-hover">
         <thead>
         <tr>
@@ -30,7 +26,7 @@
             <g:sortableColumn property="fechaCierre" title="Fecha Cierre"/>
             <g:sortableColumn property="prefijo" title="Prefijo"/>
             <g:sortableColumn property="descripcion" title="Descripción"/>
-            <th width="110">Acciones</th>
+            <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -40,7 +36,7 @@
                 <td style="text-align: center"><g:formatDate date="${contabilidadInstance.fechaCierre}" format="dd-MM-yyyy"/></td>
                 <td>${fieldValue(bean: contabilidadInstance, field: "prefijo")}</td>
                 <td>${fieldValue(bean: contabilidadInstance, field: "descripcion")}</td>
-                <td>
+                <td style="width: 15%; text-align: center">
                     <a href="#" data-id="${contabilidadInstance.id}" class="btn btn-info btn-sm btn-show btn-ajax" title="Ver">
                         <i class="fa fa-laptop"></i>
                     </a>
@@ -56,46 +52,72 @@
         </tbody>
     </table>
 </div>
+
 <elm:pagination total="${contabilidadInstanceCount}" params="${params}"/>
 
 <script type="text/javascript">
 
-
+    var id = null;
 
     $(".btnCrear").click(function () {
-        if(${cuentas > 0}){
-            createEditRow();
-            return false;
-        }else{
-            $.ajax({
-                type:'POST',
-                url: '${createLink(controller: 'contabilidad', action: 'crear_ajax')}',
-                data:{
 
-                },
-                success: function (msg){
-                    bootbox.dialog({
-                        title   : "Plan de cuentas",
-                        message : msg,
-                        class : 'long',
-                        buttons : {
-                            ok : {
-                                label     : "<i class='fa fa-times'></i> Cancelar",
-                                className : "btn-primary",
-                                callback  : function () {
-                                }
+        <g:if test="${cuentas > 0}">
+        createEditRowContabilidad();
+        </g:if>
+        <g:else>
+        $.ajax({
+            type:'POST',
+            url: '${createLink(controller: 'contabilidad', action: 'crear_ajax')}',
+            data:{
+            },
+            success: function (msg){
+                bootbox.dialog({
+                    title   : "Plan de cuentas",
+                    message : msg,
+                    // class : 'long',
+                    buttons : {
+                        ok : {
+                            label     : "<i class='fa fa-times'></i> Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
                             }
                         }
-                    });
-                }
-            });
-        }
+                    }
+                });
+            }
+        });
+        </g:else>
+
+
+        %{--if(${cuentas > 0}){--}%
+        %{--    createEditRowContabilidad();--}%
+        %{--    return false;--}%
+        %{--}else{--}%
+        %{--    $.ajax({--}%
+        %{--        type:'POST',--}%
+        %{--        url: '${createLink(controller: 'contabilidad', action: 'crear_ajax')}',--}%
+        %{--        data:{--}%
+        %{--        },--}%
+        %{--        success: function (msg){--}%
+        %{--            bootbox.dialog({--}%
+        %{--                title   : "Plan de cuentas",--}%
+        %{--                message : msg,--}%
+        %{--                // class : 'long',--}%
+        %{--                buttons : {--}%
+        %{--                    ok : {--}%
+        %{--                        label     : "<i class='fa fa-times'></i> Cancelar",--}%
+        %{--                        className : "btn-primary",--}%
+        %{--                        callback  : function () {--}%
+        %{--                        }--}%
+        %{--                    }--}%
+        %{--                }--}%
+        %{--            });--}%
+        %{--        }--}%
+        %{--    });--}%
+        %{--}--}%
     });
 
-
-
-    var id = null;
-    function submitForm() {
+    function submitFormContabilidad() {
         var $form = $("#frmContabilidad");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
@@ -106,15 +128,15 @@
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
                 success : function (msg) {
+                    closeLoader();
                     var parts = msg.split("_");
-                    log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                    if (parts[0] == "OK") {
+                    if (parts[0] === "OK") {
+                        log(parts[1], "success");
                         setTimeout(function () {
-                            location.reload(true);
-                        }, 1200);
-                    } else {
-                        closeLoader();
-//                                spinner.replaceWith($btn);
+                            location.reload();
+                        }, 1000);
+                    }else {
+                        log(parts[1], 'error');
                         return false;
                     }
                 }
@@ -123,10 +145,10 @@
             return false;
         } //else
     }
-    function deleteRow(itemId) {
+    function deleteRowContabilidad(itemId) {
         bootbox.dialog({
             title   : "Alerta",
-            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar la Contabilidad seleccionada? Esta acción no se puede deshacer.</p>",
+            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p style='font-size: 14px'> Está seguro que desea eliminar la Contabilidad seleccionada? <br> Esta acción no se puede deshacer.</p>",
             buttons : {
                 cancelar : {
                     label     : "<i class='fa fa-times'></i> Cancelar",
@@ -146,15 +168,15 @@
                                 id : itemId
                             },
                             success : function (msg) {
+                                closeLoader();
                                 var parts = msg.split("_");
-                                log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                                if (parts[0] == "OK") {
+                                if (parts[0] === "OK") {
+                                    log(parts[1], "success");
                                     setTimeout(function () {
-                                        location.reload(true);
-                                    }, 1200);
-                                } else {
-                                    closeLoader();
-//                                            spinner.replaceWith($btn);
+                                        location.reload();
+                                    }, 1000);
+                                }else {
+                                    log(parts[1], 'error');
                                     return false;
                                 }
                             }
@@ -164,7 +186,7 @@
             }
         });
     }
-    function createEditRow(id) {
+    function createEditRowContabilidad(id) {
         var title = id ? "Editar" : "Nueva";
         var data = id ? { id : id } : {};
         $.ajax({
@@ -176,7 +198,7 @@
                     id      : "dlgCreateEdit",
                     title   : title + " Contabilidad",
                     message : msg,
-                    class : 'long',
+                    // class : 'long',
                     buttons : {
                         cancelar : {
                             label     : "<i class='fa fa-times'></i> Cancelar",
@@ -189,94 +211,86 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitForm();
+                                return submitFormContabilidad();
                             } //callback
                         } //guardar
                     } //buttons
                 }); //dialog
-                setTimeout(function () {
-                    b.find(".form-control").not(".datepicker").first().focus()
-                }, 500);
             } //success
         }); //ajax
     } //createEdit
 
-    $(function () {
 
-
-
-        $(".btn-show").click(function () {
-            var id = $(this).data("id");
-            $.ajax({
-                type    : "POST",
-                url     : "${createLink(action:'show_ajax')}",
-                data    : {
-                    id : id
-                },
-                success : function (msg) {
-                    bootbox.dialog({
-                        title   : "Ver datos de la Contabilidad",
-                        message : msg,
-                        buttons : {
-                            ok : {
-                                label     : "<i class='fa fa-times'></i> Aceptar",
-                                className : "btn-primary",
-                                callback  : function () {
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        });
-        $(".btn-edit").click(function () {
-            var id = $(this).data("id");
-            createEditRow(id);
-        });
-        $(".btn-delete").click(function () {
-            var id = $(this).data("id");
-            deleteRow(id);
-        });
-
-    });
-
-
-    $(".btnNueva").click(function () {
+    $(".btn-show").click(function () {
+        var id = $(this).data("id");
         $.ajax({
-            type: 'POST',
-            %{--url: '${createLink(controller: 'contabilidad', action: 'formPeriodo_ajax')}',--}%
-            url: '${createLink(controller: 'contabilidad', action: 'form_ajax')}',
-            data:{
-
+            type    : "POST",
+            url     : "${createLink(action:'show_ajax')}",
+            data    : {
+                id : id
             },
-            success: function (msg){
-                var b = bootbox.dialog({
-                    id      : "dlgNuevaContabilidad",
-                    title   : "Nueva Contabilidad",
+            success : function (msg) {
+                bootbox.dialog({
+                    title   : "Ver datos de la Contabilidad",
                     message : msg,
                     buttons : {
-                        cancelar : {
-                            label     : "<i class='fa fa-times'></i> Cancelar",
+                        ok : {
+                            label     : "<i class='fa fa-times'></i> Aceptar",
                             className : "btn-primary",
                             callback  : function () {
                             }
-                        },
-                        guardar  : {
-                            id        : "btnSaveNueva",
-                            label     : "<i class='fa fa-save'></i> Guardar",
-                            className : "btn-success",
-                            callback  : function () {
-
-                            } //callback
-                        } //guardar
-                    } //buttons
-                }); //dialog
-                setTimeout(function () {
-
-                }, 500);
+                        }
+                    }
+                });
             }
         });
     });
+    $(".btn-edit").click(function () {
+        var id = $(this).data("id");
+        createEditRowContabilidad(id);
+    });
+    $(".btn-delete").click(function () {
+        var id = $(this).data("id");
+        deleteRowContabilidad(id);
+    });
+
+
+
+    %{--$(".btnNueva").click(function () {--}%
+    %{--    $.ajax({--}%
+    %{--        type: 'POST',--}%
+    %{--        url: '${createLink(controller: 'contabilidad', action: 'form_ajax')}',--}%
+    %{--        data:{--}%
+
+    %{--        },--}%
+    %{--        success: function (msg){--}%
+    %{--            var b = bootbox.dialog({--}%
+    %{--                id      : "dlgNuevaContabilidad",--}%
+    %{--                title   : "Nueva Contabilidad",--}%
+    %{--                message : msg,--}%
+    %{--                buttons : {--}%
+    %{--                    cancelar : {--}%
+    %{--                        label     : "<i class='fa fa-times'></i> Cancelar",--}%
+    %{--                        className : "btn-primary",--}%
+    %{--                        callback  : function () {--}%
+    %{--                        }--}%
+    %{--                    },--}%
+    %{--                    guardar  : {--}%
+    %{--                        id        : "btnSaveNueva",--}%
+    %{--                        label     : "<i class='fa fa-save'></i> Guardar",--}%
+    %{--                        className : "btn-success",--}%
+    %{--                        callback  : function () {--}%
+
+    %{--                        } //callback--}%
+    %{--                    } //guardar--}%
+    %{--                } //buttons--}%
+    %{--            }); //dialog--}%
+    %{--            setTimeout(function () {--}%
+
+    %{--            }, 500);--}%
+    %{--        }--}%
+    %{--    });--}%
+    %{--});--}%
 
 </script>
 

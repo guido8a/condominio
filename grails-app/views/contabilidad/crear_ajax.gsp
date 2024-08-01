@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 27/10/17
-  Time: 14:31
---%>
-
 <div class="alert alert-danger" style="width: 555px;">
     <i class="fa fa-warning fa-4x pull-left"></i>
     <h3>Alerta</h3>
@@ -12,7 +5,10 @@
         Su empresa no tiene un plan de cuentas configurado.
     </p>
     <p>
-        Puede crear uno manualmente creando una cuenta ahora, o copiar el plan de cuentas por defecto.
+        Puede crear uno manualmente creando una cuenta ahora.
+    </p>
+    <p>
+        O copiar el plan de cuentas por defecto.
     </p>
     <p style="text-align: center">
         <a href="#" id="btnCreate" class="btn btn-success"><i class="fa fa-file-o"></i> Crear cuenta</a>
@@ -34,7 +30,7 @@
     });
 
     function createEditRow(id, lvl, tipo) {
-        var data = tipo == "Crear" ? { padre : id, lvl : lvl} : {id : id, lvl : lvl};
+        var data = tipo === "Crear" ? { padre : id, lvl : lvl} : {id : id, lvl : lvl};
         $.ajax({
             type    : "POST",
             url     : "${createLink(controller: 'cuenta', action:'form_ajax')}",
@@ -85,13 +81,15 @@
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
                 success : function (msg) {
+                    closeLoader();
                     var parts = msg.split("_");
-                    log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                    if (parts[0] == "OK") {
-                        location.reload(true);
-                    } else {
-                        closeLoader();
-                        spinner.replaceWith($btn);
+                    if (parts[0] === "OK") {
+                        log(parts[1], "success");
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }else {
+                        log(parts[1], 'error');
                         return false;
                     }
                 }

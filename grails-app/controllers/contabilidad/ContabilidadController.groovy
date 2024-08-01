@@ -76,6 +76,8 @@ class ContabilidadController extends seguridad.Shield {
     } //show para cargar con ajax en un dialog
 
     def form_ajax() {
+        println("params " + params)
+
         def contabilidadInstance
 //        def empresa = Empresa.get(session.empresa.id)
         def condominio = Condominio.get(session.condominio.id)
@@ -146,37 +148,37 @@ class ContabilidadController extends seguridad.Shield {
         def condominio = Condominio.get(session.condominio.id)
         def errores = ''
         def contabilidadInstance
-        def cuenta = Cuenta.get(params.cuenta)
-        def creditoIva = Cuenta.get(params.creditoIva)
-        def creditoRenta = Cuenta.get(params.creditoRenta)
-        def retencionIva = Cuenta.get(params.retencionIva)
-        def retencionRenta = Cuenta.get(params.retencionRenta)
-        def banco = Cuenta.get(params.banco)
-        def porPagar = Cuenta.get(params.porPagar)
-        def porCobrar = Cuenta.get(params.porCobrar)
-        def costos = Cuenta.get(params.costos)
-        def inventario = Cuenta.get(params.inventario)
+//        def cuenta = Cuenta.get(params.cuenta)
+//        def creditoIva = Cuenta.get(params.creditoIva)
+//        def creditoRenta = Cuenta.get(params.creditoRenta)
+//        def retencionIva = Cuenta.get(params.retencionIva)
+//        def retencionRenta = Cuenta.get(params.retencionRenta)
+//        def banco = Cuenta.get(params.banco)
+//        def porPagar = Cuenta.get(params.porPagar)
+//        def porCobrar = Cuenta.get(params.porCobrar)
+//        def costos = Cuenta.get(params.costos)
+//        def inventario = Cuenta.get(params.inventario)
 
         if(params.id){
             contabilidadInstance =  Contabilidad.get(params.id)
             contabilidadInstance.descripcion = params.descripcion
             contabilidadInstance.prefijo = params.prefijo.toUpperCase()
-            contabilidadInstance.cuenta = cuenta
-            contabilidadInstance.creditoTributarioIva = creditoIva
-            contabilidadInstance.creditoTributarioRenta = creditoRenta
-            contabilidadInstance.retencionCompraIva = retencionIva
-            contabilidadInstance.retencionCompraRenta = retencionRenta
-            contabilidadInstance.bancos = banco
-            contabilidadInstance.porPagar = porPagar
-            contabilidadInstance.porCobrar = porCobrar
-            contabilidadInstance.costos = costos
-            contabilidadInstance.inventario = inventario
+//            contabilidadInstance.cuenta = cuenta
+//            contabilidadInstance.creditoTributarioIva = creditoIva
+//            contabilidadInstance.creditoTributarioRenta = creditoRenta
+//            contabilidadInstance.retencionCompraIva = retencionIva
+//            contabilidadInstance.retencionCompraRenta = retencionRenta
+//            contabilidadInstance.bancos = banco
+//            contabilidadInstance.porPagar = porPagar
+//            contabilidadInstance.porCobrar = porCobrar
+//            contabilidadInstance.costos = costos
+//            contabilidadInstance.inventario = inventario
 
             if (!contabilidadInstance.save(flush: true)) {
-                render "NO_Error al guardar los datos de la contabilidad"
+                render "NO_Error al guardar la contabilidad"
                 println("Error editar" + contabilidadInstance.errors)
             } else{
-                render "OK_Datos de la contabilidad actualizados correctamente"
+                render "OK_Contabilidad actualizada correctamente"
             }
 
         }else{
@@ -190,16 +192,16 @@ class ContabilidadController extends seguridad.Shield {
             contabilidadInstance.fechaInicio = params.fechaInicio
             contabilidadInstance.fechaCierre = params.fechaCierre
 //            contabilidadInstance.presupuesto = params.fechaInicio
-            contabilidadInstance.cuenta = cuenta
-            contabilidadInstance.creditoTributarioIva = creditoIva
-            contabilidadInstance.creditoTributarioRenta = creditoRenta
-            contabilidadInstance.retencionCompraIva = retencionIva
-            contabilidadInstance.retencionCompraRenta = retencionRenta
-            contabilidadInstance.bancos = banco
-            contabilidadInstance.porPagar = porPagar
-            contabilidadInstance.porCobrar = porCobrar
-            contabilidadInstance.costos = costos
-            contabilidadInstance.inventario = inventario
+//            contabilidadInstance.cuenta = cuenta
+//            contabilidadInstance.creditoTributarioIva = creditoIva
+//            contabilidadInstance.creditoTributarioRenta = creditoRenta
+//            contabilidadInstance.retencionCompraIva = retencionIva
+//            contabilidadInstance.retencionCompraRenta = retencionRenta
+//            contabilidadInstance.bancos = banco
+//            contabilidadInstance.porPagar = porPagar
+//            contabilidadInstance.porCobrar = porCobrar
+//            contabilidadInstance.costos = costos
+//            contabilidadInstance.inventario = inventario
 
             if (!contabilidadInstance.save(flush: true)) {
                 render "NO_Error al crear la contabilidad"
@@ -248,7 +250,6 @@ class ContabilidadController extends seguridad.Shield {
                             periodoInstance.contabilidad = contabilidadInstance
                             periodoInstance.fechaInicio = ini
                             periodoInstance.numero = it + 2
-
 
                             if(mesFin == (mesInicio + it + 1)){
                                 periodoInstance.fechaFin = contabilidadInstance.fechaCierre
@@ -305,13 +306,6 @@ class ContabilidadController extends seguridad.Shield {
         render "NO_No se encontró Contabilidad."
     } //notFound para ajax
 
-    def index() {
-        redirect(action: "list", params: params)
-    }
-
-    def create() {
-        [contabilidadInstance: new Contabilidad(params)]
-    }
 
     def save() {
 
@@ -368,56 +362,32 @@ class ContabilidadController extends seguridad.Shield {
         redirect(action: "show", id: contabilidadInstance.id)
     }
 
-    def show() {
-        def contabilidadInstance = Contabilidad.get(params.id)
-        if (!contabilidadInstance) {
-            flash.message = "No se encontró Contabilidad con id " + params.id
-            flash.tipo = "error"
-            flash.ico = "ss_delete"
-            redirect(action: "list")
-            return
-        }
 
-        [contabilidadInstance: contabilidadInstance]
-    }
 
-    def edit() {
-        def contabilidadInstance = Contabilidad.get(params.id)
-        if (!contabilidadInstance) {
-            flash.message = "No se encontró Contabilidad con id " + params.id
-            flash.tipo = "error"
-            flash.ico = "ss_delete"
-            redirect(action: "list")
-            return
-        }
-
-        [contabilidadInstance: contabilidadInstance]
-    }
-
-    def delete() {
-        def contabilidadInstance = Contabilidad.get(params.id)
-        if (!contabilidadInstance) {
-            flash.message = "No se encontró Contabilidad con id " + params.id
-            flash.tipo = "error"
-            flash.ico = "ss_delete"
-            redirect(action: "list")
-            return
-        }
-
-        try {
-            contabilidadInstance.delete(flush: true)
-            flash.message = "Contabilidad  con id " + params.id + " eliminado"
-            flash.tipo = "success"
-            flash.ico = "ss_accept"
-            redirect(action: "list")
-        }
-        catch (DataIntegrityViolationException e) {
-            flash.message = "No se pudo eliminar Contabilidad con id " + params.id
-            flash.tipo = "error"
-            flash.ico = "ss_delete"
-            redirect(action: "show", id: params.id)
-        }
-    }
+//    def delete() {
+//        def contabilidadInstance = Contabilidad.get(params.id)
+//        if (!contabilidadInstance) {
+//            flash.message = "No se encontró Contabilidad con id " + params.id
+//            flash.tipo = "error"
+//            flash.ico = "ss_delete"
+//            redirect(action: "list")
+//            return
+//        }
+//
+//        try {
+//            contabilidadInstance.delete(flush: true)
+//            flash.message = "Contabilidad  con id " + params.id + " eliminado"
+//            flash.tipo = "success"
+//            flash.ico = "ss_accept"
+//            redirect(action: "list")
+//        }
+//        catch (DataIntegrityViolationException e) {
+//            flash.message = "No se pudo eliminar Contabilidad con id " + params.id
+//            flash.tipo = "error"
+//            flash.ico = "ss_delete"
+//            redirect(action: "show", id: params.id)
+//        }
+//    }
 
     def formPeriodo_ajax () {
 

@@ -1,5 +1,6 @@
 package contabilidad
 
+import condominio.Condominio
 import org.springframework.dao.DataIntegrityViolationException
 
 class CuentaController extends seguridad.Shield {
@@ -538,7 +539,8 @@ class CuentaController extends seguridad.Shield {
 //    }
 
     def copiarCuentas() {
-        if (Cuenta.countByEmpresa(empresa) == 0) {
+        def condominio = Condominio.get(session.condominio.id)
+        if (Cuenta.countByCondominio(empresa) == 0) {
             recursivoCuentas2(null, null, origen, empresa)
             copiaGestor()
 //            creaSubgrupos()
@@ -560,6 +562,7 @@ class CuentaController extends seguridad.Shield {
     } //show para cargar con ajax en un dialog
 
     def form_ajax() {
+        def condominio = Condominio.get(session.condominio.id)
         def cuentaInstance = new Cuenta(params)
         def hijos = 0
         if (params.id) {
@@ -568,11 +571,11 @@ class CuentaController extends seguridad.Shield {
                 notFound_ajax()
                 return
             }
-            hijos = Cuenta.countByPadreAndEmpresa(cuentaInstance, session.empresa)
+            hijos = Cuenta.countByPadreAndCondominio(cuentaInstance, condominio)
         } else {
             cuentaInstance.padre = Cuenta.get(params.padre)
             cuentaInstance.nivel = Nivel.get(params.lvl.toInteger() + 1)
-            def siblings = Cuenta.findAllByPadreAndEmpresa(cuentaInstance.padre, session.empresa, [sort: "numero"])
+            def siblings = Cuenta.findAllByPadreAndCondominio(cuentaInstance.padre, condominio, [sort: "numero"])
             if (siblings) {
                 def last = siblings.last()
                 def parts = last.numero.split("\\.")
@@ -592,8 +595,8 @@ class CuentaController extends seguridad.Shield {
         return [cuentaInstance: cuentaInstance, hijos: hijos]
     } //form para cargar con ajax en un dialog
 
-
     def validarNumero_ajax() {
+        def condominio = Condominio.get(session.condominio.id)
         params.numero = params.numero.toString().trim()
         if (params.id) {
             def cuenta = Cuenta.get(params.id)
@@ -601,11 +604,11 @@ class CuentaController extends seguridad.Shield {
                 render true
                 return
             } else {
-                render Cuenta.countByNumeroAndEmpresa(params.numero, session.empresa) == 0
+                render Cuenta.countByNumeroAndCondominio(params.numero, condominio) == 0
                 return
             }
         } else {
-            render Cuenta.countByNumeroAndEmpresa(params.numero, session.empresa) == 0
+            render Cuenta.countByNumeroAndCondominio(params.numero, session.condominio) == 0
             return
         }
     }
@@ -614,31 +617,41 @@ class CuentaController extends seguridad.Shield {
 
 //        println("params---> " + params)
 
+        def condominio = Condominio.get(session.condominio.id)
+
         params.each { k, v ->
             if (v != "date.struct" && v instanceof java.lang.String) {
                 params[k] = v.toUpperCase()
             }
         }
+
         params.estado = 'A'
-        params.empresa = session.empresa
-        def cuentaInstance = new Cuenta()
+        params.condominio = condominio
+
+        def cuentaInstance
         if (params.id) {
             cuentaInstance = Cuenta.get(params.id)
             if (!cuentaInstance) {
                 notFound_ajax()
                 return
             }
-        } //update
+        }else{
+            cuentaInstance = new Cuenta()
+        }
 
         cuentaInstance.properties = params
 
         if (!cuentaInstance.save(flush: true)) {
-            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Cuenta."
-            msg += renderErrors(bean: cuentaInstance)
-            render msg
-            return
+//            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Cuenta."
+//            msg += renderErrors(bean: cuentaInstance)
+//            render msg
+//            return
+            println("error al guardar la cuenta " + cuentaInstance.errors)
+            render "NO_Error al guardar la cuenta"
+        }else{
+            render "OK_Cuenta guardada correctamente"
         }
-        render "OK_${params.id ? 'Actualización' : 'Creación'} de Cuenta exitosa."
+//        render "OK_${params.id ? 'Actualización' : 'Creación'} de Cuenta exitosa."
     } //save para grabar desde ajax
 
     def delete_ajax() {
