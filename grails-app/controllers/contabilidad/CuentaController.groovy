@@ -164,6 +164,7 @@ class CuentaController extends seguridad.Shield {
     }
 
     String makeTreeNode(id) {
+        def condominio = Condominio.get(session.condominio.id)
         String tree = "", clase = "", rel = ""
         Cuenta padre
         Cuenta[] hijos
@@ -171,21 +172,20 @@ class CuentaController extends seguridad.Shield {
         if (id == "#") {
             println("aqui ")
             //root
-            def hh = Cuenta.countByNivelAndEmpresa(Nivel.get(1), session.empresa, [sort: "numero"])
+            def hh = Cuenta.countByNivelAndCondominio(Nivel.get(1), condominio, [sort: "numero"])
             if (hh > 0) {
                 clase = "hasChildren jstree-closed"
             }
             tree = "<li id='root' class='root ${clase}' data-jstree='{\"type\":\"root\"}' level='0' ><a href='#' class='label_arbol'>Plan de cuentas</a></li>"
         } else if (id == "root") {
-            hijos = Cuenta.findAllByNivelAndEmpresa(Nivel.get(1), session.empresa, [sort: "numero"])
+            hijos = Cuenta.findAllByNivelAndCondominio(Nivel.get(1), condominio, [sort: "numero"])
         } else {
-
             def parts = id.split("_")
             def node_id = parts[1].toLong()
 
             padre = Cuenta.get(node_id)
             if (padre) {
-                hijos = Cuenta.findAllByPadreAndEmpresa(padre, session.empresa, [sort: "numero"])
+                hijos = Cuenta.findAllByPadreAndCondominio(padre, condominio, [sort: "numero"])
             }
         }
 
@@ -193,7 +193,7 @@ class CuentaController extends seguridad.Shield {
             tree += "<ul>"
 
             hijos.each { hijo ->
-                def hijosH = Cuenta.findAllByPadreAndEmpresa(hijo, session.empresa, [sort: "numero"])
+                def hijosH = Cuenta.findAllByPadreAndCondominio(hijo, condominio, [sort: "numero"])
 
                 def gestores = Genera.findAllByCuenta(hijo)
                 def asientos = Asiento.findAllByCuenta(hijo)
@@ -254,7 +254,8 @@ class CuentaController extends seguridad.Shield {
     }
 
     def list() {
-        def hh = Cuenta.countByNivelAndEmpresa(Nivel.get(1), session.empresa, [sort: "numero"])
+        def condominio = Condominio.get(session.condominio.id)
+        def hh = Cuenta.countByNivelAndCondominio(Nivel.get(1), condominio, [sort: "numero"])
         return [hh: hh]
     }
 

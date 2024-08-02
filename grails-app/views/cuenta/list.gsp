@@ -1,13 +1,15 @@
-<%@ page import="cratos.Cuenta" %>
 <!doctype html>
 <html>
     <head>
         <meta name="layout" content="main">
         <title>Plan de Cuentas</title>
+        <script src="${resource(dir: 'js/plugins/jstree-3.0.8/dist', file: 'jstree.js')}"></script>
+        <link href="${resource(dir: 'js/plugins/jstree-3.0.8/dist/themes/default', file: 'style.css')}" rel="stylesheet">
+        <link href="${resource(dir: 'css/custom', file: 'tree_context.css')}" rel="stylesheet">
 
-        <script type="text/javascript" src="${resource(dir: 'js/plugins/jstree', file: 'jstree.js')}"></script>
-        <link rel="stylesheet" href="${resource(dir: 'js/plugins/jstree/themes/default', file: 'style.css')}"/>
-        <link rel="stylesheet" href="${resource(dir: 'css/custom', file: 'tree_context.css')}"/>
+%{--        <script type="text/javascript" src="${resource(dir: 'js/plugins/jstree', file: 'jstree.js')}"></script>--}%
+%{--        <link rel="stylesheet" href="${resource(dir: 'js/plugins/jstree/themes/default', file: 'style.css')}"/>--}%
+%{--        <link rel="stylesheet" href="${resource(dir: 'css/custom', file: 'tree_context.css')}"/>--}%
 
         <style type="text/css">
         #tree {
@@ -38,13 +40,10 @@
                     <p>
                         Cargando el árbol del plan de cuentas
                     </p>
-
                     <p>
                         <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}" alt='Cargando...'/>
                     </p>
-
-                    <p>
-                        Por favor espere
+                    <p>Por favor espere
                     </p>
                 </div>
 
@@ -55,17 +54,9 @@
             <g:else>
                 <div class="alert alert-danger" style="width: 700px;">
                     <i class="fa fa-warning fa-4x pull-left"></i>
-
                     <h3>Alerta</h3>
-
-                    <p>
-                        Su empresa no tiene un plan de cuentas configurado.
-                    </p>
-
-                    <p>
-                        Puede crear uno manualmente creando una cuenta ahora, o copiar el plan de cuentas por defecto.
-                    </p>
-
+                    <p>Su empresa no tiene un plan de cuentas configurado.</p>
+                    <p>Puede crear uno manualmente creando una cuenta ahora, o copiar el plan de cuentas por defecto.</p>
                     <p style="text-align: center">
                         <a href="#" id="btnCreate" class="btn btn-success"><i class="fa fa-file-o"></i> Crear cuenta</a>
                         <g:link action="copiarCuentas" class="btn btn-primary btnCopiar"><i class="fa fa-copy"></i> Copiar plan de cuentas</g:link>
@@ -107,7 +98,7 @@
             }
 
             function createEditRow(id, lvl, tipo) {
-                var data = tipo == "Crear" ? { padre : id, lvl : lvl } : {id : id, lvl : lvl};
+                var data = tipo === "Crear" ? { padre : id, lvl : lvl } : {id : id, lvl : lvl};
                 $.ajax({
                     type    : "POST",
                     url     : "${createLink(action:'form_ajax')}",
@@ -163,7 +154,7 @@
                 var nodeConGestores = $node.hasClass("conGestores");
                 var nodeConAsientos = $node.hasClass("conAsientos");
 
-                if (nodeType == "root") {
+                if (nodeType === "root") {
                     var items = {
                         crear    : {
                             label  : "Nuevo cuenta hija",
@@ -247,12 +238,12 @@
                                                     id : nodeId
                                                 },
                                                 success : function (msg) {
+                                                    closeLoader();
                                                     var parts = msg.split("_");
-                                                    log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                                                    if (parts[0] == "OK") {
+                                                    log(parts[1], parts[0] === "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                                                    if (parts[0] === "OK") {
                                                         $('#tree').jstree('delete_node', $('#' + nodeStrId));
                                                     } else {
-                                                        closeLoader();
                                                         return false;
                                                     }
                                                 }
@@ -356,10 +347,10 @@
                                                         padre: $("#nuevoPadre").val()
                                                     },
                                                     success: function (msg){
-                                                        if(msg == 'ok'){
-                                                            log("Cuenta asignada correctamente!","success")
+                                                        if(msg === 'ok'){
+                                                            log("Cuenta asignada correctamente!","success");
                                                             setTimeout(function () {
-                                                                location.reload(true);
+                                                                location.reload();
                                                             }, 1000);
                                                         }else{
                                                             log("Error al asignar la cuenta a un nuevo padre","error")
@@ -377,9 +368,6 @@
                     }
                 });
             }
-
-
         </script>
-
     </body>
 </html>
