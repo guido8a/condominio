@@ -54,7 +54,7 @@
 
                 <span class="col-md-9">
                     <g:textArea name="descripcion" maxlength="127" style="resize: none" required=""
-                                class="allCaps form-control required" value="${cuentaInstance?.descripcion}"/>
+                                class="form-control required" value="${cuentaInstance?.descripcion}"/>
                 </span>
                 *
             </span>

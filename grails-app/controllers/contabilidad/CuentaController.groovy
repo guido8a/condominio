@@ -620,11 +620,11 @@ class CuentaController extends seguridad.Shield {
 
         def condominio = Condominio.get(session.condominio.id)
 
-        params.each { k, v ->
-            if (v != "date.struct" && v instanceof java.lang.String) {
-                params[k] = v.toUpperCase()
-            }
-        }
+//        params.each { k, v ->
+//            if (v != "date.struct" && v instanceof java.lang.String) {
+//                params[k] = v.toUpperCase()
+//            }
+//        }
 
         params.estado = 'A'
         params.condominio = condominio
