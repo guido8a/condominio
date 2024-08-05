@@ -16,6 +16,7 @@ import com.itextpdf.text.Paragraph
 
 import adicional.Redondea
 import contabilidad.Contabilidad
+import seguridad.Persona
 
 import java.awt.Color
 
@@ -313,11 +314,11 @@ class Reportes3Controller {
         tablaTitl
     }
 
-    def reportePlanCuentas(){
-
-        println("param rpc " + params)
+    def planDeCuentas(){
+        println "planDeCuentas: $params"
+        def usro = Persona.get(session.usuario.id)
         def contabilidad = Contabilidad.get(params.contabilidad)
-        cuentasService
+        [cuentas: cuentasService.getCuentas(params.cont, usro.condominio.id), empresa: usro.condominio.id]
 
     }
 

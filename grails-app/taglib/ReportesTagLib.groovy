@@ -1,6 +1,7 @@
 import com.lowagie.text.Element
 import com.lowagie.text.Rectangle
 import com.lowagie.text.pdf.PdfPTable
+import condominio.Condominio
 
 /**
  * Tags para facilitar la creación de reportes (HTML -> PDF)
@@ -334,7 +335,7 @@ class ReportesTagLib {
         }
 
         if(attrs.empresa){
-            empresa = Empresa.get(attrs.empresa)
+            empresa = Condominio.get(attrs.empresa)
         }
 
 

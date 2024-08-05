@@ -13,11 +13,11 @@ class CuentasService {
         def contabilidad = Contabilidad.get(contabilidadId)
         def cuentas = Cuenta.findAllByCondominio(condominio, [sort: "numero"])
 
-        CuentaContable.findAllByContabilidad(contabilidad).each { cc ->
-            if (cuentas.contains(cc.antiguo)) {
-                cuentas.remove(cc.antiguo)
-            }
-        }
+//        Cuenta.findAllByContabilidad(contabilidad).each { cc ->
+//            if (cuentas.contains(cc.antiguo)) {
+//                cuentas.remove(cc.antiguo)
+//            }
+//        }
 
         return cuentas
     } // getCuentas
