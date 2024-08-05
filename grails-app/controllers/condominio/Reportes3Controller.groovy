@@ -448,11 +448,6 @@ class Reportes3Controller {
         def contabilidad = Contabilidad.get(params.cont)
         def cuentas = Cuenta.findAllByCondominio(condominio, [sort: "numero"])
 
-
-//        def fechaDesde = new Date().parse("dd-MM-yyyy", contabilidad.fechaInicio).format('yyyy-MM-dd')
-//        def fechaHasta = new Date().parse("dd-MM-yyyy", contabilidad.fechaCierre).format('yyyy-MM-dd')
-
-
         def baos = new ByteArrayOutputStream()
         def name = "planDeCuentas_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
         def titulo = new Color(40, 140, 180)
@@ -464,7 +459,7 @@ class Reportes3Controller {
         com.lowagie.text.Font fontTh = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 10, com.lowagie.text.Font.BOLD);
         com.lowagie.text.Font fontTd10 = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 10, com.lowagie.text.Font.NORMAL);
 
-        def fondoTotal = new Color(240, 240, 240);
+//        def fondoTotal = new Color(240, 240, 240);
 
         com.lowagie.text.Document document
         document = new com.lowagie.text.Document(com.lowagie.text.PageSize.A4);
@@ -475,7 +470,7 @@ class Reportes3Controller {
 
         document.open();
         com.lowagie.text.pdf.PdfContentByte cb = pdfw.getDirectContent();
-        document.addTitle("Plan de cuentas de la contabilidad del ${contabilidad?.fechaInicio} al ${contabilidad?.fechaCierre}");
+        document.addTitle("Plan de cuentas de la contabilidad del ${contabilidad?.fechaInicio?.format("dd-MM-yyyy")} al ${contabilidad?.fechaCierre?.format("dd-MM-yyyy")}");
         document.addSubject("Generado por el sistema Condominio");
         document.addKeywords("reporte, condominio, pagos");
         document.addAuthor("Condominio");
@@ -524,31 +519,13 @@ class Reportes3Controller {
                 addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(cuenta?.descripcion?.toString(), fontTd10), frmtDato)
         }
 
-//        if(suma > 0) {
-//            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph("Otros: ${cuenta} proveedores menores cuyo valor no supera los " +
-//                    "\$${params.valor.toInteger()}, con promedio individual: " +
-//                    "\$${Math.round(suma/cuenta *100)/100}", fontTd10), frmtDato)
-//            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(suma.toString(), fontTd10), frmtNmro)
-//        }
-//
-//        def tablaTotal = new com.lowagie.text.pdf.PdfPTable(2);
-//        tablaTotal.setWidthPercentage(100);
-//        tablaTotal.setWidths(arregloEnteros([80, 20]))
-//
-//        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
-//        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph(g.formatNumber(number:totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
-//        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, colspan: 2, pl: 0])
-
         document.add(tablaDetalles)
         document.close();
         pdfw.close()
         byte[] b = baos.toByteArray();
 
-        encabezadoYnumeracion(b, condominio?.nombre, "Plan de cuentas de la contabilidad del ${contabilidad?.fechaInicio} al ${contabilidad?.fechaCierre}",
+        encabezadoYnumeracion(b, condominio?.nombre, "Plan de cuentas de la contabilidad del ${contabilidad?.fechaInicio?.format("dd-MM-yyyy")} al ${contabilidad?.fechaCierre?.format("dd-MM-yyyy")}",
                 "planDeCuentas_${new Date().format("dd-MM-yyyy")}.pdf")
-
     }
-
-
 
 }
