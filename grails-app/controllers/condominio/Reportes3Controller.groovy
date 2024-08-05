@@ -513,8 +513,8 @@ class Reportes3Controller {
         printHeaderDetalle()
 
         cuentas.each {cuenta ->
-                addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(cuenta?.numero, fontTd10), frmtNmro)
-                addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(cuenta?.padre?.numero?.toString(), fontTd10), frmtNmro)
+                addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(cuenta?.numero, fontTd10), frmtDato)
+                addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(cuenta?.padre?.numero?.toString(), fontTd10), frmtDato)
                 addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(cuenta?.nivel?.descripcion?.toString(), fontTd10), frmtDato)
                 addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(cuenta?.descripcion?.toString(), fontTd10), frmtDato)
         }
