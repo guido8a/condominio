@@ -15,7 +15,11 @@ import com.itextpdf.text.Font
 import com.itextpdf.text.Paragraph
 
 import adicional.Redondea
+import com.lowagie.text.HeaderFooter
+import com.lowagie.text.pdf.PdfImportedPage
+import com.lowagie.text.pdf.PdfReader
 import contabilidad.Contabilidad
+import contabilidad.Cuenta
 import seguridad.Persona
 
 import java.awt.Color
@@ -24,6 +28,9 @@ import java.awt.Color
 class Reportes3Controller {
 
     def cuentasService
+    def reportesService
+
+    def tx_footer = "Sistema de Administración de Condominios " + " " * 136 + "www.tedein.com.ec/condominio"
 
     /* variables para el reporte */
     def titulo = new Color(40, 140, 180)
@@ -45,6 +52,121 @@ class Reportes3Controller {
         }
         return ia
     }
+
+    private static void addCellTabla(com.lowagie.text.pdf.PdfPTable table, paragraph, params) {
+        com.lowagie.text.pdf.PdfPCell cell = new com.lowagie.text.pdf.PdfPCell(paragraph);
+        if (params.height) {
+            cell.setFixedHeight(params.height.toFloat());
+        }
+        if (params.border) {
+            cell.setBorderColor(params.border);
+        }
+        if (params.bg) {
+            cell.setBackgroundColor(params.bg);
+        }
+        if (params.colspan) {
+            cell.setColspan(params.colspan);
+        }
+        if (params.align) {
+            cell.setHorizontalAlignment(params.align);
+        }
+        if (params.valign) {
+            cell.setVerticalAlignment(params.valign);
+        }
+        if (params.w) {
+            cell.setBorderWidth(params.w);
+            cell.setUseBorderPadding(true);
+        }
+        if (params.bwl) {
+            cell.setBorderWidthLeft(params.bwl.toFloat());
+            cell.setUseBorderPadding(true);
+        }
+        if (params.bwb) {
+            cell.setBorderWidthBottom(params.bwb.toFloat());
+            cell.setUseBorderPadding(true);
+        }
+        if (params.bwr) {
+            cell.setBorderWidthRight(params.bwr.toFloat());
+            cell.setUseBorderPadding(true);
+        }
+        if (params.bwt) {
+            cell.setBorderWidthTop(params.bwt.toFloat());
+            cell.setUseBorderPadding(true);
+        }
+        if (params.bcl) {
+            cell.setBorderColorLeft(params.bcl);
+        }
+        if (params.bcb) {
+            cell.setBorderColorBottom(params.bcb);
+        }
+        if (params.bcr) {
+            cell.setBorderColorRight(params.bcr);
+        }
+        if (params.bct) {
+            cell.setBorderColorTop(params.bct);
+        }
+        if (params.padding) {
+            cell.setPadding(params.padding.toFloat());
+        }
+        if (params.pl) {
+            cell.setPaddingLeft(params.pl.toFloat());
+        }
+        if (params.pr) {
+            cell.setPaddingRight(params.pr.toFloat());
+        }
+        if (params.pt) {
+            cell.setPaddingTop(params.pt.toFloat());
+        }
+        if (params.pb) {
+            cell.setPaddingBottom(params.pb.toFloat());
+        }
+        table.addCell(cell);
+    }
+
+    def encabezadoYnumeracion (f, tituloReporte, subtitulo, nombreReporte) {
+
+        def titulo = new Color(30, 140, 160)
+        com.lowagie.text.Font fontTitulo = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 12, com.lowagie.text.Font.BOLD, titulo);
+        com.lowagie.text.Font fontTitulo16 = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 16, com.lowagie.text.Font.BOLD, titulo);
+        com.lowagie.text.Font fontTitulo8 = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 8, com.lowagie.text.Font.NORMAL, titulo);
+
+        def baos = new ByteArrayOutputStream()
+
+        com.lowagie.text.Document document
+        document = new com.lowagie.text.Document(com.lowagie.text.PageSize.A4);
+
+        def pdfw = com.lowagie.text.pdf.PdfWriter.getInstance(document, baos);
+
+        HeaderFooter footer1 = new HeaderFooter( new com.lowagie.text.Phrase(tx_footer, new com.lowagie.text.Font(fontTitulo8)), false);
+        footer1.setBorder(com.lowagie.text.Rectangle.NO_BORDER);
+        footer1.setBorder(com.lowagie.text.Rectangle.TOP);
+        footer1.setAlignment(com.lowagie.text.Element.ALIGN_CENTER);
+        document.setFooter(footer1);
+
+        document.open();
+
+        com.lowagie.text.pdf.PdfContentByte cb = pdfw.getDirectContent();
+
+        PdfReader reader = new PdfReader(f);
+        for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+            document.newPage();
+            PdfImportedPage page = pdfw.getImportedPage(reader, i);
+            cb.addTemplate(page, 0, 0);
+            def en = reportesService.encabezado(tituloReporte, subtitulo, fontTitulo16, fontTitulo)
+            reportesService.numeracion(i,reader.getNumberOfPages()).writeSelectedRows(0, -1, -1, 25, cb)
+            document.add(en)
+        }
+
+        document.close();
+        byte[] b = baos.toByteArray();
+
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=" + nombreReporte)
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+    }
+
+
 
     /* caja redondeada */
     def poneCelda(txto, align, font, colspan) {
@@ -317,8 +439,113 @@ class Reportes3Controller {
     def planDeCuentas(){
         println "planDeCuentas: $params --> ${session?.usuario}"
         def usro = Persona.get(session?.usuario?.id)
-        def contabilidad = Contabilidad.get(params.contabilidad)
-        [cuentas: cuentasService.getCuentas(params.cont, usro.condominio.id), empresa: usro.condominio.id]
+        def condominio = Condominio.get(session.condominio.id)
+        [cuentas: cuentasService.getCuentas(params.cont, condominio.id), empresa: condominio.id]
+    }
+
+    def reportePlanCuentas(){
+        def condominio = Condominio.get(session.condominio.id)
+        def contabilidad = Contabilidad.get(params.cont)
+        def cuentas = Cuenta.findAllByCondominio(condominio, [sort: "numero"])
+
+
+//        def fechaDesde = new Date().parse("dd-MM-yyyy", contabilidad.fechaInicio).format('yyyy-MM-dd')
+//        def fechaHasta = new Date().parse("dd-MM-yyyy", contabilidad.fechaCierre).format('yyyy-MM-dd')
+
+
+        def baos = new ByteArrayOutputStream()
+        def name = "planDeCuentas_" + new Date().format("ddMMyyyy_hhmm") + ".pdf";
+        def titulo = new Color(40, 140, 180)
+        com.lowagie.text.Font fontTitulo = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 12, com.lowagie.text.Font.BOLD, titulo);
+        com.lowagie.text.Font fontTitulo16 = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 16, com.lowagie.text.Font.BOLD, titulo);
+        com.lowagie.text.Font info = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 10, com.lowagie.text.Font.NORMAL)
+        com.lowagie.text.Font fontTitle = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 14, com.lowagie.text.Font.BOLD);
+        com.lowagie.text.Font fontTitle1 = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 10, com.lowagie.text.Font.BOLD);
+        com.lowagie.text.Font fontTh = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 10, com.lowagie.text.Font.BOLD);
+        com.lowagie.text.Font fontTd10 = new com.lowagie.text.Font(com.lowagie.text.Font.TIMES_ROMAN, 10, com.lowagie.text.Font.NORMAL);
+
+        def fondoTotal = new Color(240, 240, 240);
+
+        com.lowagie.text.Document document
+        document = new com.lowagie.text.Document(com.lowagie.text.PageSize.A4);
+        document.setMargins(50, 30, 100, 45)  //se 28 equivale a 1 cm: izq, derecha, arriba y abajo
+        def pdfw = com.lowagie.text.pdf.PdfWriter.getInstance(document, baos);
+        document.resetHeader()
+        document.resetFooter()
+
+        document.open();
+        com.lowagie.text.pdf.PdfContentByte cb = pdfw.getDirectContent();
+        document.addTitle("Plan de cuentas de la contabilidad del ${contabilidad?.fechaInicio} al ${contabilidad?.fechaCierre}");
+        document.addSubject("Generado por el sistema Condominio");
+        document.addKeywords("reporte, condominio, pagos");
+        document.addAuthor("Condominio");
+        document.addCreator("Tedein SA");
+
+//        Paragraph preface = new Paragraph();
+//        addEmptyLine(preface, 1);
+//        preface.setAlignment(Element.ALIGN_CENTER);
+//        preface.add(new Paragraph(session.condominio.nombre, fontTitulo16));
+//        preface.add(new Paragraph("Detalle de Egresos por Proveedor del ${fechaDesde} al ${fechaHasta}", fontTitulo));
+//        addEmptyLine(preface, 1);
+//        document.add(preface);
+
+        com.lowagie.text.pdf.PdfPTable tablaDetalles = null
+
+        def printHeaderDetalle = {
+            def fondo = new Color(240, 248, 250);
+            def frmtHd = [border: Color.LIGHT_GRAY, bwb: 0.1, bcb: Color.BLACK, bg: fondo, align: com.lowagie.text.Element.ALIGN_CENTER, valign: com.lowagie.text.Element.ALIGN_MIDDLE]
+
+            def tablaHeaderDetalles = new com.lowagie.text.pdf.PdfPTable(4);
+            tablaHeaderDetalles.setWidthPercentage(100);
+            tablaHeaderDetalles.setWidths(arregloEnteros([20,20,20,40]))
+
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Número", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Padre", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Nivel", fontTh), frmtHd)
+            addCellTabla(tablaHeaderDetalles, new com.lowagie.text.Paragraph("Descripción", fontTh), frmtHd)
+            addCellTabla(tablaDetalles, tablaHeaderDetalles, [border: Color.WHITE, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, colspan: 4, pl: 0])
+        }
+
+        tablaDetalles = new com.lowagie.text.pdf.PdfPTable(4);
+        tablaDetalles.setWidthPercentage(100);
+        tablaDetalles.setWidths(arregloEnteros([20,20,20,40]))
+        tablaDetalles.setSpacingAfter(1f);
+
+
+        def frmtDato = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE]
+        def frmtNmro = [bwt: 0.1, bct: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, border: Color.LIGHT_GRAY, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE]
+
+        printHeaderDetalle()
+
+        cuentas.each {cuenta ->
+                addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(cuenta?.numero, fontTd10), frmtNmro)
+                addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(cuenta?.padre?.numero?.toString(), fontTd10), frmtNmro)
+                addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(cuenta?.nivel?.descripcion?.toString(), fontTd10), frmtDato)
+                addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(cuenta?.descripcion?.toString(), fontTd10), frmtDato)
+        }
+
+//        if(suma > 0) {
+//            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph("Otros: ${cuenta} proveedores menores cuyo valor no supera los " +
+//                    "\$${params.valor.toInteger()}, con promedio individual: " +
+//                    "\$${Math.round(suma/cuenta *100)/100}", fontTd10), frmtDato)
+//            addCellTabla(tablaDetalles, new com.lowagie.text.Paragraph(suma.toString(), fontTd10), frmtNmro)
+//        }
+//
+//        def tablaTotal = new com.lowagie.text.pdf.PdfPTable(2);
+//        tablaTotal.setWidthPercentage(100);
+//        tablaTotal.setWidths(arregloEnteros([80, 20]))
+//
+//        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph("Total: ", fontTh), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+//        addCellTabla(tablaTotal, new com.lowagie.text.Paragraph(g.formatNumber(number:totalEgresos, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2, locale: 'en_US').toString(), fontTd10), [border: Color.BLACK, bwb: 0.1, bcb: Color.BLACK, height: 15, bg: fondoTotal, align: com.lowagie.text.Element.ALIGN_RIGHT, valign: com.lowagie.text.Element.ALIGN_MIDDLE])
+//        addCellTabla(tablaDetalles, tablaTotal, [border: Color.WHITE, align: com.lowagie.text.Element.ALIGN_LEFT, valign: com.lowagie.text.Element.ALIGN_MIDDLE, colspan: 2, pl: 0])
+
+        document.add(tablaDetalles)
+        document.close();
+        pdfw.close()
+        byte[] b = baos.toByteArray();
+
+        encabezadoYnumeracion(b, condominio?.nombre, "Plan de cuentas de la contabilidad del ${contabilidad?.fechaInicio} al ${contabilidad?.fechaCierre}",
+                "planDeCuentas_${new Date().format("dd-MM-yyyy")}.pdf")
 
     }
 
