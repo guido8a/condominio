@@ -15,10 +15,14 @@ import com.itextpdf.text.Font
 import com.itextpdf.text.Paragraph
 
 import adicional.Redondea
+import contabilidad.Contabilidad
+
 import java.awt.Color
 
 
 class Reportes3Controller {
+
+    def cuentasService
 
     /* variables para el reporte */
     def titulo = new Color(40, 140, 180)
@@ -307,6 +311,14 @@ class Reportes3Controller {
         tablaTitl.addCell(poneCeldaNoBorde("FECHA: " + new Date().format("dd-MM-yyyy"), Element.ALIGN_LEFT, fontTh8N, 3))
 
         tablaTitl
+    }
+
+    def reportePlanCuentas(){
+
+        println("param rpc " + params)
+        def contabilidad = Contabilidad.get(params.contabilidad)
+        cuentasService
+
     }
 
 

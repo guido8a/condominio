@@ -1,5 +1,3 @@
-<%@ page import="cratos.Cuenta" %>
-
 <g:if test="${!cuentaInstance}">
     <elm:notFound elem="Cuenta" genero="a"/>
 </g:if>
@@ -79,43 +77,43 @@
 
     </div>
 
-    <g:if test="${cuentaInstance?.retencion}">
-        <div class="row">
-            <div class="col-md-2 text-info">
-                Genera Retención
-            </div>
+%{--    <g:if test="${cuentaInstance?.retencion}">--}%
+%{--        <div class="row">--}%
+%{--            <div class="col-md-2 text-info">--}%
+%{--                Genera Retención--}%
+%{--            </div>--}%
 
-            <div class="col-md-3">
-                <g:message code="cuenta.retencion.${cuentaInstance.retencion}"/>
-            </div>
+%{--            <div class="col-md-3">--}%
+%{--                <g:message code="cuenta.retencion.${cuentaInstance.retencion}"/>--}%
+%{--            </div>--}%
 
-        </div>
-    </g:if>
+%{--        </div>--}%
+%{--    </g:if>--}%
 
-    <g:if test="${cuentaInstance?.cuentaBanco}">
-        <div class="row">
-            <div class="col-md-2 text-info">
-                Cuenta Banco
-            </div>
+%{--    <g:if test="${cuentaInstance?.cuentaBanco}">--}%
+%{--        <div class="row">--}%
+%{--            <div class="col-md-2 text-info">--}%
+%{--                Cuenta Banco--}%
+%{--            </div>--}%
 
-            <div class="col-md-3">
-                ${cuentaInstance?.cuentaBanco?.encodeAsHTML()}
-            </div>
+%{--            <div class="col-md-3">--}%
+%{--                ${cuentaInstance?.cuentaBanco?.encodeAsHTML()}--}%
+%{--            </div>--}%
 
-        </div>
-    </g:if>
+%{--        </div>--}%
+%{--    </g:if>--}%
 
-    <g:if test="${cuentaInstance?.impuesto}">
-        <div class="row">
-            <div class="col-md-2 text-info">
-                Impuesto
-            </div>
+%{--    <g:if test="${cuentaInstance?.impuesto}">--}%
+%{--        <div class="row">--}%
+%{--            <div class="col-md-2 text-info">--}%
+%{--                Impuesto--}%
+%{--            </div>--}%
 
-            <div class="col-md-3">
-                ${cuentaInstance?.impuesto?.encodeAsHTML()}
-            </div>
+%{--            <div class="col-md-3">--}%
+%{--                ${cuentaInstance?.impuesto?.encodeAsHTML()}--}%
+%{--            </div>--}%
 
-        </div>
-    </g:if>
+%{--        </div>--}%
+%{--    </g:if>--}%
 
 </g:else>

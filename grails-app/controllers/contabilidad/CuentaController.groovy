@@ -731,4 +731,11 @@ class CuentaController extends seguridad.Shield {
 
     }
 
+    def fecha_ajax(){
+        def condominio = Condominio.get(session.condominio.id)
+        def contabilidades = Contabilidad.findAllByCondominio(condominio).sort{it.fechaInicio}
+        println("c " + contabilidades)
+        return [contabilidades: contabilidades]
+    }
+
 }
