@@ -315,8 +315,8 @@ class Reportes3Controller {
     }
 
     def planDeCuentas(){
-        println "planDeCuentas: $params"
-        def usro = Persona.get(session.usuario.id)
+        println "planDeCuentas: $params --> ${session?.usuario}"
+        def usro = Persona.get(session?.usuario?.id)
         def contabilidad = Contabilidad.get(params.contabilidad)
         [cuentas: cuentasService.getCuentas(params.cont, usro.condominio.id), empresa: usro.condominio.id]
 

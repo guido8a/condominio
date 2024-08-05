@@ -136,7 +136,7 @@ class LoginController {
     }
 
     def validar() {
-//        println "valida " + params
+        println "valida " + params
         def user = Persona.withCriteria {
             eq("login", params.login, [ignoreCase: true])
             eq("activo", 1)
@@ -160,6 +160,7 @@ class LoginController {
                 redirect(controller: 'login', action: "login")
                 return
             } else {
+                println "pone usuario ******************"
                 session.usuario = user
 //                session.time = new Date()
                 session.condominio = user.condominio
@@ -230,6 +231,7 @@ class LoginController {
                     if (perfiles.size() == 1) {
                         session.usuario.vaciarPermisos()
                         session.perfil = perfiles.first().perfil
+//                        session.codigo = perfiles.first().perfil.codigo
                         cargarPermisos()
                         def cn = "inicio"
                         def an = "index"
@@ -328,6 +330,7 @@ class LoginController {
 
             }
             session.perfil = perf
+            session.codigo = perf.codigo
             cargarPermisos()
 
             def ahora = new Date().clearTime()

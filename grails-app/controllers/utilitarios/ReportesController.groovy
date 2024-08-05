@@ -86,7 +86,7 @@ class ReportesController extends Shield{
 
     def index() {
         def cn = dbConnectionService.getConnection()
-        def sql = 'select distinct cast (extract(year from pagofcpg) as INT) from pago order by 1;'
+        def sql = 'select distinct cast (extract(year from pagofcpg) as INT) anio from pago order by 1;'
         def res = cn.rows(sql.toString())
         def condominio = Condominio.get(session.condominio.id)
         def edificios = Edificio.findAllByCondominio(condominio)
@@ -94,7 +94,9 @@ class ReportesController extends Shield{
         def inicioAnio = fcha - fcha[Calendar.DAY_OF_YEAR] + 1
         inicioAnio.clearTime()
 
-        return [anios: res.date_part, edificios: edificios, condominio: condominio, inicioAnio: inicioAnio]
+        println "anios: $res"
+//        return [anios: res.date_part, edificios: edificios, condominio: condominio, inicioAnio: inicioAnio]
+        return [anios: res.anio, edificios: edificios, condominio: condominio, inicioAnio: inicioAnio]
     }
 
     def reportes() {
