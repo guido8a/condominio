@@ -96,7 +96,8 @@
                             callback: function () {
                                 var contabilidad = $("#contabilidad option:selected").val();
                                 if(contabilidad){
-                                    location.href = "${g.createLink(controller:'reportes3' , action: 'planDeCuentas')}?cont=" + contabilidad;
+                                    var url = "${g.createLink(controller:'reportes3' , action: 'planDeCuentas')}?cont=" + contabilidad;
+                                    location.href = "${g.createLink(action: 'pdfLink',controller: 'pdf')}?url=" + url + "&filename=planDeCuentas.pdf"
                                 }else{
                                     bootbox.alert("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" + "<strong style='font-size: 14px'>" + "Seleccione una contabilidad" + '</strong>');
                                 }
