@@ -1,6 +1,9 @@
 package contabilidad
 
+import condominio.Condominio
+
 class Gestor implements Serializable {
+    Condominio condominio
     String estado
     Date fecha
     String nombre
@@ -19,6 +22,7 @@ class Gestor implements Serializable {
         version false
 
         columns {
+            condominio column: 'cndm__id'
             estado column: 'gstretdo'
             fecha column: 'gstrfcha'
             nombre column: 'gstrnmbr'
@@ -30,6 +34,7 @@ class Gestor implements Serializable {
         }
     }
     static constraints = {
+        condominio(blank: false, nullable: false)
         estado(size: 1..1, blank: false, attributes: [title: 'estado'])
         fecha(blank: true, nullable: true, attributes: [title: 'fecha'])
         nombre(size: 1..127, blank: false, attributes: [title: 'nombre'])
