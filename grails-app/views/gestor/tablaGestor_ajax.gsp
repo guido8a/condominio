@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 03/05/17
-  Time: 10:51
---%>
-
 <style type="text/css">
 
 .rojo{
@@ -52,21 +45,11 @@
                 <td class="largo"><g:textField type="number" name="valor" id="val_${gnra?.id}"
                                                class="validacionNumero form-control" style="width: 85px;"
                                                value="${gnra?.valor?:0}" /></td>
-%{--
-                <td class="largo"><g:textField type="number" name="retIva" id="ri_${gnra?.id}"
-                                               class="validacionNumero form-control" style="width: 70px;"
-                                               value="${gnra?.retIva?:0}" /></td>
---}%
-%{--
-                <td class="largo"><g:textField type="number" name="valor" id="rr_${gnra?.id}"
-                                               class="validacionNumero form-control" style="width: 70px;"
-                                               value="${gnra?.valor?:0}" /></td>
---}%
                 <td width="50px"><g:textField type="number" name="debeHaber" id="dh_${gnra?.id}"
                                                class="form-control mayusculas" style="width: 45px;"
                                                value="${gnra?.debeHaber}" /></td>
                 <td style="width: 100px">
-                    <g:if test="${gestor?.estado != 'R' && (gestor?.empresa == empresa)}">
+                    <g:if test="${gestor?.estado != 'R' && (gestor?.condominio == condominio)}">
                         <div class="btn-group">
                             <a href="#" class="btn btn-success btn-s btnGuardarMovi" cuenta="${gnra?.id}" iden="${i}"
                                title="Guardar cambios">
@@ -80,8 +63,6 @@
                     </g:if>
                 </td>
                 </tr>
-                %{--<g:set var="pcnt" value="${pcnt + gnra.porcentaje?:0 * ((gnra?.debeHaber == 'D')? 1 : -1)}" />--}%
-
                 <g:set var="sgno" value="${(gnra?.debeHaber == 'D')? 1 : -1}" />
                 <g:set var="pcnt" value="${pcnt + gnra.porcentaje * sgno}" />
                 <g:set var="pcim" value="${pcim + gnra.porcentajeImpuestos * sgno}" />
@@ -89,9 +70,8 @@
                 <g:set var="pcbz" value="${pcbz + gnra.baseSinIva * sgno}" />
                 <g:set var="flte" value="${flte + gnra.flete * sgno}" />
                 <g:set var="vlor" value="${vlor + gnra.valor * sgno}" />
-                %{--<g:set var="rtrn" value="${rtrn + gnra.retRenta * sgno}" />--}%
-
         </g:each>
+
         <tr class="colorAsiento">
             <td class="total derecha">Diferencia de Totales</td>
             <td class="total derecha ${Math.abs(pcnt) > 0.001 ? 'rojo' : ''}">${Math.round(pcnt*100)/100}</td>
@@ -100,7 +80,6 @@
             <td class="total derecha ${Math.abs(ice) > 0.001 ? 'rojo' : ''}">${Math.round((ice)*100)/100}</td>
             <td class="total derecha ${Math.abs(flte) > 0.001 ? 'rojo' : ''}">${Math.round((flte)*100)/100}</td>
             <td class="total derecha ${Math.abs(vlor) > 0.001 ? 'rojo' : ''}">${Math.round((vlor)*100)/100}</td>
-            %{--<td class="total derecha ${Math.abs(rtrn) > 0.001 ? 'rojo' : ''}">${Math.round((rtrn)*100)/100}</td>--}%
             <td colspan="2" class="total">Debe - Haber</td>
         </tr>
 
@@ -110,7 +89,6 @@
             <td colspan="6">Sin movimientos contables.</td>
         </tr>
     </g:else>
-
     </tbody>
 </table>
 
@@ -131,9 +109,9 @@
          */
         return ((ev.keyCode >= 48 && ev.keyCode <= 57) ||
         (ev.keyCode >= 96 && ev.keyCode <= 105) ||
-        ev.keyCode == 8 || ev.keyCode == 46 || ev.keyCode == 9 ||
-        ev.keyCode == 37 || ev.keyCode == 39 ||
-        ev.keyCode == 110 || ev.keyCode == 190);
+        ev.keyCode === 8 || ev.keyCode === 46 || ev.keyCode === 9 ||
+        ev.keyCode === 37 || ev.keyCode === 39 ||
+        ev.keyCode === 110 || ev.keyCode === 190);
     }
 
     $(".validacionNumero").keydown(function (ev) {
@@ -164,12 +142,12 @@
                         openLoader("Eliminando");
                         $.ajax({
                             type: 'POST',
-                            url:'${createLink(controller: 'gestorContable', action: 'borrarCuenta_ajax')}',
+                            url:'${createLink(controller: 'gestor', action: 'borrarCuenta_ajax')}',
                             data:{
                                 genera: genera
                             },
                             success: function (msg) {
-                                if(msg == 'ok'){
+                                if(msg === 'ok'){
                                     closeLoader();
                                     cargarMovimientos(gestor, tipo);
                                     cargarTotales(gestor, tipo);
@@ -200,11 +178,10 @@
         var flete = $("#fl_" + genera).val();
         var debeHaber = $("#dh_" + genera).val();
         var valor = $("#val_" + genera).val();
-//        var retRenta = $("#rr_" + genera).val();
 
         $.ajax({
             type: 'POST',
-            url:'${createLink(controller: 'gestorContable', action: 'guardarValores_ajax')}',
+            url:'${createLink(controller: 'gestor', action: 'guardarValores_ajax')}',
             data:{
                 genera: genera,
                 porcentaje: porcentaje,
@@ -214,10 +191,9 @@
                 flete: flete,
                 debeHaber: debeHaber,
                 valor: valor
-//                retRenta: retRenta
             },
             success: function (msg){
-                if(msg == 'ok'){
+                if(msg === 'ok'){
                     log("Valores guardados correctamente","success");
                     cargarMovimientos(gestor, tipo);
                     cargarTotales(gestor, tipo);

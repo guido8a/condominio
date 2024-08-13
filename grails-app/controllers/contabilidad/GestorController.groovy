@@ -210,38 +210,39 @@ class GestorController extends Shield {
     }
 
     def deleteGestor() {
+        def errores = ''
         def gestor = Gestor.get(params.id)
+
         if (!gestor) {
-            flash.message = "No se ha encontrado el gestor a eliminar"
+            render "no_Error al borrar el gestor"
             return
-        }
-
-//        def adquisiciones = Adquisiciones.findAllByGestor(gestor)
-//        def facturas = Factura.findAllByGestor(gestor)
-        def procesos = Proceso.findAllByGestor(gestor)
-
-        if (procesos.size() == 0) {
+        }else{
             def generas = Genera.findAllByGestor(gestor)
-            generas.each { gen ->
+
+            if(generas.size() > 0){
+                generas.each { gen ->
+                    try {
+                        gen.delete(flush: true)
+                    } catch (e) {
+                        println e.stackTrace
+                        errores += gen.errors
+                    }
+                }
+            }else{
+                errores = ''
+            }
+
+            if(errores == ''){
                 try {
-                    gen.delete(flush: true)
+                    gestor.delete(flush: true)
+                    render "ok_Gestor borrado correctamente"
                 } catch (e) {
                     println e.stackTrace
+                    render "no_Error al borrar el gestor"
                 }
+            }else{
+                render "no_Error al borrar el gestor"
             }
-            try {
-                gestor.delete(flush: true)
-            } catch (e) {
-                println e.stackTrace
-            }
-            redirect(action: "index")
-        } else {
-            def msn = "El gestor ya ha sido utilizado en "
-            if (procesos.size() > 0) {
-                msn += procesos.size() + " proceso" + (procesos.size() == 1 ? ", " : "s, ")
-            }
-            msn += " por lo que no puede ser eliminado."
-            return [msn: msn, gestor: gestor]
         }
     }
 
@@ -275,11 +276,11 @@ class GestorController extends Shield {
 
     def tablaGestor_ajax () {
 //        println("tabla gestor" + params)
+        def condominio = Condominio.get(session.condominio.id)
         def gestor = Gestor.get(params.id)
         def tipoComprobante = TipoComprobante.get(params.tipo)
-        def empresa = Empresa.get(session.empresa.id)
         def movimientos = Genera.findAllByGestorAndTipoComprobante(gestor, tipoComprobante)?.sort{it.cuenta.numero}?.sort{it.debeHaber}
-        return [movimientos: movimientos, gestor: gestor, tipo: tipoComprobante, empresa: empresa]
+        return [movimientos: movimientos, gestor: gestor, tipo: tipoComprobante, condominio: condominio]
     }
 
     def buscarMovimiento_ajax () {
@@ -291,13 +292,13 @@ class GestorController extends Shield {
 
     def tablaBuscar_ajax () {
 //        println("params " + params)
-        def empresa = Empresa.get(params.empresa)
+        def condominio = Condominio.get(session.condominio.id)
         def gestor = Gestor.get(params.gestor)
         def tipo = TipoComprobante.get(params.tipo)
         def res
 
         if(params.nombre == "" && params.codigo == ""){
-            res = Cuenta.findAllByEmpresaAndMovimiento(empresa,'1').sort{it.numero}
+            res = Cuenta.findAllByCondominioAndMovimiento(condominio,'1').sort{it.numero}
         }else{
             res = Cuenta.withCriteria {
                 eq("empresa", empresa)
@@ -355,7 +356,7 @@ class GestorController extends Shield {
     }
 
     def guardarValores_ajax () {
-        println "guardarValores_ajax " + params
+//        println "guardarValores_ajax " + params
         def genera = Genera.get(params.genera)
         genera.ice = params.ice.toDouble()
         genera.porcentajeImpuestos = params.impuesto.toDouble()
@@ -364,7 +365,6 @@ class GestorController extends Shield {
         genera.flete = params.flete.toDouble()
         genera.debeHaber = params.debeHaber
         genera.valor = params.valor.toDouble()
-//        genera.retRenta = params.retRenta.toDouble()
 
         try{
             genera.save(flush: true)
@@ -378,29 +378,30 @@ class GestorController extends Shield {
         println "params guardar $params"
         def gestor
         def fuente = Fuente.get(params.fuente)
-        def empresa = session.empresa
-        def tipoProceso = TipoProceso.get(params.tipoProceso)
+//        def empresa = session.empresa
+        def condominio = Condominio.get(session.condominio.id)
+//        def tipoProceso = TipoProceso .get(params.tipoProceso)
 
         if(params.gestor){
             gestor = Gestor.get(params.gestor)
         }else{
             gestor = new Gestor()
-            gestor.empresa = empresa
+            gestor.condominio = condominio
             gestor.estado = 'A'
             gestor.fecha = new Date()
         }
 
         gestor.nombre = params.nombre
-        gestor.tipoProceso = tipoProceso
-        if(tipoProceso.codigo.trim() == 'A'){
-            if(params.saldoInicial == 'true'){
-                gestor.codigo = 'SLDO'
-            }else{
-                gestor.codigo = null
-            }
-        }else{
+//        gestor.tipoProceso = tipoProceso
+//        if(tipoProceso.codigo.trim() == 'A'){
+//            if(params.saldoInicial == 'true'){
+//                gestor.codigo = 'SLDO'
+//            }else{
+//                gestor.codigo = null
+//            }
+//        }else{
             gestor.codigo = null
-        }
+//        }
         gestor.observaciones = params.observacion
         gestor.fuente = fuente
         if(params.tipo != '-1') {
@@ -408,7 +409,6 @@ class GestorController extends Shield {
         } else {
             gestor.tipo = null
         }
-
 
         try{
             gestor.save(flush: true)
@@ -474,12 +474,8 @@ class GestorController extends Shield {
                 def debeSinIvaD = generaDebe.baseSinIva.sum()
                 def debeSinIvaH = generaHaber.baseSinIva.sum()
 
-
                 def totalesDebe = debeValor + debeImpuesto + debePorcentaImpuesto + fleteDebe + debeSinIvaD
                 def totalesHaber = haberValor + haberImpuesto + haberPorcentaImpuesto + fleteHaber + debeSinIvaH
-
-//                println("totalesdebe " + totalesDebe)
-//                println("totaleshaber " + totalesHaber)
 
                 if(totalesDebe == 0 && totalesHaber == 0 && gestor.codigo != 'SLDO'){
                     render "no_No se puede registrar el gestor contable, los valores se encuentran en 0, COMPROBANTE: (${tipo?.descripcion})"
@@ -491,18 +487,6 @@ class GestorController extends Shield {
                         errores += 1
                     }
                 }
-
-//                if(totalesDebe != 0 && totalesHaber != 0){
-//                    if(debeValor == haberValor && debeImpuesto == haberImpuesto && debePorcentaImpuesto == haberPorcentaImpuesto){
-//                        errores += 1
-//                    }else{
-//                        render "no_No se puede registrar el gestor contable, los valores no cuadran entre DEBE y HABER, COMPROBANTE: (${tipo?.descripcion})"
-//                        return
-//                    }
-//                }else{
-//                    render "no_No se puede registrar el gestor contable, los valores se encuentran en 0, COMPROBANTE: (${tipo?.descripcion})"
-//                    return
-//                }
             }else{
                 if(!generaDebe && !generaHaber){
                     errores += 1
@@ -538,7 +522,7 @@ class GestorController extends Shield {
 
         try{
             gestor.save(flush:true)
-            render "ok_Gestor contable desregistrado correctamente!"
+            render "ok_Quitado el registro del Gestor contable correctamente"
         }catch (e){
             println("error al quitar el registro del gestor contable " + e)
             render "no_Error al quitar el registro del gestor contable"
@@ -611,19 +595,17 @@ class GestorController extends Shield {
     }
 
     def crearGestorSaldoInicial_ajax () {
-
-        def empresa = Empresa.get(session.empresa.id)
-        def tipoProceso = TipoProceso.findByCodigo("A")
+        def condominio = Condominio.get(session.condominio.id)
         def fuente = Fuente.get(1)
         def cn = dbConnectionService.getConnection()
         def tipoComprobante = TipoComprobante.findByCodigo("D")
 
-        def cuentas1= "select cnta__id from cnta where cntanmro ILIKE '1%' and cntapdre is not null and empr__id = ${empresa?.id} and cnta__id not in (select cntapdre from cnta where empr__id = ${empresa?.id} and cntapdre is not null);"
-        def cuentas5= "select cnta__id from cnta where cntanmro ILIKE '5%' and cntapdre is not null and empr__id = ${empresa?.id} and cnta__id not in (select cntapdre from cnta where empr__id = ${empresa?.id} and cntapdre is not null);"
-        def cuentas6= "select cnta__id from cnta where cntanmro ILIKE '6%' and cntapdre is not null and empr__id = ${empresa?.id} and cnta__id not in (select cntapdre from cnta where empr__id = ${empresa?.id} and cntapdre is not null);"
-        def cuentas2= "select cnta__id from cnta where cntanmro ILIKE '2%' and cntapdre is not null and empr__id = ${empresa?.id} and cnta__id not in (select cntapdre from cnta where empr__id = ${empresa?.id} and cntapdre is not null);"
-        def cuentas3= "select cnta__id from cnta where cntanmro ILIKE '3%' and cntapdre is not null and empr__id = ${empresa?.id} and cnta__id not in (select cntapdre from cnta where empr__id = ${empresa?.id} and cntapdre is not null);"
-        def cuentas4= "select cnta__id from cnta where cntanmro ILIKE '4%' and cntapdre is not null and empr__id = ${empresa?.id} and cnta__id not in (select cntapdre from cnta where empr__id = ${empresa?.id} and cntapdre is not null);"
+        def cuentas1= "select cnta__id from cnta where cntanmro ILIKE '1%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
+        def cuentas5= "select cnta__id from cnta where cntanmro ILIKE '5%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
+        def cuentas6= "select cnta__id from cnta where cntanmro ILIKE '6%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
+        def cuentas2= "select cnta__id from cnta where cntanmro ILIKE '2%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
+        def cuentas3= "select cnta__id from cnta where cntanmro ILIKE '3%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
+        def cuentas4= "select cnta__id from cnta where cntanmro ILIKE '4%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
 
         def cuentasDebe
         def cuentasHaber
@@ -634,18 +616,16 @@ class GestorController extends Shield {
 //        println("cd " + cuentasDebe)
 //        println("ch " + cuentasHaber)
 
-
-
         def errores = ''
 
         def gestor = new Gestor()
         gestor.nombre = "Saldos iniciales para apertura de contabilidad"
         gestor.codigo = "SLDO"
-        gestor.empresa = empresa
+        gestor.condominio = condominio
         gestor.estado = "A"
         gestor.tipo = "G"
-        gestor.tipoProceso = tipoProceso
         gestor.fuente = fuente
+        gestor.fecha = new Date()
         gestor.observaciones = "Saldos iniciales generados automáticamente"
 
         try{
@@ -671,16 +651,12 @@ class GestorController extends Shield {
                 genera.flete = 0.0
                 genera.ice = 0.0
 
-
                 try{
-
                     genera.save(flush: true)
-
                 }catch (e){
                     println("error al crear los genera debe de los saldos iniciales")
                     errores += e
                 }
-
             }
 
             cuentasHaber.each{ haber->
@@ -714,7 +690,6 @@ class GestorController extends Shield {
         }else{
             render "no"
         }
-
     }
 
 }

@@ -64,17 +64,17 @@
     </div>
 </div>
 
-<div style="margin-top: 30px; min-height: 650px" class="vertical-container">
-    <p class="css-vertical-text">Gestores encontrados</p>
+<div style="margin-top: 30px; min-height: 550px" class="vertical-container">
+    <p class="css-vertical-text">Gestores</p>
 
     <div class="linea"></div>
     <table class="table table-bordered table-hover table-condensed" style="width: 1070px">
         <thead>
         <tr>
-            <th class="alinear" style="width: 130px">Proceso</th>
-            <th class="alinear" style="width: 700px">Nombre</th>
-            <th class="alinear" style="width: 120px">Estado</th>
-            <th class="alinear" style="width: 120px">Tipo</th>
+            <th class="alinear" style="width: 40%">Nombre</th>
+            <th class="alinear" style="width: 15%">Estado</th>
+            <th class="alinear" style="width: 30%">Tipo</th>
+            <th class="alinear" style="width: 15%">Acciones</th>
         </tr>
         </thead>
     </table>
@@ -83,8 +83,8 @@
     </div>
 </div>
 
-<div><strong>Nota</strong>: Si existen muchos registros que coinciden con el criterio de búsqueda, se retorna
-como máximo 20 <span style="margin-left: 40px; color: #0b2c89">Se ordena por proceso y nombre del gestor</span>
+<div>
+    <strong>Nota</strong>: Se retorna como máximo 20 registros <span style="margin-left: 40px; color: #0b2c89">Se ordena por nombre del gestor</span>
 </div>
 
 <div class="modal fade " id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -106,39 +106,48 @@ como máximo 20 <span style="margin-left: 40px; color: #0b2c89">Se ordena por pr
     </div><!-- /.modal-dialog -->
 </div>
 
-<script>
-    $(function () {
-        $("#limpiaBuscar").click(function () {
-            $("#buscar").val('');
-        });
-    });
-</script>
-
 <script type="text/javascript">
+
+    $("#limpiaBuscar").click(function () {
+        $("#buscar").val('');
+        cargarBusqueda();
+    });
 
     $("#btnInicial").click(function () {
 
-        bootbox.confirm("<i class='fa fa-check fa-3x pull-left text-warning text-shadow'></i> Está seguro de crear un gestor de saldos iniciales?", function (result) {
-            if (result) {
-                openLoader("Creando...");
-                $.ajax({
-                    type: 'POST',
-                    url:'${createLink(controller: 'gestorContable', action: 'crearGestorSaldoInicial_ajax')}',
-                    data:{
-
-                    },
-                    success: function (msg){
-                        closeLoader();
-                        if(msg === 'OK'){
-                            log("Gestor de Saldos Iniciales creado correctamente", "success");
-                            setTimeout(function () {
-                                location.reload();
-                            }, 1000);
-                        }else{
-                            log("Error al crear el gestor de saldos iniciales", "error");
+        bootbox.confirm({
+            message: "<i class='fa fa-3x fa-exclamation-triangle text-info'></i> <strong style='font-size: 14px'> Está seguro de crear un gestor de saldos iniciales? </strong>",
+            buttons: {
+                confirm: {
+                    label: '<i class="fa fa-save"></i> Aceptar',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancelar',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                if(result){
+                    openLoader("Creando...");
+                    $.ajax({
+                        type: 'POST',
+                        url:'${createLink(controller: 'gestor', action: 'crearGestorSaldoInicial_ajax')}',
+                        data:{
+                        },
+                        success: function (msg){
+                            closeLoader();
+                            if(msg === 'OK'){
+                                log("Gestor de Saldos Iniciales creado correctamente", "success");
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 1000);
+                            }else{
+                                log("Error al crear el gestor de saldos iniciales", "error");
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
     });
@@ -146,7 +155,6 @@ como máximo 20 <span style="margin-left: 40px; color: #0b2c89">Se ordena por pr
     cargarBusqueda();
 
     function cargarBusqueda() {
-        // $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
         var buscar = $("#buscar").val();
         var datos = "buscar=" + buscar;
 
@@ -173,90 +181,90 @@ como máximo 20 <span style="margin-left: 40px; color: #0b2c89">Se ordena por pr
         }
     });
 
-    function createContextMenu(node) {
-        var $tr = $(node);
+    %{--function createContextMenu(node) {--}%
+    %{--    var $tr = $(node);--}%
 
-        var items = {
-            header: {
-                label: "Acciones",
-                header: true
-            }
-        };
+    %{--    var items = {--}%
+    %{--        header: {--}%
+    %{--            label: "Acciones",--}%
+    %{--            header: true--}%
+    %{--        }--}%
+    %{--    };--}%
 
-        var etdo = $tr.data("ed");
-        var id = $tr.data("id");
+    %{--    var etdo = $tr.data("ed");--}%
+    %{--    var id = $tr.data("id");--}%
 
-        var editar = {
-            label: " Editar",
-            icon: "fa fa-file-text-o",
-            action: function () {
-                location.href = '${createLink(action: "formGestor")}?id=' + id;
-            }
-        };
+    %{--    var editar = {--}%
+    %{--        label: " Editar",--}%
+    %{--        icon: "fa fa-file-text-o",--}%
+    %{--        action: function () {--}%
+    %{--            location.href = '${createLink(action: "formGestor")}?id=' + id;--}%
+    %{--        }--}%
+    %{--    };--}%
 
-        var ver = {
-            label: " Ver gestor",
-            icon: "fa fa-search-plus",
-            action: function () {
-                location.href = '${createLink(action: "formGestor")}?id=' + id;
-            }
-        };
+    %{--    var ver = {--}%
+    %{--        label: " Ver gestor",--}%
+    %{--        icon: "fa fa-search-plus",--}%
+    %{--        action: function () {--}%
+    %{--            location.href = '${createLink(action: "formGestor")}?id=' + id;--}%
+    %{--        }--}%
+    %{--    };--}%
 
-        var copiar = {
-            label: " Copiar gestor",
-            icon: "fa fa-copy",
-            action: function () {
-                var b = bootbox.dialog({
-                    id: "dlgCopiarGestor",
-                    title: "Copiar Gestor",
-                    message:  "<label>Nombre</label> </br> <input name='copiName' id='copiado' style='height: 40px;' class='form-control'/>",
-                    buttons: {
-                        cancelar: {
-                            label: "<i class='fa fa-times'></i> Cancelar",
-                            className: "btn-primary",
-                            callback: function () {
-                            }
-                        },
-                        aceptar: {
-                            label: "<i class='fa fa-times'></i> Aceptar",
-                            className: "btn-success",
-                            callback: function () {
-                                var cp = $("#copiado").val();
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '${createLink(controller: 'gestorContable', action: 'copiarGestor_ajax')}',
-                                    data:{
-                                        id: id,
-                                        nombre:  cp
-                                    },
-                                    success: function(msg){
-                                        if(msg === 'ok'){
-                                            bootbox.hideAll();
-                                            log("Gestor copiado correctamente","success");
-                                            setTimeout(function () {
-                                                location.reload();
-                                            }, 1500);
-                                        }else{
-                                            log("Error al copiar el gestor ","error")
-                                        }
+    %{--    var copiar = {--}%
+    %{--        label: " Copiar gestor",--}%
+    %{--        icon: "fa fa-copy",--}%
+    %{--        action: function () {--}%
+    %{--            var b = bootbox.dialog({--}%
+    %{--                id: "dlgCopiarGestor",--}%
+    %{--                title: "Copiar Gestor",--}%
+    %{--                message:  "<label>Nombre</label> </br> <input name='copiName' id='copiado' style='height: 40px;' class='form-control'/>",--}%
+    %{--                buttons: {--}%
+    %{--                    cancelar: {--}%
+    %{--                        label: "<i class='fa fa-times'></i> Cancelar",--}%
+    %{--                        className: "btn-primary",--}%
+    %{--                        callback: function () {--}%
+    %{--                        }--}%
+    %{--                    },--}%
+    %{--                    aceptar: {--}%
+    %{--                        label: "<i class='fa fa-times'></i> Aceptar",--}%
+    %{--                        className: "btn-success",--}%
+    %{--                        callback: function () {--}%
+    %{--                            var cp = $("#copiado").val();--}%
+    %{--                            $.ajax({--}%
+    %{--                                type: 'POST',--}%
+    %{--                                url: '${createLink(controller: 'gestorContable', action: 'copiarGestor_ajax')}',--}%
+    %{--                                data:{--}%
+    %{--                                    id: id,--}%
+    %{--                                    nombre:  cp--}%
+    %{--                                },--}%
+    %{--                                success: function(msg){--}%
+    %{--                                    if(msg === 'ok'){--}%
+    %{--                                        bootbox.hideAll();--}%
+    %{--                                        log("Gestor copiado correctamente","success");--}%
+    %{--                                        setTimeout(function () {--}%
+    %{--                                            location.reload();--}%
+    %{--                                        }, 1500);--}%
+    %{--                                    }else{--}%
+    %{--                                        log("Error al copiar el gestor ","error")--}%
+    %{--                                    }--}%
 
-                                    }
-                                })
-                            }
-                        }
-                    } //buttons
-                }); //dialog
-            }
-        };
+    %{--                                }--}%
+    %{--                            })--}%
+    %{--                        }--}%
+    %{--                    }--}%
+    %{--                } //buttons--}%
+    %{--            }); //dialog--}%
+    %{--        }--}%
+    %{--    };--}%
 
-        if(etdo !== 'R') {
-            items.editar = editar;
-        }
-        items.ver = ver;
-        items.copiar = copiar;
+    %{--    if(etdo !== 'R') {--}%
+    %{--        items.editar = editar;--}%
+    %{--    }--}%
+    %{--    items.ver = ver;--}%
+    %{--    items.copiar = copiar;--}%
 
-        return items
-    }
+    %{--    return items--}%
+    %{--}--}%
 
 </script>
 </body>

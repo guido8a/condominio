@@ -73,10 +73,14 @@
                     Registrar
                 </a>
                 <g:if test="${gestorInstance?.id}">
-                    <g:link action="deleteGestor" id="${gestorInstance?.id}" class="btn btn-danger" name="eliminarGestor">
+%{--                    <g:link action="deleteGestor" id="${gestorInstance?.id}" class="btn btn-danger" name="eliminarGestor">--}%
+%{--                        <i class="fa fa-trash-o"></i>--}%
+%{--                        Eliminar--}%
+%{--                    </g:link>--}%
+                    <a href="#" id="btnBorrarGestor" class="btn btn-danger">
                         <i class="fa fa-trash-o"></i>
                         Eliminar
-                    </g:link>
+                    </a>
                 </g:if>
             </g:if>
             <g:else>
@@ -127,10 +131,8 @@
 
             <div class="col-xs-3 negrilla" style="margin-left: 0">
                 <g:select name="fuente.id" type="select" campo="fuente"
-                          from="${contabilidad.Fuente.list([sort: 'descripcion'])}"
-                          label="Fuente: " value="${gestorInstance?.fuente?.id}" optionKey="id"
-                          optionValue="descripcion"
-                          class="form-control required col-md-3" id="fuenteGestor" />
+                          from="${contabilidad.Fuente.list([sort: 'descripcion'])}" value="${gestorInstance?.fuente?.id}" optionKey="id"
+                          optionValue="descripcion" class="form-control required col-md-3" id="fuenteGestor" />
             </div>
 
             <div class="col-xs-1 negrilla">
@@ -141,14 +143,11 @@
 
             <div class="col-xs-2 negrilla" style="margin-left: 0">
                 <g:select class="form-control required tipoD" from="${tipo}" optionValue="value" optionKey="key"
-                          name="tipoD_name" value="${gestorInstance?.tipo?:-1}"
-                          disabled="${gestorInstance?.estado == 'R'}" title="Tipo de Detalle"/>
+                          name="tipoD_name" value="${gestorInstance?.tipo?:-1}" disabled="${gestorInstance?.estado == 'R'}"/>
             </div>
-
         </div>
 
         <div class="fila">
-
             <g:if test="${!gestorInicial || gestorInicial.id == gestorInstance?.id}">
                 <div class="col-xs-3 negrilla hidden" id="divS">
                     Gestor para saldos iniciales:
@@ -226,10 +225,51 @@
 
 <script type="text/javascript">
 
+    $("#btnBorrarGestor").click(function () {
+        bootbox.dialog({
+            title: "Alerta",
+            message: "<i class='fa fa-warning fa-3x pull-left text-danger text-shadow'></i><p style='font-size: 14px; font-weight: bold'> Está seguro que desea borrar el gestor contable?",
+            buttons: {
+                cancelar: {
+                    label: "<i class='fa fa-times'></i> Cancelar",
+                    className: "btn-primary",
+                    callback: function () {
+                    }
+                },
+                eliminar: {
+                    label: "<i class='fa fa-trash-o'></i> Borrar",
+                    className: "btn-success",
+                    callback: function () {
+                        openLoader("Borrando...");
+                        $.ajax({
+                            type: 'POST',
+                            url: '${createLink(controller: 'gestor', action: 'deleteGestor')}',
+                            data: {
+                                id: '${gestorInstance?.id}'
+                            },
+                            success: function (msg) {
+                                closeLoader();
+                                var parts = msg.split("_");
+                                if (parts[0] === 'ok') {
+                                    log(parts[1], "success");
+                                    setTimeout(function () {
+                                        location.href = "${createLink(controller: 'gestor', action: 'buscarGstr')}"
+                                    }, 1000);
+                                } else {
+                                    log(parts[1], "error");
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    });
+
     function revisarAsientos () {
         $.ajax({
             type: 'POST',
-            url: '${createLink(controller: 'gestorContable', action: 'revisarAsiento_ajax')}',
+            url: '${createLink(controller: 'gestor', action: 'revisarAsiento_ajax')}',
             data:{
                 gestor: '${gestorInstance?.id}'
             },
@@ -283,20 +323,20 @@
                         openLoader("Registrando..");
                         $.ajax({
                             type: 'POST',
-                            url: '${createLink(controller: 'gestorContable', action: 'registrar_ajax')}',
+                            url: '${createLink(controller: 'gestor', action: 'registrar_ajax')}',
                             data: {
                                 id: '${gestorInstance?.id}'
                             },
                             success: function (msg) {
+                                closeLoader();
                                 var parts = msg.split("_");
                                 if (parts[0] === 'ok') {
                                     log(parts[1], "success");
                                     setTimeout(function () {
-                                        location.href = "${createLink(controller: 'gestorContable', action: 'formGestor')}/" + '${gestorInstance?.id}'
+                                        location.href = "${createLink(controller: 'gestor', action: 'formGestor')}/" + '${gestorInstance?.id}'
                                     }, 1000);
                                 } else {
                                     log(parts[1], "error");
-                                    closeLoader();
                                 }
                             }
                         });
@@ -324,20 +364,20 @@
                         openLoader("Quitando Registro..");
                         $.ajax({
                             type: 'POST',
-                            url: '${createLink(controller: 'gestorContable', action: 'desRegistrar_ajax')}',
+                            url: '${createLink(controller: 'gestor', action: 'desRegistrar_ajax')}',
                             data: {
                                 id: '${gestorInstance?.id}'
                             },
                             success: function (msg) {
+                                closeLoader();
                                 var parts = msg.split("_");
                                 if (parts[0] === 'ok') {
                                     log(parts[1], "success");
                                     setTimeout(function () {
-                                        location.href = "${createLink(controller: 'gestorContable', action: 'formGestor')}/" + '${gestorInstance?.id}'
+                                        location.href = "${createLink(controller: 'gestor', action: 'formGestor')}/" + '${gestorInstance?.id}'
                                     }, 1000);
                                 } else {
                                     log(parts[1], "error");
-                                    closeLoader();
                                 }
                             }
                         });
@@ -394,7 +434,7 @@
     function cargarMovimientos(idGestor, idTipo) {
         $.ajax({
             type: 'POST',
-            url: '${createLink(controller: 'gestorContable', action: 'tablaGestor_ajax')}',
+            url: '${createLink(controller: 'gestor', action: 'tablaGestor_ajax')}',
             data: {
                 id: idGestor,
                 tipo: idTipo
@@ -408,7 +448,7 @@
     function cargarTotales(idGestor, idTipo) {
         $.ajax({
             type: 'POST',
-            url: '${createLink(controller: 'gestorContable', action: 'totales_ajax')}',
+            url: '${createLink(controller: 'gestor', action: 'totales_ajax')}',
             data: {
                 id: idGestor,
                 tipo: idTipo
@@ -420,6 +460,7 @@
     }
 
     $("#btnGuardar").click(function () {
+        openLoader("Guardando..");
         var gestor = '${gestorInstance?.id}';
         var nombreGestor = $("#nombre").val();
         var descripcion = $("#descripcion").val();
@@ -427,7 +468,7 @@
         var fuente = $("#fuenteGestor").val();
         $.ajax({
             type: 'POST',
-            url: "${createLink(controller: 'gestorContable', action: 'guardarGestor')}",
+            url: "${createLink(controller: 'gestor', action: 'guardarGestor')}",
             data: {
                 gestor: gestor,
                 nombre: nombreGestor,
@@ -439,12 +480,13 @@
                 saldoInicial: $(".salIni").prop('checked')
             },
             success: function (msg) {
+                closeLoader();
                 var parts = msg.split("_");
                 if (parts[0] === 'ok') {
                     log("Información del gestor guardada correctamente", "success");
                     setTimeout(function () {
-                        location.href = "${createLink(controller: 'gestorContable', action: 'formGestor')}/" + parts[1]
-                    }, 800);
+                        location.href = "${createLink(controller: 'gestor', action: 'formGestor')}/" + parts[1]
+                    }, 1000);
                 } else {
                     log("Error al guardar la información del gestor", "error")
                 }
