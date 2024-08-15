@@ -45,25 +45,29 @@
 </div>
 
 <script type="text/javascript">
+
     var id = null;
+
     function submitForm() {
         var $form = $("#frmTipoComprobante");
         var $btn = $("#dlgCreateEdit").find("#btnSave");
         if ($form.valid()) {
             $btn.replaceWith(spinner);
-            openLoader("Grabando");
+            openLoader("Guardando...");
             $.ajax({
                 type    : "POST",
                 url     : $form.attr("action"),
                 data    : $form.serialize(),
                 success : function (msg) {
+                    closeLoader();
                     var parts = msg.split("_");
-                    log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                    if (parts[0] == "OK") {
-                        location.reload(true);
-                    } else {
-                        closeLoader();
-                        spinner.replaceWith($btn);
+                    if (parts[0] === "ok") {
+                        log(parts[1], "success");
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }else {
+                        log(parts[1], 'error');
                         return false;
                     }
                 }
@@ -75,7 +79,7 @@
     function deleteRow(itemId) {
         bootbox.dialog({
             title   : "Alerta",
-            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Tipo de Comprobante seleccionado? Esta acción no se puede deshacer.</p>",
+            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p style='font-weight: bold; font-size: 14px' >¿Está seguro que desea eliminar el Tipo de Comprobante seleccionado?</p>",
             buttons : {
                 cancelar : {
                     label     : "Cancelar",
@@ -95,13 +99,15 @@
                                 id : itemId
                             },
                             success : function (msg) {
+                                closeLoader();
                                 var parts = msg.split("_");
-                                log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                                if (parts[0] == "OK") {
-                                    location.reload(true);
-                                } else {
-                                    closeLoader();
-                                    spinner.replaceWith($btn);
+                                if (parts[0] === "ok") {
+                                    log(parts[1], "success");
+                                    setTimeout(function () {
+                                        location.reload();
+                                    }, 1000);
+                                }else {
+                                    log(parts[1], 'error');
                                     return false;
                                 }
                             }
@@ -146,7 +152,6 @@
             } //success
         }); //ajax
     } //createEdit
-
 
     $(".btnCrear").click(function() {
         createEditRow();

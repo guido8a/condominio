@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 03/05/17
-  Time: 12:40
---%>
-
 <div class="row" style="margin-bottom: 10px">
     <div class="col-xs-3 negrilla">
         C&oacute;digo:
@@ -23,40 +16,35 @@
     </div>
 </div>
 
-
 <table class="table table-bordered table-hover table-condensed">
     <thead>
     <tr>
-        <th style="width: 30px">C&oacute;digo</th>
-        <th style="width: 230px">Nombre</th>
-        <th style="width: 10px">Nivel</th>
-        <th style="width: 30px">Acciones</th>
+        <th style="width: 20%">C&oacute;digo</th>
+        <th style="width: 50%">Nombre</th>
+        <th style="width: 10%">Nivel</th>
+        <th style="width: 20%">Acciones</th>
     </tr>
     </thead>
 </table>
 
-<div class="row-fluid"  style="width: 99.7%;height: 250px;overflow-y: auto;float: right;">
-    <div class="span12">
-        <div id="divTablaMovimientos" style="width: 1030px; height: 250px;"></div>
-    </div>
-</div>
+<div id="divTablaMovimientos"></div>
 
 <script type="text/javascript">
 
-    $("#buscarM").click(function (){
-        var cod = $("#codigoBus").val();
-        var nom = $("#nombreBus").val();
-        buscarCuenta(cod, nom);
+    buscarCuenta();
 
+    $("#buscarM").click(function (){
+        buscarCuenta();
     });
 
-    function buscarCuenta (cod, nom) {
-        openLoader("Buscando");
+    function buscarCuenta () {
+        var cod = $("#codigoBus").val();
+        var nom = $("#nombreBus").val();
+        openLoader("Buscando...");
         $.ajax({
             type: 'POST',
-            url: "${createLink(controller: 'gestorContable', action: 'tablaBuscar_ajax')}",
+            url: "${createLink(controller: 'gestor', action: 'tablaBuscar_ajax')}",
             data:{
-                empresa: '${empresa?.id}',
                 codigo: cod,
                 nombre: nom,
                 gestor: '${gestor?.id}',
@@ -70,10 +58,8 @@
     }
 
     $("input").keydown(function (ev) {
-        if (ev.keyCode == 13) {
-            var cod = $("#codigoBus").val();
-            var nom = $("#nombreBus").val();
-            buscarCuenta(cod, nom);
+        if (ev.keyCode === 13) {
+            buscarCuenta();
             return false;
         }
         return true;

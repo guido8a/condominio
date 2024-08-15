@@ -7,7 +7,7 @@
                 Código
             </label>
 
-            <span class="col-md-6">
+            <span class="col-md-2">
                 <g:textField name="codigo" maxlength="1" class="allCaps form-control required"
                              value="${tipoComprobanteInstance?.codigo}"/>
             </span>

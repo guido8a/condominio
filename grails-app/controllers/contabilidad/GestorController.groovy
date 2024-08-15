@@ -301,7 +301,7 @@ class GestorController extends Shield {
             res = Cuenta.findAllByCondominioAndMovimiento(condominio,'1').sort{it.numero}
         }else{
             res = Cuenta.withCriteria {
-                eq("empresa", empresa)
+                eq("condominio", condominio)
 
                 and{
                     ilike("descripcion", '%' + params.nombre + '%')
@@ -331,32 +331,28 @@ class GestorController extends Shield {
         genera.valor = 0
 
         if(!genera.save(flush: true)){
-            render "no"
+            render "no_Error al agregar la cuenta"
         }else{
-            render "ok"
+            render "ok_Cuenta agregada correctamente"
         }
     }
 
     def borrarCuenta_ajax () {
 //        println("genera borrar " + params)
         def genera = Genera.get(params.genera)
-        def errores = ''
 
         try {
             genera.delete(flush: true)
+            render "ok_Borrado correctamente"
         } catch (e) {
-            errores += e.stackTrace
-        }
-
-        if(errores == ''){
-            render "ok"
-        }else{
-            render "no"
+            println("Error al borrar " + genera.errors)
+            render "no_Error al borrar"
         }
     }
 
     def guardarValores_ajax () {
 //        println "guardarValores_ajax " + params
+
         def genera = Genera.get(params.genera)
         genera.ice = params.ice.toDouble()
         genera.porcentajeImpuestos = params.impuesto.toDouble()
@@ -366,11 +362,11 @@ class GestorController extends Shield {
         genera.debeHaber = params.debeHaber
         genera.valor = params.valor.toDouble()
 
-        try{
-            genera.save(flush: true)
-            render "ok"
-        }catch (e){
-            render "no"
+        if(!genera.save(flush:true)){
+            println("error al guardar " + genera.errors)
+            render "no_Error al guardar"
+        }else{
+            render "ok_Guardado correctamente"
         }
     }
 
@@ -378,9 +374,7 @@ class GestorController extends Shield {
         println "params guardar $params"
         def gestor
         def fuente = Fuente.get(params.fuente)
-//        def empresa = session.empresa
         def condominio = Condominio.get(session.condominio.id)
-//        def tipoProceso = TipoProceso .get(params.tipoProceso)
 
         if(params.gestor){
             gestor = Gestor.get(params.gestor)
@@ -392,16 +386,7 @@ class GestorController extends Shield {
         }
 
         gestor.nombre = params.nombre
-//        gestor.tipoProceso = tipoProceso
-//        if(tipoProceso.codigo.trim() == 'A'){
-//            if(params.saldoInicial == 'true'){
-//                gestor.codigo = 'SLDO'
-//            }else{
-//                gestor.codigo = null
-//            }
-//        }else{
-            gestor.codigo = null
-//        }
+        gestor.codigo = null
         gestor.observaciones = params.observacion
         gestor.fuente = fuente
         if(params.tipo != '-1') {

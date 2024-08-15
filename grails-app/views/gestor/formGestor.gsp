@@ -73,10 +73,6 @@
                     Registrar
                 </a>
                 <g:if test="${gestorInstance?.id}">
-%{--                    <g:link action="deleteGestor" id="${gestorInstance?.id}" class="btn btn-danger" name="eliminarGestor">--}%
-%{--                        <i class="fa fa-trash-o"></i>--}%
-%{--                        Eliminar--}%
-%{--                    </g:link>--}%
                     <a href="#" id="btnBorrarGestor" class="btn btn-danger">
                         <i class="fa fa-trash-o"></i>
                         Eliminar
@@ -87,7 +83,7 @@
                 <g:if test="${gestorInstance?.estado == 'R'}">
                     <a href="#" id="btnDesRegistrar" class="btn btn-info">
                         <i class="fa fa-times"></i>
-                        Desregistrar
+                        Quitar registro
                     </a>
                 </g:if>
             </g:else>
@@ -186,8 +182,10 @@
 
                 </span>
 
-                <g:if test="${gestorInstance}">
-                    Genera comprobantes de:  ${tieneAsientos?.sort{it?.tipoComprobante?.descripcion}?.tipoComprobante?.descripcion?.unique() ?: ''}
+                <g:if test="${gestorInstance?.id}">
+                    <g:if test="${tieneAsientos.size() > 0}">
+                        Genera comprobantes de:  ${tieneAsientos?.sort{it?.tipoComprobante?.descripcion}?.tipoComprobante?.descripcion?.unique() ?: ''}
+                    </g:if>
                 </g:if>
 
                 <g:if test="${(gestorInstance?.estado != 'R') && band}">
@@ -198,10 +196,10 @@
                     </div>
                 </g:if>
             </div>
-            <table class="table table-bordered table-hover table-condensed" width="1060">
+            <table class="table table-bordered table-hover table-condensed">
                 <thead>
                 <tr>
-                    <th style="width: 420px;" class="letraP">Código (Cuenta)</th>
+                    <th style="width: 350px;" class="letraP">Código (Cuenta)</th>
                     <th style="width: 90px" class="letraP">% B. Imponible</th>
                     <th style="width: 90px" class="letraP">% B.I. Sin IVA</th>
                     <th style="width: 90px" class="letraP">Impuestos</th>
@@ -209,16 +207,11 @@
                     <th style="width: 90px" class="letraP">Flete</th>
                     <th style="width: 80px" class="letraP">Valor</th>
                     <th style="width: 50px" class="letraP">D / H</th>
-                    <th style="width: 110px" class="letraP"><i class="fa fa-pencil"></i></th>
+                    <th style="width: 80px" class="letraP">Acciones</th>
                 </tr>
                 </thead>
             </table>
-
-            <div class="row-fluid" style="width: 99.7%;height: 410px;overflow-y: auto;float: right; margin-top: -10px">
-                <div class="span12">
-                    <div id="cuentaAgregada" style="width: 1070px; height: 280px;"></div>
-                </div>
-            </div>
+            <div id="cuentaAgregada" style="height: 280px;"></div>
         </div>
     </div>
 </g:if>
