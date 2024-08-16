@@ -478,15 +478,15 @@ class GestorController extends Shield {
                     vr += 1
                 }else{
                     render "no_No se puede registrar el gestor contable, ingrese valores tanto en DEBE como en HABER, COMPROBANTE: (${tipo?.descripcion})"
-                    return
+                    return false
                 }
             }
         }
 
         def tam = tiposComprobantes.size()
 
-        println("tam " + tam)
-        println("errores  " + errores)
+//        println("tam " + tam)
+//        println("errores  " + errores)
 
         if(tam == errores && tam != vr){
             gestor.estado = 'R'

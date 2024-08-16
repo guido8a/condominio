@@ -301,7 +301,7 @@
     $("#btnRegistrar").click(function () {
         bootbox.dialog({
             title: "Alerta",
-            message: "<i class='fa fa-check fa-3x pull-left text-warning text-shadow'></i><p>¿Está seguro que desea registrar el gestor contable? </br> Una vez registrado, la información NO podrá ser cambiada.</p>",
+            message: "<i class='fa fa-check fa-3x pull-left text-warning text-shadow'></i><strong style='font-size: 14px'>¿Está seguro que desea registrar el gestor contable? </br> Una vez registrado, la información NO podrá ser cambiada.</strong>",
             buttons: {
                 cancelar: {
                     label: "<i class='fa fa-times'></i> Cancelar",
@@ -342,7 +342,7 @@
     $("#btnDesRegistrar").click(function () {
         bootbox.dialog({
             title: "Alerta",
-            message: "<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i><p>¿Está seguro que desea quitar el registro el gestor contable?",
+            message: "<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i><strong style='font-size: 14px'>¿Está seguro que desea quitar el registro el gestor contable?</strong>",
             buttons: {
                 cancelar: {
                     label: "<i class='fa fa-times'></i> Cancelar",
@@ -351,7 +351,7 @@
                     }
                 },
                 eliminar: {
-                    label: "<i class='fa fa-times'></i> Desregistrar",
+                    label: "<i class='fa fa-times'></i> Quitar registro",
                     className: "btn-success",
                     callback: function () {
                         openLoader("Quitando Registro..");
