@@ -7,7 +7,7 @@
 
 <body>
 <div style="margin-top: -15px;" class="vertical-container">
-    <p class="css-icono" style="margin-bottom: -15px"><i class="fa fa-folder-open-o"></i></p>
+    <p class="css-icono" style="margin-bottom: -15px"><i class="fa fa-file"></i></p>
 
     <div class="linea45"></div>
 
@@ -32,49 +32,40 @@
 
         <div class="btn-group col-xs-2" style="margin-left: -20px; margin-top: 20px; width: 160px;">
 
-            <a href="#" name="busqueda" class="btn btn-info btnBusqueda btn-ajax">
-                <i class="fa fa-check-square-o"></i> Buscar</a>
+            <a href="#" name="busqueda" class="btn btn-info btnBusqueda btn-ajax" title="Buscar comprobante">
+                <i class="fa fa-search"></i></a>
 
-            <a href="#" name="limpiarBus" class="btn btn-warning btnLimpiarBusqueda btn-ajax" title="Borrar criterios" style="height: 34px">
+            <a href="#" name="limpiarBus" class="btn btn-warning btnLimpiarBusqueda btn-ajax" title="Borrar criterios">
                 <i class="fa fa-eraser"></i></a>
         </div>
 
-        <div  class="col-xs-2" style="width: 260px; border-style: solid; border-radius:10px; border-width: 1px;
-        margin-left: 0px; height: 68px; border-color: #0c6cc2">
-            <div class="col-xs-3" style="padding: 5px; height:30px;
-            text-align: center; width: 100%;">
-                <span class="text-info" style="font-size: 15px"><strong>${session.contabilidad.descripcion}</strong></span>
-            </div>
-            <div style="width: 100%; text-align: center;">
-                <a href="#" class="btn btn-azul btn-sm" id="btnCambiarConta" style="margin-left: 5px;" title="Cambiar a otra Contabilidad">
-                    <i class="fa fa-refresh"></i> Cambiar Contabilidad
-                </a>
-            </div>
-        </div>
+        %{--        <div  class="col-xs-2" style="width: 260px; border-style: solid; border-radius:10px; border-width: 1px;--}%
+        %{--        margin-left: 0px; height: 68px; border-color: #0c6cc2">--}%
+        %{--            <div class="col-xs-3" style="padding: 5px; height:30px;--}%
+        %{--            text-align: center; width: 100%;">--}%
+        %{--                <span class="text-info" style="font-size: 15px"><strong>${contabilidad?.descripcion}</strong></span>--}%
+        %{--            </div>--}%
+        %{--            <div style="width: 100%; text-align: center;">--}%
+        %{--                <a href="#" class="btn btn-azul btn-sm" id="btnCambiarConta" style="margin-left: 5px;" title="Cambiar a otra Contabilidad">--}%
+        %{--                    <i class="fa fa-refresh"></i> Cambiar Contabilidad--}%
+        %{--                </a>--}%
+        %{--            </div>--}%
+        %{--        </div>--}%
 
     </div>
 </div>
 
 
-<div style="margin-top: 30px; min-height: 650px" class="vertical-container">
-    <p class="css-vertical-text">Comprobantes encontrados</p>
+<div style="margin-top: 30px; min-height: 550px" class="vertical-container">
+    <p class="css-vertical-text">Comprobantes</p>
 
     <div class="linea"></div>
-    <table class="table table-bordered table-hover table-condensed" style="width: 1070px">
-        <thead>
-        <tr>
-            <th class="alinear" style="width: 100px">Fecha</th>
-            <th class="alinear" style="width: 100px">Tipo</th>
-            <th class="alinear" style="width: 500px">Descripción</th>
-            <th class="alinear" style="width: 170px">Documento</th>
-            <th class="alinear" style="width: 200px">Valor</th>
-        </tr>
-        </thead>
-    </table>
 
     <div id="divComprobantes">
     </div>
 </div>
+
+
 
 <script type="text/javascript">
 
@@ -97,7 +88,7 @@
 
         $.ajax({
             type: 'POST',
-            url: '${createLink(controller: 'proceso', action: 'revisarFecha_ajax')}',
+            url: '${createLink(controller: 'comprobanteCont', action: 'revisarFecha_ajax')}',
             data:{
                 desde: fechaD,
                 hasta: fechaH
@@ -110,7 +101,7 @@
 
                     $.ajax({
                         type: 'POST',
-                        url: '${createLink(controller: 'contabilidad', action: 'tablaComprobantes_ajax')}',
+                        url: '${createLink(controller: 'comprobanteCont', action: 'tablaComprobantes_ajax')}',
                         data:{
                             descripcion: desc,
                             desde: fechaD,
@@ -157,31 +148,31 @@
         buscarComprobantes();
     });
 
-    function createContextMenu(node) {
-        var $tr = $(node);
+    %{--function createContextMenu(node) {--}%
+    %{--    var $tr = $(node);--}%
 
-        var items = {
-            header: {
-                label: "Acciones",
-                header: true
-            }
-        };
+    %{--    var items = {--}%
+    %{--        header: {--}%
+    %{--            label: "Acciones",--}%
+    %{--            header: true--}%
+    %{--        }--}%
+    %{--    };--}%
 
-        var id = $tr.data("id");
+    %{--    var id = $tr.data("id");--}%
 
-        var comprobante = {
-            label: 'ComprobanteCont',
-            icon: 'fa fa-calendar-o',
-            action: function () {
-                location.href="${createLink(controller: 'proceso', action: 'comprobante')}/?proceso=" + id
-            }
-        };
+    %{--    var comprobante = {--}%
+    %{--        label: 'ComprobanteCont',--}%
+    %{--        icon: 'fa fa-calendar-o',--}%
+    %{--        action: function () {--}%
+    %{--            location.href="${createLink(controller: 'proceso', action: 'comprobante')}/?proceso=" + id--}%
+    %{--        }--}%
+    %{--    };--}%
 
-        items.comprobante = comprobante;
+    %{--    items.comprobante = comprobante;--}%
 
 
-        return items
-    }
+    %{--    return items--}%
+    %{--}--}%
 
 </script>
 
