@@ -12,14 +12,14 @@ jQuery.fn.center = function () {
 }
 
 function openLoader(){
-    $('#modalTabelGray').css('height', $(document).height()).css('width', $(document).width()).fadeIn();
-    $("#modalDiv").show().center();
+    // $('#modalTabelGray').css('height', $(document).height()).css('width', $(document).width()).fadeIn();
+    $("#modalDiv").show()
 
 }
 function openLoader(msg){
-    $('#modalTabelGray').css('height', $(document).height()).css('width', $(document).width()).fadeIn();
+    // $('#modalTabelGray').css('height', $(document).height()).css('width', $(document).width()).fadeIn();
     $(".loading-title").html(msg);
-    $("#modalDiv").show().center();
+    $("#modalDiv").show()
 
 }
 function closeLoader(){

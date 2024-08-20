@@ -3,7 +3,7 @@
         <label>Código:</label>
     </div>
     <div class="col-md-4">
-        <input type="text" name="codigoAsiento_name" id="codigoAsiento" value="${asiento?.cuenta?.numero}" ${asiento ? 'readonly' : ''} style="width: 150px"/>
+        <input type="text" class="form-control" name="codigoAsiento_name" id="codigoAsiento" value="${asiento?.cuenta?.numero}" ${asiento ? 'readonly' : ''} style="width: 150px"/>
     </div>
     <div class="col-md-2">
         <a href="#" class="btn btn-info" id="btnBuscarCuenta"><i class="fa fa-search"></i> Buscar cuenta</a>
@@ -14,7 +14,7 @@
         <label>Nombre:</label>
     </div>
     <div class="col-md-7">
-        <input type="text" name="nombreAsiento_name" id="nombreAsiento" class="" value="${asiento?.cuenta?.descripcion}" ${asiento ? 'readonly' : ''} style="width: 400px"/>
+        <input type="text" class="form-control" name="nombreAsiento_name" id="nombreAsiento" value="${asiento?.cuenta?.descripcion}" ${asiento ? 'readonly' : ''} style="width: 400px"/>
     </div>
 </div>
 <div class="row">
@@ -36,6 +36,9 @@
 
 
 <script type="text/javascript">
+
+    var bc;
+
     function validarNum(ev) {
         /*
          48-57      -> numeros
@@ -63,43 +66,46 @@
     });
 
     $(".valorD").keydown(function (ev) {
-        $(".valorH").val(0).prop('readonly', true)
+        // $(".valorH").val(0).prop('readonly', true)
     }).keyup(function () {
+        $(".valorH").val(0)
     });
 
     $(".valorH").keydown(function (ev) {
-        $(".valorD").val(0).prop('readonly', true)
+        // $(".valorD").val(0).prop('readonly', true)
     }).keyup(function () {
+        $(".valorD").val(0)
     });
 
-    %{--$("#btnBuscarCuenta").click(function () {--}%
-    %{--    $.ajax({--}%
-    %{--        type   : "POST",--}%
-    %{--        url    : "${createLink(controller: 'proceso', action:'buscarCuenta_ajax')}",--}%
-    %{--        data   : {--}%
-    %{--            empresa: '${session.empresa.id}'--}%
-    %{--        },--}%
-    %{--        success: function (msg) {--}%
-    %{--            var b = bootbox.dialog({--}%
-    %{--                id   : "dlgBuscarCuenta",--}%
-    %{--                title: "Buscar cuenta",--}%
-    %{--                class   : "long",--}%
-    %{--                message: msg,--}%
-    %{--                buttons: {--}%
-    %{--                    cancelar: {--}%
-    %{--                        label    : "<i class='fa fa-times'></i> Cancelar",--}%
-    %{--                        className: "btn-primary",--}%
-    %{--                        callback : function () {--}%
-    %{--                        }--}%
-    %{--                    }--}%
-    %{--                } //buttons--}%
-    %{--            }); //dialog--}%
-    %{--            setTimeout(function () {--}%
-    %{--                b.find(".form-control").first().focus()--}%
-    %{--            }, 500);--}%
-    %{--        } //success--}%
-    %{--    }); //ajax--}%
-    %{--});--}%
+    $("#btnBuscarCuenta").click(function () {
+        $.ajax({
+            type   : "POST",
+            url    : "${createLink(controller: 'asiento', action:'buscarCuenta_ajax')}",
+            data   : {
+
+            },
+            success: function (msg) {
+                bc = bootbox.dialog({
+                    id   : "dlgBuscarCuenta",
+                    title: "Buscar cuenta",
+                    class   : "long",
+                    message: msg,
+                    buttons: {
+                        cancelar: {
+                            label    : "<i class='fa fa-times'></i> Cancelar",
+                            className: "btn-primary",
+                            callback : function () {
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+            } //success
+        }); //ajax
+    });
+
+    function cerrarBuscarCuenta(){
+        bc.modal("hide");
+    }
 
 
 </script>
