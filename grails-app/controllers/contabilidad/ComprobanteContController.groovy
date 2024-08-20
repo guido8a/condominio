@@ -8,7 +8,10 @@ import seguridad.Shield
 class ComprobanteContController extends Shield {
 
     def form(){
-        def contabilidad = Contabilidad.get()
+
+        def comprobante = ComprobanteCont.get(params.id)
+        return [comprobante: comprobante]
+
     }
 
     def list() {
@@ -69,6 +72,11 @@ class ComprobanteContController extends Shield {
         }
     }
 
+    def asientos_ajax(){
+        def comprobante = ComprobanteCont.get(params.id)
+        def asientos = Asiento.findAllByComprobante(comprobante, [sort: 'numero'])
+        return [asientos: asientos, comprobante: comprobante]
+    }
 
-    
+
 }
