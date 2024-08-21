@@ -101,12 +101,14 @@ class ComprobanteContController extends Shield {
 
     def saveComprobante_ajax(){
 
+        def contabilidad = Contabilidad.get(session.contabilidad.id)
         def comprobante
 
         if(params.id){
             comprobante = ComprobanteCont.get(params.id)
         }else{
             comprobante = new ComprobanteCont()
+            comprobante.contabilidad = contabilidad
             comprobante.registrado = 'N'
         }
 
@@ -118,7 +120,18 @@ class ComprobanteContController extends Shield {
         }else{
             render "ok_Guardado correctamente"
         }
+    }
 
+    def delete_ajax(){
+       def comprobante = ComprobanteCont.get(params.id)
+
+        try{
+            comprobante.delete(flush:true)
+            render "ok_Borrado correctamente"
+        }catch(e){
+            println("error al borrar el comprobante " + comprobante.errors)
+            render "no_Error al borrar el comprobante"
+        }
     }
 
 

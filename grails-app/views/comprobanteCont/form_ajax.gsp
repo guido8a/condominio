@@ -20,6 +20,26 @@
             </span>
         </span>
     </div>
+    <div class="form-group ${hasErrors(bean: comprobante, field: 'numero', 'error')} required">
+        <span class="grupo">
+            <label for="numero" class="col-md-2 control-label text-info">
+                Número
+            </label>
+            <span class="col-md-3">
+                <g:textField name="numero" required="" class="form-control required" value="${comprobante?.numero}"/>
+            </span>
+        </span>
+    </div>
+    <div class="form-group ${hasErrors(bean: comprobante, field: 'fecha', 'error')} required">
+        <span class="grupo">
+            <label class="col-md-2 control-label text-info">
+                Fecha
+            </label>
+            <span class="col-md-8">
+                <elm:datepicker name="fecha" class="datepicker form-control required" value="${comprobante?.fecha}"  />
+            </span>
+        </span>
+    </div>
 </g:form>
 
 <script type="text/javascript">

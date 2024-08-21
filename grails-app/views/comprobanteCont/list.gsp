@@ -52,6 +52,13 @@
         %{--            </div>--}%
         %{--        </div>--}%
 
+        <div class="btn-group" style="margin-top: 18px">
+            <a href="#" class="btn btn-success btnCrear" title="Crear comprobante">
+                <i class="fa fa-file"></i>
+                Nuevo Comprobante
+            </a>
+        </div>
+
     </div>
 </div>
 
@@ -209,7 +216,7 @@
     function deleteRow(itemId) {
         bootbox.dialog({
             title   : "Alerta",
-            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar la Fuente seleccionada? Esta acción no se puede deshacer.</p>",
+            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><strong style='font-size: 14px'>¿Está seguro que desea eliminar el comprobante seleccionado?</strong>",
             buttons : {
                 cancelar : {
                     label     : "Cancelar",
@@ -224,7 +231,7 @@
                         openLoader("Borrando....");
                         $.ajax({
                             type    : "POST",
-                            url     : '${createLink(action:'delete_ajax')}',
+                            url     : '${createLink(controller: 'comprobanteCont', action:'delete_ajax')}',
                             data    : {
                                 id : itemId
                             },
