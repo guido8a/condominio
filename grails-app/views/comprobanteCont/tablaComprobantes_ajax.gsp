@@ -7,8 +7,7 @@
             <th style="width: 30%">Descripción</th>
             <th style="width: 10%">Número</th>
             <th style="width: 10%">Registrado</th>
-            <th style="width: 10%">Valor</th>
-            <th style="width: 10%">Acciones</th>
+            <th style="width: 20%">Acciones</th>
         </tr>
         </thead>
     </table>
@@ -24,14 +23,16 @@
                     <td style="width: 20%">${comprobante?.tipo?.descripcion}</td>
                     <td style="width: 30%">${comprobante?.descripcion}</td>
                     <td style="width: 10%">${comprobante?.numero}</td>
-                    <td style="width: 10%">${comprobante?.registrado}</td>
-                    %{--            <td style="width: 170px">${comprobante?.proceso?.documento}</td>--}%
-                    <td style="width: 10%; text-align: right">
-                        %{--            <g:formatNumber number="${comprobante?.proceso?.valor}" format="##,##0" locale="ec" maxFractionDigits="2" minFractionDigits="2"/>--}%
-                    </td>
-                    <td style="width: 10%; text-align: center">
+                    <td style="width: 10%; background-color: ${comprobante?.registrado == 'N' ? '#ffcc3b' : '#5e9cff'} ">${comprobante?.registrado == 'N' ? 'No registrado' : 'Registrado'}</td>
+                    <td style="width: 20%; text-align: center">
                         <a href="#" data-id="${comprobante.id}" class="btn btn-info btn-sm btnVerComprobante" title="Ir a comprobante">
                             <i class="fa fa-laptop"></i>
+                        </a>
+                        <a href="#" data-id="${comprobante.id}" class="btn btn-success btn-sm btnEditarComprobante" title="Editar comprobante">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a href="#" data-id="${comprobante.id}" class="btn btn-danger btn-sm btnBorrarComprobante" title="Borrar comprobante">
+                            <i class="fa fa-trash"></i>
                         </a>
                     </td>
                 </tr>
@@ -49,6 +50,15 @@
     $(".btnVerComprobante").click(function () {
         var id = $(this).data("id");
        location.href="${createLink(controller: 'comprobanteCont', action: 'form')}/" + id
+    });
+
+    $(".btnEditarComprobante").click(function () {
+        var id = $(this).data("id");
+        createEditRowComprobante(id);
+    });
+    $(".btnBorrarComprobante").click(function () {
+        var id = $(this).data("id");
+        deleteRow(id);
     });
 
 </script>

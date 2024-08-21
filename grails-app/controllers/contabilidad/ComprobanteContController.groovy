@@ -35,10 +35,6 @@ class ComprobanteContController extends Shield {
 
         def comprobantes = ComprobanteCont.withCriteria {
 
-//            proceso{
-//                eq("contabilidad", contabilidad)
-//            }
-
             eq("registrado", 'N')
 
             if(params.desde && params.hasta){
@@ -47,7 +43,6 @@ class ComprobanteContController extends Shield {
 
             if(params.descripcion){
                 ilike("descripcion", "%" + params.descripcion.trim() + "%")
-
             }
 
             order("fecha","asc")
@@ -76,6 +71,54 @@ class ComprobanteContController extends Shield {
         def comprobante = ComprobanteCont.get(params.id)
         def asientos = Asiento.findAllByComprobante(comprobante, [sort: 'numero'])
         return [asientos: asientos, comprobante: comprobante]
+    }
+
+    def registrarComprobante_ajax(){
+        def comprobante = ComprobanteCont.get(params.id)
+
+        comprobante.registrado = 'R'
+
+        if(!comprobante.save(flush:true)){
+            println("error al registrar el comprobante " + comprobante.errors)
+            render "no_Error al registrar el comprobante"
+        }else{
+            render "ok_Registrado correctamente"
+        }
+    }
+
+    def form_ajax(){
+
+        def comprobante
+
+        if(params.id){
+            comprobante = ComprobanteCont.get(params.id)
+        }else{
+            comprobante = new ComprobanteCont()
+        }
+
+        return [comprobante: comprobante]
+    }
+
+    def saveComprobante_ajax(){
+
+        def comprobante
+
+        if(params.id){
+            comprobante = ComprobanteCont.get(params.id)
+        }else{
+            comprobante = new ComprobanteCont()
+            comprobante.registrado = 'N'
+        }
+
+        comprobante.properties = params
+
+        if(!comprobante.save(flush:true)){
+            println("error al guardar el comprobante " +  comprobante.errors)
+            render "no_Error al guardar el comprobante"
+        }else{
+            render "ok_Guardado correctamente"
+        }
+
     }
 
 

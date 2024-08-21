@@ -29,39 +29,24 @@
                 <th style="width: 30%">Descripción</th>
                 <th style="width: 10%">Número</th>
                 <th style="width: 10%">Registrado</th>
-                <th style="width: 10%">Valor</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
+            <tr style="font-weight: bold">
                 <td style="width: 10%">${comprobante?.fecha?.format("dd-MM-yyyy")}</td>
                 <td style="width: 20%">${comprobante?.tipo?.descripcion}</td>
                 <td style="width: 30%">${comprobante?.descripcion}</td>
                 <td style="width: 10%">${comprobante?.numero}</td>
-                <td style="width: 10%">${comprobante?.registrado}</td>
-                <td style="width: 10%; text-align: right">
-                </td>
+                <td style="width: 10%; background-color: ${comprobante?.registrado == 'N' ? '#ffcc3b' : '#5e9cff'}  ">${comprobante?.registrado == 'N' ? 'No registrado' : 'Registrado'}</td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
 
-%{--<g:if test="${}">--}%
-%{--    <div class="vertical-container" style="margin-top: 5px; color:black; margin-bottom:20px; height:700px; max-height: 720px; overflow: auto;">--}%
-%{--        <p class="css-vertical-text">Asientos</p>--}%
-
-%{--        <div class="linea"></div>--}%
-
-%{--        <div id="divAsientos" class="col-xs-12"style="margin-bottom: 0px ;padding: 0px;margin-top: 5px; height: 650px">--}%
-%{--        </div>--}%
-%{--    </div>--}%
-%{--</g:if>--}%
-
 <div id="divAsientos">
 
 </div>
-
 
 <script type="text/javascript">
 
@@ -79,14 +64,6 @@
             }
         });
     }
-
-    %{--$("#irProceso").click(function () {--}%
-    %{--    location.href='${createLink(controller: 'proceso', action: 'nuevoProceso')}/?id=' + '${proceso?.id}'--}%
-    %{--});--}%
-
-    %{--$("#reembolsoN").click(function () {--}%
-    %{--    location.href="${createLink(controller: 'proceso', action: 'reembolso')}/?proceso=" + '${proceso?.id}'--}%
-    %{--});--}%
 
 </script>
 

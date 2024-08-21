@@ -116,30 +116,30 @@
         });
     }
 
-    $("#btnCambiarConta").click(function () {
-        $.ajax({
-            type: 'POST',
-            url: "${createLink(controller: 'proceso', action: 'cambiarContabilidad_ajax')}",
-            data:{
-                tipo : 1
-            },
-            success: function(msg){
-                bootbox.dialog({
-                    title   : "",
-                    message : msg,
-                    class    : "long",
-                    buttons : {
-                        cancelar : {
-                            label     : "<i class='fa fa-times'></i> Cancelar",
-                            className : "btn-primary",
-                            callback  : function () {
-                            }
-                        }
-                    }
-                });
-            }
-        })
-    });
+    %{--$("#btnCambiarConta").click(function () {--}%
+    %{--    $.ajax({--}%
+    %{--        type: 'POST',--}%
+    %{--        url: "${createLink(controller: 'proceso', action: 'cambiarContabilidad_ajax')}",--}%
+    %{--        data:{--}%
+    %{--            tipo : 1--}%
+    %{--        },--}%
+    %{--        success: function(msg){--}%
+    %{--            bootbox.dialog({--}%
+    %{--                title   : "",--}%
+    %{--                message : msg,--}%
+    %{--                class    : "long",--}%
+    %{--                buttons : {--}%
+    %{--                    cancelar : {--}%
+    %{--                        label     : "<i class='fa fa-times'></i> Cancelar",--}%
+    %{--                        className : "btn-primary",--}%
+    %{--                        callback  : function () {--}%
+    %{--                        }--}%
+    %{--                    }--}%
+    %{--                }--}%
+    %{--            });--}%
+    %{--        }--}%
+    %{--    })--}%
+    %{--});--}%
 
     $(".btnLimpiarBusqueda").click(function () {
         $("#descripcionComp").val('');
@@ -148,31 +148,109 @@
         buscarComprobantes();
     });
 
-    %{--function createContextMenu(node) {--}%
-    %{--    var $tr = $(node);--}%
+    function createEditRowComprobante(id) {
+        var title = id ? "Editar" : "Crear";
+        var data = id ? { id: id } : {};
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(action:'form_ajax')}",
+            data    : data,
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgCreateEdit",
+                    title   : title + " Comprobante",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return submitFormComprobante();
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+            } //success
+        }); //ajax
+    } //createEdit
 
-    %{--    var items = {--}%
-    %{--        header: {--}%
-    %{--            label: "Acciones",--}%
-    %{--            header: true--}%
-    %{--        }--}%
-    %{--    };--}%
+    function submitFormComprobante() {
+        var $form = $("#frmFuente");
+        if ($form.valid()) {
+            openLoader("Guardando...");
+            $.ajax({
+                type    : "POST",
+                url     : $form.attr("action"),
+                data    : $form.serialize(),
+                success : function (msg) {
+                    closeLoader();
+                    var parts = msg.split("_");
+                    if (parts[0] === "ok") {
+                        log(parts[1], "success");
+                        buscarComprobantes();
+                    } else {
+                        log(parts[1], "error");
+                        return false;
+                    }
+                }
+            });
+        } else {
+            return false;
+        } //else
+    }
 
-    %{--    var id = $tr.data("id");--}%
+    function deleteRow(itemId) {
+        bootbox.dialog({
+            title   : "Alerta",
+            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar la Fuente seleccionada? Esta acción no se puede deshacer.</p>",
+            buttons : {
+                cancelar : {
+                    label     : "Cancelar",
+                    className : "btn-primary",
+                    callback  : function () {
+                    }
+                },
+                eliminar : {
+                    label     : "<i class='fa fa-trash-o'></i> Eliminar",
+                    className : "btn-danger",
+                    callback  : function () {
+                        openLoader("Borrando....");
+                        $.ajax({
+                            type    : "POST",
+                            url     : '${createLink(action:'delete_ajax')}',
+                            data    : {
+                                id : itemId
+                            },
+                            success : function (msg) {
+                                closeLoader();
+                                var parts = msg.split("_");
+                                if (parts[0] === "ok") {
+                                    log(parts[1], "success");
+                                    buscarComprobantes();
+                                } else {
+                                    log(parts[1], "error");
+                                    return false;
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
 
-    %{--    var comprobante = {--}%
-    %{--        label: 'ComprobanteCont',--}%
-    %{--        icon: 'fa fa-calendar-o',--}%
-    %{--        action: function () {--}%
-    %{--            location.href="${createLink(controller: 'proceso', action: 'comprobante')}/?proceso=" + id--}%
-    %{--        }--}%
-    %{--    };--}%
+    $(".btnCrear").click(function() {
+        createEditRowComprobante();
+        return false;
+    });
 
-    %{--    items.comprobante = comprobante;--}%
-
-
-    %{--    return items--}%
-    %{--}--}%
 
 </script>
 

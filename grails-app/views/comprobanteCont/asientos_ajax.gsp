@@ -41,6 +41,9 @@
             <i class="fa fa-plus"> Agregar Cuenta</i>
         </a>
         <g:if test="${asientos?.size() > 0}">
+            <a href="#" class="btn btn-info btnRegistrarComprobante" data-id="${comprobante?.id}" title="Registrar comprobante">
+                <i class="fa fa-lock"> Registrar comprobante</i>
+            </a>
             <a href="#" class="btn btn-danger btnBorrarAsientos" title="Borrar los asientos con valores en 0 al debe y al haber">
                 <i class="fa fa-minus"> Borrar Cuentas con 0</i>
             </a>
@@ -53,10 +56,9 @@
     <tr>
         <th width="100px">ASIENTO</th>
         <th width="527px">NOMBRE</th>
-        <th width="50px">CC</th>
         <th width="100px">DEBE</th>
         <th width="100px">HABER</th>
-        <th width="133px"><i class="fa fa-pencil"></i></th>
+        <th width="133px">ACCIONES</th>
     </tr>
     </thead>
 </table>
@@ -74,9 +76,6 @@
                 <tr class="colorAsiento">
                     <td width="100px">${asiento?.cuenta?.numero}</td>
                     <td width="520px">${asiento?.cuenta?.descripcion}</td>
-                    <td width="50px">
-                        %{--                        ${cratos.AsientoCentro.findAllByAsiento(asiento) ? cratos.AsientoCentro.findAllByAsiento(asiento)?.first()?.centroCosto?.codigo : ''}--}%
-                    </td>
                     <td width="100px"
                         class="derecha">${asiento.debe ? g.formatNumber(number: asiento.debe, format: '##,##0', minFractionDigits: 2, maxFractionDigits: 2) : 0.00}</td>
                     <td width="100px"
@@ -98,9 +97,9 @@
                 </tr>
             </g:each>
             <tr class="colorAsiento">
-                <td colspan="3" class="total derecha">Totales del asiento</td>
-                %{--                <td class="total derecha ${Math.round(sumadebe*100)/100 != (comprobante?.tipo?.codigo == 'R' ? cratos.Retencion.findByProceso(proceso)?.total : proceso?.valor) ? 'rojo' : ''}"><g:formatNumber number="${Math.round(sumadebe*100)/100}" format="##,##0" maxFractionDigits="2" minFractionDigits="2"/> </td>--}%
-                %{--                <td class="total derecha ${Math.round(sumahber*100)/100 != (comprobante?.tipo?.codigo == 'R' ? cratos.Retencion.findByProceso(proceso)?.total : proceso?.valor) ? 'rojo' : ''}"><g:formatNumber number="${Math.round(sumahber*100)/100}" format="##,##0" maxFractionDigits="2" minFractionDigits="2"/> </td>--}%
+                <td colspan="2" class="total derecha">Totales del asiento</td>
+                <td class="total derecha"><g:formatNumber number="${Math.round(sumadebe*100)/100}" format="##,##0" maxFractionDigits="2" minFractionDigits="2"/> </td>
+                <td class="total derecha"><g:formatNumber number="${Math.round(sumahber*100)/100}" format="##,##0" maxFractionDigits="2" minFractionDigits="2"/> </td>
                 <td class="total derecha" ${Math.round((sumadebe - sumahber)*100)/100 != 0 ? 'rojo' : ''}>Dif: ${Math.round((sumadebe - sumahber)*100)/100}</td>
             </tr>
             </tbody>
@@ -116,13 +115,52 @@
 
     var mbc;
 
+    $(".btnRegistrarComprobante").click(function () {
+        bootbox.dialog({
+            title   : "Alerta",
+            message : "<i class='fa fa-trash fa-2x pull-left text-danger text-shadow'></i><strong style='font-size: 14px'>¿Está seguro que desea registrar el comprobante? <br> Una vez registrado NO podrá ser modificado.</strong>",
+            buttons : {
+                cancelar : {
+                    label     : "<i class='fa fa-times'></i> Cancelar",
+                    className : "btn-primary",
+                    callback  : function () {
+                    }
+                },
+                registrar : {
+                    label     : "<i class='fa fa-lock'></i> Registrar",
+                    className : "btn-danger",
+                    callback  : function () {
+                        openLoader("Guardando...");
+                        $.ajax({
+                            type    : "POST",
+                            url     : '${createLink(controller: 'comprobanteCont', action:'registrarComprobante_ajax')}',
+                            data    : {
+                                id: '${comprobante?.id}'
+                            },
+                            success : function (msg) {
+                                closeLoader();
+                                var parts = msg.split("_");
+                                if (parts[0] === 'ok') {
+                                    log(parts[1], "success");
+                                    cargarAsientos('${comprobante?.id}');
+                                } else {
+                                    log(parts[1], "error");
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    });
+
     function deleteAsiento(itemId) {
         bootbox.dialog({
             title   : "Alerta",
-            message : "<i class='fa fa-trash fa-2x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el asiento contable.</p>",
+            message : "<i class='fa fa-trash fa-2x pull-left text-danger text-shadow'></i><strong style='font-size: 14px'>¿Está seguro que desea eliminar el asiento contable.</strong>",
             buttons : {
                 cancelar : {
-                    label     : "Cancelar",
+                    label     : "<i class='fa fa-times'></i> Cancelar",
                     className : "btn-primary",
                     callback  : function () {
                     }
@@ -198,30 +236,6 @@
                 }
             }
         });
-
-
-        %{--bootbox.confirm("<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i> Está seguro de borrar todos los asientos con valor 0.00 ?", function (result) {--}%
-        %{--    if (result) {--}%
-        %{--        openLoader("Borrando...");--}%
-        %{--        $.ajax({--}%
-        %{--            type:'POST',--}%
-        %{--            url: '${createLink(controller: 'proceso', action: 'borrarCeros_ajax')}',--}%
-        %{--            data:{--}%
-        %{--                comprobante: comprobante--}%
-        %{--            },--}%
-        %{--            success: function (msg){--}%
-        %{--                if(msg === 'ok'){--}%
-        %{--                    log("Asientos borrados correctamente","success");--}%
-        %{--                    cargarComprobanteP('${proceso?.id}');--}%
-        %{--                    closeLoader();--}%
-        %{--                }else{--}%
-        %{--                    log("Error al borrar los asientos","error");--}%
-        %{--                    closeLoader();--}%
-        %{--                }--}%
-        %{--            }--}%
-        %{--        });--}%
-        %{--    }--}%
-        %{--})--}%
     });
 
     $(".btnAgregarAsiento").click(function () {
