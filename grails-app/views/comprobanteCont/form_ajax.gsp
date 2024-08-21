@@ -38,6 +38,7 @@
             label.parents(".grupo").removeClass('has-error');
         }
     });
+
     $(".form-control").keydown(function (ev) {
         if (ev.keyCode === 13) {
             submitFormComprobante();

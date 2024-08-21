@@ -182,7 +182,7 @@
     } //createEdit
 
     function submitFormComprobante() {
-        var $form = $("#frmFuente");
+        var $form = $("#frmComprobante");
         if ($form.valid()) {
             openLoader("Guardando...");
             $.ajax({
