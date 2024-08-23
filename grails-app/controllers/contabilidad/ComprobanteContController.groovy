@@ -6,10 +6,10 @@ import seguridad.Shield
  * Controlador que muestra las pantallas de manejo de ComprobanteCont
  */
 class ComprobanteContController extends Shield {
+    def dbConnectionService
 
     def form(){
-
-        def comprobante = ComprobanteCont.get(params.id)
+        def comprobante = ComprobanteCont.get(params.id).refresh()
         return [comprobante: comprobante]
 
     }
@@ -20,8 +20,6 @@ class ComprobanteContController extends Shield {
     }
 
     def tablaComprobantes_ajax () {
-//        println("params c " + params)
-
         def contabilidad = Contabilidad.get(session.contabilidad.id)
         def desde
         def hasta
@@ -34,9 +32,7 @@ class ComprobanteContController extends Shield {
         }
 
         def comprobantes = ComprobanteCont.withCriteria {
-
-            eq("registrado", 'N')
-
+            eq('contabilidad', contabilidad)
             if(params.desde && params.hasta){
                 between("fecha", desde, hasta)
             }
@@ -44,8 +40,7 @@ class ComprobanteContController extends Shield {
             if(params.descripcion){
                 ilike("descripcion", "%" + params.descripcion.trim() + "%")
             }
-
-            order("fecha","asc")
+            order("fecha","desc")
         }
 
         return [comprobantes: comprobantes]
@@ -74,16 +69,20 @@ class ComprobanteContController extends Shield {
     }
 
     def registrarComprobante_ajax(){
-        def comprobante = ComprobanteCont.get(params.id)
+        def cn = dbConnectionService.getConnection()
+        def mnsj = ""
+        def sql = "select sum(asntdebe) - sum(asnthber) suma from asnt where cmco__id = ${params.id}"
+        def sumaAsnt = cn.rows(sql.toString())[0].suma
 
-        comprobante.registrado = 'R'
-
-        if(!comprobante.save(flush:true)){
-            println("error al registrar el comprobante " + comprobante.errors)
-            render "no_Error al registrar el comprobante"
-        }else{
-            render "ok_Registrado correctamente"
+        if(sumaAsnt == 0) {
+            cn.eachRow("select mayorizar from mayorizar(${params.id}, 1)".toString()) { d ->
+                mnsj = "ok_" + d.mayorizar
+            }
+        } else {
+            render "no_no cuadran los valores de asientos"
+            return
         }
+        render mnsj
     }
 
     def form_ajax(){

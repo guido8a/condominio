@@ -21,6 +21,7 @@ import condominio.Pago
 import condominio.Talonario
 import condominio.Texto
 import condominio.TipoAporte
+import contabilidad.Contabilidad
 import grails.converters.JSON
 import groovy.json.JsonBuilder
 import jxl.Workbook
@@ -95,6 +96,18 @@ class ReportesController extends Shield{
         inicioAnio.clearTime()
 
         println "anios: $res"
+
+        def cont = Contabilidad.get(session.contabilidad.id)
+        def mnsj = ""
+        sql = "select * from saldos(${session.contabilidad.id});"
+        mnsj = cn.rows(sql.toString())[0].saldos
+
+        if(mnsj) {
+            flash.message = mnsj
+            flash.title = "Aviso"
+            flash.tipo = "error"
+        }
+
 //        return [anios: res.date_part, edificios: edificios, condominio: condominio, inicioAnio: inicioAnio]
         return [anios: res.anio, edificios: edificios, condominio: condominio, inicioAnio: inicioAnio]
     }

@@ -6,10 +6,10 @@
     font-weight: bold;
 }
 
-.colorAsiento {
-    color: #0b0b0b;
-    background-color: #7ac6ff;
-}
+/*.colorAsiento {*/
+    /*color: #0b0b0b;*/
+    /*background-color: #7ac6ff;*/
+/*}*/
 
 .derecha {
     text-align: right;
@@ -25,8 +25,8 @@
 }
 .total {
     /*font-weight: bold;*/
-    background-color: #1270c3;
-    color: #fdcfa0;
+    background-color: #dddddd;
+    /*color: #fdcfa0;*/
 }
 
 .rojo{
@@ -35,7 +35,7 @@
 
 </style>
 
-<g:if test="${comprobante?.registrado != 'R'}">
+<g:if test="${comprobante?.registrado != 'S'}">
     <div class="btn-group" style="float: left;">
         <a href="#" class="btn btn-success btnAgregarAsiento" data-id="${comprobante?.id}" title="Agregar asiento contable">
             <i class="fa fa-plus"> Agregar Cuenta</i>
@@ -54,11 +54,11 @@
 <table class="table table-bordered table-hover table-condensed" width="1000px">
     <thead>
     <tr>
-        <th width="100px">ASIENTO</th>
-        <th width="527px">NOMBRE</th>
-        <th width="100px">DEBE</th>
-        <th width="100px">HABER</th>
-        <th width="133px">ACCIONES</th>
+        <th width="100px">Asiento</th>
+        <th width="527px">Nombre</th>
+        <th width="100px">Debe</th>
+        <th width="100px">Haber</th>
+        <th width="133px">Acciones</th>
     </tr>
     </thead>
 </table>
@@ -96,7 +96,7 @@
                     </td>
                 </tr>
             </g:each>
-            <tr class="colorAsiento">
+            <tr>
                 <td colspan="2" class="total derecha">Totales del asiento</td>
                 <td class="total derecha"><g:formatNumber number="${Math.round(sumadebe*100)/100}" format="##,##0" maxFractionDigits="2" minFractionDigits="2"/> </td>
                 <td class="total derecha"><g:formatNumber number="${Math.round(sumahber*100)/100}" format="##,##0" maxFractionDigits="2" minFractionDigits="2"/> </td>
@@ -142,7 +142,7 @@
                                 var parts = msg.split("_");
                                 if (parts[0] === 'ok') {
                                     log(parts[1], "success");
-                                    cargarAsientos('${comprobante?.id}');
+                                    location.reload()
                                 } else {
                                     log(parts[1], "error");
                                 }

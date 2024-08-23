@@ -14,7 +14,7 @@
     </g:link>
 </div>
 
-<div class="alert alert-info">
+<div class="alert-info">
     <div role="main" style="margin-top: 10px;">
         <table class="table table-bordered table-striped table-condensed">
             <thead>
@@ -37,7 +37,7 @@
                 <td style="width: 20%">${comprobante?.tipo?.descripcion}</td>
                 <td style="width: 30%">${comprobante?.descripcion}</td>
                 <td style="width: 10%">${comprobante?.numero}</td>
-                <td style="width: 10%; background-color: ${comprobante?.registrado == 'N' ? '#ffcc3b' : '#5e9cff'}  ">${comprobante?.registrado == 'N' ? 'No registrado' : 'Registrado'}</td>
+                <td style="width: 10%; background-color: ${comprobante?.registrado == 'N' ? '#ffffef' : '#efefff'}  ">${comprobante?.registrado == 'N' ? 'No registrado' : 'Registrado'}</td>
             </tr>
             </tbody>
         </table>
