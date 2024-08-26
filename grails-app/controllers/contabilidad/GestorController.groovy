@@ -585,17 +585,28 @@ class GestorController extends Shield {
         def cn = dbConnectionService.getConnection()
         def tipoComprobante = TipoComprobante.findByCodigo("D")
 
-        def cuentas1= "select cnta__id from cnta where cntanmro ILIKE '1%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
-        def cuentas5= "select cnta__id from cnta where cntanmro ILIKE '5%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
-        def cuentas6= "select cnta__id from cnta where cntanmro ILIKE '6%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
-        def cuentas2= "select cnta__id from cnta where cntanmro ILIKE '2%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
-        def cuentas3= "select cnta__id from cnta where cntanmro ILIKE '3%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
-        def cuentas4= "select cnta__id from cnta where cntanmro ILIKE '4%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
+        def cuentas1= "select cnta__id from cnta where cntanmro ILIKE '1%' and cntapdre is not null and " +
+                "cndm__id = ${condominio?.id} and cnta__id not in " +
+                "(select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
+        def cuentas2= "select cnta__id from cnta where cntanmro ILIKE '2%' and cntapdre is not null and " +
+                "cndm__id = ${condominio?.id} and cnta__id not in " +
+                "(select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
+        def cuentas3= "select cnta__id from cnta where cntanmro ILIKE '3%' and cntapdre is not null and " +
+                "cndm__id = ${condominio?.id} and cnta__id not in " +
+                "(select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
+        def cuentas4= "select cnta__id from cnta where cntanmro ILIKE '4%' and cntapdre is not null and " +
+                "cndm__id = ${condominio?.id} and cnta__id not in " +
+                "(select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
+        def cuentas5= "select cnta__id from cnta where cntanmro ILIKE '5%' and cntapdre is not null and " +
+                "cndm__id = ${condominio?.id} and cnta__id not in " +
+                "(select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
+//        def cuentas6= "select cnta__id from cnta where cntanmro ILIKE '6%' and cntapdre is not null and cndm__id = ${condominio?.id} and cnta__id not in (select cntapdre from cnta where cndm__id = ${condominio?.id} and cntapdre is not null);"
 
         def cuentasDebe
         def cuentasHaber
 
-        cuentasDebe =  cn.rows(cuentas1.toString()).cnta__id + cn.rows(cuentas5.toString()).cnta__id + cn.rows(cuentas6.toString()).cnta__id
+//        cuentasDebe =  cn.rows(cuentas1.toString()).cnta__id + cn.rows(cuentas5.toString()).cnta__id + cn.rows(cuentas6.toString()).cnta__id
+        cuentasDebe =  cn.rows(cuentas1.toString()).cnta__id + cn.rows(cuentas5.toString()).cnta__id
         cuentasHaber =  cn.rows(cuentas2.toString()).cnta__id + cn.rows(cuentas3.toString()).cnta__id + cn.rows(cuentas4.toString()).cnta__id
 
 //        println("cd " + cuentasDebe)

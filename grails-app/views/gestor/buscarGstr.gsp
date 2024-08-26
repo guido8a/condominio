@@ -116,7 +116,8 @@
     $("#btnInicial").click(function () {
 
         bootbox.confirm({
-            message: "<i class='fa fa-3x fa-exclamation-triangle text-info'></i> <strong style='font-size: 14px'> Está seguro de crear un gestor de saldos iniciales? </strong>",
+            message: "<i class='fa fa-3x fa-exclamation-triangle text-info'></i> " +
+                "<strong style='font-size: 14px'> Está seguro de crear un gestor de saldos iniciales? </strong>",
             buttons: {
                 confirm: {
                     label: '<i class="fa fa-save"></i> Aceptar',
