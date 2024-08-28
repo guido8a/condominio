@@ -31,30 +31,33 @@
         <th style="width: 15%">Fecha Inicio</th>
         <th style="width: 15%">Fecha Fin</th>
         <th style="width: 40%">Contabilidad</th>
-        <th style="width: 15%">Acciones</th>
+%{--        <th style="width: 15%">Acciones</th>--}%
     </tr>
     </thead>
     <tbody>
     <g:if test="${periodos.size() > 0}">
         <g:each in="${periodos}" status="i" var="periodo">
             <tr data-id="${periodo.id}">
-                <td style="width: 15%">
-                    <g:textField name="periodo" value="${periodo?.numero}" class="form-control" />
+                <td style="width: 25%">
+%{--                    <g:textField name="periodo" value="${periodo?.numero}" class="form-control" readonly="" />--}%
+                    ${periodo?.numero}
                 </td>
-                <td style="width: 15%">
-                    <elm:datepicker name="fechaInicio"  class="datepicker form-control" value="${periodo?.fechaInicio}"  />
+                <td style="width: 25%">
+                    ${periodo?.fechaInicio?.format("dd-MM-yyyy")}
+%{--                    <elm:datepicker name="fechaInicio"  class="datepicker form-control" value="${periodo?.fechaInicio}"  />--}%
                 </td>
-                <td style="width: 15%">
-                    <elm:datepicker name="fechaFin"  class="datepicker form-control" value="${periodo?.fechaFin}"  />
+                <td style="width: 25%">
+%{--                    <elm:datepicker name="fechaFin"  class="datepicker form-control" value="${periodo?.fechaFin}" />--}%
+                    ${periodo?.fechaFin?.format("dd-MM-yyyy")}
                 </td>
-                <td style="width: 40%">
-                    ${periodo?.contabilidad?.descripcion}
+                <td style="width: 25%">
+                    ${periodo?.contabilidad?.fechaInicio?.format("yyyy")}
                 </td>
-                <td style="width: 15%; text-align: center">
-                    <a href="#" class="btn btn-success btnGuardarPeriodo" data-id="${periodo?.id}">
-                        <i class="fa fa-save"></i> Guardar
-                    </a>
-                </td>
+%{--                <td style="width: 15%; text-align: center">--}%
+%{--                    <a href="#" class="btn btn-success btnGuardarPeriodo" data-id="${periodo?.id}">--}%
+%{--                        <i class="fa fa-save"></i> Guardar--}%
+%{--                    </a>--}%
+%{--                </td>--}%
             </tr>
         </g:each>
     </g:if>
