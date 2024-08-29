@@ -6,13 +6,13 @@ class ProcesoService {
     def dbConnectionService
 
 
-    def registrar(proceso) {
+    def registrar(id, cdgo) {
         def lista = [true]
         def cn = dbConnectionService.getConnection()
         def cmpr
         def asnt
 
-        println "registrar proceso: ${proceso.id} --> select * from generar(${proceso.id})"
+        println "registrar proceso: ${proceso.id} --> select * from generar(${id}, $cdgo)"
         try {
             cn.execute("select * from generar($proceso.id)".toString())
             cmpr = Comprobante.findAllByProceso(proceso)
