@@ -12,6 +12,7 @@ class EgresoController extends Shield {
 
     def dbConnectionService
     def buscadorService
+    def procesoService
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
@@ -147,6 +148,9 @@ class EgresoController extends Shield {
                     pagos.documento = params.pg_cmpr
                     pagos.cajaChica = params.pagar_CC
                     pagos.save(flush: true)
+
+                    procesoService.registrar(egresoInstance?.id, 'egrs')
+
                 }
                 render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Egreso exitosa."
                 return
@@ -248,6 +252,9 @@ class EgresoController extends Shield {
             println("error al guardar el pago " + pago.errors)
             render "no"
         }else{
+
+            procesoService.registrar(egreso?.id, 'pgeg')
+
             render "ok"
         }
     }

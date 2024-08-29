@@ -133,13 +133,21 @@
 
             <div class="col-xs-1 negrilla">
             </div>
+%{--            <div class="col-xs-2 negrilla">--}%
+%{--                Tipo de detalle:--}%
+%{--            </div>--}%
+
+%{--            <div class="col-xs-2 negrilla" style="margin-left: 0">--}%
+%{--                <g:select class="form-control required tipoD" from="${tipo}" optionValue="value" optionKey="key"--}%
+%{--                          name="tipoD_name" value="${gestorInstance?.tipo?:-1}" disabled="${gestorInstance?.estado == 'R'}"/>--}%
+%{--            </div>--}%
             <div class="col-xs-2 negrilla">
-                Tipo de detalle:
+                Tipo:
             </div>
 
             <div class="col-xs-2 negrilla" style="margin-left: 0">
-                <g:select class="form-control required tipoD" from="${tipo}" optionValue="value" optionKey="key"
-                          name="tipoD_name" value="${gestorInstance?.tipo?:-1}" disabled="${gestorInstance?.estado == 'R'}"/>
+                <g:select class="form-control required " from="${['drio': 'Diario', 'SLDO': 'Saldo',  'pgal' : 'Pago alícuota', 'pgeg' : 'Pago egreso', 'egrs' : 'Egreso' , 'ingr' : 'Ingreso']}" optionValue="value" optionKey="key"
+                          name="codigo" value="${gestorInstance?.codigo}" disabled="${gestorInstance?.estado == 'R'}"/>
             </div>
         </div>
 
@@ -200,11 +208,11 @@
                 <thead>
                 <tr>
                     <th style="width: 350px;" class="letraP">Código (Cuenta)</th>
-                    <th style="width: 90px" class="letraP">% B. Imponible</th>
-                    <th style="width: 90px" class="letraP">% B.I. Sin IVA</th>
-                    <th style="width: 90px" class="letraP">Impuestos</th>
-                    <th style="width: 90px" class="letraP">ICE</th>
-                    <th style="width: 90px" class="letraP">Flete</th>
+%{--                    <th style="width: 90px" class="letraP">% B. Imponible</th>--}%
+%{--                    <th style="width: 90px" class="letraP">% B.I. Sin IVA</th>--}%
+%{--                    <th style="width: 90px" class="letraP">Impuestos</th>--}%
+%{--                    <th style="width: 90px" class="letraP">ICE</th>--}%
+%{--                    <th style="width: 90px" class="letraP">Flete</th>--}%
                     <th style="width: 80px" class="letraP">Valor</th>
                     <th style="width: 50px" class="letraP">D / H</th>
                     <th style="width: 80px" class="letraP">Acciones</th>
@@ -459,6 +467,7 @@
         var descripcion = $("#descripcion").val();
         var observacion = $("#observaciones").val();
         var fuente = $("#fuenteGestor").val();
+        var codigo = $("#codigo option:selected").val();
         $.ajax({
             type: 'POST',
             url: "${createLink(controller: 'gestor', action: 'guardarGestor')}",
@@ -468,8 +477,9 @@
                 descripcion: descripcion,
                 observacion: observacion,
                 fuente: fuente,
-                tipoProceso:  $(".tipoProcesoSel option:selected").val(),
-                tipo:  $(".tipoD option:selected").val(),
+                codigo: codigo,
+                // tipoProceso:  $(".tipoProcesoSel option:selected").val(),
+                // tipo:  $(".tipoD option:selected").val(),
                 saldoInicial: $(".salIni").prop('checked')
             },
             success: function (msg) {

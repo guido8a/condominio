@@ -28,26 +28,26 @@
                     class="movimiento">
                     <td style="width: 400px">${gnra?.cuenta?.numero}<span style="font-size: 12px"> (${gnra?.cuenta?.descripcion})</span></td>
 
-                    <td style="width: 90px">
-                        <g:textField type="number" name="porcentaje" id="por_${gnra?.id}" class="validacionNumero form-control" style="width: 85px;"
-                                     value="${gnra.porcentaje ?: 0}" />
-                    </td>
-                    <td style="width: 90px"><g:textField type="number" name="porcentaje" id="sin_${gnra?.id}"
-                                                   class="validacionNumero form-control" style="width: 85px;"
-                                                   value="${gnra.baseSinIva ?: 0}" />
-                    </td>
-                    <td style="width: 90px"><g:textField type="number" name="impuestos" id="imp_${gnra?.id}"
-                                                   class="validacionNumero form-control" style="width: 85px;"
-                                                   value="${gnra.porcentajeImpuestos?:0}" />
-                    </td>
-                    <td style="width: 90px"><g:textField type="number" name="ice" id="ice_${gnra?.id}"
-                                                   class="validacionNumero form-control" style="width: 85px;"
-                                                   value="${gnra.ice?:0}" />
-                    </td>
-                    <td style="width: 90px"><g:textField type="number" name="flete" id="fl_${gnra?.id}"
-                                                   class="validacionNumero form-control" style="width: 85px;"
-                                                   value="${gnra?.flete?:0}" />
-                    </td>
+%{--                    <td style="width: 90px">--}%
+%{--                        <g:textField type="number" name="porcentaje" id="por_${gnra?.id}" class="validacionNumero form-control" style="width: 85px;"--}%
+%{--                                     value="${gnra.porcentaje ?: 0}" />--}%
+%{--                    </td>--}%
+%{--                    <td style="width: 90px"><g:textField type="number" name="porcentaje" id="sin_${gnra?.id}"--}%
+%{--                                                   class="validacionNumero form-control" style="width: 85px;"--}%
+%{--                                                   value="${gnra.baseSinIva ?: 0}" />--}%
+%{--                    </td>--}%
+%{--                    <td style="width: 90px"><g:textField type="number" name="impuestos" id="imp_${gnra?.id}"--}%
+%{--                                                   class="validacionNumero form-control" style="width: 85px;"--}%
+%{--                                                   value="${gnra.porcentajeImpuestos?:0}" />--}%
+%{--                    </td>--}%
+%{--                    <td style="width: 90px"><g:textField type="number" name="ice" id="ice_${gnra?.id}"--}%
+%{--                                                   class="validacionNumero form-control" style="width: 85px;"--}%
+%{--                                                   value="${gnra.ice?:0}" />--}%
+%{--                    </td>--}%
+%{--                    <td style="width: 90px"><g:textField type="number" name="flete" id="fl_${gnra?.id}"--}%
+%{--                                                   class="validacionNumero form-control" style="width: 85px;"--}%
+%{--                                                   value="${gnra?.flete?:0}" />--}%
+%{--                    </td>--}%
                     <td style="width: 90px"><g:textField type="number" name="valor" id="val_${gnra?.id}"
                                                    class="validacionNumero form-control" style="width: 85px;"
                                                    value="${gnra?.valor?:0}" />
@@ -82,11 +82,11 @@
 
             <tr class="colorAsiento">
                 <td class="total derecha">Diferencia de Totales</td>
-                <td class="total derecha ${Math.abs(pcnt) > 0.001 ? 'rojo' : ''}">${Math.round(pcnt*100)/100}</td>
-                <td class="total derecha ${Math.abs(pcbz) > 0.001 ? 'rojo' : ''}">${Math.round(pcbz*100)/100}</td>
-                <td class="total derecha ${Math.abs(pcim) > 0.001 ? 'rojo' : ''}">${Math.round((pcim)*100)/100}</td>
-                <td class="total derecha ${Math.abs(ice) > 0.001 ? 'rojo' : ''}">${Math.round((ice)*100)/100}</td>
-                <td class="total derecha ${Math.abs(flte) > 0.001 ? 'rojo' : ''}">${Math.round((flte)*100)/100}</td>
+%{--                <td class="total derecha ${Math.abs(pcnt) > 0.001 ? 'rojo' : ''}">${Math.round(pcnt*100)/100}</td>--}%
+%{--                <td class="total derecha ${Math.abs(pcbz) > 0.001 ? 'rojo' : ''}">${Math.round(pcbz*100)/100}</td>--}%
+%{--                <td class="total derecha ${Math.abs(pcim) > 0.001 ? 'rojo' : ''}">${Math.round((pcim)*100)/100}</td>--}%
+%{--                <td class="total derecha ${Math.abs(ice) > 0.001 ? 'rojo' : ''}">${Math.round((ice)*100)/100}</td>--}%
+%{--                <td class="total derecha ${Math.abs(flte) > 0.001 ? 'rojo' : ''}">${Math.round((flte)*100)/100}</td>--}%
                 <td class="total derecha ${Math.abs(vlor) > 0.001 ? 'rojo' : ''}">${Math.round((vlor)*100)/100}</td>
                 <td colspan="2" class="total">Debe - Haber</td>
             </tr>

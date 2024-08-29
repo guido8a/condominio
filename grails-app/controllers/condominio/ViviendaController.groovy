@@ -9,6 +9,7 @@ class ViviendaController extends Shield {
 
     def dbConnectionService
     def buscadorService
+    def procesoService
 
     def index() {
 
@@ -177,6 +178,9 @@ class ViviendaController extends Shield {
                     }
                     nos += "#" + prsnId
                 } else {
+
+                    procesoService.registrar(ingreso?.id, 'ingr')
+
                     if (oks != "") {
                         oks += ","
                     }
@@ -229,6 +233,9 @@ class ViviendaController extends Shield {
                     }
                     nos += "#" + id
                 } else {
+
+                    procesoService.registrar(ingreso?.id, 'ingr')
+
                     if (oks != "") {
                         oks += ","
                     }

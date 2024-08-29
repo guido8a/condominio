@@ -13,6 +13,7 @@ class IngresoController extends Shield {
     def dbConnectionService
     def buscadorService
     def firmasService
+    def procesoService
 
     static allowedMethods = [save_ajax: "POST", delete_ajax: "POST"]
 
@@ -282,12 +283,9 @@ class IngresoController extends Shield {
             pago.descuento = params.descuento.toDouble()
             pago.anterior = params.anterior == 'SI' ? 'S' :'N'
 
-            if(params.banco){
-
-            }else{
+            if(!params.banco){
                 params.banco = 0
             }
-
 /*
            if(mess > 2) {
                pago.mora = params.mora.toDouble()
@@ -295,7 +293,6 @@ class IngresoController extends Shield {
                pago.mess = mess
            }
 */
-
             pago.mora = params.mora.toDouble()
 
             if(!pago.save(flush: true)){
@@ -303,6 +300,7 @@ class IngresoController extends Shield {
                 band = 0
             }else{
                 band = 1
+                procesoService.registrar(ingreso?.id, 'pgal')
             }
 
             if(condominio?.comprobante == 'S'){
@@ -363,8 +361,6 @@ class IngresoController extends Shield {
                 }
             }
         }
-
-
     }
 
     def borrarPago_ajax () {

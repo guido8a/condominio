@@ -12,13 +12,13 @@ class ProcesoService {
         def cmpr
         def asnt
 
-        println "registrar proceso: ${proceso.id} --> select * from generar(${id}, $cdgo)"
+        println "registrar proceso: ${id} --> select * from generar(${id}, $cdgo)"
         try {
-            cn.execute("select * from generar($proceso.id)".toString())
-            cmpr = Comprobante.findAllByProceso(proceso)
-            asnt = Asiento.findAllByComprobanteInList(cmpr)
-            lista.add(cmpr)
-            lista.add(asnt)
+            cn.execute("select * from generar($id, $cdgo)".toString())
+//            cmpr = Comprobante.findAllByProceso(proceso)
+//            asnt = Asiento.findAllByComprobanteInList(cmpr)
+//            lista.add(cmpr)
+//            lista.add(asnt)
         } catch (e) {
             lista[0] = false
             println "errores: $e"

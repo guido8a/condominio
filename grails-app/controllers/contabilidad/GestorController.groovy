@@ -316,7 +316,7 @@ class GestorController extends Shield {
     }
 
     def agregarDebeHaber_ajax () {
-//        println("params agregar debe " + params)
+        println("params agregar debe " + params)
         def gestor = Gestor.get(params.gestor)
         def tipo = TipoComprobante.get(params.tipo)
         def cuenta = Cuenta.get(params.cuenta)
@@ -354,11 +354,11 @@ class GestorController extends Shield {
 //        println "guardarValores_ajax " + params
 
         def genera = Genera.get(params.genera)
-        genera.ice = params.ice.toDouble()
-        genera.porcentajeImpuestos = params.impuesto.toDouble()
-        genera.porcentaje = params.porcentaje.toDouble()
-        genera.baseSinIva = params.sinIva.toDouble()
-        genera.flete = params.flete.toDouble()
+//        genera.ice = params.ice.toDouble()
+//        genera.porcentajeImpuestos = params.impuesto.toDouble()
+//        genera.porcentaje = params.porcentaje.toDouble()
+//        genera.baseSinIva = params.sinIva.toDouble()
+//        genera.flete = params.flete.toDouble()
         genera.debeHaber = params.debeHaber
         genera.valor = params.valor.toDouble()
 
@@ -381,27 +381,34 @@ class GestorController extends Shield {
         }else{
             gestor = new Gestor()
             gestor.condominio = condominio
-            gestor.estado = 'A'
+            gestor.estado = 'N'
             gestor.fecha = new Date()
         }
 
         gestor.nombre = params.nombre
-        gestor.codigo = null
+        gestor.codigo = params.codigo
         gestor.observaciones = params.observacion
         gestor.fuente = fuente
-        if(params.tipo != '-1') {
-            gestor.tipo = params.tipo
-        } else {
-            gestor.tipo = null
-        }
+//        if(params.tipo != '-1') {
+//            gestor.tipo = params.tipo
+//        } else {
+            gestor.tipo = 'G'
+//        }
 
-        try{
-            gestor.save(flush: true)
-            render "ok_" + gestor?.id
-        }catch (e){
+
+        if(!gestor.save(flush:true)){
             render "no"
             println("error " + gestor.errors)
+        }else{
+            render "ok_" + gestor?.id
         }
+
+//        try{
+//            gestor.save(flush: true)
+//
+//        }catch (e){
+//
+//        }
     }
 
     def totales_ajax () {
@@ -503,7 +510,7 @@ class GestorController extends Shield {
 
     def desRegistrar_ajax() {
         def gestor = Gestor.get(params.id)
-        gestor.estado = 'A'
+        gestor.estado = 'N'
 
         try{
             gestor.save(flush:true)
@@ -553,10 +560,11 @@ class GestorController extends Shield {
         def nuevo = new Gestor()
         nuevo.nombre = params.nombre
         nuevo.condominio = gestor.condominio
-        nuevo.estado = 'A'
+        nuevo.estado = 'N'
         nuevo.fecha = new Date()
         nuevo.fuente = gestor.fuente
         nuevo.tipo = gestor.tipo
+        nuevo.codigo = gestor.codigo
         nuevo.observaciones = gestor.observaciones
 
         try {
@@ -618,7 +626,7 @@ class GestorController extends Shield {
         gestor.nombre = "Saldos iniciales para apertura de contabilidad"
         gestor.codigo = "SLDO"
         gestor.condominio = condominio
-        gestor.estado = "A"
+        gestor.estado = "N"
         gestor.tipo = "G"
         gestor.fuente = fuente
         gestor.fecha = new Date()
