@@ -1,5 +1,6 @@
 package condominio
 
+import contabilidad.Contabilidad
 import org.hibernate.criterion.MatchMode
 import seguridad.Persona
 import seguridad.Shield
@@ -83,7 +84,7 @@ class ViviendaController extends Shield {
         }
         if(params.edif != 'Todas...') {
             sqlWhere += " and edifdscr = '${params.edif}' ";
-        } 
+        }
 //        println "-->sql: $sqlSelect $sqlWhere $sqlOrder"
         "$sqlSelect $sqlWhere $sqlOrder".toString()
     }
@@ -115,6 +116,7 @@ class ViviendaController extends Shield {
 
     def actualizar() {
         println "actualizar $params"
+        def contabilidad = Contabilidad.get(session.contabilidad.id)
         if (params.item instanceof java.lang.String) {
             params.item = [params.item]
         }
@@ -179,7 +181,10 @@ class ViviendaController extends Shield {
                     nos += "#" + prsnId
                 } else {
 
-                    procesoService.registrar(ingreso?.id, 'ingr')
+
+                    def sql = "select * from generar(${ingreso?.id}, 'INGR', ${contabilidad?.id})"
+                    def cn = dbConnectionService.getConnection()
+                    cn.execute(sql.toString())
 
                     if (oks != "") {
                         oks += ","
@@ -234,7 +239,9 @@ class ViviendaController extends Shield {
                     nos += "#" + id
                 } else {
 
-                    procesoService.registrar(ingreso?.id, 'ingr')
+                    def sql = "select * from generar(${ingreso?.id}, 'INGR', ${contabilidad?.id})"
+                    def cn = dbConnectionService.getConnection()
+                    cn.execute(sql.toString())
 
                     if (oks != "") {
                         oks += ","

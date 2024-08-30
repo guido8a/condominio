@@ -146,7 +146,7 @@
             </div>
 
             <div class="col-xs-2 negrilla" style="margin-left: 0">
-                <g:select class="form-control required " from="${['drio': 'Diario', 'SLDO': 'Saldo',  'pgal' : 'Pago alícuota', 'pgeg' : 'Pago egreso', 'egrs' : 'Egreso' , 'ingr' : 'Ingreso']}" optionValue="value" optionKey="key"
+                <g:select class="form-control required " from="${['DRIO': 'Diario', 'SLDO': 'Saldo',  'PGAL' : 'Pago alícuota', 'PGEG' : 'Pago egreso', 'EGRS' : 'Egreso' , 'INGR' : 'Ingreso']}" optionValue="value" optionKey="key"
                           name="codigo" value="${gestorInstance?.codigo}" disabled="${gestorInstance?.estado == 'R'}"/>
             </div>
         </div>

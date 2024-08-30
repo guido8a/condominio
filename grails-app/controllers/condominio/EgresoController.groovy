@@ -1,5 +1,6 @@
 package condominio
 
+import contabilidad.Contabilidad
 import org.springframework.dao.DataIntegrityViolationException
 import seguridad.Shield
 import utilitarios.Anio
@@ -118,6 +119,7 @@ class EgresoController extends Shield {
      */
     def save_ajax() {
         println "params: $params"
+        def contabilidad = Contabilidad.get(session.contabilidad.id)
         def egresoInstance = new Egreso()
         def pagos
 
@@ -149,7 +151,11 @@ class EgresoController extends Shield {
                     pagos.cajaChica = params.pagar_CC
                     pagos.save(flush: true)
 
-                    procesoService.registrar(egresoInstance?.id, 'egrs')
+//                    procesoService.registrar(egresoInstance?.id, 'egrs')
+
+                    def sql = "select * from generar(${pagos?.id}, 'EGRS', ${contabilidad?.id})"
+                    def cn = dbConnectionService.getConnection()
+                    cn.execute(sql.toString())
 
                 }
                 render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Egreso exitosa."
@@ -207,7 +213,7 @@ class EgresoController extends Shield {
     def guardarPagoEgreso_ajax () {
 
 //        println "params $params"
-
+        def contabilidad = Contabilidad.get(session.contabilidad.id)
         def egreso = Egreso.get(params.egreso)
         def pagos = PagoEgreso.findAllByEgreso(egreso)
 //        def saldo = (egreso.valor - (pagos?.valor?.sum() ?: 0))
@@ -253,7 +259,9 @@ class EgresoController extends Shield {
             render "no"
         }else{
 
-            procesoService.registrar(egreso?.id, 'pgeg')
+            def sql = "select * from generar(${pago?.id}, 'PGEG', ${contabilidad?.id})"
+            def cn = dbConnectionService.getConnection()
+            cn.execute(sql.toString())
 
             render "ok"
         }

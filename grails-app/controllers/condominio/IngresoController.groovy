@@ -1,5 +1,6 @@
 package condominio
 
+import contabilidad.Contabilidad
 import org.springframework.dao.DataIntegrityViolationException
 import seguridad.Persona
 import seguridad.Shield
@@ -224,6 +225,7 @@ class IngresoController extends Shield {
 
     def guardarPago_ajax (){
 //        println("guardarPago_ajax: " + params)
+        def contabilidad = Contabilidad.get(session.contabilidad.id)
         def condominio = Condominio.get(session.condominio.id)
         def ingreso = Ingreso.get(params.ingreso)
         def pagos = Pago.findAllByIngreso(ingreso)
@@ -300,7 +302,11 @@ class IngresoController extends Shield {
                 band = 0
             }else{
                 band = 1
-                procesoService.registrar(ingreso?.id, 'pgal')
+
+                def sql = "select * from generar(${pago?.id}, 'PGAL', ${contabilidad?.id})"
+                def cn = dbConnectionService.getConnection()
+                cn.execute(sql.toString())
+
             }
 
             if(condominio?.comprobante == 'S'){
@@ -391,7 +397,7 @@ class IngresoController extends Shield {
     def borrarComprobante(pago){
         def comprobante = Comprobante.findByPago(pago)
 
-        comprobante.estado = 'A'
+        comprobante.estado = 'N'
 
         if(!comprobante.save(flush: true)){
             println("error al anular el comprobante " + comprobante.errors)
