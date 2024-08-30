@@ -142,11 +142,15 @@
 %{--                          name="tipoD_name" value="${gestorInstance?.tipo?:-1}" disabled="${gestorInstance?.estado == 'R'}"/>--}%
 %{--            </div>--}%
             <div class="col-xs-2 negrilla">
-                Tipo:
+                Tipo (código del gestor):
             </div>
 
-            <div class="col-xs-2 negrilla" style="margin-left: 0">
-                <g:select class="form-control required " from="${['DRIO': 'Diario', 'SLDO': 'Saldo',  'PGAL' : 'Pago alícuota', 'PGEG' : 'Pago egreso', 'EGRS' : 'Egreso' , 'INGR' : 'Ingreso']}" optionValue="value" optionKey="key"
+            <div class="col-xs-4 negrilla" style="margin-left: 0">
+                <g:select class="form-control required "
+                          from="${['DRIO': 'Diario', 'SLDO': 'Saldo',  'PGAL' : 'Pago alícuota', 'PGEG' : 'Pago egreso',
+                                   'EGRS' : 'Registro egreso' , 'INGR' : 'Registro ingreso ordinarios',
+                                   'IGEX' : 'Registro ingreso extraordinarios', 'IGML' : 'Registro ingreso varios']}"
+                          optionValue="value" optionKey="key"
                           name="codigo" value="${gestorInstance?.codigo}" disabled="${gestorInstance?.estado == 'R'}"/>
             </div>
         </div>
