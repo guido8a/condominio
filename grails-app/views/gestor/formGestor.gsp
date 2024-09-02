@@ -1,4 +1,4 @@
-<%@ page import="contabilidad.Fuente; contabilidad.TipoComprobante" %>
+<%@ page import="contabilidad.TipoComprobante" %>
 <html>
 <head>
     <meta name="layout" content="main"/>
@@ -122,14 +122,14 @@
 
         <div class="fila">
             <div class="col-xs-2 negrilla">
-                Fuente:
+                Tipo de comprobante:
             </div>
 
-            <div class="col-xs-3 negrilla" style="margin-left: 0">
-                <g:select name="fuente.id" type="select" campo="fuente"
-                          from="${contabilidad.Fuente.list([sort: 'descripcion'])}" value="${gestorInstance?.fuente?.id}" optionKey="id"
-                          optionValue="descripcion" class="form-control required col-md-3" id="fuenteGestor" />
-            </div>
+            %{--<div class="col-xs-3 negrilla" style="margin-left: 0">--}%
+                %{--<g:select name="tipoComprobante.id" type="select" campo="tipoComprobante"--}%
+                          %{--from="${contabilidad.TipoComprobante.list([sort: 'descripcion'])}" value="${gestorInstance?.tipoComprobante?.id}" optionKey="id"--}%
+                          %{--optionValue="descripcion" class="form-control required col-md-3" id="fuenteGestor" />--}%
+            %{--</div>--}%
 
             <div class="col-xs-1 negrilla">
             </div>
@@ -145,14 +145,14 @@
                 Tipo (código del gestor):
             </div>
 
-            <div class="col-xs-4 negrilla" style="margin-left: 0">
-                <g:select class="form-control required "
-                          from="${['DRIO': 'Diario', 'SLDO': 'Saldo',  'PGAL' : 'Pago alícuota', 'PGEG' : 'Pago egreso',
-                                   'EGRS' : 'Registro egreso' , 'INGR' : 'Registro ingreso ordinarios',
-                                   'IGEX' : 'Registro ingreso extraordinarios', 'IGML' : 'Registro ingreso varios']}"
-                          optionValue="value" optionKey="key"
-                          name="codigo" value="${gestorInstance?.codigo}" disabled="${gestorInstance?.estado == 'R'}"/>
-            </div>
+            %{--<div class="col-xs-4 negrilla" style="margin-left: 0">--}%
+                %{--<g:select class="form-control required "--}%
+                          %{--from="${['DRIO': 'Diario', 'SLDO': 'Saldo',  'PGAL' : 'Pago alícuota', 'PGEG' : 'Pago egreso',--}%
+                                   %{--'EGRS' : 'Registro egreso' , 'INGR' : 'Registro ingreso ordinarios',--}%
+                                   %{--'IGEX' : 'Registro ingreso extraordinarios', 'IGML' : 'Registro ingreso varios']}"--}%
+                          %{--optionValue="value" optionKey="key"--}%
+                          %{--name="codigo" value="${gestorInstance?.codigo}" disabled="${gestorInstance?.estado == 'R'}"/>--}%
+            %{--</div>--}%
         </div>
 
         <div class="fila">
@@ -161,7 +161,8 @@
                     Gestor para saldos iniciales:
                 </div>
                 <div class="col-xs-2 negrilla hidden" id="divSI">
-                    <g:checkBox name="saldoIni_name" id="saldoIni" class="form-control salIni" data-on-Label="Si" checked="${gestorInstance?.codigo == 'SLDO' ?: false}"/>
+                    <g:checkBox name="saldoIni_name" id="saldoIni" class="form-control salIni" data-on-Label="Si"
+                                checked="${gestorInicial}"/>
                 </div>
             </g:if>
         </div>
@@ -183,22 +184,22 @@
 
                 <div class="col-md-3">
                     <span class="grupo">
-                        <g:select name="tipoCom" campo="tipo"
-                                  from="${contabilidad.TipoComprobante.list([sort: 'descripcion'])}"
-                                  label="Tipo comprobante: " value="${''}" optionKey="id" id="tipo"
-                                  class="form-control required col-md-2"
-                                  optionValue="descripcion" style="margin-left: 80px; font-weight: bold"/>
+                        %{--<g:select name="tipoCom" campo="tipo"--}%
+                                  %{--from="${contabilidad.TipoComprobante.list([sort: 'descripcion'])}"--}%
+                                  %{--label="Tipo comprobante: " value="${''}" optionKey="id" id="tipo"--}%
+                                  %{--class="form-control required col-md-2"--}%
+                                  %{--optionValue="descripcion" style="margin-left: 80px; font-weight: bold"/>--}%
                     </span>
                 </div>
                 <span class="col-md-1">
 
                 </span>
 
-                <g:if test="${gestorInstance?.id}">
-                    <g:if test="${tieneAsientos.size() > 0}">
-                        Genera comprobantes de:  ${tieneAsientos?.sort{it?.tipoComprobante?.descripcion}?.tipoComprobante?.descripcion?.unique() ?: ''}
-                    </g:if>
-                </g:if>
+                %{--<g:if test="${gestorInstance?.id}">--}%
+                    %{--<g:if test="${tieneAsientos.size() > 0}">--}%
+                        %{--Genera comprobantes de:  ${tieneAsientos?.sort{it?.tipoComprobante?.descripcion}?.tipoComprobante?.descripcion?.unique() ?: ''}--}%
+                    %{--</g:if>--}%
+                %{--</g:if>--}%
 
                 <g:if test="${(gestorInstance?.estado != 'R') && band}">
                     <div class="btn-group col-md-3">

@@ -74,9 +74,9 @@
                 <g:set var="sgno" value="${(gnra?.debeHaber == 'D')? 1 : -1}" />
                 <g:set var="pcnt" value="${pcnt + gnra.porcentaje * sgno}" />
                 <g:set var="pcim" value="${pcim + gnra.porcentajeImpuestos * sgno}" />
-                <g:set var="ice" value="${ice + gnra.ice * sgno}" />
-                <g:set var="pcbz" value="${pcbz + gnra.baseSinIva * sgno}" />
-                <g:set var="flte" value="${flte + gnra.flete * sgno}" />
+                %{--<g:set var="ice" value="${ice + gnra.ice * sgno}" />--}%
+                %{--<g:set var="pcbz" value="${pcbz + gnra.baseSinIva * sgno}" />--}%
+                %{--<g:set var="flte" value="${flte + gnra.flete * sgno}" />--}%
                 <g:set var="vlor" value="${vlor + gnra.valor * sgno}" />
             </g:each>
 

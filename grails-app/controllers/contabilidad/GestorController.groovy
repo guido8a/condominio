@@ -261,7 +261,7 @@ class GestorController extends Shield {
 
     def formGestor () {
         def condominio = Condominio.get(session.condominio.id)
-        def gestorInicial = Gestor.findByCondominioAndCodigo(condominio, 'SLDO')
+        def gestorInicial = Gestor.findByCondominioAndNombreIlike(condominio, 'Saldos%')
         def titulo = "Nuevo Gestor"
         def tipo = ['G': 'Gasto', 'I':'Inventario', 'S': 'Servicios', 'C': 'Sin detalle']
         if(params.id){
@@ -279,7 +279,7 @@ class GestorController extends Shield {
         def condominio = Condominio.get(session.condominio.id)
         def gestor = Gestor.get(params.id)
         def tipoComprobante = TipoComprobante.get(params.tipo)
-        def movimientos = Genera.findAllByGestorAndTipoComprobante(gestor, tipoComprobante)?.sort{it.cuenta.numero}?.sort{it.debeHaber}
+        def movimientos = Genera.findAllByGestor(gestor)?.sort{it.cuenta.numero}?.sort{it.debeHaber}
         return [movimientos: movimientos, gestor: gestor, tipo: tipoComprobante, condominio: condominio]
     }
 
@@ -414,8 +414,8 @@ class GestorController extends Shield {
     def totales_ajax () {
         def gestor = Gestor.get(params.id)
         def tipoComprobante = TipoComprobante.get(params.tipo)
-        def cuentasDebe = Genera.findAllByGestorAndTipoComprobanteAndDebeHaber(gestor, tipoComprobante,'D')
-        def cuentasHaber = Genera.findAllByGestorAndTipoComprobanteAndDebeHaber(gestor, tipoComprobante,'H')
+        def cuentasDebe = Genera.findAllByGestorAndDebeHaber(gestor, tipoComprobante,'D')
+        def cuentasHaber = Genera.findAllByGestorAndDebeHaber(gestor, tipoComprobante,'H')
 
         def baseD =  cuentasDebe.porcentaje.sum()
         def impD = cuentasDebe.porcentajeImpuestos.sum()
@@ -523,7 +523,7 @@ class GestorController extends Shield {
 
     def buscarGstr() {
         def condominio = Condominio.get(session.condominio.id)
-        def gestor = Gestor.findByCondominioAndCodigo(condominio, 'SLDO')
+        def gestor = Gestor.findByCondominioAndNombreIlike(condominio, 'Saldos%')
         return[condominio: condominio, gestorIniciales: gestor]
     }
 
@@ -534,9 +534,9 @@ class GestorController extends Shield {
         def cn = dbConnectionService.getConnection()
         def buscar = params.buscar.trim()?:'%'
 
-        def sql = "select gstr__id, gstrnmbr, gstretdo, case gstrtipo when 'G' then 'Gasto' " +
-                "when 'I' then 'Inventario' end as tipo from gstr where " +
-                "cndm__id = ${condominio.id} and gstrnmbr ilike '%${buscar}%' order by gstrnmbr"
+        def sql = "select gstr__id, gstrnmbr, gstretdo, tpcpdscr from gstr, tpcp where " +
+                "cndm__id = ${condominio.id} and tpcp.tpcp__id = gstr.tpcp__id and gstrnmbr ilike '%${buscar}%' " +
+                "order by gstrnmbr"
 
 //        println "buscar .. ${sql}"
 

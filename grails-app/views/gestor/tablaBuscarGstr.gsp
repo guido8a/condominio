@@ -25,13 +25,13 @@ th, td {
                     ${dato.gstretdo == 'R' ? 'Registrado' : 'No registrado'}
                 </td>
                 <td style="width: 30%">
-                    ${dato.tipo}
+                    ${dato.tpcpdscr}
                 </td>
                 <td style="width: 15%">
                     <a href="#" data-id="${dato.gstr__id}" class="btn btn-success btn-sm btn-edit btn-ajax" title="Editar gestor">
                         <i class="fa fa-pencil"></i> Editar
                     </a>
-                    <g:if test="${dato?.gstretdo != 'R'}">
+                    <g:if test="${dato?.gstretdo == 'R'}">
                         <a href="#" data-id="${dato.gstr__id}" class="btn btn-info btn-sm btn-copiar btn-ajax" title="Copiar gestor">
                             <i class="fa fa-file"></i> Copiar
                         </a>
