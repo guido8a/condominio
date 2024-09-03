@@ -384,7 +384,7 @@ class GestorController extends Shield {
             gestor.fecha = new Date()
         }
 
-          gestor.properties = params
+        gestor.properties = params
 
         if(!gestor.save(flush:true)){
             render "no"
@@ -426,69 +426,80 @@ class GestorController extends Shield {
         def errores = 0
         def vr = 0
 
-        tiposComprobantes.each {t->
+//        tiposComprobantes.each {t->
 
-            tipo = TipoComprobante.get(t?.id)
+//            tipo = TipoComprobante.get(t?.id)
 
-            generaDebe = Genera.findAllByGestorAndDebeHaberAndTipoComprobante(gestor, 'D',tipo)
-            generaHaber = Genera.findAllByGestorAndDebeHaberAndTipoComprobante(gestor, 'H',tipo)
+//            generaDebe = Genera.findAllByGestorAndDebeHaberAndTipoComprobante(gestor, 'D',tipo)
+//            generaHaber = Genera.findAllByGestorAndDebeHaberAndTipoComprobante(gestor, 'H',tipo)
 
-            if(generaDebe && generaHaber){
+        generaDebe = Genera.findAllByGestorAndDebeHaber(gestor, 'D')
+        generaHaber = Genera.findAllByGestorAndDebeHaber(gestor, 'H')
 
-                def debeValor = generaDebe.valor.sum()
-                def debeImpuesto = generaDebe.porcentaje.sum()
-                def debePorcentaImpuesto = generaDebe.porcentajeImpuestos.sum()
+        if(generaDebe && generaHaber){
 
-                def haberValor = generaHaber.valor.sum()
-                def haberImpuesto = generaHaber.porcentaje.sum()
-                def haberPorcentaImpuesto = generaHaber.porcentajeImpuestos.sum()
+            def debeValor = generaDebe.valor.sum()
+            def debeImpuesto = generaDebe.porcentaje.sum()
+            def debePorcentaImpuesto = generaDebe.porcentajeImpuestos.sum()
 
-                def fleteDebe = generaDebe.flete.sum()
-                def fleteHaber = generaHaber.flete.sum()
+            def haberValor = generaHaber.valor.sum()
+            def haberImpuesto = generaHaber.porcentaje.sum()
+            def haberPorcentaImpuesto = generaHaber.porcentajeImpuestos.sum()
 
-                def debeSinIvaD = generaDebe.baseSinIva.sum()
-                def debeSinIvaH = generaHaber.baseSinIva.sum()
+//            def fleteDebe = generaDebe.flete.sum()
+//            def fleteHaber = generaHaber.flete.sum()
+//
+//            def debeSinIvaD = generaDebe.baseSinIva.sum()
+//            def debeSinIvaH = generaHaber.baseSinIva.sum()
 
-                def totalesDebe = debeValor + debeImpuesto + debePorcentaImpuesto + fleteDebe + debeSinIvaD
-                def totalesHaber = haberValor + haberImpuesto + haberPorcentaImpuesto + fleteHaber + debeSinIvaH
+//            def totalesDebe = debeValor + debeImpuesto + debePorcentaImpuesto + fleteDebe + debeSinIvaD
+//            def totalesHaber = haberValor + haberImpuesto + haberPorcentaImpuesto + fleteHaber + debeSinIvaH
 
-                if(totalesDebe == 0 && totalesHaber == 0 && gestor.codigo != 'SLDO'){
-                    render "no_No se puede registrar el gestor contable, los valores se encuentran en 0, COMPROBANTE: (${tipo?.descripcion})"
-                }else{
-                    if( (debeImpuesto.toDouble() != haberImpuesto.toDouble()) || (debeSinIvaD.toDouble() != debeSinIvaH.toDouble()) || (debePorcentaImpuesto.toDouble() != haberPorcentaImpuesto.toDouble()) || (debeValor.toDouble() != haberValor.toDouble()) || (fleteDebe.toDouble() != fleteHaber.toDouble() )){
-                        render "no_No se puede registrar el gestor contable, los valores no cuadran entre DEBE y HABER, COMPROBANTE: (${tipo?.descripcion})"
-                        return
-                    }else{
-                        errores += 1
-                    }
-                }
+            def totalesDebe = debeValor + debeImpuesto + debePorcentaImpuesto
+            def totalesHaber = haberValor + haberImpuesto + haberPorcentaImpuesto
+
+//            if(totalesDebe == 0 && totalesHaber == 0 && gestor.codigo != 'SLDO'){
+            if(totalesDebe == 0 && totalesHaber == 0){
+//                render "no_No se puede registrar el gestor contable, los valores se encuentran en 0, COMPROBANTE: (${tipo?.descripcion})"
+                render "no_No se puede registrar el gestor contable, los valores se encuentran en 0"
             }else{
-                if(!generaDebe && !generaHaber){
-                    errores += 1
-                    vr += 1
+//                if( (debeImpuesto.toDouble() != haberImpuesto.toDouble()) || (debeSinIvaD.toDouble() != debeSinIvaH.toDouble()) || (debePorcentaImpuesto.toDouble() != haberPorcentaImpuesto.toDouble()) || (debeValor.toDouble() != haberValor.toDouble()) || (fleteDebe.toDouble() != fleteHaber.toDouble() )){
+                if( (debeImpuesto.toDouble() != haberImpuesto.toDouble()) || (debePorcentaImpuesto.toDouble() != haberPorcentaImpuesto.toDouble()) || (debeValor.toDouble() != haberValor.toDouble())){
+//                    render "no_No se puede registrar el gestor contable, los valores no cuadran entre DEBE y HABER, COMPROBANTE: (${tipo?.descripcion})"
+                    render "no_No se puede registrar el gestor contable, los valores no cuadran entre DEBE y HABER"
+                    return
                 }else{
-                    render "no_No se puede registrar el gestor contable, ingrese valores tanto en DEBE como en HABER, COMPROBANTE: (${tipo?.descripcion})"
-                    return false
+                    errores += 1
                 }
             }
+        }else{
+            if(!generaDebe && !generaHaber){
+                errores += 1
+                vr += 1
+            }else{
+//                render "no_No se puede registrar el gestor contable, ingrese valores tanto en DEBE como en HABER, COMPROBANTE: (${tipo?.descripcion})"
+                render "no_No se puede registrar el gestor contable, ingrese valores tanto en DEBE como en HABER"
+                return false
+            }
         }
+//        }
 
-        def tam = tiposComprobantes.size()
+//        def tam = tiposComprobantes.size()
 
 //        println("tam " + tam)
 //        println("errores  " + errores)
 
-        if(tam == errores && tam != vr){
+//        if(tam == errores && tam != vr){
             gestor.estado = 'R'
             if(!gestor.save(flush: true)){
-                render "no_Error al registrar el gestor contable"
                 println("error save gestor " + gestor.errors)
+                render "no_Error al registrar el gestor contable"
             }else{
                 render "ok_Gestor contable registrado correctamente"
             }
-        }else{
-            render "no_Error al registrar el gestor contable"
-        }
+//        }else{
+//            render "no_Error al registrar el gestor contable"
+//        }
     }
 
     def desRegistrar_ajax() {
