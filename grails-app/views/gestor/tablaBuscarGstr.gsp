@@ -18,13 +18,19 @@ th, td {
     <table class="table-bordered table-condensed table-hover" width="1060px">
         <g:each in="${data}" var="dato" status="z">
             <tr id="${dato.gstr__id}" data-id="${dato.gstr__id}" data-ed="${dato.gstretdo}" class="${clase}">
-                <td style="width: 40%">
+                <td style="width: 25%">
                     ${dato?.gstrnmbr}
                 </td>
                 <td  style="width: 15%">
                     ${dato.gstretdo == 'R' ? 'Registrado' : 'No registrado'}
                 </td>
-                <td style="width: 30%">
+                <td style="width: 15%">
+                    ${contabilidad.Gestor.get(dato.gstr__id).tipoGasto?.descripcion}
+                </td>
+                <td style="width: 15%">
+                    ${contabilidad.Gestor.get(dato.gstr__id).tipoAporte?.descripcion}
+                </td>
+                <td style="width: 15%">
                     ${dato.tpcpdscr}
                 </td>
                 <td style="width: 15%">

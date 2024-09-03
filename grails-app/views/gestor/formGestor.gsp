@@ -1,4 +1,4 @@
-<%@ page import="contabilidad.TipoComprobante" %>
+<%@ page import="condominio.TipoAporte; condominio.TipoGasto; contabilidad.TipoComprobante" %>
 <html>
 <head>
     <meta name="layout" content="main"/>
@@ -120,19 +120,31 @@
             </div>
         </div>
 
-        <div class="fila">
+      1  <div class="fila">
             <div class="col-xs-2 negrilla">
                 Tipo de comprobante:
             </div>
 
-            %{--<div class="col-xs-3 negrilla" style="margin-left: 0">--}%
-                %{--<g:select name="tipoComprobante.id" type="select" campo="tipoComprobante"--}%
-                          %{--from="${contabilidad.TipoComprobante.list([sort: 'descripcion'])}" value="${gestorInstance?.tipoComprobante?.id}" optionKey="id"--}%
-                          %{--optionValue="descripcion" class="form-control required col-md-3" id="fuenteGestor" />--}%
-            %{--</div>--}%
+            <div class="col-xs-3 negrilla" style="margin-left: 0">
+                <g:select name="tipoComprobante" type="select" campo="tipoComprobante"
+                          from="${contabilidad.TipoComprobante.list([sort: 'descripcion'])}" value="${gestorInstance?.tipoComprobante?.id}" optionKey="id"
+                          optionValue="descripcion" class="form-control required col-md-3" />
+            </div>
 
             <div class="col-xs-1 negrilla">
             </div>
+
+
+            <div class="col-xs-2 negrilla">
+                Tipo de gasto:
+            </div>
+
+            <div class="col-xs-3 negrilla" style="margin-left: 0">
+                <g:select name="tipoGasto" from="${condominio.TipoGasto.list([sort: 'descripcion'])}" value="${gestorInstance?.tipoGasto?.id}" optionKey="id"
+                          optionValue="descripcion" class="form-control required col-md-3" />
+            </div>
+
+
 %{--            <div class="col-xs-2 negrilla">--}%
 %{--                Tipo de detalle:--}%
 %{--            </div>--}%
@@ -141,9 +153,9 @@
 %{--                <g:select class="form-control required tipoD" from="${tipo}" optionValue="value" optionKey="key"--}%
 %{--                          name="tipoD_name" value="${gestorInstance?.tipo?:-1}" disabled="${gestorInstance?.estado == 'R'}"/>--}%
 %{--            </div>--}%
-            <div class="col-xs-2 negrilla">
-                Tipo (código del gestor):
-            </div>
+%{--            <div class="col-xs-2 negrilla">--}%
+%{--                Tipo (código del gestor):--}%
+%{--            </div>--}%
 
             %{--<div class="col-xs-4 negrilla" style="margin-left: 0">--}%
                 %{--<g:select class="form-control required "--}%
@@ -153,6 +165,18 @@
                           %{--optionValue="value" optionKey="key"--}%
                           %{--name="codigo" value="${gestorInstance?.codigo}" disabled="${gestorInstance?.estado == 'R'}"/>--}%
             %{--</div>--}%
+        </div>
+
+
+        <div class="fila">
+            <div class="col-xs-2 negrilla">
+                Tipo Aporte :
+            </div>
+
+            <div class="col-xs-3 negrilla" style="margin-left: 0">
+                <g:select name="tipoAporte" from="${condominio.TipoAporte.list([sort: 'descripcion'])}" value="${gestorInstance?.tipoAporte?.id}" optionKey="id"
+                          optionValue="descripcion" class="form-control required col-md-3"/>
+            </div>
         </div>
 
         <div class="fila">
@@ -471,8 +495,9 @@
         var nombreGestor = $("#nombre").val();
         var descripcion = $("#descripcion").val();
         var observacion = $("#observaciones").val();
-        var fuente = $("#fuenteGestor").val();
-        var codigo = $("#codigo option:selected").val();
+        var tipoAporte = $("#tipoAporte option:selected").val();
+        var tipoGasto = $("#tipoGasto option:selected").val();
+        var tipoComprobante= $("#tipoComprobante option:selected").val();
         $.ajax({
             type: 'POST',
             url: "${createLink(controller: 'gestor', action: 'guardarGestor')}",
@@ -481,22 +506,20 @@
                 nombre: nombreGestor,
                 descripcion: descripcion,
                 observacion: observacion,
-                fuente: fuente,
-                codigo: codigo,
-                // tipoProceso:  $(".tipoProcesoSel option:selected").val(),
-                // tipo:  $(".tipoD option:selected").val(),
-                saldoInicial: $(".salIni").prop('checked')
+                tipoAporte: tipoAporte,
+                tipoGasto: tipoGasto,
+                tipoComprobante: tipoComprobante
             },
             success: function (msg) {
                 closeLoader();
                 var parts = msg.split("_");
                 if (parts[0] === 'ok') {
-                    log("Información del gestor guardada correctamente", "success");
+                    log("Gestor guardado correctamente", "success");
                     setTimeout(function () {
                         location.href = "${createLink(controller: 'gestor', action: 'formGestor')}/" + parts[1]
                     }, 1000);
                 } else {
-                    log("Error al guardar la información del gestor", "error")
+                    log("Error al guardar el gestor", "error")
                 }
             }
         });

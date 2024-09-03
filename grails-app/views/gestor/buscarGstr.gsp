@@ -71,9 +71,11 @@
     <table class="table table-bordered table-hover table-condensed" style="width: 1070px">
         <thead>
         <tr>
-            <th class="alinear" style="width: 40%">Nombre</th>
+            <th class="alinear" style="width: 25%">Nombre</th>
             <th class="alinear" style="width: 15%">Estado</th>
-            <th class="alinear" style="width: 30%">Tipo</th>
+            <th class="alinear" style="width: 15%">Tipo Gasto</th>
+            <th class="alinear" style="width: 15%">Tipo Aporte</th>
+            <th class="alinear" style="width: 15%">Tipo Comprobante</th>
             <th class="alinear" style="width: 15%">Acciones</th>
         </tr>
         </thead>

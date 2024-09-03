@@ -371,9 +371,8 @@ class GestorController extends Shield {
     }
 
     def guardarGestor () {
-        println "params guardar $params"
+//        println "params guardar $params"
         def gestor
-        def fuente = Fuente.get(params.fuente)
         def condominio = Condominio.get(session.condominio.id)
 
         if(params.gestor){
@@ -385,16 +384,7 @@ class GestorController extends Shield {
             gestor.fecha = new Date()
         }
 
-        gestor.nombre = params.nombre
-        gestor.codigo = params.codigo
-        gestor.observaciones = params.observacion
-        gestor.fuente = fuente
-//        if(params.tipo != '-1') {
-//            gestor.tipo = params.tipo
-//        } else {
-            gestor.tipo = 'G'
-//        }
-
+          gestor.properties = params
 
         if(!gestor.save(flush:true)){
             render "no"
@@ -402,13 +392,6 @@ class GestorController extends Shield {
         }else{
             render "ok_" + gestor?.id
         }
-
-//        try{
-//            gestor.save(flush: true)
-//
-//        }catch (e){
-//
-//        }
     }
 
     def totales_ajax () {
@@ -534,7 +517,7 @@ class GestorController extends Shield {
         def cn = dbConnectionService.getConnection()
         def buscar = params.buscar.trim()?:'%'
 
-        def sql = "select gstr__id, gstrnmbr, gstretdo, tpcpdscr from gstr, tpcp where " +
+        def sql = "select gstr__id, gstrnmbr, gstretdo, tpcpdscr from gstr, tpcp  where " +
                 "cndm__id = ${condominio.id} and tpcp.tpcp__id = gstr.tpcp__id and gstrnmbr ilike '%${buscar}%' " +
                 "order by gstrnmbr"
 
