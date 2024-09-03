@@ -152,7 +152,9 @@ class EgresoController extends Shield {
                     pagos.cajaChica = params.pagar_CC
                     pagos.save(flush: true)
 
+                    pago.refresh()
                     def sql = "select * from generar(${pagos?.id}, 2, null, ${tipoGasto?.id}, ${contabilidad?.id})"
+                    println "sql: $sql"
                     def cn = dbConnectionService.getConnection()
                     cn.execute(sql.toString())
 
