@@ -181,8 +181,8 @@ class ViviendaController extends Shield {
                     nos += "#" + prsnId
                 } else {
 
-
-                    def sql = "select * from generar(${ingreso?.id}, 'INGR', ${contabilidad?.id})"
+/* "select * from generar(${pago?.id}, tpcp__id=3, tpap__id=1, tpgs__id=null, ${contabilidad?.id})" */
+                    def sql = "select * from generar(${ingreso?.id}, 3, 1, null, ${contabilidad?.id})"
                     def cn = dbConnectionService.getConnection()
                     cn.execute(sql.toString())
 
@@ -239,7 +239,7 @@ class ViviendaController extends Shield {
                     nos += "#" + id
                 } else {
 
-                    def sql = "select * from generar(${ingreso?.id}, 'INGR', ${contabilidad?.id})"
+                    def sql = "select * from generar(${ingreso?.id}, 3, 1, null, ${contabilidad?.id})"
                     def cn = dbConnectionService.getConnection()
                     cn.execute(sql.toString())
 

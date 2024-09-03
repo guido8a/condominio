@@ -120,6 +120,7 @@ class EgresoController extends Shield {
     def save_ajax() {
         println "params: $params"
         def contabilidad = Contabilidad.get(session.contabilidad.id)
+        def tipoGasto = TipoGasto.get(params.tipoGasto)
         def egresoInstance = new Egreso()
         def pagos
 
@@ -151,9 +152,7 @@ class EgresoController extends Shield {
                     pagos.cajaChica = params.pagar_CC
                     pagos.save(flush: true)
 
-//                    procesoService.registrar(egresoInstance?.id, 'egrs')
-
-                    def sql = "select * from generar(${pagos?.id}, 'EGRS', ${contabilidad?.id})"
+                    def sql = "select * from generar(${pagos?.id}, 2, null, ${tipoGasto?.id}, ${contabilidad?.id})"
                     def cn = dbConnectionService.getConnection()
                     cn.execute(sql.toString())
 
@@ -215,6 +214,7 @@ class EgresoController extends Shield {
 //        println "params $params"
         def contabilidad = Contabilidad.get(session.contabilidad.id)
         def egreso = Egreso.get(params.egreso)
+        def tipoGasto = egreso.tipoGasto
         def pagos = PagoEgreso.findAllByEgreso(egreso)
 //        def saldo = (egreso.valor - (pagos?.valor?.sum() ?: 0))
         def saldo = Math.round(( egreso.valor - (pagos?.valor?.sum() ?: 0)) *100)/100
@@ -259,7 +259,7 @@ class EgresoController extends Shield {
             render "no"
         }else{
 
-            def sql = "select * from generar(${pago?.id}, 'PGEG', ${contabilidad?.id})"
+            def sql = "select * from generar(${pago?.id}, 2, null, ${tipoGasto?.id}, ${contabilidad?.id})"
             def cn = dbConnectionService.getConnection()
             cn.execute(sql.toString())
 
