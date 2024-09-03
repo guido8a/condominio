@@ -160,7 +160,7 @@ class LoginController {
                 redirect(controller: 'login', action: "login")
                 return
             } else {
-                println "pone usuario ******************"
+//                println "pone usuario ******************"
                 session.usuario = user
 //                session.time = new Date()
                 session.condominio = user.condominio
