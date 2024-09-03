@@ -545,9 +545,9 @@ class GestorController extends Shield {
         nuevo.condominio = gestor.condominio
         nuevo.estado = 'N'
         nuevo.fecha = new Date()
-        nuevo.fuente = gestor.fuente
-        nuevo.tipo = gestor.tipo
-        nuevo.codigo = gestor.codigo
+        nuevo.tipoAporte = gestor.tipoAporte
+        nuevo.tipoGasto = gestor.tipoGasto
+        nuevo.tipoComprobante = gestor.tipoComprobante
         nuevo.observaciones = gestor.observaciones
 
         try {
