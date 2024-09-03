@@ -18,6 +18,7 @@ class Pago {
     double descuento
     double banco = 0
     String anterior = 'N'
+    String registrado = 'N'
 
 
     static mapping = {
@@ -42,6 +43,7 @@ class Pago {
             descuento column: 'pagodsct'
             banco column: 'pagobnco'
             anterior column: 'pagoantr'
+            registrado column: 'pagorgst'
         }
     }
 
@@ -54,5 +56,6 @@ class Pago {
         transferencia(inList: ["S", "N"], size: 1..1, blank: false, attributes: ['mensaje': 'Transferencia'])
         descuento(blank:true, nullable:true)
         banco(blank:true, nullable:true)
+        registrado(blank:true, nullable:true)
     }
 }

@@ -303,7 +303,9 @@ class IngresoController extends Shield {
             }else{
                 band = 1
                 /* "select * from generar(${pago?.id}, tpcp__id=3, tpap__id=1, tpgs__id=null, ${contabilidad?.id})" */
+                pago.refresh()
                 def sql = "select * from generar(${pago?.id}, 1, 1, null, ${contabilidad?.id})"
+                println "sql: $sql"
                 def cn = dbConnectionService.getConnection()
                 cn.execute(sql.toString())
 
