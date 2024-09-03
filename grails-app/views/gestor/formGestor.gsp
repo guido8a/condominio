@@ -135,7 +135,7 @@
                     Tipo de gasto:
                 </label>
                 <g:select name="tipoGasto" from="${condominio.TipoGasto.list([sort: 'descripcion'])}" value="${gestorInstance?.tipoGasto?.id}" optionKey="id"
-                          optionValue="descripcion" class="form-control required col-md-3" />
+                          optionValue="descripcion" class="form-control required col-md-3" noSelection="[null: 'Ninguno']" />
             </div>
 
             <div class="col-xs-3 negrilla" style="margin-left: 0">
@@ -143,7 +143,7 @@
                     Tipo Aporte :
                 </label>
                 <g:select name="tipoAporte" from="${condominio.TipoAporte.list([sort: 'descripcion'])}" value="${gestorInstance?.tipoAporte?.id}" optionKey="id"
-                          optionValue="descripcion" class="form-control required col-md-3"/>
+                          optionValue="descripcion" class="form-control required col-md-3" noSelection="[null: 'Ninguno']" />
             </div>
 
         </div>
