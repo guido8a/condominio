@@ -11,6 +11,7 @@ class Ingreso {
     double valor
     String estado = 'E'
     String observaciones
+    String registrado = 'N'
 
     static mapping = {
         table 'ingr'
@@ -28,6 +29,7 @@ class Ingreso {
 //            fechaPago column: 'ingrfcpg'
 //            documento column: 'ingrdcmt'
             observaciones column: 'ingrobsr'
+            registrado column: 'ingrrgst'
         }
     }
 
@@ -35,5 +37,6 @@ class Ingreso {
 //        documento(blank: true, nullable: true)
 //        fechaPago(blank: true, nullable: true)
         observaciones(blank: true, nullable: true)
+        registrado(blank: true, nullable: true)
     }
 }

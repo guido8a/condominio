@@ -140,6 +140,12 @@ class EgresoController extends Shield {
 
         if(params.valor.toDouble() >= pagos?.valor?.sum()){
             if(egresoInstance.save(flush: true)) {
+                egresoInstance.refresh()
+                def sql = "select * from generar(${egresoInstance?.id}, 3, null, ${tipoGasto?.id}, ${contabilidad?.id})"
+                println "sql: $sql"
+                def cn = dbConnectionService.getConnection()
+                cn.execute(sql.toString())
+
                 if(params.pagar && !pagos){
                     println("entro")
                     pagos = new PagoEgreso()
@@ -153,12 +159,13 @@ class EgresoController extends Shield {
                     pagos.save(flush: true)
 
                     pagos.refresh()
-                    def sql = "select * from generar(${pagos?.id}, 2, null, ${tipoGasto?.id}, ${contabilidad?.id})"
+                    sql = "select * from generar(${pagos?.id}, 2, null, ${tipoGasto?.id}, ${contabilidad?.id})"
                     println "sql: $sql"
-                    def cn = dbConnectionService.getConnection()
+                    cn = dbConnectionService.getConnection()
                     cn.execute(sql.toString())
 
                 }
+                cn.close()
                 render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Egreso exitosa."
                 return
             } else {
@@ -261,7 +268,9 @@ class EgresoController extends Shield {
             render "no"
         }else{
 
+            pago.refresh()
             def sql = "select * from generar(${pago?.id}, 2, null, ${tipoGasto?.id}, ${contabilidad?.id})"
+            println "sql pago: $sql"
             def cn = dbConnectionService.getConnection()
             cn.execute(sql.toString())
 
