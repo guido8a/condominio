@@ -120,7 +120,7 @@ class EgresoController extends Shield {
     def save_ajax() {
         println "params: $params"
         def contabilidad = Contabilidad.get(session.contabilidad.id)
-        def tipoGasto = TipoGasto.get(params.tipoGasto)
+        def tipoGasto = TipoGasto.get(params."tipoGasto.id")
         def egresoInstance = new Egreso()
         def pagos
 
