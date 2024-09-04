@@ -79,7 +79,7 @@ class ComprobanteContController extends Shield {
                 mnsj = "ok_" + d.mayorizar
             }
         } else {
-            render "no_no cuadran los valores de asientos"
+            render "no_Los valores de los asientos no cuadran"
             return
         }
         render mnsj

@@ -42,7 +42,7 @@
         </a>
         <g:if test="${asientos?.size() > 0}">
             <a href="#" class="btn btn-info btnRegistrarComprobante" data-id="${comprobante?.id}" title="Registrar comprobante">
-                <i class="fa fa-lock"> Registrar comprobante</i>
+                <i class="fa fa-lock"> Mayorizar</i>
             </a>
             <a href="#" class="btn btn-danger btnBorrarAsientos" title="Borrar los asientos con valores en 0 al debe y al haber">
                 <i class="fa fa-minus"> Borrar Cuentas con 0</i>
