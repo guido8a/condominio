@@ -127,8 +127,8 @@
                     }
                 },
                 registrar : {
-                    label     : "<i class='fa fa-lock'></i> Registrar",
-                    className : "btn-danger",
+                    label     : "<i class='fa fa-lock'></i> Mayorizar",
+                    className : "btn-success",
                     callback  : function () {
                         openLoader("Guardando...");
                         $.ajax({
