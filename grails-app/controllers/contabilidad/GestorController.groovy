@@ -318,12 +318,12 @@ class GestorController extends Shield {
     def agregarDebeHaber_ajax () {
         println("params agregar debe " + params)
         def gestor = Gestor.get(params.gestor)
-        def tipo = TipoComprobante.get(params.tipo)
+//        def tipo = TipoComprobante.get(params.tipo)
         def cuenta = Cuenta.get(params.cuenta)
 
         def genera = new Genera()
         genera.gestor = gestor
-        genera.tipoComprobante = tipo
+//        genera.tipoComprobante = tipo
         genera.cuenta = cuenta
         genera.debeHaber = params.dif
         genera.porcentaje = 0

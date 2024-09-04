@@ -171,22 +171,22 @@
         <div class="contenido">
 
             <div class="col-md-12" style="margin-bottom: 10px">
-                <div class="label col-md-3">
-                    Tipo de comprobante:
-                </div>
+%{--                <div class="label col-md-3">--}%
+%{--                    Tipo de comprobante:--}%
+%{--                </div>--}%
 
-                <div class="col-md-3">
-                    <span class="grupo">
+%{--                <div class="col-md-3">--}%
+%{--                    <span class="grupo">--}%
                         %{--<g:select name="tipoCom" campo="tipo"--}%
                         %{--from="${contabilidad.TipoComprobante.list([sort: 'descripcion'])}"--}%
                         %{--label="Tipo comprobante: " value="${''}" optionKey="id" id="tipo"--}%
                         %{--class="form-control required col-md-2"--}%
                         %{--optionValue="descripcion" style="margin-left: 80px; font-weight: bold"/>--}%
-                    </span>
-                </div>
-                <span class="col-md-1">
+%{--                    </span>--}%
+%{--                </div>--}%
+%{--                <span class="col-md-1">--}%
 
-                </span>
+%{--                </span>--}%
 
             %{--<g:if test="${gestorInstance?.id}">--}%
             %{--<g:if test="${tieneAsientos.size() > 0}">--}%

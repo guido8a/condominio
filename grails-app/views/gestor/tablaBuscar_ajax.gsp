@@ -56,7 +56,7 @@
                     revisarAsientos();
                     setTimeout(function () {
                         bootbox.hideAll();
-                    }, 1000);
+                    }, 700);
                 }else{
                     log(parts[1], "error")
                 }
