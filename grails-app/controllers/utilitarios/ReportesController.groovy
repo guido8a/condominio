@@ -1686,10 +1686,12 @@ class ReportesController extends Shield{
     def detalle() {
 
         def cn = dbConnectionService.getConnection()
-        def sql = 'select distinct cast (extract(year from pagofcpg) as INT) from pago order by 1;'
+        def sql = 'select distinct cast (extract(year from pagofcpg) as INT) anio from pago order by 1;'
+//        def sql = 'select distinct pagofcpg from pago order by 1;'
         def res = cn.rows(sql.toString())
-
-        return [anios: res.date_part]
+        println "--> $res"
+//        return [anios: res.date_part]
+        return [anios: res.anio]
     }
 
     def detalle_ajax() {
