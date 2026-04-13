@@ -80,12 +80,13 @@ import java.awt.image.BufferedImage
 class ReportesController extends Shield{
 
     def dbConnectionService
-    
+
     def reportesService
 
     def tx_footer = "Sistema de Administración de Condominios " + " " * 136 + "www.tedein.com.ec/condominio"
 
     def index() {
+        def mnsj = ""
         def cn = dbConnectionService.getConnection()
         def sql = 'select distinct cast (extract(year from pagofcpg) as INT) anio from pago order by 1;'
         def res = cn.rows(sql.toString())
@@ -94,22 +95,28 @@ class ReportesController extends Shield{
         def fcha = new Date()
         def inicioAnio = fcha - fcha[Calendar.DAY_OF_YEAR] + 1
         inicioAnio.clearTime()
-
-        println "anios: $res"
-
+//        println "anios: $res"
         def cont = Contabilidad.get(session.contabilidad.id)
-        def mnsj = ""
-        sql = "select * from saldos(${session.contabilidad.id});"
-        mnsj = cn.rows(sql.toString())[0].saldos
 
-        if(mnsj) {
-            flash.message = mnsj
+        if(cont){
+            sql = "select * from saldos(${session.contabilidad.id});"
+            mnsj = cn.rows(sql.toString())[0].saldos
+
+            if(mnsj) {
+                flash.message = mnsj
+                flash.title = "Aviso"
+                flash.tipo = "success"
+            }
+
+            return [anios: res.anio, edificios: edificios, condominio: condominio, inicioAnio: inicioAnio]
+        }else{
+
+            flash.message = "No existe una contabilidad asignada"
             flash.title = "Aviso"
-            flash.tipo = "error"
-        }
+            flash.tipo = "info"
 
-//        return [anios: res.date_part, edificios: edificios, condominio: condominio, inicioAnio: inicioAnio]
-        return [anios: res.anio, edificios: edificios, condominio: condominio, inicioAnio: inicioAnio]
+            return [edificios: edificios, condominio: condominio, inicioAnio: inicioAnio]
+        }
     }
 
     def reportes() {
